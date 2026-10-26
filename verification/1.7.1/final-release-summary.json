@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "version": "1.7.1",
+  "release_date": "2026-10-26",
+  "release_timezone": "Asia/Seoul",
+  "source_windows": {
+    "passed": 369,
+    "expected_external_reference_skip": 1,
+    "subtests_passed": 166
+  },
+  "source_linux": {
+    "passed": 340,
+    "platform_skips": 30,
+    "subtests_passed": 159
+  },
+  "oven_playback": {
+    "viewports": 8,
+    "visible_controls_checked": 56,
+    "caption_fits_checked": 40,
+    "source_and_real_EXE_cross_verified": true,
+    "play_advances_pause_holds_stop_resets": true,
+    "worker_results_and_numerical_prefix_unchanged": true
+  },
+  "input_persistence": {
+    "tools": 11,
+    "tk_variables": 138,
+    "unbound_fields": 5,
+    "normal_exit_roundtrip_verified": true
+  },
+  "github": {
+    "release_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.7.1",
+    "target_commit": "0c378b0d9aa56d24a8759581a2b57608238b72bc",
+    "full_zip": {
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.7.1/BJT_1.7.1_Windows_x64.zip",
+      "digest": "sha256:8f6bf68cc1535e496498a2899b0eae444117639ed9908b05a2a9c0cd52857853",
+      "id": 678411092,
+      "name": "BJT_1.7.1_Windows_x64.zip",
+      "size": 309347197
+    }
+  },
+  "team_drive": {
+    "folder_url": "https://drive.google.com/drive/folders/10hO6BJxlWqzORBEw8iTGxoWc3owvG9li",
+    "files": 8,
+    "source_id": "13pqJYKHov9903GQX8VRWk-duAcO95e4j",
+    "manual_id": "120TMbEbEmRPSVxjj_BRcr1y73Vfj7_QV",
+    "all4EXEparts_remotely_hashed": true,
+    "whole_wine_zip_sha256": "383d518a69eb786fe1b4527449b6c897258c82c3bdd49db26abd312620887d81"
+  },
+  "notion": {
+    "passed": true,
+    "version": "1.7.1",
+    "page_id": "40205e94-a225-81e3-b272-ffa8a1de15e7",
+    "path": "3D printing team / 자료: 기기, 제품, 이론 등 / 스터디",
+    "header": "# BJT 통합도구 1.7.1",
+    "all_old_41_file_refs_preserved": true,
+    "archived_versions": [
+      "1.7.0",
+      "1.6.2",
+      "1.6.1",
+      "1.6.0",
+      "1.5"
+    ],
+    "full_single_zip_primary": true
+  },
+  "execution_scope": "Native GitHub-hosted Windows plus genuine Windows PEs under Wine; actual camera/normal/largest projects also checked under Wine. No physical oven/printer test."
+}

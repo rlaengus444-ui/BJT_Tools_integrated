@@ -1,0 +1,570 @@
+{
+  "passed": true,
+  "version": "1.7.1",
+  "native_run": 40338157697,
+  "commit": "0c378b0d9aa56d24a8759581a2b57608238b72bc",
+  "native_oven_playback": {
+    "passed": true,
+    "frozen": true,
+    "checks": {
+      "strict_source_hashes": true,
+      "no_result_controls_disabled": true,
+      "all_controls_inside_all_eight_viewports": true,
+      "play_advances_pause_holds_stop_rewinds_both_fields": true,
+      "solver_worker_stop_and_field_results_unchanged": true,
+      "both_playback_timers_cancelled_on_close": true,
+      "no_python_or_tcl_callback_errors": true
+    },
+    "views": [
+      {
+        "width": 1660,
+        "height": 860,
+        "language": "ko",
+        "field": "temperature",
+        "controls": {
+          "prev_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "◀",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "play_btn": {
+            "fully_visible": true,
+            "width": 73,
+            "height": 29,
+            "caption": "재생",
+            "caption_pixels": 24,
+            "available_pixels": 73,
+            "fits": true
+          },
+          "pause_btn": {
+            "fully_visible": true,
+            "width": 87,
+            "height": 29,
+            "caption": "일시정지",
+            "caption_pixels": 48,
+            "available_pixels": 87,
+            "fits": true
+          },
+          "stop_btn": {
+            "fully_visible": true,
+            "width": 101,
+            "height": 29,
+            "caption": "정지",
+            "caption_pixels": 24,
+            "available_pixels": 101,
+            "fits": true
+          },
+          "next_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "▶",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "slider": {
+            "fully_visible": true,
+            "width": 209,
+            "height": 16
+          },
+          "time_label": {
+            "fully_visible": true,
+            "width": 399,
+            "height": 34
+          }
+        },
+        "screenshot": "D:\\a\\_temp\\bjt-suite-native\\build-work\\oven-playback-exe\\1660x860-ko-temperature.png"
+      },
+      {
+        "width": 1660,
+        "height": 860,
+        "language": "ko",
+        "field": "oxygen",
+        "controls": {
+          "prev_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "◀",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "play_btn": {
+            "fully_visible": true,
+            "width": 73,
+            "height": 29,
+            "caption": "재생",
+            "caption_pixels": 24,
+            "available_pixels": 73,
+            "fits": true
+          },
+          "pause_btn": {
+            "fully_visible": true,
+            "width": 87,
+            "height": 29,
+            "caption": "일시정지",
+            "caption_pixels": 48,
+            "available_pixels": 87,
+            "fits": true
+          },
+          "stop_btn": {
+            "fully_visible": true,
+            "width": 101,
+            "height": 29,
+            "caption": "정지",
+            "caption_pixels": 24,
+            "available_pixels": 101,
+            "fits": true
+          },
+          "next_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "▶",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "slider": {
+            "fully_visible": true,
+            "width": 209,
+            "height": 16
+          },
+          "time_label": {
+            "fully_visible": true,
+            "width": 399,
+            "height": 34
+          }
+        },
+        "screenshot": "D:\\a\\_temp\\bjt-suite-native\\build-work\\oven-playback-exe\\1660x860-ko-oxygen.png"
+      },
+      {
+        "width": 1660,
+        "height": 860,
+        "language": "en",
+        "field": "temperature",
+        "controls": {
+          "prev_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "◀",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "play_btn": {
+            "fully_visible": true,
+            "width": 73,
+            "height": 29,
+            "caption": "Play",
+            "caption_pixels": 22,
+            "available_pixels": 73,
+            "fits": true
+          },
+          "pause_btn": {
+            "fully_visible": true,
+            "width": 87,
+            "height": 29,
+            "caption": "Pause",
+            "caption_pixels": 31,
+            "available_pixels": 87,
+            "fits": true
+          },
+          "stop_btn": {
+            "fully_visible": true,
+            "width": 101,
+            "height": 29,
+            "caption": "Stop playback",
+            "caption_pixels": 76,
+            "available_pixels": 101,
+            "fits": true
+          },
+          "next_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "▶",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "slider": {
+            "fully_visible": true,
+            "width": 209,
+            "height": 16
+          },
+          "time_label": {
+            "fully_visible": true,
+            "width": 399,
+            "height": 34
+          }
+        },
+        "screenshot": "D:\\a\\_temp\\bjt-suite-native\\build-work\\oven-playback-exe\\1660x860-en-temperature.png"
+      },
+      {
+        "width": 1660,
+        "height": 860,
+        "language": "en",
+        "field": "oxygen",
+        "controls": {
+          "prev_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "◀",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "play_btn": {
+            "fully_visible": true,
+            "width": 73,
+            "height": 29,
+            "caption": "Play",
+            "caption_pixels": 22,
+            "available_pixels": 73,
+            "fits": true
+          },
+          "pause_btn": {
+            "fully_visible": true,
+            "width": 87,
+            "height": 29,
+            "caption": "Pause",
+            "caption_pixels": 31,
+            "available_pixels": 87,
+            "fits": true
+          },
+          "stop_btn": {
+            "fully_visible": true,
+            "width": 101,
+            "height": 29,
+            "caption": "Stop playback",
+            "caption_pixels": 76,
+            "available_pixels": 101,
+            "fits": true
+          },
+          "next_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "▶",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "slider": {
+            "fully_visible": true,
+            "width": 209,
+            "height": 16
+          },
+          "time_label": {
+            "fully_visible": true,
+            "width": 399,
+            "height": 34
+          }
+        },
+        "screenshot": "D:\\a\\_temp\\bjt-suite-native\\build-work\\oven-playback-exe\\1660x860-en-oxygen.png"
+      },
+      {
+        "width": 1120,
+        "height": 780,
+        "language": "ko",
+        "field": "temperature",
+        "controls": {
+          "prev_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "◀",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "play_btn": {
+            "fully_visible": true,
+            "width": 73,
+            "height": 29,
+            "caption": "재생",
+            "caption_pixels": 24,
+            "available_pixels": 73,
+            "fits": true
+          },
+          "pause_btn": {
+            "fully_visible": true,
+            "width": 87,
+            "height": 29,
+            "caption": "일시정지",
+            "caption_pixels": 48,
+            "available_pixels": 87,
+            "fits": true
+          },
+          "stop_btn": {
+            "fully_visible": true,
+            "width": 101,
+            "height": 29,
+            "caption": "정지",
+            "caption_pixels": 24,
+            "available_pixels": 101,
+            "fits": true
+          },
+          "next_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "▶",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "slider": {
+            "fully_visible": true,
+            "width": 209,
+            "height": 16
+          },
+          "time_label": {
+            "fully_visible": true,
+            "width": 399,
+            "height": 34
+          }
+        },
+        "screenshot": "D:\\a\\_temp\\bjt-suite-native\\build-work\\oven-playback-exe\\1120x780-ko-temperature.png"
+      },
+      {
+        "width": 1120,
+        "height": 780,
+        "language": "ko",
+        "field": "oxygen",
+        "controls": {
+          "prev_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "◀",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "play_btn": {
+            "fully_visible": true,
+            "width": 73,
+            "height": 29,
+            "caption": "재생",
+            "caption_pixels": 24,
+            "available_pixels": 73,
+            "fits": true
+          },
+          "pause_btn": {
+            "fully_visible": true,
+            "width": 87,
+            "height": 29,
+            "caption": "일시정지",
+            "caption_pixels": 48,
+            "available_pixels": 87,
+            "fits": true
+          },
+          "stop_btn": {
+            "fully_visible": true,
+            "width": 101,
+            "height": 29,
+            "caption": "정지",
+            "caption_pixels": 24,
+            "available_pixels": 101,
+            "fits": true
+          },
+          "next_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "▶",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "slider": {
+            "fully_visible": true,
+            "width": 209,
+            "height": 16
+          },
+          "time_label": {
+            "fully_visible": true,
+            "width": 399,
+            "height": 34
+          }
+        },
+        "screenshot": "D:\\a\\_temp\\bjt-suite-native\\build-work\\oven-playback-exe\\1120x780-ko-oxygen.png"
+      },
+      {
+        "width": 1120,
+        "height": 780,
+        "language": "en",
+        "field": "temperature",
+        "controls": {
+          "prev_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "◀",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "play_btn": {
+            "fully_visible": true,
+            "width": 73,
+            "height": 29,
+            "caption": "Play",
+            "caption_pixels": 22,
+            "available_pixels": 73,
+            "fits": true
+          },
+          "pause_btn": {
+            "fully_visible": true,
+            "width": 87,
+            "height": 29,
+            "caption": "Pause",
+            "caption_pixels": 31,
+            "available_pixels": 87,
+            "fits": true
+          },
+          "stop_btn": {
+            "fully_visible": true,
+            "width": 101,
+            "height": 29,
+            "caption": "Stop playback",
+            "caption_pixels": 76,
+            "available_pixels": 101,
+            "fits": true
+          },
+          "next_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "▶",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "slider": {
+            "fully_visible": true,
+            "width": 209,
+            "height": 16
+          },
+          "time_label": {
+            "fully_visible": true,
+            "width": 399,
+            "height": 34
+          }
+        },
+        "screenshot": "D:\\a\\_temp\\bjt-suite-native\\build-work\\oven-playback-exe\\1120x780-en-temperature.png"
+      },
+      {
+        "width": 1120,
+        "height": 780,
+        "language": "en",
+        "field": "oxygen",
+        "controls": {
+          "prev_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "◀",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "play_btn": {
+            "fully_visible": true,
+            "width": 73,
+            "height": 29,
+            "caption": "Play",
+            "caption_pixels": 22,
+            "available_pixels": 73,
+            "fits": true
+          },
+          "pause_btn": {
+            "fully_visible": true,
+            "width": 87,
+            "height": 29,
+            "caption": "Pause",
+            "caption_pixels": 31,
+            "available_pixels": 87,
+            "fits": true
+          },
+          "stop_btn": {
+            "fully_visible": true,
+            "width": 101,
+            "height": 29,
+            "caption": "Stop playback",
+            "caption_pixels": 76,
+            "available_pixels": 101,
+            "fits": true
+          },
+          "next_btn": {
+            "fully_visible": true,
+            "width": 52,
+            "height": 29,
+            "caption": "▶",
+            "caption_pixels": 12,
+            "available_pixels": 52,
+            "fits": true
+          },
+          "slider": {
+            "fully_visible": true,
+            "width": 209,
+            "height": 16
+          },
+          "time_label": {
+            "fully_visible": true,
+            "width": 399,
+            "height": 34
+          }
+        },
+        "screenshot": "D:\\a\\_temp\\bjt-suite-native\\build-work\\oven-playback-exe\\1120x780-en-oxygen.png"
+      }
+    ],
+    "callback_errors": [],
+    "screenshot_notes": [],
+    "tcl_bgerrors": [],
+    "seconds": 4.156
+  },
+  "server_assets": {
+    "BJT_1.7.1_manual.zip": {
+      "id": 678410851,
+      "name": "BJT_1.7.1_manual.zip",
+      "size": 230658,
+      "digest": "sha256:ee11d74bcee1896d5ba2849cf4d8241e0022c11ec04e2cd624fd9e27eea76f8c"
+    },
+    "BJT_1.7.1_source.zip": {
+      "id": 678410919,
+      "name": "BJT_1.7.1_source.zip",
+      "size": 4057982,
+      "digest": "sha256:9c5ed4be05823b3e2e0e428be00e53732d9b93d3024ad546900b1ede6c3f0b19"
+    },
+    "BJT_1.7.1_standalone.pyw": {
+      "id": 678410983,
+      "name": "BJT_1.7.1_standalone.pyw",
+      "size": 2550357,
+      "digest": "sha256:eff0db8edcb4c04aa4a1c42422a1ad8470cae15cf67ddd5856b209c0136065d6"
+    },
+    "BJT_1.7.1_Windows_x64.zip": {
+      "id": 678411092,
+      "name": "BJT_1.7.1_Windows_x64.zip",
+      "size": 309347197,
+      "digest": "sha256:8f6bf68cc1535e496498a2899b0eae444117639ed9908b05a2a9c0cd52857853"
+    },
+    "SHA256SUMS.txt": {
+      "id": 678411612,
+      "name": "SHA256SUMS.txt",
+      "size": 357,
+      "digest": "sha256:eb89da8955cf78126596538420a1948d3170fa8910609151c065801ff7bfa141"
+    }
+  },
+  "draft_at_observation": true
+}

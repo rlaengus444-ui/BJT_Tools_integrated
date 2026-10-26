@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "version": "1.7.1",
+  "parts": [
+    {
+      "name": "BJT_통합프로그램_1.7.1_EXE_100MB_01.zip",
+      "bytes": 99002965,
+      "sha256": "bdd46482017a586fb5af71b9d2ec1ca7704a351b9e217cf9e62a8265f601f2ae",
+      "remote_bytes_match": true
+    },
+    {
+      "name": "BJT_통합프로그램_1.7.1_EXE_100MB_02.zip",
+      "bytes": 99000140,
+      "sha256": "0a431057d428c50023f79ae1d133cf24febc84a3d4e4831ec11700c5196624f0",
+      "remote_bytes_match": true
+    },
+    {
+      "name": "BJT_통합프로그램_1.7.1_EXE_100MB_03.zip",
+      "bytes": 99000140,
+      "sha256": "5db1a4cc03a634f1eaea82da9c5fa9b4a4885fd45c2faa0221bbf74385a49e36",
+      "remote_bytes_match": true
+    },
+    {
+      "name": "BJT_통합프로그램_1.7.1_EXE_100MB_04.zip",
+      "bytes": 12060486,
+      "sha256": "f28a86ce744b738d48b54cf762e2d0127ad8b3d575ac0ab908a0c20167c468ad",
+      "remote_bytes_match": true
+    }
+  ],
+  "restored_archive_sha256": "383d518a69eb786fe1b4527449b6c897258c82c3bdd49db26abd312620887d81",
+  "restored_archive_matches_verified_EXE": true
+}

@@ -1,0 +1,336 @@
+{
+  "passed": true,
+  "version": "1.7.1",
+  "scope": "IndependentreviewofACTUALwindowedPyInstallerWindowsAMD64EXEgateandalleightcapturedviewsunderWine. All8PNGswereopenedwithview_image. Thisextends,anddoesnotreplace,theearlierindependentsourceGUIbehavioraudit. NotacleanWindowsVMtest.",
+  "frozen": true,
+  "gate_report": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe.json",
+  "gate_report_sha256": "865cd440e55f6305e304c79f1564699f621e823db23424b03344e64f0f0e0d9b",
+  "gate_checks": {
+    "strict_source_hashes": true,
+    "no_result_controls_disabled": true,
+    "all_controls_inside_all_eight_viewports": true,
+    "play_advances_pause_holds_stop_rewinds_both_fields": true,
+    "solver_worker_stop_and_field_results_unchanged": true,
+    "both_playback_timers_cancelled_on_close": true,
+    "no_python_or_tcl_callback_errors": true
+  },
+  "python_callback_errors": [],
+  "tcl_bgerrors": [],
+  "screenshot_notes": [],
+  "actual_PE_files": [
+    {
+      "file": "BJT_통합프로그램.exe",
+      "size": 31520359,
+      "sha256": "aaf3d43d2410d4427b76f35bfde8f5d7b6591a3bc55a7c1423f62111c3296686",
+      "PE_machine": "0x8664 AMD64"
+    },
+    {
+      "file": "BJT_명령줄.exe",
+      "size": 31523943,
+      "sha256": "114b799e46dc9394d47fa3dcdaa098cf9a4d6e0054934d4efa5d341467fc3366",
+      "PE_machine": "0x8664 AMD64"
+    }
+  ],
+  "strict_frozen_source_hash_matches": [
+    {
+      "path": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/slicing arrange.py",
+      "sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/slice_folder_overlay.py",
+      "sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/slice exchanger.py",
+      "sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/slice_alignment_checker.py",
+      "sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/sic_buildbox_thermal_gui_v5.py",
+      "sha256": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/slice_compare_app.py",
+      "sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/number_tools.py",
+      "sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/sequence_z.py",
+      "sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/m2_converter.py",
+      "sha256": "856efcb9b94846719c7261991c3964c45418463c122999ed8398c13b41faf7da",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "sources/chitu_checker.py",
+      "sha256": "bb5c6845a4727ab49fc4dc8fc9c913bb0e16248aba896e849d0c76cc82088fe0",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "slice_compare_engine.py",
+      "sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "slice_replace_validation.py",
+      "sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "suite_theme.py",
+      "sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "suite_layout.py",
+      "sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "m2_image_engine.py",
+      "sha256": "8caeb3cece308d487f84f885e9bef4f7b211d3cacae5ab67b0e590b0a21044ab",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "chitu_overlap/__init__.py",
+      "sha256": "51b552f2fd61b2d2223717feb394f5183ea71b0967a4f79621f8449e7a7c584f",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "chitu_overlap/__main__.py",
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "chitu_overlap/chitubox.py",
+      "sha256": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "chitu_overlap/cli.py",
+      "sha256": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "chitu_overlap/geometry.py",
+      "sha256": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "chitu_overlap/inputs.py",
+      "sha256": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "chitu_overlap/viewer.py",
+      "sha256": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "chitu_overlap/seams.py",
+      "sha256": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "suite_state.py",
+      "sha256": "a2452d072cc475c8bf14fe55a00d52ba9b7af1f064a1da5d8b3865d97788b97b",
+      "matches_current_and_manifest": true
+    },
+    {
+      "path": "oven_i18n.py",
+      "sha256": "6c8a09b8f52d6e186da7b011f9b55e28011aeb76eeb87507e50c88dd20626879",
+      "matches_current_and_manifest": true
+    }
+  ],
+  "strict_frozen_source_match_count": 26,
+  "fixed_thermal_source_sha256": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece",
+  "native_visual_review": {
+    "views_opened_with_view_image": 8,
+    "visible_control_checks": 56,
+    "fitting_button_caption_checks": 40,
+    "minimum_small_window_slider_width": 211,
+    "finding": "Both temperatureandoxygen3DtabsnowretainPlay/Pause/Stop,previous/next/slider,timeinformationaboveplotatbothsupportedwindowssizes.KoreanandEnglishcaptionsreadableandcontained; timeinformationwrapswithoutoverlap; plotandfooterremainvisible.",
+    "blocking_issues": []
+  },
+  "screenshots": [
+    {
+      "file": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe/1660x860-ko-temperature.png",
+      "sha256": "394d4a1379ca6efd2785c53dec7e4944f66f8d96018a4747c19d30822a1145a3",
+      "size": [
+        1660,
+        860
+      ],
+      "language": "ko",
+      "field": "temperature",
+      "all_seven_controls_fully_visible": true,
+      "all_five_button_captions_fit": true,
+      "slider_width": 751
+    },
+    {
+      "file": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe/1660x860-ko-oxygen.png",
+      "sha256": "6160b6d73b6287f95418703f8b6f707b604dd67adc97f668b5d94b6942531c11",
+      "size": [
+        1660,
+        860
+      ],
+      "language": "ko",
+      "field": "oxygen",
+      "all_seven_controls_fully_visible": true,
+      "all_five_button_captions_fit": true,
+      "slider_width": 751
+    },
+    {
+      "file": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe/1660x860-en-temperature.png",
+      "sha256": "7cf3227100c846ae5586d5a350962a9bd24d21c31fa4cd190426316535e75798",
+      "size": [
+        1660,
+        860
+      ],
+      "language": "en",
+      "field": "temperature",
+      "all_seven_controls_fully_visible": true,
+      "all_five_button_captions_fit": true,
+      "slider_width": 751
+    },
+    {
+      "file": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe/1660x860-en-oxygen.png",
+      "sha256": "0293477e8ac4483ea36e8e5522699be627a5f518daa7c92676df76ee183b10eb",
+      "size": [
+        1660,
+        860
+      ],
+      "language": "en",
+      "field": "oxygen",
+      "all_seven_controls_fully_visible": true,
+      "all_five_button_captions_fit": true,
+      "slider_width": 751
+    },
+    {
+      "file": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe/1120x780-ko-temperature.png",
+      "sha256": "798a8e2b92eb4e3a6ef42cb5217669e2456b108df29105acf438e73512ba1034",
+      "size": [
+        1120,
+        780
+      ],
+      "language": "ko",
+      "field": "temperature",
+      "all_seven_controls_fully_visible": true,
+      "all_five_button_captions_fit": true,
+      "slider_width": 211
+    },
+    {
+      "file": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe/1120x780-ko-oxygen.png",
+      "sha256": "caf86f978bb0a374e531bfe254b77edbd4f82bba67bd649d53e238dc96962040",
+      "size": [
+        1120,
+        780
+      ],
+      "language": "ko",
+      "field": "oxygen",
+      "all_seven_controls_fully_visible": true,
+      "all_five_button_captions_fit": true,
+      "slider_width": 211
+    },
+    {
+      "file": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe/1120x780-en-temperature.png",
+      "sha256": "d376b43338ec02c5e00b9fbb203d2d958da4a6c06b93e797eaa8052048b3f0fb",
+      "size": [
+        1120,
+        780
+      ],
+      "language": "en",
+      "field": "temperature",
+      "all_seven_controls_fully_visible": true,
+      "all_five_button_captions_fit": true,
+      "slider_width": 211
+    },
+    {
+      "file": "/workspace/bjt-integration/suite-1.7.1/windows-build/oven-playback-exe/1120x780-en-oxygen.png",
+      "sha256": "70ec65fe29cd55f5868d1479eb0aa116ebff75d42442995b2aef86153aea85a4",
+      "size": [
+        1120,
+        780
+      ],
+      "language": "en",
+      "field": "oxygen",
+      "all_seven_controls_fully_visible": true,
+      "all_five_button_captions_fit": true,
+      "slider_width": 211
+    }
+  ],
+  "baseline_comparison": [
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "tab": "field",
+      "baseline_play_mapped": false,
+      "candidate_all_seven_controls_fully_visible": true,
+      "before_screenshot": "../../oven-3d-playback-baseline/field-1660x860.png",
+      "after_screenshot": "independent-field-1660x860-ko.png"
+    },
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "tab": "o2_field",
+      "baseline_play_mapped": false,
+      "candidate_all_seven_controls_fully_visible": true,
+      "before_screenshot": "../../oven-3d-playback-baseline/o2_field-1660x860.png",
+      "after_screenshot": "independent-o2_field-1660x860-ko.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "tab": "field",
+      "baseline_play_mapped": false,
+      "candidate_all_seven_controls_fully_visible": true,
+      "before_screenshot": "../../oven-3d-playback-baseline/field-1120x780.png",
+      "after_screenshot": "independent-field-1120x780-ko.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "tab": "o2_field",
+      "baseline_play_mapped": false,
+      "candidate_all_seven_controls_fully_visible": true,
+      "before_screenshot": "../../oven-3d-playback-baseline/o2_field-1120x780.png",
+      "after_screenshot": "independent-o2_field-1120x780-ko.png"
+    }
+  ],
+  "source_behavior_evidence": "/workspace/BJT_Tools_integrated/verification/ui-1.7.1/independent/independent-playback-postfix.json",
+  "source_numeric_core_prefix_identity": {
+    "baseline_source_sha256": "0b079a821a8d7711cf1c70713396bbea7c964b06f0feacf03d14bd6600e99655",
+    "bytes": 59248,
+    "sha256": "fe15aa96cfb697fb5e96cda80d9d40261d8975b9814bbd52ea1c93c153f87460",
+    "match": true
+  },
+  "runtime_edits": false
+}

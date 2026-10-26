@@ -91,5 +91,14 @@
     "match": true
   },
   "runtime_edits": false,
-  "linux_font_limit": "LinuxX87stilllacksKoreanfonts.NativeKOlegibilityandcaptionfitverifiedfromWindows/WinePNGssameproductionsourceSHA."
+  "linux_font_limit": "LinuxX87stilllacksKoreanfonts.NativeKOlegibilityandcaptionfitverifiedfromWindows/WinePNGssameproductionsourceSHA.",
+  "final_frozen_exe_verification": {
+    "passed": true,
+    "report": "independent-frozen-exe-visual-review.json",
+    "frozen": true,
+    "views_independently_viewed": 8,
+    "strict_frozen_source_matches": 26,
+    "actual_windowed_PE_sha256": "aaf3d43d2410d4427b76f35bfde8f5d7b6591a3bc55a7c1423f62111c3296686",
+    "scope": "ActualwindowedWindowsAMD64EXEunderWine; nativeKorean/English3Dplaybackviewportsandcaptionspassed.OriginalsourceGUIscopeaboveretainedseparately."
+  }
 }

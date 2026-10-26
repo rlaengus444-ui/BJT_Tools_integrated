@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "version": "1.7.1",
+  "checks": [
+    {
+      "name": "BJT_통합프로그램_1.7.1_전체소스.zip",
+      "bytes": 4040821,
+      "sha256": "8e531b3ce9f547b7237b2fac22f52c5eac1f38fd4dc83a446a41f04f2fcfdc52",
+      "remote_matches_local": true
+    },
+    {
+      "name": "BJT_통합프로그램_1.7.1_사용설명서.zip",
+      "bytes": 230658,
+      "sha256": "670d044a0baa21755432ec0a24b90e4465e0fae7ca5452d46ae9399567d614a7",
+      "remote_matches_local": true
+    }
+  ]
+}

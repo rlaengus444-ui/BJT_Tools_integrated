@@ -1,0 +1,19 @@
+{
+  "changed_GUI_methods": [
+    "_build_gui",
+    "_initialize_o2_3d_field",
+    "_toggle_o2_3d_play",
+    "_stop_o2_3d_play",
+    "_initialize_3d_field",
+    "_toggle_3d_play",
+    "_stop_3d_play"
+  ],
+  "added_GUI_methods": [
+    "_play_o2_3d_animation",
+    "_reset_o2_3d_playback",
+    "_play_3d_animation",
+    "_reset_3d_playback"
+  ],
+  "input_collector_unchanged": true,
+  "solver_start_unchanged": true
+}
