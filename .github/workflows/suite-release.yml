@@ -1,0 +1,66 @@
+name: Integrated suite Windows verification and draft release
+
+'on':
+  push:
+    branches:
+      - codex/integrated-suite-1.7.0
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: suite-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-release:
+    runs-on: windows-2022
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      BJT_CI_OUTPUT: ${{ runner.temp }}\bjt-suite-native
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+          cache: pip
+          cache-dependency-path: suite/배포_빌드/windows-requirements.txt
+      - name: Install pinned native Windows dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --only-binary=:all: -r 'suite/배포_빌드/windows-requirements.txt'
+      - name: Verify all tools, build genuine EXEs and package checked assets
+        shell: pwsh
+        run: |
+          python 'suite/배포_빌드/ci_windows_release.py' --output "$env:BJT_CI_OUTPUT"
+      - name: Preserve verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BJT-native-Windows-evidence-${{ github.run_id }}
+          path: ${{ env.BJT_CI_OUTPUT }}\reports
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Preserve complete release files
+        uses: actions/upload-artifact@v4
+        with:
+          name: BJT-native-Windows-release-${{ github.run_id }}
+          path: ${{ env.BJT_CI_OUTPUT }}\release-assets
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - name: Upload verified assets to a private draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          python 'suite/배포_빌드/ci_windows_release.py' --output "$env:BJT_CI_OUTPUT" --publish-only
