@@ -1,0 +1,39 @@
+{
+  "project": "26.04.08_set.2.chitubox",
+  "project_bytes": 1307944076,
+  "project_sha256": "6e57d3f9c041b624e7e09065e06ddb1fbc460ad3dde2e0f07e98df905551315a",
+  "source_unchanged": true,
+  "published_exe_sha256": "be40a795a3c299fb8950f82c3c8b7fed46451c44c8b25a21cd1427de5f71b6d4",
+  "execution_environment": "Published Windows x64 EXE under Wine 10 in Linux Docker",
+  "min_gap_mm": 1.0,
+  "elapsed_exe_seconds": 221.524,
+  "timing_scope": "EXE launch + runtime initialization + file reading + inspection + JSON export; excludes download and HTML",
+  "exit_code": 137,
+  "timed_out": false,
+  "preflight": {
+    "magic": "0xAB231243",
+    "declared_objects": 22,
+    "triangle_instances": 36329658,
+    "native_support_objects": 0
+  },
+  "result_file_written": false,
+  "status": null,
+  "complete": null,
+  "object_count": null,
+  "pair_count": 0,
+  "pair_status_counts": {},
+  "known_minimum_distance_mm": null,
+  "invalid_objects": [],
+  "error": null,
+  "stderr_tail": "",
+  "benchmark_outcome": "memory_limit_termination",
+  "inspection_completed": false,
+  "memory_limit_bytes": 12884901888,
+  "observed_process_peak_bytes": 12624285696,
+  "largest_file_scope": {
+    "active_process_records": 514,
+    "unique_direct_chitu_files": 200,
+    "zip_contents_included": false
+  },
+  "source_page_url": "https://app.notion.com/33c05e94a2258002b702cee97c6822d2"
+}

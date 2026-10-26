@@ -1,0 +1,41 @@
+{
+  "passed_in_executed_scope": true,
+  "platform": "Windows-10-10.0.19043-SP0",
+  "os_name": "nt",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "packages": {
+    "pytest": "9.1.1",
+    "numpy": "2.3.5",
+    "Pillow": "12.3.0",
+    "scipy": "1.17.0",
+    "trimesh": "5.1.0",
+    "manifold3d": "3.5.4",
+    "python-fcl": "0.7.0.11",
+    "plotly": "7.1.0",
+    "imagecodecs": "2026.10.10",
+    "pypng": "0.20220715.0",
+    "tifffile": "2026.9.9"
+  },
+  "seconds": 23.26800000000003,
+  "tests": {
+    "collected": 200,
+    "exit_status": 0,
+    "summary_counts": {
+      "passed": 199,
+      "subtests passed": 97,
+      "skipped": 1
+    },
+    "passed": 199,
+    "skipped": [
+      {
+        "test": "tests/test_number_tools.py::NumberToolTests::test_original_valid_conflict_policies_match_file_bytes_and_metadata",
+        "reason": "('Z:\\\\workspace\\\\bjt-integration\\\\source\\\\BJT_통합도구\\\\tests\\\\test_number_tools.py', 237, 'Skipped: Original supplied tool is only present in the integration workspace')"
+      }
+    ],
+    "failures": [],
+    "errors": []
+  },
+  "junit_file": "Z:\\workspace\\bjt-integration\\verification\\full-suite-windows.xml",
+  "scope": "All shipped original 122 tests, 14 integration tests, and 64 Chitu engine/CLI/viewer tests in one Windows Python run",
+  "execution_context": "Windows CPython under Wine 10 in an isolated Linux Docker container, using Microsoft GDI+ and WindowsCodecs for parity checks; not a native Windows VM run"
+}

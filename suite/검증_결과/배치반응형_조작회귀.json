@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "sizes": [
+    {
+      "width": 1120,
+      "height": 780,
+      "toolbar_controls": 17,
+      "compact_two_rows": true,
+      "source_buttons": 4,
+      "export_cancel_hit_test": true,
+      "side_preview_and_help_hit_test": true
+    },
+    {
+      "width": 1740,
+      "height": 960,
+      "toolbar_controls": 17,
+      "compact_two_rows": false,
+      "source_buttons": 4,
+      "export_cancel_hit_test": true,
+      "side_preview_and_help_hit_test": true
+    },
+    {
+      "width": 1120,
+      "height": 780,
+      "toolbar_controls": 17,
+      "compact_two_rows": true,
+      "source_buttons": 4,
+      "export_cancel_hit_test": true,
+      "side_preview_and_help_hit_test": true
+    }
+  ],
+  "checks": [
+    "17_original_toolbar_widgets_commands_vars_widths_bindtags_preserved",
+    "all_controls_center_hit_test_not_covered_by_new_containers",
+    "four_source_buttons_and_export_cancel_visible",
+    "all_three_side_tabs_and_preview_controls_accessible",
+    "compact_wide_compact_reflow",
+    "original_nudge_copy_paste_duplicate_delete_undo_bindings",
+    "real_canvas_drag_and_undo",
+    "real_control_wheel_zoom_alt_wheel_rotation_middle_pan",
+    "preview_tab_wheel_shift_jump_and_opacity",
+    "fit_and_100_percent_commands",
+    "actual_export_cancel_button_reachable_and_effective",
+    "shared_close_waits_for_actual_export_worker",
+    "clean_python_and_Tcl_shutdown"
+  ],
+  "python_callback_errors": [],
+  "tcl_background_errors": []
+}

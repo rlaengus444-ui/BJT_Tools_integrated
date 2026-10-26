@@ -1,0 +1,20 @@
+{
+  "ticks": 298,
+  "mounted": [
+    "bjt",
+    "arrange",
+    "overlay",
+    "exchanger",
+    "alignment",
+    "thermal"
+  ],
+  "errors": [],
+  "checks": [
+    "asynchronous_import_keeps_tk_responsive",
+    "real_arrange_shortcuts_active_tab_only",
+    "manual_copy_does_not_trigger_arrange_shortcut",
+    "shutdown_waits_and_signals_worker",
+    "clean_original_close_hooks"
+  ],
+  "elapsed_seconds": 11.827999999979511
+}

@@ -1,0 +1,101 @@
+{
+  "passed_in_executed_scope": true,
+  "suite_version": "1.6.2",
+  "source_unchanged_during_run": true,
+  "source_sha256": {
+    "chitu_overlap\\__init__.py": "51b552f2fd61b2d2223717feb394f5183ea71b0967a4f79621f8449e7a7c584f",
+    "chitu_overlap\\__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "chitu_overlap\\chitubox.py": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+    "chitu_overlap\\cli.py": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d",
+    "chitu_overlap\\geometry.py": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+    "chitu_overlap\\inputs.py": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c",
+    "chitu_overlap\\seams.py": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418",
+    "chitu_overlap\\viewer.py": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8",
+    "chitu_tests\\test_chitubox.py": "a3008b91790ad57ab49826ade1ace719ce62a7e2bdc7c2b5979c19f4a76ea732",
+    "chitu_tests\\test_cli.py": "c35bc9a47dc67b84ef5df5806b3ed073f9998167a8f2184b1282c2df44be7ed9",
+    "chitu_tests\\test_geometry.py": "a9ca720c5d6630e04eaba066222e7d75ec0de1a30fa32fa26f2c78ce522d1b00",
+    "chitu_tests\\test_geometry_scalability.py": "2756708ded061af2a4957466d180e28e1f411c7a331e52b903f61330700600d1",
+    "chitu_tests\\test_loader_scalability.py": "3f438c4e75942cb4f717b712c559ad94737193c292c60e341d33762e36cae04f",
+    "chitu_tests\\test_seam_scene_clearance.py": "b4e3a38f869cd2b8cf32a417efbb0f817e9b2f798e658309b2687e057b094543",
+    "chitu_tests\\test_seams.py": "c8a12c3ff073fc42a6b291856c4298fe52ef6058ff56ee21171c9110d4b61140",
+    "chitu_tests\\test_viewer.py": "699265011ce11012c469a6084b54fb1a54969bdadedc2172b157c3a4eae2f1b8",
+    "chitu_tests\\test_viewer_scalability.py": "6ea5f7fa73608c42ae9015ad4d45e7f7996261e2d803226e6220d3eb1cae272f",
+    "m2_image_engine.py": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2",
+    "run_suite.py": "162d0ef281677a2ec97aa09226620810363b77614447f13b0d690c2155ed078d",
+    "slice_compare_cli.py": "da1ef220fb685cc4e059cc8250f51653f6d23604b50aaf8951ce387aa8fbcec8",
+    "slice_compare_engine.py": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+    "slice_replace_validation.py": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+    "source_manifest.json": "5bc8bf9a6a3d0bcfdc3c59816bc85ca0a9916eb70a0866633c5b9e1eb2bdb5a7",
+    "sources\\260914_BJT_model_to_lattice_STL_all_in_one.py": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+    "sources\\chitu_checker.py": "f2e06f2ea23a306e1b26beda1f8549df2152d0c1bc5cbfac8a2bfdc58b074503",
+    "sources\\m2_converter.py": "f8de5a13f876560c1bb4f1395f30709f73c7bbc799b701074cca6a69efc60183",
+    "sources\\number_tools.py": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+    "sources\\sequence_z.py": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+    "sources\\sic_buildbox_thermal_gui_v5.py": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+    "sources\\slice exchanger.py": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+    "sources\\slice_alignment_checker.py": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+    "sources\\slice_compare_app.py": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+    "sources\\slice_folder_overlay.py": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+    "sources\\slicing arrange.py": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+    "suite_layout.py": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+    "suite_loader.py": "3ffd075ce5945eed54ff73b2f5203992b2a962249a3ceac60d8b06ef18ed7153",
+    "suite_manuals.py": "4814d62ce13ed34f9bccf6fa95b04fade6718698650cd76b3aefa8994ac1baff",
+    "suite_runtime.py": "4bb9ee7c668934e9794c477c8dd36b82de4f935c27327df774433007af64fb7e",
+    "suite_theme.py": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+    "suite_ui.py": "16b93b7c5037d935c918820bd7ac9c41eb7c590c0ac7dc248c114f63361142ef",
+    "tests\\test_chitu_integration.py": "8f4bb2efde4cc4ee0070e81bfa47cf3c41a96f6fc37a1114679fb65a2301ae32",
+    "tests\\test_m2_image_engine.py": "8c014f557bfaeea69aff2df4eb80d92a71c60b4e2bd1b1db1a340f8e2a5832c8",
+    "tests\\test_number_tools.py": "040fcf7eadd686b4e8d7fd8224aba2861ee157c21f7e19e545c9916de97a2fa5",
+    "tests\\test_replace_validation.py": "a673907d124ed1a5200e1b194ee47a8f2740a7646e4da7825dfbc8bfb8f60eca",
+    "tests\\test_sequence_z.py": "dc70719af3d5e79d10958de35f70fdadd9fcab75a7ed66fc559a915a642408c6",
+    "tests\\test_slice_compare.py": "0f981ce1525257d36024997502d9d8d93fc72eb01168099d6ccc9b8daf96a02a"
+  },
+  "native_runtime_preloads": [
+    {
+      "name": "msvcp140.dll",
+      "sha256": "0f885b509a685d2bbfa652fed26b5fb31d88fbdab0a978c641d1c7b8aa460aa9"
+    },
+    {
+      "name": "vcomp140.dll",
+      "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164"
+    }
+  ],
+  "execution_context": "Windows CPython under Wine 10 in an isolated Linux Docker container, using Microsoft GDI+ and WindowsCodecs for parity checks; not a native Windows VM run",
+  "platform": "Windows-10-10.0.19043-SP0",
+  "os_name": "nt",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "packages": {
+    "pytest": "9.1.1",
+    "numpy": "2.3.5",
+    "Pillow": "12.3.0",
+    "scipy": "1.17.0",
+    "trimesh": "5.1.0",
+    "manifold3d": "3.5.4",
+    "python-fcl": "0.7.0.11",
+    "plotly": "7.1.0",
+    "imagecodecs": "2026.10.10",
+    "pypng": "0.20220715.0",
+    "tifffile": "2026.9.9"
+  },
+  "seconds": 27.12400000000025,
+  "tests": {
+    "collected": 281,
+    "exit_status": 0,
+    "summary_counts": {
+      "passed": 280,
+      "subtests passed": 97,
+      "skipped": 1
+    },
+    "passed": 280,
+    "skipped": [
+      {
+        "test": "tests/test_number_tools.py::NumberToolTests::test_original_valid_conflict_policies_match_file_bytes_and_metadata",
+        "reason": "('Z:\\\\workspace\\\\bjt-integration\\\\source\\\\BJT_통합도구\\\\tests\\\\test_number_tools.py', 237, 'Skipped: Original supplied tool is only present in the integration workspace')"
+      }
+    ],
+    "failures": [],
+    "errors": []
+  },
+  "junit_file": "Z:\\workspace\\bjt-integration\\camera-case\\verification\\full-suite-windows-1.6.2.xml",
+  "scope": "Every test collected from final integrated tests/ and chitu_tests/, including exact-seam adversarial and existing native TIFF golden cases"
+}

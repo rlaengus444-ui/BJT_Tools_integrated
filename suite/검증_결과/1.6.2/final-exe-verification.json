@@ -1,0 +1,345 @@
+{
+  "passed": true,
+  "created_utc": "2026-10-25T18:09:36.799095+00:00",
+  "suite_version": "1.6.2",
+  "execution_context": "Actual Windows x64 PE under Wine10/LinuxDocker; same-session performance comparison in12GiB/no-swap container; not a native Windows VM run",
+  "executables": [
+    {
+      "name": "BJT_통합프로그램.exe",
+      "bytes": 31463908,
+      "sha256": "5a449029336f4093905c7f6e1b36d12fd24dc158c6264694871c24b20f889cc0",
+      "modified_utc": "2026-10-25T17:54:07.198772+00:00",
+      "machine": "0x8664",
+      "file_version": "1.6.2.0",
+      "unchanged_since_verified": true
+    },
+    {
+      "name": "BJT_명령줄.exe",
+      "bytes": 31467492,
+      "sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "modified_utc": "2026-10-25T17:54:07.174773+00:00",
+      "machine": "0x8664",
+      "file_version": "1.6.2.0",
+      "unchanged_since_verified": true
+    }
+  ],
+  "gates": [
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/diagnose-exe.json",
+      "passed": true,
+      "sha256": "f71085867d2e403803a562fa54d50e5ce2ed55f6ceb3c190b595906f09d44327",
+      "modified_utc": "2026-10-25T17:56:29.072943+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/smoke-exe.json",
+      "passed": true,
+      "sha256": "d942e18e114c3eee12da6f39b22f0afed4ae88a2e3e449fe0c263e513d293b08",
+      "modified_utc": "2026-10-25T17:57:07.966482+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/smoke-gui-exe.json",
+      "passed": true,
+      "sha256": "d942e18e114c3eee12da6f39b22f0afed4ae88a2e3e449fe0c263e513d293b08",
+      "modified_utc": "2026-10-25T17:57:42.976324+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/fixtures-exe.json",
+      "passed": true,
+      "sha256": "6b418da8986f29a7a9c83d6c3d6ef4858cd9614867d37524781c0e39698f0101",
+      "modified_utc": "2026-10-25T17:57:08.638718+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/fixtures-gui-exe.json",
+      "passed": true,
+      "sha256": "1ad797e0fdc3cb96cf707759e3f28a6cd0ee22f37caafd28911698ef4cd4e355",
+      "modified_utc": "2026-10-25T17:56:59.135092+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/cli-exe.json",
+      "passed": true,
+      "sha256": "7c57bb6a8f4c3433f5d82c9c981b7096c59547c53f23e369908431a2450c3359",
+      "modified_utc": "2026-10-25T17:58:54.509287+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/chitu-cli-exe.json",
+      "passed": true,
+      "sha256": "0dcfb5a8e3178e87d821d590df29c795a06dcf6b520f0904ae5e9b7f210f61eb",
+      "modified_utc": "2026-10-25T17:59:56.518157+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/chitu-gui-exe.json",
+      "passed": true,
+      "sha256": "28550475e9362a0d594c50f0c0c46819b61809b092231756e1ef4819ac1b1071",
+      "modified_utc": "2026-10-25T17:55:44.790462+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/camera-cli-exe.json",
+      "passed": true,
+      "sha256": "35163ce381cd10539983c3d5ac2483577332b4027792f05f8ad448db2996a4a3",
+      "modified_utc": "2026-10-25T17:59:34.340765+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/camera-gui-exe.json",
+      "passed": true,
+      "sha256": "20b94397429f68e28ebe1eb08e929acdb09c78f6e28eed72d346594fddcf8866",
+      "modified_utc": "2026-10-25T17:55:58.774173+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/final-frozen-source-parity.json",
+      "passed": true,
+      "sha256": "23a43644b1839e87730efc9a57a84a4cd55f42377a54bacf03de09e3f099b346",
+      "modified_utc": "2026-10-25T17:56:11.520747+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/native-runtime-closure.json",
+      "passed": true,
+      "sha256": "7e47c7353a875149c1a5650d98b8c13c496b693682a63bae4db9c1f192504992",
+      "modified_utc": "2026-10-25T17:55:30.153717+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/summary.json",
+      "passed": true,
+      "sha256": "204da60eef10182b76e1fcaafdb481effbf66f8878f6237fe30eb2eb801355ff",
+      "modified_utc": "2026-10-25T18:08:33.463480+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/verification/full-suite-windows-1.6.2.json",
+      "passed": true,
+      "sha256": "4ec3aec65d81451b86c9c178b9df41b29f7624d9c64e86983b41512b17edf5f0",
+      "modified_utc": "2026-10-25T17:47:47.128228+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/camera-case/verification/final-exe-original-real-cases-1.6.2.json",
+      "passed": true,
+      "sha256": "287a40450b8debdc2c8efba54888882d9a043136ce06eaa4980c46a229c0952f",
+      "modified_utc": "2026-10-25T17:56:46.518277+00:00"
+    }
+  ],
+  "source_manifest_assets_verified": 24,
+  "source_stage_frozen_data_matches": 64,
+  "windows_source_suite": {
+    "collected": 281,
+    "exit_status": 0,
+    "summary_counts": {
+      "passed": 280,
+      "subtests passed": 97,
+      "skipped": 1
+    },
+    "passed": 280,
+    "skipped": [
+      {
+        "test": "tests/test_number_tools.py::NumberToolTests::test_original_valid_conflict_policies_match_file_bytes_and_metadata",
+        "reason": "('Z:\\\\workspace\\\\bjt-integration\\\\source\\\\BJT_통합도구\\\\tests\\\\test_number_tools.py', 237, 'Skipped: Original supplied tool is only present in the integration workspace')"
+      }
+    ],
+    "failures": [],
+    "errors": []
+  },
+  "generic_cli_checks": 10,
+  "original63_cli_checks": 4,
+  "original63_gui_checks": 17,
+  "camera_cli_checks": 8,
+  "camera_gui_checks": 37,
+  "camera_project_sha256": "c22dc0cfc58b42a0f6528e512ae9b1947222c6bbfc8fad67747b807cad2270ad",
+  "camera_results": [
+    {
+      "gap_mm": 0,
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 10.123000000000047,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "object_count": 49,
+      "pair_count": 1176,
+      "pair_status_counts": {
+        "clear": 1176
+      },
+      "violating_pairs": [],
+      "normalized_indices": [
+        4,
+        5
+      ],
+      "minimum_distance_mm": 1.4999923706054688,
+      "result_file": "Z:\\workspace\\bjt-integration\\camera-case\\windows-build\\camera-cli-cases\\gap-0.json"
+    },
+    {
+      "gap_mm": 1,
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 10.813000000000102,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "object_count": 49,
+      "pair_count": 1176,
+      "pair_status_counts": {
+        "clear": 1176
+      },
+      "violating_pairs": [],
+      "normalized_indices": [
+        4,
+        5
+      ],
+      "minimum_distance_mm": 1.4999923706054688,
+      "result_file": "Z:\\workspace\\bjt-integration\\camera-case\\windows-build\\camera-cli-cases\\gap-1.json"
+    },
+    {
+      "gap_mm": 1.5,
+      "passed": true,
+      "exit_code": 1,
+      "seconds": 8.373000000000502,
+      "status": "violation",
+      "complete": true,
+      "processing_completed": true,
+      "object_count": 49,
+      "pair_count": 1176,
+      "pair_status_counts": {
+        "clear": 1175,
+        "too_close": 1
+      },
+      "violating_pairs": [
+        [
+          5,
+          6
+        ]
+      ],
+      "normalized_indices": [
+        4,
+        5
+      ],
+      "minimum_distance_mm": 1.4999923706054688,
+      "result_file": "Z:\\workspace\\bjt-integration\\camera-case\\windows-build\\camera-cli-cases\\gap-1.5.json"
+    },
+    {
+      "gap_mm": 2,
+      "passed": true,
+      "exit_code": 1,
+      "seconds": 9.609999999999673,
+      "status": "violation",
+      "complete": true,
+      "processing_completed": true,
+      "object_count": 49,
+      "pair_count": 1176,
+      "pair_status_counts": {
+        "clear": 1172,
+        "too_close": 4
+      },
+      "violating_pairs": [
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          7
+        ]
+      ],
+      "normalized_indices": [
+        4,
+        5
+      ],
+      "minimum_distance_mm": 1.4999923706054688,
+      "result_file": "Z:\\workspace\\bjt-integration\\camera-case\\windows-build\\camera-cli-cases\\gap-2.json"
+    }
+  ],
+  "camera_fail_example_html": "/workspace/bjt-integration/camera-case/windows-build/camera-cli-cases/gap-2.html",
+  "camera_fail_example_html_bytes": 12493787,
+  "camera_selected_pair_gui_html": "/workspace/bjt-integration/camera-case/windows-build/camera-gui-gap1.5.html",
+  "paired_pe_medians": {
+    "normal63": {
+      "baseline": {
+        "samples_seconds": [
+          12.289,
+          11.809
+        ],
+        "sample_count": 2,
+        "median_seconds": 12.049,
+        "max_process_vm_hwm_bytes": 715816960
+      },
+      "candidate": {
+        "samples_seconds": [
+          12.076,
+          11.78
+        ],
+        "sample_count": 2,
+        "median_seconds": 11.928,
+        "max_process_vm_hwm_bytes": 713465856
+      },
+      "candidate_over_baseline_ratio": 0.9899576728359201
+    },
+    "camera49": {
+      "baseline": {
+        "samples_seconds": [
+          12.032,
+          12.03,
+          11.308,
+          12.046
+        ],
+        "sample_count": 4,
+        "median_seconds": 12.030999999999999,
+        "max_process_vm_hwm_bytes": 828678144
+      },
+      "candidate": {
+        "samples_seconds": [
+          12.029,
+          12.916,
+          11.531,
+          11.276
+        ],
+        "sample_count": 4,
+        "median_seconds": 11.780000000000001,
+        "max_process_vm_hwm_bytes": 858460160
+      },
+      "candidate_over_baseline_ratio": 0.9791372288255342
+    },
+    "largest22": {
+      "baseline": {
+        "samples_seconds": [
+          32.339,
+          31.334
+        ],
+        "sample_count": 2,
+        "median_seconds": 31.8365,
+        "max_process_vm_hwm_bytes": 4356898816
+      },
+      "candidate": {
+        "samples_seconds": [
+          29.333,
+          28.84
+        ],
+        "sample_count": 2,
+        "median_seconds": 29.0865,
+        "max_process_vm_hwm_bytes": 4356988928
+      },
+      "candidate_over_baseline_ratio": 0.9136211581046911
+    }
+  },
+  "observed_candidate_medians_not_slower": true,
+  "all_initial_and_follow_up_samples_retained": true,
+  "largest_result_scope": "Unchanged known FAIL pair6/16 at0.6575593948364258mm with min_gap1;11 invalid meshes,176inconclusive pairs,54clear pairs. processing_completed true;complete false. Not a full-file PASS.",
+  "memory_scope": "Per-process Linux VmHWM of the actual Windows CLI PE; GUI functional timings were collected during parallel gates and are not performance benchmarks.",
+  "cpython_license": {
+    "bytes": 36874,
+    "sha256": "e502c6b880ff58d614901495a9009c136539cd0b1e2a2abb8fc00b934c203419",
+    "inventory_entry": [
+      {
+        "distribution": "CPython",
+        "version": "3.12.10",
+        "role": "Python runtime",
+        "license_files": [
+          "licenses\\Python\\LICENSE.txt"
+        ]
+      }
+    ]
+  },
+  "report_update_note": "Source-stage-frozen-data parity was recorded before root appends final nonruntime verification documents; PE and runtime source remain unchanged."
+}

@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "existing_release_cli_artifact": true,
+  "source_html": "/workspace/bjt-integration/camera-case/windows-build/camera-cli-cases/gap-2.html",
+  "source_bytes": 12493787,
+  "source_sha256": "878b7bf8fc7118a50888dcf9030aaf019be68ceab31efae94fc003a2485ce4db",
+  "html_json_reports_identical": true,
+  "chitu_reloaded": false,
+  "production_code_modified": false,
+  "offline_context": true,
+  "object_count": 49,
+  "threshold_mm": 2,
+  "fail_pairs": [
+    [
+      1,
+      4
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      5,
+      7
+    ]
+  ],
+  "normalization_notice_object_indices": [
+    4,
+    5
+  ],
+  "pair_selections": [
+    {
+      "pair": [
+        1,
+        4
+      ],
+      "distance_mm": 1.5000076293945312,
+      "passed": true,
+      "details": "[1] 경통_200mm_v2_For_8t_기본.STEP.step\n[4] 카메라모듈_200mm_v2_For_8t_기본.STEP.step\n\n판정: 최소 간격 미달\n간격: 1.50000763 mm\n교차 부피: 0 mm³"
+    },
+    {
+      "pair": [
+        2,
+        4
+      ],
+      "distance_mm": 1.5,
+      "passed": true,
+      "details": "[2] 스파이더_200mm_v2_For_8t_기본.STEP.step\n[4] 카메라모듈_200mm_v2_For_8t_기본.STEP.step\n\n판정: 최소 간격 미달\n간격: 1.5 mm\n교차 부피: 0 mm³"
+    },
+    {
+      "pair": [
+        5,
+        6
+      ],
+      "distance_mm": 1.4999923706054688,
+      "passed": true,
+      "details": "[5] 카메라모듈_200mm_v2_For_6t_기본.STEP.step\n[6] 경통_200mm_v2_For_6t_기본.STEP.step\n\n판정: 최소 간격 미달\n간격: 1.49999237 mm\n교차 부피: 0 mm³"
+    },
+    {
+      "pair": [
+        5,
+        7
+      ],
+      "distance_mm": 1.5000038146972656,
+      "passed": true,
+      "details": "[5] 카메라모듈_200mm_v2_For_6t_기본.STEP.step\n[7] 스파이더_200mm_v2_For_6t_기본.STEP.step\n\n판정: 최소 간격 미달\n간격: 1.50000381 mm\n교차 부피: 0 mm³"
+    }
+  ],
+  "selected_5_6_exact_meshes_and_nearest_points": true,
+  "normalization_notices": "[4] 카메라모듈_200mm_v2_For_8t_기본.STEP.step: 원본 형상을 유지한 검사용 연결면 정리 완료 (정점 좌표 변경 없음).\n\n[5] 카메라모듈_200mm_v2_For_6t_기본.STEP.step: 원본 형상을 유지한 검사용 연결면 정리 완료 (정점 좌표 변경 없음).",
+  "full_reset": true,
+  "source_unchanged": true,
+  "javascript_errors": [],
+  "console_errors": [],
+  "network_requests": [],
+  "failed_requests": [],
+  "duration_seconds": 21.762
+}

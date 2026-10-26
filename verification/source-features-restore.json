@@ -1,0 +1,188 @@
+{
+  "passed": false,
+  "frozen": false,
+  "phase": "restore",
+  "checks": {
+    "all_11_tools_and_simple_titles": {
+      "passed": true
+    }
+  },
+  "settings_path": "Z:\\workspace\\bjt-integration\\suite-1.7.0\\source-feature-profile\\profile\\settings.json",
+  "mismatches": {
+    "thermal": {
+      "expected": {
+        "variables": {
+          "language_var": "en",
+          "lx": "400",
+          "ly": "500",
+          "lz": "350",
+          "box_k": "16.2",
+          "box_density": "7930.0",
+          "box_cp": "500.0",
+          "side_t": "3",
+          "bottom_t": "5",
+          "top_t": "3",
+          "bottom_gap": "40",
+          "floor_emissivity": "0.80",
+          "bottom_view_factor": "0.95",
+          "top_open_var": "1",
+          "bed_rho": "1.700",
+          "true_rho": "3.210",
+          "cp": "750",
+          "k_solid": "80",
+          "gas_k": "0.026",
+          "d10": "40.6",
+          "d50": "65.4",
+          "d90": "105.0",
+          "solid_k_exp": "0.75",
+          "contact_blend": "0.50",
+          "k_eff": "0.60",
+          "hconv": "12",
+          "emissivity": "0.75",
+          "initial_temp": "25",
+          "o2_enabled_var": "1",
+          "o2_ambient": "20.95",
+          "o2_initial": "20.95",
+          "o2_d25": "2.05e-5",
+          "o2_temp_exp": "1.75",
+          "o2_tau": "1.46",
+          "o2_knudsen_var": "1",
+          "o2_top_access_var": "1",
+          "o2_side_access_var": "0",
+          "o2_bottom_access_var": "0",
+          "cal_scale": "1.00",
+          "cal_h": "12.0",
+          "nx": "6",
+          "ny": "24",
+          "nz": "18",
+          "max_dt": "10",
+          "record_interval": "60",
+          "snapshot_interval": "10"
+        },
+        "inputs": {
+          "oven_profile": [
+            [
+              "0",
+              "23.5"
+            ],
+            [
+              "10.25",
+              "600"
+            ],
+            [
+              "30",
+              "25"
+            ]
+          ],
+          "tc_path": "Z:\\workspace\\bjt-integration\\suite-1.7.0\\source-feature-profile\\측정.csv",
+          "tc_data": {
+            "time_min": [
+              0.0,
+              1.0,
+              2.0
+            ],
+            "center_c": [
+              22.0,
+              25.0,
+              30.0
+            ]
+          }
+        },
+        "entries": {
+          "!panedwindow/!frame/!frame/!canonicalcombobox": "en",
+          "!panedwindow/!frame/!canvas/!frame/!labelframe2/!canonicalcombobox": "SUS304",
+          "!panedwindow/!frame/!canvas/!frame/!labelframe3/!canonicalcombobox": "SiC general",
+          "!panedwindow/!frame/!canvas/!frame/!labelframe3/!canonicalcombobox2": "PSD estimate",
+          "!panedwindow/!frame/!canvas/!frame/!labelframe5/!canonicalcombobox": "Bruggeman"
+        }
+      },
+      "actual": {
+        "variables": {
+          "language_var": "en",
+          "lx": "400",
+          "ly": "500",
+          "lz": "350",
+          "box_k": "16.2",
+          "box_density": "7930.0",
+          "box_cp": "500.0",
+          "side_t": "3",
+          "bottom_t": "5",
+          "top_t": "3",
+          "bottom_gap": "40",
+          "floor_emissivity": "0.80",
+          "bottom_view_factor": "0.95",
+          "top_open_var": "1",
+          "bed_rho": "1.700",
+          "true_rho": "3.210",
+          "cp": "750",
+          "k_solid": "80",
+          "gas_k": "0.026",
+          "d10": "40.6",
+          "d50": "65.4",
+          "d90": "105.0",
+          "solid_k_exp": "0.75",
+          "contact_blend": "0.50",
+          "k_eff": "0.60",
+          "hconv": "12",
+          "emissivity": "0.75",
+          "initial_temp": "25",
+          "o2_enabled_var": "1",
+          "o2_ambient": "20.95",
+          "o2_initial": "20.95",
+          "o2_d25": "2.05e-5",
+          "o2_temp_exp": "1.75",
+          "o2_tau": "1.46",
+          "o2_knudsen_var": "1",
+          "o2_top_access_var": "1",
+          "o2_side_access_var": "0",
+          "cal_scale": "1.00",
+          "cal_h": "12.0",
+          "nx": "6",
+          "ny": "24",
+          "nz": "18",
+          "max_dt": "10",
+          "record_interval": "60",
+          "snapshot_interval": "10"
+        },
+        "inputs": {
+          "oven_profile": [
+            [
+              "0",
+              "23.5"
+            ],
+            [
+              "10.25",
+              "600"
+            ],
+            [
+              "30",
+              "25"
+            ]
+          ],
+          "tc_path": "Z:\\workspace\\bjt-integration\\suite-1.7.0\\source-feature-profile\\측정.csv",
+          "tc_data": {
+            "time_min": [
+              0.0,
+              1.0,
+              2.0
+            ],
+            "center_c": [
+              22.0,
+              25.0,
+              30.0
+            ]
+          }
+        },
+        "entries": {
+          "!panedwindow/!frame/!frame/!canonicalcombobox": "en",
+          "!panedwindow/!frame/!canvas/!frame/!labelframe2/!canonicalcombobox": "SUS304",
+          "!panedwindow/!frame/!canvas/!frame/!labelframe3/!canonicalcombobox": "SiC general",
+          "!panedwindow/!frame/!canvas/!frame/!labelframe3/!canonicalcombobox2": "PSD estimate",
+          "!panedwindow/!frame/!canvas/!frame/!labelframe5/!canonicalcombobox": "Bruggeman"
+        }
+      }
+    }
+  },
+  "traceback": "Traceback (most recent call last):\n  File \"Z:\\workspace\\bjt-integration\\suite-1.7.0\\windows-build\\frozen_suite_features.py\", line 201, in run\n    assert not mismatches, 'Input restore mismatch: ' + repr(mismatches)\n           ^^^^^^^^^^^^^^\nAssertionError: Input restore mismatch: ['thermal']\n",
+  "seconds": 20.604
+}

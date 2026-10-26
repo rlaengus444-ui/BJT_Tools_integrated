@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "synthetic_fixture_only": true,
+  "max_exact_faces": 200000,
+  "max_exact_vertices": 120000,
+  "selected_faces": 180326,
+  "selected_vertices": 90165,
+  "selected_pair_remains_exact": true,
+  "context_is_labeled_wire_proxy": true,
+  "javascript_errors": [],
+  "external_requests": [],
+  "sizes": {
+    "ordinary.html": {
+      "bytes": 12381912,
+      "under_twenty_mib": true
+    },
+    "selected-180k.html": {
+      "bytes": 13059192,
+      "under_twenty_mib": true
+    },
+    "maximum-budget.html": {
+      "bytes": 17473084,
+      "under_twenty_mib": true
+    }
+  },
+  "viewer_sha256": "8e550a2d639746e0cee6ad633171e756d8fbfdd6331b0700509b75c8a5cb10a0"
+}

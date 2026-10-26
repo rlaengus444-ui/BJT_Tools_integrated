@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "executable": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\BJT_명령줄.exe",
+  "python_removed_from_path": true,
+  "checks": [
+    {
+      "name": "list_11_tools",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "source_and_engine_hashes",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "bjt_cli_no_original_bootstrap",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "alignment_cli_no_original_bootstrap",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "compare_help",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "chitu_help",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "compare_identical_exit_0",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "compare_json_csv_exports",
+      "passed": true
+    },
+    {
+      "name": "compare_different_exit_1",
+      "passed": true,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "compare_error_exit_2",
+      "passed": true,
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe",
+  "core_assertions": 577,
+  "gui_semantic_assertions": 1467,
+  "core_cases": [
+    "psd_uniform_o2",
+    "manual_heat_only_closed_lid",
+    "calibrated_gradient_o2_side_access",
+    "manual_tortuosity_no_knudsen",
+    "sealed_o2_and_cooling",
+    "no_radiation_no_snapshots",
+    "16 validation failures",
+    "cancellation",
+    "synthetic thermocouple calibration"
+  ],
+  "gui_cases": [
+    "default_settings",
+    "collected_inputs",
+    "initial_widgets",
+    "thermal_lines",
+    "oxygen_lines",
+    "summary",
+    "oxygen_summary",
+    "settings_roundtrip",
+    "thermal_3d_collections",
+    "oxygen_3d_collections",
+    "thermal_slider_to",
+    "oxygen_slider_to",
+    "22-column CSV byte equivalence and UTF8 BOM",
+    "mounted Tk root methods",
+    "queue/idletasks",
+    "close cleanup"
+  ],
+  "saved_input_variables": 43,
+  "elapsed_seconds": 3.589,
+  "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구",
+  "settings_isolated": true
+}

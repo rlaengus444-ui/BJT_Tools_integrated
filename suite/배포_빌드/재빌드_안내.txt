@@ -1,0 +1,88 @@
+BJT 통합프로그램 1.7.0 Windows EXE 재빌드 안내
+
+대상: Windows 10/11 64비트, CPython 3.12 64비트.
+이 폴더에는 빌드 스크립트, 검증 helper와 공식 VC++ 재배포 DLL·라이선스를
+포함합니다. Python 환경, build/dist, 사용자 입력과 계산 결과는 포함하지 않습니다.
+기존 도구의 기능과 라이브러리 버전을 유지하며 요청한 변경을 포함합니다.
+
+1. 빌드 환경
+전체소스를 보존한 채 배포_빌드 폴더를 별도 작업 위치에 복사하거나,
+전체소스 안의 배포_빌드에서 실행합니다. PowerShell 예시:
+
+  Set-Location 'D:/BJT작업/전체소스/배포_빌드'
+  py -3.12 -m venv build-python
+  $env:BJT_BUILD_PYTHON = (Resolve-Path './build-python/Scripts/python.exe').Path
+  & $env:BJT_BUILD_PYTHON -m pip install --only-binary=:all: -r ./windows-requirements.txt
+
+BJT_SOURCE_DIR을 생략하면 배포_빌드의 부모 폴더를 전체소스로 사용합니다.
+빌드 폴더만 별도로 복사했다면 원본 전체소스 경로를 설정합니다:
+  $env:BJT_SOURCE_DIR = 'D:/BJT작업/전체소스'
+
+해당 폴더에는 source_manifest.json, suite_ui.py, sources, manuals,
+chitu_overlap, tests가 있어야 합니다. fixture helper는 ./helpers에서 읽습니다.
+기존 작업 환경에 빌드 도구를 설치하거나 기존 Python을 변경할 필요는 없습니다.
+
+2. 스냅샷과 빌드
+  & $env:BJT_BUILD_PYTHON ./prepare_build.py
+  & $env:BJT_BUILD_PYTHON ./run_build.py build
+
+prepare_build.py가 원본/엔진 SHA-256을 확인합니다. 불일치 시 원인을 확인하고
+소스를 수정해야 합니다. 배포용 스냅샷에는 우회 옵션을 사용하지 않습니다.
+출력: ./dist/BJT_통합프로그램_1.7.0_EXE
+GUI·명령줄 EXE와 _internal 폴더 전체를 함께 배포합니다.
+파일 버전은 1.7.0.0, 계산 캐시는 LocalAppData/BJT/n170_<빌드해시>,
+실행 로그는 LocalAppData/BJT_통합프로그램/1.7.0에 저장합니다.
+
+3. 기본 EXE 검증
+  & $env:BJT_BUILD_PYTHON ./run_build.py diagnose-exe
+  & $env:BJT_BUILD_PYTHON ./run_build.py smoke-exe
+  & $env:BJT_BUILD_PYTHON ./run_build.py smoke-gui-exe
+  & $env:BJT_BUILD_PYTHON ./run_build.py fixtures-exe
+  & $env:BJT_BUILD_PYTHON ./run_build.py fixtures-gui-exe
+  & $env:BJT_BUILD_PYTHON ./run_build.py features-exe
+  & $env:BJT_BUILD_PYTHON ./verify_cli.py
+
+검증 EXE의 PATH에서 Python/Conda를 제거하고 ./test-profile에 새 설정·캐시를
+만듭니다. 모든 JSON의 passed가 true여야 합니다. 전체 fixtures는 ZIP 작성,
+STL 계산, 픽셀 비교, 이미지 변환 TIFF 골든, 안전 저장·취소까지 확인합니다.
+features-exe는 GUI EXE를 정상 종료해 입력값을 저장한 다음, 별도의 명령줄
+EXE 프로세스에서 11개 도구의 입력값과 파일 목록·배치·오븐 이력·언어를
+복원해 대조합니다. 사용자 지정 픽셀·X/Y DPI의 실제 GDI+ TIFF 출력과
+한국어/English 전환도 검사합니다. 드래그앤드롭은 등록된 TkDND Tcl 콜백을
+통해 검사하며 실제 탐색기에서 마우스로 드래그하는 동작을 합성하지 않습니다.
+이 검증은 임시 설정 경로를 사용하며 사용자의 입력값을 덮어쓰지 않습니다.
+번호 도구 원본 외부참조 1개는 원본 archive가 없을 때 skipped로 명시합니다.
+입력은 임시폴더에 생성하고 정리합니다. 예전 1.5 환경의 ZIP 쓰기 제한 기록은
+현재 환경의 검증 결과를 뜻하지 않습니다. 실제 전체 fixtures 결과를 확인하세요.
+--frozen-product-fixtures는 ZIP 쓰기 일부를 제외하는 별도 경로이므로 전체
+검증을 대신하지 않습니다. 제품 처리 코드는 이 환경 차이 때문에 변경하지 않습니다.
+
+4. 실제 Chitu 프로젝트 검증
+실제 입력은 사용자가 별도로 준비합니다. 원본을 수정하지 않습니다.
+  & $env:BJT_BUILD_PYTHON ./verify_chitu_cli.py --folder './dist/BJT_통합프로그램_1.7.0_EXE' --project 'D:/검증/20261012-M1-1.chitubox' --output './chitu-cli-exe.json'
+  & './dist/BJT_통합프로그램_1.7.0_EXE/BJT_통합프로그램.exe' --frozen-chitu-gui 'D:/검증/20261012-M1-1.chitubox' './chitu-gui-exe.json'
+
+업로드된 49개 카메라 프로젝트 전용 확인:
+  & $env:BJT_BUILD_PYTHON ./verify_camera_chitu_cli.py --folder './dist/BJT_통합프로그램_1.7.0_EXE' --project 'D:/검증/260928-M1-1__.chitubox' --output './camera-cli-exe.json'
+  & './dist/BJT_통합프로그램_1.7.0_EXE/BJT_통합프로그램.exe' --frozen-camera-gui 'D:/검증/260928-M1-1__.chitubox' './camera-gui-exe.json'
+
+이 전용 fixture는 49개/1,176쌍을 모두 검사합니다. 간격 0·1mm는 PASS,
+1.5mm는 [5]/[6] 1쌍 FAIL(실측 1.4999923706054688mm), 2mm는 4쌍 FAIL입니다.
+원본 표면과 정점을 그대로 유지하는 연결면 정리 안내 2개, 선택한 실패 쌍의
+JSON·오프라인 HTML, 취소·종료·원본 SHA 보존을 확인합니다.
+검증 플래그는 개발자가 명시적으로 실행할 때만 동작합니다.
+
+5. 배포와 라이선스
+기본 검증을 완료한 dist 폴더 전체를 복사해 압축합니다. release_exe.py는 기본
+frozen/CLI 검증 기록과 원본 manifest를 확인하고 --output-root 아래 새 배포
+폴더와 ZIP을 만듭니다. 기존 배포 폴더를 자동 덮어쓰지 않습니다:
+  & $env:BJT_BUILD_PYTHON ./release_exe.py --output-root 'D:/BJT작업/배포'
+
+공식 PyInstaller hooks가 Tcl/Tk/tkdnd, VTK, NumPy/SciPy, OpenCV,
+Shapely/GEOS, Rtree, LLVM/Numba 및 이미지 코덱을 수집합니다.
+chitu_overlap.seams, suite_state, oven_i18n도 포함하며 Manifold/FCL DLL과
+Plotly 오프라인 JS를 수집합니다.
+Windows 운영체제의 UCRT/GDI+/WindowsCodecs는 배포본에 복제하지 않습니다.
+vendor-runtime의 공식 MSVCP140/VCOMP140은 포함하고 공식 이용조건을 보존합니다.
+CPython 설치본의 LICENSE_PYTHON.txt 또는 LICENSE.txt를 수집하며, 내장
+라이브러리 버전·라이선스 원문은 _internal/licenses 및 inventory.json에 보존합니다.

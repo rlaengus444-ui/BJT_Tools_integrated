@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "environment": "Official Windows CPython3.12.10 AMD64 / Wine10 / DebianDocker on Linux; no clean native Windows VM was used",
+  "executables": {
+    "BJT_명령줄.exe": {
+      "sha256": "be40a795a3c299fb8950f82c3c8b7fed46451c44c8b25a21cd1427de5f71b6d4",
+      "bytes": 31417300,
+      "mtime_utc": "2026-10-24T05:44:48.099263+00:00"
+    },
+    "BJT_통합프로그램.exe": {
+      "sha256": "348cb8bdd2e8eac5e23036b9c5d4b232e0911ebb40136fa3e82db9e9362a8ae8",
+      "bytes": 31413716,
+      "mtime_utc": "2026-10-24T05:44:48.319253+00:00"
+    }
+  },
+  "reports": [
+    {
+      "file": "diagnose-exe.json",
+      "passed": true,
+      "sha256": "424ef79b4da19f4c3baf28b0d0f4fbee4f48b6f3dca2ee4c23ceaa6ceb06d6cc",
+      "mtime_utc": "2026-10-24T05:52:53.894292+00:00",
+      "frozen": true
+    },
+    {
+      "file": "smoke-gui-exe.json",
+      "passed": true,
+      "sha256": "d942e18e114c3eee12da6f39b22f0afed4ae88a2e3e449fe0c263e513d293b08",
+      "mtime_utc": "2026-10-24T05:52:52.928552+00:00",
+      "frozen": true
+    },
+    {
+      "file": "fixtures-exe.json",
+      "passed": true,
+      "sha256": "d35cd73e6b7cd40cec278eb548739bbdcec0295ae37f024d828870620601f41d",
+      "mtime_utc": "2026-10-24T05:53:37.050505+00:00",
+      "frozen": true
+    },
+    {
+      "file": "cli-exe.json",
+      "passed": true,
+      "sha256": "0debc3609f1ffc36580fdc745f6a93aec9303674d0d6ded903da422e293a7c91",
+      "mtime_utc": "2026-10-24T05:53:35.811365+00:00",
+      "frozen": null
+    },
+    {
+      "file": "chitu-cli-exe.json",
+      "passed": true,
+      "sha256": "db99bf23de47b3a8f0df22192f0ad0ed30b81ee72b979ecd69e467350804e778",
+      "mtime_utc": "2026-10-24T05:52:39.130024+00:00",
+      "frozen": null
+    },
+    {
+      "file": "chitu-gui-exe.json",
+      "passed": true,
+      "sha256": "ab9e6b7c33f9989674a66c44d2d7ad060c2db611c8b1ea70b4d4808f7787b74d",
+      "mtime_utc": "2026-10-24T05:52:23.526713+00:00",
+      "frozen": true
+    },
+    {
+      "file": "native-runtime-closure.json",
+      "passed": true,
+      "sha256": "7e47c7353a875149c1a5650d98b8c13c496b693682a63bae4db9c1f192504992",
+      "mtime_utc": "2026-10-24T05:51:05.429859+00:00",
+      "frozen": null
+    }
+  ],
+  "strict_native_vc_overrides_for_both_executables": true,
+  "os_system_dlls_bundled": false,
+  "actual_gui_real_project_checks": 17,
+  "actual_cli_generic_checks": 10,
+  "actual_cli_chitu_checks": 4,
+  "verification_scope": "Final rebuilt UTF8/error-handling launcher plus native redistributable dependency closure, full original developer fixtures, real Chitu63object CLI+GUI tests."
+}

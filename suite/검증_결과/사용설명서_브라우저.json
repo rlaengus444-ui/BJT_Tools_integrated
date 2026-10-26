@@ -1,0 +1,32 @@
+[
+  {
+    "id": "bjt",
+    "passed": true,
+    "last_chapter_matches": 1
+  },
+  {
+    "id": "arrange",
+    "passed": true,
+    "last_chapter_matches": 1
+  },
+  {
+    "id": "overlay",
+    "passed": true,
+    "last_chapter_matches": 1
+  },
+  {
+    "id": "exchanger",
+    "passed": true,
+    "last_chapter_matches": 1
+  },
+  {
+    "id": "alignment",
+    "passed": true,
+    "last_chapter_matches": 1
+  },
+  {
+    "id": "thermal",
+    "passed": true,
+    "last_chapter_matches": 1
+  }
+]

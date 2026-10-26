@@ -1,0 +1,95 @@
+{
+  "sources": [
+    {
+      "id": "bjt",
+      "valid": true,
+      "bytes": 534649,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-21\\new-chat-3\\outputs\\BJT_통합도구\\sources\\260914_BJT_model_to_lattice_STL_all_in_one.py"
+    },
+    {
+      "id": "arrange",
+      "valid": true,
+      "bytes": 111281,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-21\\new-chat-3\\outputs\\BJT_통합도구\\sources\\slicing arrange.py"
+    },
+    {
+      "id": "overlay",
+      "valid": true,
+      "bytes": 25838,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-21\\new-chat-3\\outputs\\BJT_통합도구\\sources\\slice_folder_overlay.py"
+    },
+    {
+      "id": "exchanger",
+      "valid": true,
+      "bytes": 18784,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-21\\new-chat-3\\outputs\\BJT_통합도구\\sources\\slice exchanger.py"
+    },
+    {
+      "id": "alignment",
+      "valid": true,
+      "bytes": 137262,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-21\\new-chat-3\\outputs\\BJT_통합도구\\sources\\slice_alignment_checker.py"
+    },
+    {
+      "id": "thermal",
+      "valid": true,
+      "bytes": 161773,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-21\\new-chat-3\\outputs\\BJT_통합도구\\sources\\sic_buildbox_thermal_gui_v5.py"
+    }
+  ],
+  "tools": {
+    "bjt": {
+      "widget_count": 79,
+      "root_title": "BJT 모델 → 슬라이싱 → 격자화 → STL 통합기 v5.8-faithful-contact-aware",
+      "adapted_classes": [
+        "App"
+      ],
+      "elapsed": 15.313143200008199
+    },
+    "arrange": {
+      "widget_count": 67,
+      "root_title": "슬라이싱 이미지 배치·합성",
+      "adapted_classes": [],
+      "elapsed": 0.1293149000266567
+    },
+    "overlay": {
+      "widget_count": 39,
+      "root_title": "Slice Folder N-Way Overlay Tool",
+      "adapted_classes": [
+        "App"
+      ],
+      "elapsed": 0.05581950000487268
+    },
+    "exchanger": {
+      "widget_count": 24,
+      "root_title": "슬라이싱 이미지 범위 교체 도구",
+      "adapted_classes": [],
+      "elapsed": 0.02553380001336336
+    },
+    "alignment": {
+      "widget_count": 29,
+      "root_title": "슬라이싱 위치 검사 v3.3.0",
+      "adapted_classes": [],
+      "elapsed": 0.1015303999884054
+    },
+    "thermal": {
+      "widget_count": 168,
+      "root_title": "SiC Build Box 3D Thermal + O₂ Diffusion Simulator — v7",
+      "adapted_classes": [
+        "ThermalGUI"
+      ],
+      "elapsed": 0.8550668000243604
+    }
+  },
+  "checks": [
+    "single_tk_interpreter",
+    "six_full_interfaces",
+    "source_integrity",
+    "tkdnd_loaded",
+    "six_manual_toolbars_preserved_after_mount",
+    "bindings_and_unbind_isolated",
+    "central_stop_signal",
+    "original_close_hooks_and_shared_shutdown"
+  ],
+  "callback_errors": []
+}

@@ -1,0 +1,443 @@
+{
+  "passed": true,
+  "forced_certified": false,
+  "block_faces": null,
+  "fixtures": 63,
+  "real_project_gap_cases": 9,
+  "seconds": 15.35,
+  "cases": [
+    {
+      "name": "separate_axis",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "face_contact",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "edge_contact",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "point_contact",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "tiny_positive_overlap",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "containment",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "identical_named_instances",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "minimum_below",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "minimum_equal",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "minimum_within_numeric_error",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "large_coordinates_overlap",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "rotated_contact",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "overlapping_aabbs_disjoint_tetrahedra",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "solid_inside_hollow_void",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "solid_intersects_hollow_wall",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "closest_edges_not_vertices",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "skew_rotated_solids",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "open_near",
+      "pairs": 1,
+      "exact_pairs": 0,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "open_far",
+      "pairs": 1,
+      "exact_pairs": 0,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "inverted_far",
+      "pairs": 1,
+      "exact_pairs": 0,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "degenerate_triangle",
+      "pairs": 1,
+      "exact_pairs": 0,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "known_violation_and_unknown",
+      "pairs": 3,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "many_far_global_closest",
+      "pairs": 45,
+      "exact_pairs": 45,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "same_name_many_distinct_placements",
+      "pairs": 36,
+      "exact_pairs": 36,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "nonmanifold_joined_edge",
+      "pairs": 1,
+      "exact_pairs": 0,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "nonmanifold_joined_face",
+      "pairs": 1,
+      "exact_pairs": 0,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "nonmanifold_joined_duplicate",
+      "pairs": 1,
+      "exact_pairs": 0,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_00",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_01",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_02",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_03",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_04",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_05",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_06",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_07",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_08",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_09",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_10",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_11",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_12",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_13",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_14",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_15",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_16",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_17",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_18",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_19",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_20",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_21",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_22",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "random_hulls_23",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_00",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_01",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_02",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_03",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_04",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_05",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_06",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_07",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_08",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_09",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_10",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "curved_sampled_surface_11",
+      "pairs": 1,
+      "exact_pairs": 1,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "20261012-M1-1.chitubox/gap-0",
+      "pairs": 1953,
+      "exact_pairs": 1953,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "20261012-M1-1.chitubox/gap-1",
+      "pairs": 1953,
+      "exact_pairs": 1953,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "20261012-M1-1.chitubox/gap-3",
+      "pairs": 1953,
+      "exact_pairs": 1953,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "261014-M1-1_살추가O.chitubox/gap-0",
+      "pairs": 78,
+      "exact_pairs": 55,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "261014-M1-1_살추가O.chitubox/gap-1",
+      "pairs": 78,
+      "exact_pairs": 55,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "261014-M1-1_살추가O.chitubox/gap-3",
+      "pairs": 78,
+      "exact_pairs": 55,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "261014-M1-1_살추가X.chitubox/gap-0",
+      "pairs": 78,
+      "exact_pairs": 55,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "261014-M1-1_살추가X.chitubox/gap-1",
+      "pairs": 78,
+      "exact_pairs": 55,
+      "lower_bound_pairs": 0
+    },
+    {
+      "name": "261014-M1-1_살추가X.chitubox/gap-3",
+      "pairs": 78,
+      "exact_pairs": 55,
+      "lower_bound_pairs": 0
+    }
+  ],
+  "failures": []
+}

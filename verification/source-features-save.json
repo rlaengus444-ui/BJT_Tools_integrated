@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "frozen": false,
+  "phase": "save",
+  "checks": {
+    "all_11_tools_and_simple_titles": {
+      "passed": true
+    },
+    "native_image_custom_settings": {
+      "passed": true,
+      "custom_output_tags": {
+        "format": "TIFF",
+        "width": 13,
+        "height": 9,
+        "bits_per_sample": [
+          4
+        ],
+        "bits_per_pixel": 4,
+        "samples_per_pixel": 1,
+        "compression": 5,
+        "photometric": 3,
+        "dpi_x": 203.25,
+        "dpi_y": 612.5,
+        "resolution_unit": 2,
+        "frames": 1
+      },
+      "dpi_only_pixel_sha256": [
+        "85497e6e131c52302625ea385a48c7f7d9bd6c455b0faa1251cd30b86f9733df",
+        "85497e6e131c52302625ea385a48c7f7d9bd6c455b0faa1251cd30b86f9733df"
+      ],
+      "input_unchanged": true
+    },
+    "native_drop_callback": {
+      "passed": true,
+      "native_registered_targets": 3,
+      "unicode_spaces_braces_multi_file": true,
+      "duplicates_ignored": true,
+      "scope": "Actual registered Tcl callback; physical OS mouse drag not simulated"
+    },
+    "oven_language_switch": {
+      "passed": true,
+      "run_button_captions": {
+        "ko": "시뮬레이션 실행",
+        "en": "Run simulation"
+      },
+      "all_numeric_model_inputs_preserved": true,
+      "oven_profile_preserved": true
+    },
+    "normal_close_persisted": {
+      "passed": true
+    },
+    "callback_errors": {
+      "passed": true,
+      "errors": []
+    }
+  },
+  "settings_path": "Z:\\workspace\\bjt-integration\\suite-1.7.0\\source-feature-profile\\profile\\settings.json",
+  "seconds": 26.326
+}

@@ -1,0 +1,163 @@
+{
+  "passed": true,
+  "project_sha256": "6e57d3f9c041b624e7e09065e06ddb1fbc460ad3dde2e0f07e98df905551315a",
+  "triangle_count": 36329658,
+  "object_count": 22,
+  "objects": [
+    {
+      "index": 0,
+      "triangles": 261304,
+      "exact_world_coordinates": true,
+      "expected_sha256": "9d36d54c63e26e53c686e7fb0db83877b57a2cf0f4db69b7adba0cc75941ea07",
+      "actual_sha256": "9d36d54c63e26e53c686e7fb0db83877b57a2cf0f4db69b7adba0cc75941ea07"
+    },
+    {
+      "index": 1,
+      "triangles": 86832,
+      "exact_world_coordinates": true,
+      "expected_sha256": "8b20001ca25ccfb28810b513357ccf3ab567a057d3778cd08794958536f6d700",
+      "actual_sha256": "8b20001ca25ccfb28810b513357ccf3ab567a057d3778cd08794958536f6d700"
+    },
+    {
+      "index": 2,
+      "triangles": 281894,
+      "exact_world_coordinates": true,
+      "expected_sha256": "f641a94d2a044a1deede85126f3d5edceacd4c715e38893007295ce25e618473",
+      "actual_sha256": "f641a94d2a044a1deede85126f3d5edceacd4c715e38893007295ce25e618473"
+    },
+    {
+      "index": 3,
+      "triangles": 255472,
+      "exact_world_coordinates": true,
+      "expected_sha256": "ef47770e41ce0505cc2c97facfec3eac4e40d9a83653bf3a6eff9f1cf3d23cf1",
+      "actual_sha256": "ef47770e41ce0505cc2c97facfec3eac4e40d9a83653bf3a6eff9f1cf3d23cf1"
+    },
+    {
+      "index": 4,
+      "triangles": 180326,
+      "exact_world_coordinates": true,
+      "expected_sha256": "79b9a284af7f781f8b4d0c5d283f0bcf7ff6b748fea2e0c4b3f8c398eb9f4adb",
+      "actual_sha256": "79b9a284af7f781f8b4d0c5d283f0bcf7ff6b748fea2e0c4b3f8c398eb9f4adb"
+    },
+    {
+      "index": 5,
+      "triangles": 180326,
+      "exact_world_coordinates": true,
+      "expected_sha256": "213b4e402e8485da3a8a36a742a2093d3f492c94ed7bac9967392a6d7312b0b2",
+      "actual_sha256": "213b4e402e8485da3a8a36a742a2093d3f492c94ed7bac9967392a6d7312b0b2"
+    },
+    {
+      "index": 6,
+      "triangles": 180326,
+      "exact_world_coordinates": true,
+      "expected_sha256": "499c4e2aa47b2c28087a85f5a5cd54d7444317b509a722f7ffcc45f1607c47cf",
+      "actual_sha256": "499c4e2aa47b2c28087a85f5a5cd54d7444317b509a722f7ffcc45f1607c47cf"
+    },
+    {
+      "index": 7,
+      "triangles": 281894,
+      "exact_world_coordinates": true,
+      "expected_sha256": "fb500f428ded3af20a075f420b0ff1399b87df6a528b313fea23aa9e382dbe7d",
+      "actual_sha256": "fb500f428ded3af20a075f420b0ff1399b87df6a528b313fea23aa9e382dbe7d"
+    },
+    {
+      "index": 8,
+      "triangles": 281894,
+      "exact_world_coordinates": true,
+      "expected_sha256": "f863c69d9338254b62c55438b96b06be7293aeaf30da01c1954f6e50bf8bf94f",
+      "actual_sha256": "f863c69d9338254b62c55438b96b06be7293aeaf30da01c1954f6e50bf8bf94f"
+    },
+    {
+      "index": 9,
+      "triangles": 281894,
+      "exact_world_coordinates": true,
+      "expected_sha256": "2de8840876d24d4348f2f9fdb1b2fdaf52e053652ee90367f71b2d46a051dba8",
+      "actual_sha256": "2de8840876d24d4348f2f9fdb1b2fdaf52e053652ee90367f71b2d46a051dba8"
+    },
+    {
+      "index": 10,
+      "triangles": 281894,
+      "exact_world_coordinates": true,
+      "expected_sha256": "20d96865f1091ede6cdcbb1ef51bdc449737ddc4ae49f99e5098acd380959293",
+      "actual_sha256": "20d96865f1091ede6cdcbb1ef51bdc449737ddc4ae49f99e5098acd380959293"
+    },
+    {
+      "index": 11,
+      "triangles": 86832,
+      "exact_world_coordinates": true,
+      "expected_sha256": "e44852b11082737174094182abb97c5a0d08c3bf87053037e28775350b954365",
+      "actual_sha256": "e44852b11082737174094182abb97c5a0d08c3bf87053037e28775350b954365"
+    },
+    {
+      "index": 12,
+      "triangles": 11177624,
+      "exact_world_coordinates": true,
+      "expected_sha256": "4e820b0d10c7a3e00bfd5b3336d678a6b03ff11171eb21b9ec67307c4d8e82cb",
+      "actual_sha256": "4e820b0d10c7a3e00bfd5b3336d678a6b03ff11171eb21b9ec67307c4d8e82cb"
+    },
+    {
+      "index": 13,
+      "triangles": 11177624,
+      "exact_world_coordinates": true,
+      "expected_sha256": "41e6e6341e1d1015f54b0a6d96a1fa974a688597bea3b2b4a9390013d20e029e",
+      "actual_sha256": "41e6e6341e1d1015f54b0a6d96a1fa974a688597bea3b2b4a9390013d20e029e"
+    },
+    {
+      "index": 14,
+      "triangles": 11177624,
+      "exact_world_coordinates": true,
+      "expected_sha256": "9e35dd2c5ab8a9b7dff30ce08517d7604f8b4a885e5cdb3b03e27c1acaf6e30c",
+      "actual_sha256": "9e35dd2c5ab8a9b7dff30ce08517d7604f8b4a885e5cdb3b03e27c1acaf6e30c"
+    },
+    {
+      "index": 15,
+      "triangles": 155826,
+      "exact_world_coordinates": true,
+      "expected_sha256": "e8a67eae9fec71d96c63f4ddd05d3ed176d32de6ab83fe1e24c641288c76fa59",
+      "actual_sha256": "e8a67eae9fec71d96c63f4ddd05d3ed176d32de6ab83fe1e24c641288c76fa59"
+    },
+    {
+      "index": 16,
+      "triangles": 12,
+      "exact_world_coordinates": true,
+      "expected_sha256": "a8c3bce97cb377d6bdf3174222ee003d22f4a931b148fa1097f28f4d9c2df509",
+      "actual_sha256": "a8c3bce97cb377d6bdf3174222ee003d22f4a931b148fa1097f28f4d9c2df509"
+    },
+    {
+      "index": 17,
+      "triangles": 12,
+      "exact_world_coordinates": true,
+      "expected_sha256": "17a88c1c84e8f4a3bfb2c9d897ff5b7697e0fdd1cdbaa0061c8d15656cd89876",
+      "actual_sha256": "17a88c1c84e8f4a3bfb2c9d897ff5b7697e0fdd1cdbaa0061c8d15656cd89876"
+    },
+    {
+      "index": 18,
+      "triangles": 12,
+      "exact_world_coordinates": true,
+      "expected_sha256": "ad473aa47e15bc91113ff3ca80f1d67d2666de44057c05ca3d9378235c35884e",
+      "actual_sha256": "ad473aa47e15bc91113ff3ca80f1d67d2666de44057c05ca3d9378235c35884e"
+    },
+    {
+      "index": 19,
+      "triangles": 12,
+      "exact_world_coordinates": true,
+      "expected_sha256": "a6ed24762a8f7cd1c8d8fd538b087416d0674e5ea075de7176f3184c92c05a29",
+      "actual_sha256": "a6ed24762a8f7cd1c8d8fd538b087416d0674e5ea075de7176f3184c92c05a29"
+    },
+    {
+      "index": 20,
+      "triangles": 12,
+      "exact_world_coordinates": true,
+      "expected_sha256": "18a45c168d7943655631b83d0b0176d3e236f45873386476b4869e47b61033f6",
+      "actual_sha256": "18a45c168d7943655631b83d0b0176d3e236f45873386476b4869e47b61033f6"
+    },
+    {
+      "index": 21,
+      "triangles": 12,
+      "exact_world_coordinates": true,
+      "expected_sha256": "27d33250c302eab8fcdbc3526338ee0b7af213fc90b6f14cc4ca7035d4b6bb4d",
+      "actual_sha256": "27d33250c302eab8fcdbc3526338ee0b7af213fc90b6f14cc4ca7035d4b6bb4d"
+    }
+  ],
+  "scope": "Every original triangle world coordinate matches indexed optimized geometry exactly; not a timing measurement."
+}

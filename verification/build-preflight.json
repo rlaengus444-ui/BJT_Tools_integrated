@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "scope": "prepare recipe syntax and pinned Windows environment only; final source staging/build pending",
+  "wine_environment": {
+    "passed": true,
+    "created_utc": "2026-10-26T12:36:01.088342+00:00",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "scope": "Environment bootstrap only; no project loading, build or suite execution",
+    "checks": {
+      "msvcp140.dll": true,
+      "vcomp140.dll": true,
+      "tk_xvfb_ready": true,
+      "gdiplus.dll": true,
+      "windowscodecs.dll": true,
+      "ucrtbase.dll": true,
+      "fcl_native_collision": true,
+      "manifold_native_cube": true,
+      "original_trimesh_pin": true
+    },
+    "display": {
+      "width": 1740,
+      "height": 960
+    },
+    "packages": {
+      "numpy": "2.3.5",
+      "trimesh": "5.1.0",
+      "manifold3d": "3.5.4",
+      "python-fcl": "0.7.0.11",
+      "PyInstaller": "6.22.3",
+      "pytest": "9.1.1"
+    }
+  },
+  "files": {
+    "BJT_Suite.spec": "ee237b6bf8a67083ec1e5ab8e618f37949cc642d1fe21aca12408247dac411bd",
+    "bjt_frozen_entry.py": "e65cb79864646a30e9c0462f3350dddab6458758268bab12256928728b381cfb",
+    "frozen_camera_chitu_gui.py": "792effe78a7a7255fc8089a90173d57f088f794861b9d997a471a8ac76ca9c78",
+    "frozen_chitu_gui.py": "2db8312a157a395acedaec951f4412436ba0a506479c73d109fbda96b7d6ef97",
+    "frozen_fixtures.py": "893e799f9a53a4e5a2372e7c762a860db8bae7edf1702be2f3a53ba82079416d",
+    "frozen_large_chitu_gui.py": "1c50e5a09448c05af8f1827b7a965929c3fae955b93ed6dd725c2cd2a2b753e3",
+    "frozen_suite_features.py": "629c792d1dee1ac75f2f20d95a5888560c07f2f3e6f3febd94d458ef5bea9b3f",
+    "prepare_build.py": "8b79c94aad97a7de89fb9335bd9d62b877151c98649e3e5892ec96c0107fb2b2",
+    "release_exe.py": "bd4af3f01386252cd618a327084be7da74d17599d2636a614c2df148f0c6739e",
+    "run_build.py": "07d4a8d77a7880b09dbae1ae63a7699824082be10e833340dd10dbc070dad2ec",
+    "verify_camera_chitu_cli.py": "0b50082f8898bc469aa42f3d24a3f0e09456f36396ca202edc0e06edadbdae93",
+    "verify_chitu_cli.py": "a6d5c1a490c0c7ad9731cd815bba31792b39b228a16a4d84e017a91d33976f62",
+    "verify_cli.py": "00406d7611c006bcd43328a2a0e555ab0aa7a566c5afb9aabdb3279ae1987ace",
+    "verify_suite_features.py": "1ab0fd629c445c0838e028e64158bd46fc763150b3f7cbef02c593443486e5fd",
+    "version_info.txt": "d24aaccf3ee55ba7c37454516a0bea577d2214a2c00e99d1ac51ed1a12d714f9",
+    "windows-requirements.txt": "d6175ff9419da28fbdc2a0ed46b4d655288418a52a46c70f8278ece7260d0445",
+    "재빌드_안내.txt": "342530cd63954fa8ab236b8c3b4b6a524bfaf2e62c033f0f3cc772a5469809d1"
+  }
+}

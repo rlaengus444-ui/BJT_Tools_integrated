@@ -1,0 +1,198 @@
+{
+  "passed": true,
+  "verified_at_kst": "2026-10-23T17:20:23.254734+09:00",
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe",
+  "total_unit_tests": 79,
+  "replacement_unit_tests": 12,
+  "fixture_cases": [
+    {
+      "name": "clean_gray8",
+      "original_succeeds": true,
+      "enhanced_succeeds": true,
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "clean_rgb16",
+      "original_succeeds": true,
+      "enhanced_succeeds": true,
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "mixed_rgb_depth",
+      "original_succeeds": true,
+      "enhanced_succeeds": false,
+      "issue": "native RGB channel depth 8 versus 16",
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "mixed_gray_resolution",
+      "original_succeeds": false,
+      "enhanced_succeeds": false,
+      "issue": "resolution differs outside replaced range",
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "mixed_actual_format",
+      "original_succeeds": false,
+      "enhanced_succeeds": false,
+      "issue": "JPEG bytes named 4.png",
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "mixed_tiff_later_frame",
+      "original_succeeds": true,
+      "enhanced_succeeds": false,
+      "issue": "second TIFF page resolution differs",
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "uniform_multipage_tiff",
+      "original_succeeds": true,
+      "enhanced_succeeds": true,
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "numeric_gap",
+      "original_succeeds": false,
+      "enhanced_succeeds": false,
+      "issue": "number 3 absent outside replacement range",
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "duplicate_numeric",
+      "original_succeeds": false,
+      "enhanced_succeeds": false,
+      "issue": "1.png and 001.png duplicate number",
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "preview_and_backup_ignored",
+      "original_succeeds": true,
+      "enhanced_succeeds": true,
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "corrupt_numeric",
+      "original_succeeds": false,
+      "enhanced_succeeds": false,
+      "issue": "truncated numbered PNG",
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "clean_bmp",
+      "original_succeeds": true,
+      "enhanced_succeeds": true,
+      "outcome_matches_expected": true
+    },
+    {
+      "name": "metadata_only_variation",
+      "original_succeeds": true,
+      "enhanced_succeeds": true,
+      "outcome_matches_expected": true
+    }
+  ],
+  "native_channel_subcases": [
+    {
+      "channels": 1,
+      "bit_depth": 8,
+      "expected_bits_per_pixel": 8
+    },
+    {
+      "channels": 1,
+      "bit_depth": 16,
+      "expected_bits_per_pixel": 16
+    },
+    {
+      "channels": 2,
+      "bit_depth": 8,
+      "expected_bits_per_pixel": 16
+    },
+    {
+      "channels": 2,
+      "bit_depth": 16,
+      "expected_bits_per_pixel": 32
+    },
+    {
+      "channels": 3,
+      "bit_depth": 8,
+      "expected_bits_per_pixel": 24
+    },
+    {
+      "channels": 3,
+      "bit_depth": 16,
+      "expected_bits_per_pixel": 48
+    },
+    {
+      "channels": 4,
+      "bit_depth": 8,
+      "expected_bits_per_pixel": 32
+    },
+    {
+      "channels": 4,
+      "bit_depth": 16,
+      "expected_bits_per_pixel": 64
+    }
+  ],
+  "checks": [
+    "only_three_validation_helpers_replaced_idempotently",
+    "original_transaction_and_worker_objects_preserved",
+    "loader_installs_into_original_transaction_globals",
+    "native_pair_mismatch_rejected_before_backup",
+    "whole_numbered_folder_native_mismatch_runs_original_rollback",
+    "all_TIFF_pages_checked_with_frame_identification",
+    "PNG_valid_CRC_invalid_deflate_rejected_by_full_decode",
+    "normal_different_pixels_not_treated_as_format_mismatch",
+    "BMP_support_preserved",
+    "previews_auxiliary_and_backup_subfolders_ignored_as_original_scope"
+  ],
+  "gui": {
+    "passed": true,
+    "cases": [
+      {
+        "name": "clean_rgb16",
+        "passed": true,
+        "dialog": "info",
+        "postcheck_log": "========== 작업 시작 ==========\nA 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\clean_rgb16\\A\nB 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\clean_rgb16\\B\nA 교체 범위: 2 ~ 2\nB 소스 범위: 10 ~ 10\n총 교체 개수: 1개\n\n[1/6] 숫자 이미지 파일 목록 수집 중...\nA 폴더 숫자 이미지 수: 4\nB 폴더 숫자 이미지 수: 1\n\n[2/6] 지정 범위 누락 파일 검사 중...\n지정 범위 누락 없음.\n\n[3/6] 대응 파일 확장자/해상도/비트수/모드 검사 중...\n  검사 완료: 1 / 1\n대응 파일 형식 검사 통과.\n\n[4/6] A 폴더 원본 백업 중...\n  백업 완료: 1 / 1\n백업 폴더 생성: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\clean_rgb16\\A\\_backup_before_replace_20261023_171753\n\n[5/6] B 이미지 내용으로 A 파일 덮어쓰기 중...\n  교체 완료: 1 / 1\n덮어쓰기 완료.\n\n[6/6] 최종 무결성 검사 중...\nA 폴더 전체 숫자 연속성 검사 통과.\n[최종검사] A 폴더 기준 파일: 1.png\n[최종검사] 기준 형식: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=48 bit/pixel, sample_bits=16, frames=1\n[최종검사] 숫자 슬라이싱 이미지 전체 4개 검사 (미리보기·하위 폴더 제외)\n[최종검사] 형식 검사 완료: 4 / 4\n[최종검사 통과] 4개 · 번호 1~4 · ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=48 bit/pixel, sample_bits=16, frames=1\nA 폴더 전체 이미지 형식 일관성 검사 통과.\n\n========== 작업 성공 ==========\n최종 확인까지 모두 통과했습니다.\n백업 폴더는 보존됩니다: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\clean_rgb16\\A\\_backup_before_replace_20261023_171753\n\n"
+      },
+      {
+        "name": "mixed_rgb_depth",
+        "passed": true,
+        "dialog": "error",
+        "postcheck_log": "========== 작업 시작 ==========\nA 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\mixed_rgb_depth\\A\nB 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\mixed_rgb_depth\\B\nA 교체 범위: 2 ~ 2\nB 소스 범위: 10 ~ 10\n총 교체 개수: 1개\n\n[1/6] 숫자 이미지 파일 목록 수집 중...\nA 폴더 숫자 이미지 수: 4\nB 폴더 숫자 이미지 수: 1\n\n[2/6] 지정 범위 누락 파일 검사 중...\n지정 범위 누락 없음.\n\n[3/6] 대응 파일 확장자/해상도/비트수/모드 검사 중...\n  검사 완료: 1 / 1\n대응 파일 형식 검사 통과.\n\n[4/6] A 폴더 원본 백업 중...\n  백업 완료: 1 / 1\n백업 폴더 생성: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\mixed_rgb_depth\\A\\_backup_before_replace_20261023_171753\n\n[5/6] B 이미지 내용으로 A 파일 덮어쓰기 중...\n  교체 완료: 1 / 1\n덮어쓰기 완료.\n\n[6/6] 최종 무결성 검사 중...\nA 폴더 전체 숫자 연속성 검사 통과.\n[최종검사] A 폴더 기준 파일: 1.png\n[최종검사] 기준 형식: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=24 bit/pixel, sample_bits=8, frames=1\n[최종검사] 숫자 슬라이싱 이미지 전체 4개 검사 (미리보기·하위 폴더 제외)\n[최종검사] 형식 검사 완료: 4 / 4\n\n!!!!!! 최종 검사 또는 교체 중 오류 발생 !!!!!!\nA 폴더 전체 이미지 형식이 일관되지 않습니다.\n기준 파일: 1.png\n기준 형식: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=24 bit/pixel, sample_bits=8, frames=1\n\n문제 파일 예시:\n  4.png: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=48 bit/pixel, sample_bits=16, frames=1\n    프레임 1: 기준={'width': 8, 'height': 6, 'bit_depth': 8, 'channels': 3, 'bits_per_pixel': 24, 'mode': 'RGB', 'dtype': 'uint8'}, 파일={'width': 8, 'height': 6, 'bit_depth': 16, 'channels': 3, 'bits_per_pixel': 48, 'mode': 'RGB', 'dtype': 'uint16'}\n\n[자동복구] 백업 파일로 A 폴더를 이전 상태로 복구합니다...\n[자동복구 완료] A 폴더를 작업 전 상태로 되돌렸습니다.\n백업 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\mixed_rgb_depth\\A\\_backup_before_replace_20261023_171753\n\n========== 오류 상세 ==========\nTraceback (most recent call last):\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 547, in worker\n    safe_replace_images(\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 320, in safe_replace_images\n    check_folder_format_consistency(a_map_after, \"A 폴더\", log)\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_replace_validation.py\", line 108, in check_folder_format_consistency\n    raise RuntimeError('\\n'.join(messages))\nRuntimeError: A 폴더 전체 이미지 형식이 일관되지 않습니다.\n기준 파일: 1.png\n기준 형식: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=24 bit/pixel, sample_bits=8, frames=1\n\n문제 파일 예시:\n  4.png: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=48 bit/pixel, sample_bits=16, frames=1\n    프레임 1: 기준={'width': 8, 'height': 6, 'bit_depth': 8, 'channels': 3, 'bits_per_pixel': 24, 'mode': 'RGB', 'dtype': 'uint8'}, 파일={'width': 8, 'height': 6, 'bit_depth': 16, 'channels': 3, 'bits_per_pixel': 48, 'mode': 'RGB', 'dtype': 'uint16'}\n\n\n"
+      },
+      {
+        "name": "numeric_gap",
+        "passed": true,
+        "dialog": "error",
+        "postcheck_log": "========== 작업 시작 ==========\nA 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\numeric_gap\\A\nB 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\numeric_gap\\B\nA 교체 범위: 2 ~ 2\nB 소스 범위: 10 ~ 10\n총 교체 개수: 1개\n\n[1/6] 숫자 이미지 파일 목록 수집 중...\nA 폴더 숫자 이미지 수: 3\nB 폴더 숫자 이미지 수: 1\n\n[2/6] 지정 범위 누락 파일 검사 중...\n지정 범위 누락 없음.\n\n[3/6] 대응 파일 확장자/해상도/비트수/모드 검사 중...\n  검사 완료: 1 / 1\n대응 파일 형식 검사 통과.\n\n[4/6] A 폴더 원본 백업 중...\n  백업 완료: 1 / 1\n백업 폴더 생성: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\numeric_gap\\A\\_backup_before_replace_20261023_171754\n\n[5/6] B 이미지 내용으로 A 파일 덮어쓰기 중...\n  교체 완료: 1 / 1\n덮어쓰기 완료.\n\n[6/6] 최종 무결성 검사 중...\n\n!!!!!! 최종 검사 또는 교체 중 오류 발생 !!!!!!\nA 폴더 전체 숫자 파일에 빠진 번호가 있습니다.\n전체 범위: 1 ~ 4\n누락 번호: 3\n\n[자동복구] 백업 파일로 A 폴더를 이전 상태로 복구합니다...\n[자동복구 완료] A 폴더를 작업 전 상태로 되돌렸습니다.\n백업 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\numeric_gap\\A\\_backup_before_replace_20261023_171754\n\n========== 오류 상세 ==========\nTraceback (most recent call last):\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 547, in worker\n    safe_replace_images(\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 317, in safe_replace_images\n    check_folder_continuity_all(a_map_after, \"A 폴더\")\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 153, in check_folder_continuity_all\n    raise RuntimeError(\nRuntimeError: A 폴더 전체 숫자 파일에 빠진 번호가 있습니다.\n전체 범위: 1 ~ 4\n누락 번호: 3\n\n\n"
+      }
+    ],
+    "heartbeat_ticks": 42,
+    "python_callback_errors": [],
+    "tcl_background_errors": [],
+    "workers_started": [
+      "Thread-1 (worker)",
+      "Thread-2 (worker)",
+      "Thread-3 (worker)"
+    ],
+    "close_waited_for_postcheck": true,
+    "elapsed_seconds": 1.0929999999934807,
+    "checks": [
+      "original_real_worker_success_only_after_native_postcheck",
+      "native_depth_failure_error_dialog_after_original_rollback",
+      "numeric_gap_error_after_original_rollback",
+      "shared_close_waits_for_real_postcheck_and_worker",
+      "tk_heartbeat_and_clean_shutdown"
+    ]
+  },
+  "preserved_original_sources": 6,
+  "preserved_compiled_bodies": 905,
+  "scope": "A selected folder, all strictly numeric image filenames, nonrecursive. Original sequencing, preflight, backup, writes, rollback and worker remain; three validation helpers gain native stored depth and every TIFF page.",
+  "source_sha256": {
+    "slice_replace_validation.py": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+    "suite_loader.py": "7739ba1e8f5c86ed2e8b3cf0132881b9c7b31c962765142ce7dc3f5b4972fdb7",
+    "slice_compare_engine.py": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+    "sources/slice exchanger.py": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+    "tests/test_replace_validation.py": "a673907d124ed1a5200e1b194ee47a8f2740a7646e4da7825dfbc8bfb8f60eca"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "executables": [
+    {
+      "name": "BJT_통합프로그램.exe",
+      "bytes": 31463908,
+      "sha256": "5a449029336f4093905c7f6e1b36d12fd24dc158c6264694871c24b20f889cc0",
+      "modified_utc": "2026-10-25T17:54:07.198772+00:00",
+      "machine": "0x8664",
+      "file_version": "1.6.2.0"
+    },
+    {
+      "name": "BJT_명령줄.exe",
+      "bytes": 31467492,
+      "sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "modified_utc": "2026-10-25T17:54:07.174773+00:00",
+      "machine": "0x8664",
+      "file_version": "1.6.2.0"
+    }
+  ]
+}

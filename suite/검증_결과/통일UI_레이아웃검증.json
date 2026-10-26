@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "sizes": [
+    {
+      "width": 1120,
+      "height": 780,
+      "all_nine_tabs_visible": true,
+      "all_home_actions_visible": true
+    },
+    {
+      "width": 1740,
+      "height": 960,
+      "all_nine_tabs_visible": true,
+      "all_home_actions_visible": true
+    }
+  ],
+  "behavior_preserved": {
+    "bjt": {
+      "widgets": 80,
+      "canvases": 0
+    },
+    "arrange": {
+      "widgets": 74,
+      "canvases": 1
+    },
+    "overlay": {
+      "widgets": 40,
+      "canvases": 0
+    },
+    "exchanger": {
+      "widgets": 25,
+      "canvases": 0
+    },
+    "alignment": {
+      "widgets": 30,
+      "canvases": 0
+    },
+    "thermal": {
+      "widgets": 169,
+      "canvases": 5
+    },
+    "compare": {
+      "widgets": 63,
+      "canvases": 0
+    },
+    "number_tools": {
+      "widgets": 49,
+      "canvases": 0
+    }
+  },
+  "theme": "BjtSuite",
+  "python_callback_errors": [],
+  "close_errors": []
+}

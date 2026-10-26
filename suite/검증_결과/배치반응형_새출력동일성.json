@@ -1,0 +1,97 @@
+{
+  "passed": true,
+  "fresh_baseline_cases": {
+    "total": 6,
+    "passed": 6,
+    "cases": [
+      {
+        "name": "arrange_compose_clip_hide_rotate_fallback",
+        "passed": true
+      },
+      {
+        "name": "arrange_alpha_compositing",
+        "passed": true
+      },
+      {
+        "name": "arrange_rotations_geometry_naming",
+        "passed": true
+      },
+      {
+        "name": "arrange_output_formats",
+        "passed": true
+      },
+      {
+        "name": "arrange_stl_slicing_and_cache",
+        "passed": true
+      },
+      {
+        "name": "arrange_parallel_export_length_modes_cancel",
+        "passed": true
+      }
+    ]
+  },
+  "fresh_integrated_cases": {
+    "total": 6,
+    "passed": 6,
+    "cases": [
+      {
+        "name": "arrange_compose_clip_hide_rotate_fallback",
+        "passed": true
+      },
+      {
+        "name": "arrange_alpha_compositing",
+        "passed": true
+      },
+      {
+        "name": "arrange_rotations_geometry_naming",
+        "passed": true
+      },
+      {
+        "name": "arrange_output_formats",
+        "passed": true
+      },
+      {
+        "name": "arrange_stl_slicing_and_cache",
+        "passed": true
+      },
+      {
+        "name": "arrange_parallel_export_length_modes_cancel",
+        "passed": true
+      }
+    ]
+  },
+  "identical_artifacts": 23,
+  "artifact_differences": [],
+  "artifact_sha256": {
+    "results.json": "2d1eac62f90239b687a76e871ee604e307c50095f698775ca43b3e24a8fbab28",
+    "arrange_alpha_compositing\\alpha.png": "3f4869d18027c933946602d8ff792da5d6f64c6ac41db856f4207a4fe2aa8b1d",
+    "arrange_output_formats\\fallback.png": "f08f7bac54057251140c2f2c774689ce96fe2b7c2b16c768a4e68ed22fcda99c",
+    "arrange_output_formats\\out.bmp": "cfba0d764d04be529af51793042e54f5e71d185244cfec0d34f74e6b1f0bb5a3",
+    "arrange_output_formats\\out.jpg": "75114201931559ed39de4e58f824f13fbfc1b3d2df67f7967047fcce6f8edbe2",
+    "arrange_output_formats\\out.png": "d5bc40dd9b91e65bb703d936a505ad5aa2262267fd9f37b3ec493acb9bef5294",
+    "arrange_output_formats\\out.tif": "bf153e28ca588cb5575cdf734d69017a17920ccc7c3b83db544f5ef4745278c5",
+    "arrange_output_formats\\out.webp": "ecd543dbd8e3d72fad7abde43da9a6de4d9d7be30f4733f87497c4fc52efe0c3",
+    "arrange_stl_slicing_and_cache\\box.stl": "027aab8bf2f77e6a79c13ac63e696962b16170698bd15baa64e21456c213b96b",
+    "arrange_compose_clip_hide_rotate_fallback\\other\\1.png": "fe6bd0f06a73a3c35d592f86ef54420699b3a8e06c383e44bd54a02a86a185b7",
+    "arrange_compose_clip_hide_rotate_fallback\\source\\1.png": "12b6e0e29b218f8145cddbe7fa503d13bbd9113c09685aae8726c731470a833b",
+    "arrange_parallel_export_length_modes_cancel\\a\\1.png": "1cd98dc0bfca3982981985dd8c2378efc5f7a83c220702dde86b838bbd8f7e4a",
+    "arrange_parallel_export_length_modes_cancel\\a\\2.png": "bc5f06a24de6685bba83b61d460a349d9a5fe998db9d592c95a37ca106451e39",
+    "arrange_parallel_export_length_modes_cancel\\a\\3.png": "6fae88b0b61226a30f45651b0d08fe94c7747cdb9ac79e75d2db1e5501d6c011",
+    "arrange_parallel_export_length_modes_cancel\\b\\1.png": "af8b5b1d046b055d0987ffc766a45c2974e8c722f436640806c07087aee83a67",
+    "arrange_parallel_export_length_modes_cancel\\max\\1.png": "277b71bfee2e4f064320bba114e40a9334692bf369e5cf2c9f6ad1b6332f2f5e",
+    "arrange_parallel_export_length_modes_cancel\\max\\2.png": "7911061e3fba98ab0e5f5fe1f6ae23efddf9cacc3704831269070146af620914",
+    "arrange_parallel_export_length_modes_cancel\\max\\3.png": "34fb214de43332129bd3f11ccc4b5cf4bdc5f491b697c87af7840c380c5e47d8",
+    "arrange_parallel_export_length_modes_cancel\\min\\1.png": "277b71bfee2e4f064320bba114e40a9334692bf369e5cf2c9f6ad1b6332f2f5e",
+    "arrange_stl_slicing_and_cache\\cache\\CACHE_ID\\1.png": "6ba240577205e871cd2d289e0ffef922e6235a169b1eebf208c5ef00a6644a9c",
+    "arrange_stl_slicing_and_cache\\cache\\CACHE_ID\\2.png": "6ba240577205e871cd2d289e0ffef922e6235a169b1eebf208c5ef00a6644a9c",
+    "arrange_stl_slicing_and_cache\\cache\\CACHE_ID\\3.png": "6ba240577205e871cd2d289e0ffef922e6235a169b1eebf208c5ef00a6644a9c",
+    "arrange_stl_slicing_and_cache\\cache\\CACHE_ID\\manifest.json": "e022215e8c72a1b1eaba990e822cf1edd99bb3b27dcabb33cdc14e96769e535c"
+  },
+  "elapsed_seconds": 2.3097710999427363,
+  "normalizations": [
+    "temporary fixture root path",
+    "STL cache directory ID",
+    "JSON key order"
+  ],
+  "scope": "Fresh six-case arrange algorithm/output fixtures: composition/clipping/visibility/rotation/fallback, alpha, output formats, STL slicing/cache, parallel export length modes and cancellation."
+}

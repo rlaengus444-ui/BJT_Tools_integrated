@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "created_utc": "2026-10-24T08:14:26.002825+00:00",
+  "component": "CPython3.12.10 Windowsx64",
+  "source": "Unmodified C:/Python312/LICENSE.txt from official Windows CPython3.12.10 installer used for final Windows PE build",
+  "license_bytes": 36874,
+  "license_sha256": "e502c6b880ff58d614901495a9009c136539cd0b1e2a2abb8fc00b934c203419",
+  "copies": [
+    {
+      "license_path": "/workspace/bjt-integration/optimization/windows-build/app-source/licenses/Python/LICENSE.txt",
+      "license_sha256": "e502c6b880ff58d614901495a9009c136539cd0b1e2a2abb8fc00b934c203419",
+      "inventory_path": "/workspace/bjt-integration/optimization/windows-build/app-source/licenses/inventory.json",
+      "inventory_sha256": "ba09403673c10a7098befd01480af88ed85a99bc1051683577bcb6fc9bb6a7ca",
+      "inventory_entries": 33
+    },
+    {
+      "license_path": "/workspace/bjt-integration/optimization/windows-build/dist/BJT_통합프로그램_1.6.1_EXE/_internal/licenses/Python/LICENSE.txt",
+      "license_sha256": "e502c6b880ff58d614901495a9009c136539cd0b1e2a2abb8fc00b934c203419",
+      "inventory_path": "/workspace/bjt-integration/optimization/windows-build/dist/BJT_통합프로그램_1.6.1_EXE/_internal/licenses/inventory.json",
+      "inventory_sha256": "ba09403673c10a7098befd01480af88ed85a99bc1051683577bcb6fc9bb6a7ca",
+      "inventory_entries": 33
+    }
+  ],
+  "recipe_changes": [
+    {
+      "path": "/workspace/bjt-integration/source/BJT_통합도구/배포_빌드/BJT_Suite.spec",
+      "sha256": "d6b5bdf3dbafccb35c4727a371f57810964d1bf7f1c1e30ce9eb897f552c0c8b",
+      "syntax_valid": true
+    },
+    {
+      "path": "/workspace/bjt-integration/source/BJT_통합도구/배포_빌드/prepare_build.py",
+      "sha256": "50b4889efd46269208c9fdb2e6a768715288432aeccf549131c51bde3ca4562c",
+      "syntax_valid": true
+    },
+    {
+      "path": "/workspace/bjt-integration/optimization/windows-build/BJT_Suite.spec",
+      "sha256": "d6b5bdf3dbafccb35c4727a371f57810964d1bf7f1c1e30ce9eb897f552c0c8b",
+      "syntax_valid": true
+    },
+    {
+      "path": "/workspace/bjt-integration/optimization/windows-build/prepare_build.py",
+      "sha256": "50b4889efd46269208c9fdb2e6a768715288432aeccf549131c51bde3ca4562c",
+      "syntax_valid": true
+    }
+  ],
+  "executables": [
+    {
+      "name": "BJT_통합프로그램.exe",
+      "sha256": "3c501e6b4a705e32ccb6cb3080db1d2de62be40c8d21f3a7904363fb6dfa4124",
+      "unchanged": true
+    },
+    {
+      "name": "BJT_명령줄.exe",
+      "sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "unchanged": true
+    }
+  ],
+  "runtime_source_changed": false,
+  "license_only_distribution_data_update": true
+}

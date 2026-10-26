@@ -1,0 +1,158 @@
+[
+  {
+    "id": "bjt",
+    "valid": true,
+    "bytes": 534649,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/260914_BJT_model_to_lattice_STL_all_in_one.py"
+  },
+  {
+    "id": "arrange",
+    "valid": true,
+    "bytes": 111281,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/slicing arrange.py"
+  },
+  {
+    "id": "overlay",
+    "valid": true,
+    "bytes": 25838,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/slice_folder_overlay.py"
+  },
+  {
+    "id": "exchanger",
+    "valid": true,
+    "bytes": 18784,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/slice exchanger.py"
+  },
+  {
+    "id": "alignment",
+    "valid": true,
+    "bytes": 137262,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/slice_alignment_checker.py"
+  },
+  {
+    "id": "thermal",
+    "valid": true,
+    "bytes": 169148,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/sic_buildbox_thermal_gui_v5.py"
+  },
+  {
+    "id": "compare",
+    "valid": true,
+    "bytes": 37944,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/slice_compare_app.py"
+  },
+  {
+    "id": "number_tools",
+    "valid": true,
+    "bytes": 35171,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/number_tools.py"
+  },
+  {
+    "id": "sequence_z",
+    "valid": true,
+    "bytes": 28062,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/sequence_z.py"
+  },
+  {
+    "id": "m2_converter",
+    "valid": true,
+    "bytes": 31617,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/m2_converter.py"
+  },
+  {
+    "id": "chitu_checker",
+    "valid": true,
+    "bytes": 31244,
+    "path": "/workspace/BJT_Tools_integrated/suite/sources/chitu_checker.py"
+  },
+  {
+    "id": "slice_compare_engine.py",
+    "valid": true,
+    "bytes": 51024,
+    "path": "/workspace/BJT_Tools_integrated/suite/slice_compare_engine.py"
+  },
+  {
+    "id": "slice_replace_validation.py",
+    "valid": true,
+    "bytes": 6013,
+    "path": "/workspace/BJT_Tools_integrated/suite/slice_replace_validation.py"
+  },
+  {
+    "id": "suite_theme.py",
+    "valid": true,
+    "bytes": 17555,
+    "path": "/workspace/BJT_Tools_integrated/suite/suite_theme.py"
+  },
+  {
+    "id": "suite_layout.py",
+    "valid": true,
+    "bytes": 3713,
+    "path": "/workspace/BJT_Tools_integrated/suite/suite_layout.py"
+  },
+  {
+    "id": "m2_image_engine.py",
+    "valid": true,
+    "bytes": 18991,
+    "path": "/workspace/BJT_Tools_integrated/suite/m2_image_engine.py"
+  },
+  {
+    "id": "chitu_overlap/__init__.py",
+    "valid": true,
+    "bytes": 263,
+    "path": "/workspace/BJT_Tools_integrated/suite/chitu_overlap/__init__.py"
+  },
+  {
+    "id": "chitu_overlap/__main__.py",
+    "valid": true,
+    "bytes": 48,
+    "path": "/workspace/BJT_Tools_integrated/suite/chitu_overlap/__main__.py"
+  },
+  {
+    "id": "chitu_overlap/chitubox.py",
+    "valid": true,
+    "bytes": 17326,
+    "path": "/workspace/BJT_Tools_integrated/suite/chitu_overlap/chitubox.py"
+  },
+  {
+    "id": "chitu_overlap/cli.py",
+    "valid": true,
+    "bytes": 6813,
+    "path": "/workspace/BJT_Tools_integrated/suite/chitu_overlap/cli.py"
+  },
+  {
+    "id": "chitu_overlap/geometry.py",
+    "valid": true,
+    "bytes": 27116,
+    "path": "/workspace/BJT_Tools_integrated/suite/chitu_overlap/geometry.py"
+  },
+  {
+    "id": "chitu_overlap/inputs.py",
+    "valid": true,
+    "bytes": 2406,
+    "path": "/workspace/BJT_Tools_integrated/suite/chitu_overlap/inputs.py"
+  },
+  {
+    "id": "chitu_overlap/viewer.py",
+    "valid": true,
+    "bytes": 19989,
+    "path": "/workspace/BJT_Tools_integrated/suite/chitu_overlap/viewer.py"
+  },
+  {
+    "id": "chitu_overlap/seams.py",
+    "valid": true,
+    "bytes": 9892,
+    "path": "/workspace/BJT_Tools_integrated/suite/chitu_overlap/seams.py"
+  },
+  {
+    "id": "suite_state.py",
+    "valid": true,
+    "bytes": 17738,
+    "path": "/workspace/BJT_Tools_integrated/suite/suite_state.py"
+  },
+  {
+    "id": "oven_i18n.py",
+    "valid": true,
+    "bytes": 37124,
+    "path": "/workspace/BJT_Tools_integrated/suite/oven_i18n.py"
+  }
+]

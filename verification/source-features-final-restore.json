@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "frozen": false,
+  "phase": "restore",
+  "checks": {
+    "all_11_tools_and_simple_titles": {
+      "passed": true
+    },
+    "fresh_process_all_11_inputs_restored": {
+      "passed": true,
+      "tools": [
+        "alignment",
+        "arrange",
+        "bjt",
+        "chitu_checker",
+        "compare",
+        "exchanger",
+        "m2_converter",
+        "number_tools",
+        "overlay",
+        "sequence_z",
+        "thermal"
+      ],
+      "oven_language": "en"
+    },
+    "normal_close_persisted": {
+      "passed": true
+    },
+    "callback_errors": {
+      "passed": true,
+      "errors": []
+    }
+  },
+  "settings_path": "Z:\\workspace\\bjt-integration\\suite-1.7.0\\source-feature-profile-final\\profile\\settings.json",
+  "seconds": 25.931
+}

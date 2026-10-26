@@ -1,0 +1,280 @@
+{
+  "implementation": "production",
+  "cases": [
+    {
+      "case": "actual-camera-4",
+      "result": "exactly-matches-independent-oriented-triangle-partition",
+      "proof": {
+        "method": "exact-collinear-seam-retriangulation",
+        "original_topology": [
+          true,
+          true
+        ],
+        "original_faces": 11454,
+        "repaired_faces": 11454,
+        "coordinates_unchanged": true,
+        "vertices_sha256": "e6cbb7564fb006c559337cb63ee11d99ef874677823b3b5f4e95a57796f5372b",
+        "exact_surface_union_preserved": true,
+        "exact_oriented_surface_chain_preserved": true,
+        "zero_area_seams_removed": 2,
+        "ordinary_validation": {
+          "index": 0,
+          "name": "exact-seam-repair",
+          "valid": true,
+          "errors": [],
+          "bounds": [
+            [
+              -26.573387145996094,
+              -20.084396362304688,
+              44.0
+            ],
+            [
+              174.96857452392578,
+              181.4575653076172,
+              74.0
+            ]
+          ],
+          "volume": 63964.05573131497
+        },
+        "seams": [
+          {
+            "removed_face": 4486,
+            "endpoints": [
+              5037,
+              4021
+            ],
+            "middle_vertex": 1575,
+            "middle_parameter": "22205/41192",
+            "replaced_face": 4488,
+            "original_triangle": [
+              5037,
+              620,
+              4021
+            ],
+            "replacement_triangles": [
+              [
+                4021,
+                1575,
+                620
+              ],
+              [
+                1575,
+                5037,
+                620
+              ]
+            ],
+            "removed_image_is_retained_edge": true,
+            "exact_oriented_triangle_partition": true
+          },
+          {
+            "removed_face": 7313,
+            "endpoints": [
+              421,
+              4660
+            ],
+            "middle_vertex": 3178,
+            "middle_parameter": "170883/1853638",
+            "replaced_face": 6890,
+            "original_triangle": [
+              421,
+              1509,
+              4660
+            ],
+            "replacement_triangles": [
+              [
+                4660,
+                3178,
+                1509
+              ],
+              [
+                3178,
+                421,
+                1509
+              ]
+            ],
+            "removed_image_is_retained_edge": true,
+            "exact_oriented_triangle_partition": true
+          }
+        ]
+      }
+    },
+    {
+      "case": "actual-camera-5",
+      "result": "exactly-matches-independent-oriented-triangle-partition",
+      "proof": {
+        "method": "exact-collinear-seam-retriangulation",
+        "original_topology": [
+          true,
+          true
+        ],
+        "original_faces": 11460,
+        "repaired_faces": 11460,
+        "coordinates_unchanged": true,
+        "vertices_sha256": "9e537a4c79eedb9b740448c3a997fc28b2240ded954690a03a20f8fc6ea4dfb2",
+        "exact_surface_union_preserved": true,
+        "exact_oriented_surface_chain_preserved": true,
+        "zero_area_seams_removed": 2,
+        "ordinary_validation": {
+          "index": 0,
+          "name": "exact-seam-repair",
+          "valid": true,
+          "errors": [],
+          "bounds": [
+            [
+              -156.0568084716797,
+              -217.74729919433594,
+              44.0
+            ],
+            [
+              45.48515319824219,
+              -16.205337524414062,
+              74.00000762939453
+            ]
+          ],
+          "volume": 55822.762517317045
+        },
+        "seams": [
+          {
+            "removed_face": 4501,
+            "endpoints": [
+              3324,
+              5597
+            ],
+            "middle_vertex": 1792,
+            "middle_parameter": "570572/741455",
+            "replaced_face": 4503,
+            "original_triangle": [
+              5597,
+              3324,
+              2196
+            ],
+            "replacement_triangles": [
+              [
+                5597,
+                1792,
+                2196
+              ],
+              [
+                1792,
+                3324,
+                2196
+              ]
+            ],
+            "removed_image_is_retained_edge": true,
+            "exact_oriented_triangle_partition": true
+          },
+          {
+            "removed_face": 7319,
+            "endpoints": [
+              4119,
+              3043
+            ],
+            "middle_vertex": 5042,
+            "middle_parameter": "170883/1853638",
+            "replaced_face": 6896,
+            "original_triangle": [
+              4119,
+              4873,
+              3043
+            ],
+            "replacement_triangles": [
+              [
+                3043,
+                5042,
+                4873
+              ],
+              [
+                5042,
+                4119,
+                4873
+              ]
+            ],
+            "removed_image_is_retained_edge": true,
+            "exact_oriented_triangle_partition": true
+          }
+        ]
+      }
+    },
+    {
+      "case": "synthetic-closed-box-seam",
+      "result": "correctly-accepted",
+      "volume_mm3": 0.9999999999999999
+    },
+    {
+      "case": "volume-overlap",
+      "result": "correctly-detected",
+      "status": "overlap",
+      "distance_mm": 0.0,
+      "intersection_volume_mm3": 0.5
+    },
+    {
+      "case": "surface-contact",
+      "result": "correctly-detected",
+      "status": "touching",
+      "distance_mm": 0.0,
+      "intersection_volume_mm3": 0.0
+    },
+    {
+      "case": "minimum-spacing",
+      "result": "correctly-detected",
+      "status": "too_close",
+      "distance_mm": 0.5,
+      "intersection_volume_mm3": 0.0
+    },
+    {
+      "case": "contained-solid-no-surface-crossing",
+      "result": "correctly-detected",
+      "intersection_volume_mm3": 0.0010000000000000005
+    },
+    {
+      "case": "open-mesh-with-valid-collinear-seam",
+      "result": "correctly-rejected",
+      "reason": "Original indexed surface must already be closed and consistently oriented"
+    },
+    {
+      "case": "inconsistent-seam-winding",
+      "result": "correctly-rejected",
+      "reason": "Original indexed surface must already be closed and consistently oriented"
+    },
+    {
+      "case": "nonmanifold-duplicate-triangle",
+      "result": "correctly-rejected",
+      "reason": "Original indexed surface must already be closed and consistently oriented"
+    },
+    {
+      "case": "underflow-area-is-not-exact-collinearity",
+      "result": "correctly-rejected",
+      "reason": "Zero floating area is not exactly collinear"
+    },
+    {
+      "case": "repeated-index-rank-zero-or-one-face",
+      "result": "correctly-rejected",
+      "reason": "Repeated-index degeneracy is not an exact CAD seam"
+    },
+    {
+      "case": "ordinary-open-mesh-no-seam",
+      "result": "correctly-rejected",
+      "reason": "No zero-area seam candidates"
+    },
+    {
+      "case": "face-budget",
+      "result": "correctly-rejected"
+    },
+    {
+      "case": "seam-budget",
+      "result": "correctly-rejected"
+    },
+    {
+      "case": "cancellation-check-1",
+      "result": "correctly-interrupted"
+    },
+    {
+      "case": "cancellation-check-20",
+      "result": "correctly-interrupted"
+    }
+  ],
+  "all_passed": true,
+  "camera_pairs_compared": 95,
+  "max_distance_delta_mm": 0.0,
+  "max_intersection_volume_delta_mm3": 0.0
+}

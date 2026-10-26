@@ -1,0 +1,58 @@
+{
+  "documents": [
+    {
+      "id": "bjt",
+      "chapters": 12,
+      "characters": 11479
+    },
+    {
+      "id": "arrange",
+      "chapters": 10,
+      "characters": 7132
+    },
+    {
+      "id": "overlay",
+      "chapters": 10,
+      "characters": 7644
+    },
+    {
+      "id": "exchanger",
+      "chapters": 10,
+      "characters": 7873
+    },
+    {
+      "id": "alignment",
+      "chapters": 14,
+      "characters": 9339
+    },
+    {
+      "id": "thermal",
+      "chapters": 15,
+      "characters": 19555
+    }
+  ],
+  "checks": [
+    "six_complete_documents",
+    "all_blocks_rendered_in_html",
+    "unique_valid_anchors",
+    "offline_links_and_assets",
+    "library_links",
+    "six_tab_buttons_before_loading",
+    "all_blocks_in_native_viewer",
+    "chapter_navigation_and_bounds",
+    "literal_search_and_cycle",
+    "empty_search_reset",
+    "font_bounds",
+    "readonly_select_copy",
+    "browser_print_targets",
+    "window_reuse_and_reopen",
+    "active_tab_f1_mapping",
+    "modeless_help",
+    "no_core_load_for_help",
+    "toolbar_survives_tool_failure",
+    "shared_shutdown_with_manuals"
+  ],
+  "callback_errors": [],
+  "chapters": 71,
+  "characters": 63022
+}

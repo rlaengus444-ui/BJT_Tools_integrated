@@ -1,0 +1,37 @@
+{
+  "outcome": "killed_by_12GiB_container_memory_limit",
+  "elapsed_seconds": 221.524,
+  "exit_code": 137,
+  "result_written": false,
+  "container_limit_bytes": 12884901888,
+  "outer_limit_bytes": 17179869184,
+  "container_memory_events_local": {
+    "low": 0,
+    "high": 0,
+    "max": 4040,
+    "oom": 1,
+    "oom_kill": 1,
+    "oom_group_kill": 0
+  },
+  "outer_memory_events_local": {
+    "low": 0,
+    "high": 0,
+    "max": 36385,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "isolated_container_limit_oom": true,
+  "outer_16GiB_limit_oom": false,
+  "container_peak_bytes": 12884901888,
+  "cli_process_vm_hwm_bytes": 12624285696,
+  "oom_observed_between_utc": [
+    "2026-10-24T06:25:56.014294+00:00",
+    "2026-10-24T06:25:58.016557+00:00"
+  ],
+  "agent_terminated_process": false,
+  "monitor_stopped": true,
+  "container_still_running": true,
+  "limit_left_in_place_bytes": 12884901888,
+  "scope": "Published EXE unchanged; Wine10/Linux Docker measurement. No completed overlap/gap verdict; native Windows RAM requirement unmeasured."
+}

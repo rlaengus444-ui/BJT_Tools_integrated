@@ -1,0 +1,71 @@
+{
+  "all_passed": true,
+  "source_and_input_arrays_unchanged": true,
+  "four_gap_full_exact_comparisons": [
+    {
+      "gap_mm": 0,
+      "status": "clear",
+      "minimum_distance_mm": 1.4999923706054688,
+      "minimum_distance_pair": [
+        5,
+        6
+      ],
+      "ordinary_exact": 1081,
+      "certified_bounds": 91,
+      "normalized_exact": 4
+    },
+    {
+      "gap_mm": 1,
+      "status": "clear",
+      "minimum_distance_mm": 1.4999923706054688,
+      "minimum_distance_pair": [
+        5,
+        6
+      ],
+      "ordinary_exact": 1081,
+      "certified_bounds": 91,
+      "normalized_exact": 4
+    },
+    {
+      "gap_mm": 1.5,
+      "status": "violation",
+      "minimum_distance_mm": 1.4999923706054688,
+      "minimum_distance_pair": [
+        5,
+        6
+      ],
+      "ordinary_exact": 1081,
+      "certified_bounds": 91,
+      "normalized_exact": 4
+    },
+    {
+      "gap_mm": 2,
+      "status": "violation",
+      "minimum_distance_mm": 1.4999923706054688,
+      "minimum_distance_pair": [
+        5,
+        6
+      ],
+      "ordinary_exact": 1081,
+      "certified_bounds": 88,
+      "normalized_exact": 7
+    }
+  ],
+  "cache_budget_comparisons": [
+    {
+      "budget_bytes": 0,
+      "manifold_constructions_including_validation": 68
+    },
+    {
+      "budget_bytes": 10000,
+      "manifold_constructions_including_validation": 68
+    },
+    {
+      "budget_bytes": 67108864,
+      "manifold_constructions_including_validation": 49
+    }
+  ],
+  "boolean_operands_immutable": true,
+  "tiny_lru_eviction_and_promotion_correct": true,
+  "elapsed_seconds": 17.65473522299999
+}

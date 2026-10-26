@@ -11,3 +11,10 @@ venv/
 *.npy
 *.npz
 .DS_Store
+.pytest_cache/
+*.nbi
+*.nbc
+/validation/
+/suite/배포_빌드/app-source/
+/suite/배포_빌드/build/
+/suite/배포_빌드/dist/

@@ -1,0 +1,16 @@
+{
+  "baseline_artifacts": 86,
+  "candidate_artifacts": 86,
+  "identical_artifacts": 86,
+  "normalizations": [
+    "test root name",
+    "generated report directory timestamp",
+    "backup timestamp",
+    "STL cache directory identity",
+    "JSON object key order"
+  ],
+  "excluded": [
+    "ZIP container generation timestamps"
+  ],
+  "differences": []
+}

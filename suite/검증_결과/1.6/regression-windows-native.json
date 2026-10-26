@@ -1,0 +1,161 @@
+{
+  "platform": "Windows-10-10.0.19043-SP0",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.3.5",
+    "Pillow": "12.3.0",
+    "trimesh": "5.1.0",
+    "pypng": "0.20220715.0",
+    "tifffile": "2026.9.9",
+    "imagecodecs": "2026.10.10",
+    "manifold3d": "3.5.4",
+    "python-fcl": "0.7.0.11",
+    "plotly": "7.1.0"
+  },
+  "reference_suite_version": "1.5.0",
+  "preserved_sources": [
+    {
+      "id": "bjt",
+      "path": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "bytes": 534649,
+      "original_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "current_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "identical": true
+    },
+    {
+      "id": "arrange",
+      "path": "sources/slicing arrange.py",
+      "bytes": 111281,
+      "original_sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "current_sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "identical": true
+    },
+    {
+      "id": "overlay",
+      "path": "sources/slice_folder_overlay.py",
+      "bytes": 25838,
+      "original_sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "current_sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "identical": true
+    },
+    {
+      "id": "exchanger",
+      "path": "sources/slice exchanger.py",
+      "bytes": 18784,
+      "original_sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "current_sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "identical": true
+    },
+    {
+      "id": "alignment",
+      "path": "sources/slice_alignment_checker.py",
+      "bytes": 137262,
+      "original_sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "current_sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "identical": true
+    },
+    {
+      "id": "thermal",
+      "path": "sources/sic_buildbox_thermal_gui_v5.py",
+      "bytes": 161773,
+      "original_sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+      "current_sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+      "identical": true
+    },
+    {
+      "id": "compare",
+      "path": "sources/slice_compare_app.py",
+      "bytes": 37944,
+      "original_sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "current_sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "identical": true
+    },
+    {
+      "id": "number_tools",
+      "path": "sources/number_tools.py",
+      "bytes": 35171,
+      "original_sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "current_sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "identical": true
+    },
+    {
+      "id": "sequence_z",
+      "path": "sources/sequence_z.py",
+      "bytes": 28062,
+      "original_sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+      "current_sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+      "identical": true
+    },
+    {
+      "id": "m2_converter",
+      "path": "sources/m2_converter.py",
+      "bytes": 28401,
+      "original_sha256": "f8de5a13f876560c1bb4f1395f30709f73c7bbc799b701074cca6a69efc60183",
+      "current_sha256": "f8de5a13f876560c1bb4f1395f30709f73c7bbc799b701074cca6a69efc60183",
+      "identical": true
+    },
+    {
+      "id": "slice_compare_engine.py",
+      "path": "slice_compare_engine.py",
+      "bytes": 51024,
+      "original_sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "current_sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "identical": true
+    },
+    {
+      "id": "slice_replace_validation.py",
+      "path": "slice_replace_validation.py",
+      "bytes": 6013,
+      "original_sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "current_sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "identical": true
+    },
+    {
+      "id": "suite_theme.py",
+      "path": "suite_theme.py",
+      "bytes": 17555,
+      "original_sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "current_sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "identical": true
+    },
+    {
+      "id": "suite_layout.py",
+      "path": "suite_layout.py",
+      "bytes": 3713,
+      "original_sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+      "current_sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+      "identical": true
+    },
+    {
+      "id": "m2_image_engine.py",
+      "path": "m2_image_engine.py",
+      "bytes": 16757,
+      "original_sha256": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2",
+      "current_sha256": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2",
+      "identical": true
+    }
+  ],
+  "all_original_tool_sources_identical": true,
+  "all_original_engine_dependencies_identical": true,
+  "tests": {
+    "files": [
+      "test_m2_image_engine.py",
+      "test_number_tools.py",
+      "test_replace_validation.py",
+      "test_sequence_z.py",
+      "test_slice_compare.py"
+    ],
+    "run": 122,
+    "passed": 121,
+    "skipped": [
+      {
+        "test": "test_number_tools.NumberToolTests.test_original_valid_conflict_policies_match_file_bytes_and_metadata",
+        "reason": "Original supplied tool is only present in the integration workspace"
+      }
+    ],
+    "failures": [],
+    "errors": [],
+    "seconds": 16.61999999999989
+  },
+  "passed_in_executed_scope": true
+}

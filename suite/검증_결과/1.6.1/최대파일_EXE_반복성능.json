@@ -1,0 +1,435 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "project": "26.04.08_set.2.chitubox",
+      "project_bytes": 1307944076,
+      "project_sha256": "6e57d3f9c041b624e7e09065e06ddb1fbc460ad3dde2e0f07e98df905551315a",
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "execution_environment": "Built Windows x64 EXE under Wine10/LinuxDocker",
+      "min_gap_mm": 1.0,
+      "elapsed_exe_seconds": 33.324,
+      "timing_scope": "EXE launch + runtime initialization + file reading + inspection + JSON export; excludes download and HTML",
+      "exit_code": 1,
+      "timed_out": false,
+      "preflight": {
+        "magic": "0xAB231243",
+        "declared_objects": 22,
+        "triangle_instances": 36329658,
+        "native_support_objects": 0
+      },
+      "result_file_written": true,
+      "status": "violation",
+      "complete": false,
+      "processing_completed": true,
+      "object_count": 22,
+      "pair_count": 231,
+      "pair_status_counts": {
+        "inconclusive": 176,
+        "clear": 54,
+        "too_close": 1
+      },
+      "known_minimum_distance_mm": 0.6575593948364258,
+      "invalid_objects": [
+        {
+          "index": 0,
+          "name": "Gyroid 2T 40 60 20(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 2,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -65.87861108779907,
+              24.786601066589355,
+              0.0
+            ],
+            [
+              -54.12138891220093,
+              35.213398933410645,
+              19.999998092651367
+            ]
+          ],
+          "volume": 134.86912702519044
+        },
+        {
+          "index": 3,
+          "name": "Gyroid 1T 40 60 20(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 7,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -50.87861108779907,
+              24.786601066589355,
+              0.0
+            ],
+            [
+              -39.12138891220093,
+              35.213398933410645,
+              19.999998092651367
+            ]
+          ],
+          "volume": 134.86912702519044
+        },
+        {
+          "index": 8,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -35.87861108779907,
+              24.786601066589355,
+              0.0
+            ],
+            [
+              -24.121388912200928,
+              35.213398933410645,
+              19.999998092651367
+            ]
+          ],
+          "volume": 134.86912702519044
+        },
+        {
+          "index": 9,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -66.39348411560059,
+              -19.38125228881836,
+              0.0
+            ],
+            [
+              -43.606515884399414,
+              19.38125228881836,
+              20.20844078063965
+            ]
+          ],
+          "volume": 981.8792746499624
+        },
+        {
+          "index": 10,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -41.393484115600586,
+              -19.38125228881836,
+              0.0
+            ],
+            [
+              -18.606515884399414,
+              19.38125228881836,
+              20.20844078063965
+            ]
+          ],
+          "volume": 981.8792746499624
+        },
+        {
+          "index": 12,
+          "name": "Gyroid 2T 20 40 10(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 13,
+          "name": "Gyroid 2T 20 40 10(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 14,
+          "name": "Gyroid 2T 20 40 10(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 15,
+          "name": "cetrifugal_impeller_blade.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              20.562196731567383,
+              -101.57299995422363,
+              0.0
+            ],
+            [
+              63.78800010681152,
+              -58.34719657897949,
+              20.0
+            ]
+          ],
+          "volume": 79393.94396678354
+        }
+      ],
+      "error": null,
+      "stderr_tail": "↔ [11]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [7]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [8]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [7]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [8]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [7]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [8]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [8]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [11]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [11]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [11]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [11]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [11] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [11] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [11] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [11] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [21]: One or both objects failed solid-mesh validation.\r\n",
+      "process_vm_hwm_bytes": 4361461760,
+      "observed_container_peak_bytes": 5355237376,
+      "oom_kill_delta": 0,
+      "gates_passed": true
+    },
+    {
+      "project": "26.04.08_set.2.chitubox",
+      "project_bytes": 1307944076,
+      "project_sha256": "6e57d3f9c041b624e7e09065e06ddb1fbc460ad3dde2e0f07e98df905551315a",
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "execution_environment": "Built Windows x64 EXE under Wine10/LinuxDocker",
+      "min_gap_mm": 1.0,
+      "elapsed_exe_seconds": 30.37,
+      "timing_scope": "EXE launch + runtime initialization + file reading + inspection + JSON export; excludes download and HTML",
+      "exit_code": 1,
+      "timed_out": false,
+      "preflight": {
+        "magic": "0xAB231243",
+        "declared_objects": 22,
+        "triangle_instances": 36329658,
+        "native_support_objects": 0
+      },
+      "result_file_written": true,
+      "status": "violation",
+      "complete": false,
+      "processing_completed": true,
+      "object_count": 22,
+      "pair_count": 231,
+      "pair_status_counts": {
+        "inconclusive": 176,
+        "clear": 54,
+        "too_close": 1
+      },
+      "known_minimum_distance_mm": 0.6575593948364258,
+      "invalid_objects": [
+        {
+          "index": 0,
+          "name": "Gyroid 2T 40 60 20(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 2,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -65.87861108779907,
+              24.786601066589355,
+              0.0
+            ],
+            [
+              -54.12138891220093,
+              35.213398933410645,
+              19.999998092651367
+            ]
+          ],
+          "volume": 134.86912702519044
+        },
+        {
+          "index": 3,
+          "name": "Gyroid 1T 40 60 20(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 7,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -50.87861108779907,
+              24.786601066589355,
+              0.0
+            ],
+            [
+              -39.12138891220093,
+              35.213398933410645,
+              19.999998092651367
+            ]
+          ],
+          "volume": 134.86912702519044
+        },
+        {
+          "index": 8,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -35.87861108779907,
+              24.786601066589355,
+              0.0
+            ],
+            [
+              -24.121388912200928,
+              35.213398933410645,
+              19.999998092651367
+            ]
+          ],
+          "volume": 134.86912702519044
+        },
+        {
+          "index": 9,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -66.39348411560059,
+              -19.38125228881836,
+              0.0
+            ],
+            [
+              -43.606515884399414,
+              19.38125228881836,
+              20.20844078063965
+            ]
+          ],
+          "volume": 981.8792746499624
+        },
+        {
+          "index": 10,
+          "name": "Klein Vase-bhl.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              -41.393484115600586,
+              -19.38125228881836,
+              0.0
+            ],
+            [
+              -18.606515884399414,
+              19.38125228881836,
+              20.20844078063965
+            ]
+          ],
+          "volume": 981.8792746499624
+        },
+        {
+          "index": 12,
+          "name": "Gyroid 2T 20 40 10(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 13,
+          "name": "Gyroid 2T 20 40 10(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 14,
+          "name": "Gyroid 2T 20 40 10(1).STL",
+          "valid": false,
+          "errors": [
+            "Mesh contains degenerate or invalid triangles."
+          ],
+          "bounds": null,
+          "volume": null
+        },
+        {
+          "index": 15,
+          "name": "cetrifugal_impeller_blade.STL",
+          "valid": false,
+          "errors": [
+            "Mesh is not watertight; a solid volume is required."
+          ],
+          "bounds": [
+            [
+              20.562196731567383,
+              -101.57299995422363,
+              0.0
+            ],
+            [
+              63.78800010681152,
+              -58.34719657897949,
+              20.0
+            ]
+          ],
+          "volume": 79393.94396678354
+        }
+      ],
+      "error": null,
+      "stderr_tail": "↔ [11]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [3] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [7]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [8]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [4] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [7]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [8]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [5] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [7]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [8]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [6] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [8]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [11]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [7] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [9]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [11]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [8] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [10]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [11]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [9] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [11]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [10] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [11] ↔ [12]: One or both objects failed solid-mesh validation.\r\n  [11] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [11] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [11] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [13]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [12] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [14]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [13] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [15]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [14] ↔ [21]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [16]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [17]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [18]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [19]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [20]: One or both objects failed solid-mesh validation.\r\n  [15] ↔ [21]: One or both objects failed solid-mesh validation.\r\n",
+      "process_vm_hwm_bytes": 4361158656,
+      "observed_container_peak_bytes": 5236555776,
+      "oom_kill_delta": 0,
+      "gates_passed": true
+    }
+  ]
+}

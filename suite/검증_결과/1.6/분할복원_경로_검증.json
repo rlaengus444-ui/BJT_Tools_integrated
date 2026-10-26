@@ -1,0 +1,9 @@
+{
+  "source_sha256": "62364de64ff7bd81bc72e9c5379d53a1cafd230cf40826ff606225c38a197da5",
+  "restored_sha256": "62364de64ff7bd81bc72e9c5379d53a1cafd230cf40826ff606225c38a197da5",
+  "match": true,
+  "source_unchanged": true,
+  "guarded_cmd_prefix_passed": true,
+  "path": "Korean + spaces + exclamation marks",
+  "notes": "Executed generated CMD prefix through binary concatenation with pushd and DisableDelayedExpansion; PowerShell and final launcher reviewed but not executed."
+}

@@ -1,0 +1,370 @@
+{
+  "description": "Controlled tests on copies of real project objects15/31; source file unchanged. These are modified meshes, distinct from original-file validation.",
+  "source_file": "20261012-M1-1.chitubox",
+  "source_object_indices": [
+    15,
+    31
+  ],
+  "cases": [
+    {
+      "case": "surface_contact",
+      "controlled_x_gap_mm": 0,
+      "required_gap_mm": 0,
+      "expected_pair_status": "touching",
+      "report": {
+        "status": "violation",
+        "complete": true,
+        "overlap_found": false,
+        "violation_found": true,
+        "object_count": 2,
+        "volume_tolerance": 1e-06,
+        "min_gap_mm": 0.0,
+        "distance_tolerance_mm": 1e-06,
+        "objects": [
+          {
+            "index": 0,
+            "name": "20x20x20.stl #31",
+            "valid": true,
+            "errors": [],
+            "bounds": [
+              [
+                -132.36199927330017,
+                -199.18081665039062,
+                0.0
+              ],
+              [
+                -124.36199975013733,
+                -109.18081665039062,
+                6.0
+              ]
+            ],
+            "volume": 4319.999742507935
+          },
+          {
+            "index": 1,
+            "name": "20x20x20.stl #50",
+            "valid": true,
+            "errors": [],
+            "bounds": [
+              [
+                -124.36199975013733,
+                -138.97042846679688,
+                0.0
+              ],
+              [
+                -102.36199975013733,
+                -116.97042846679688,
+                12.0
+              ]
+            ],
+            "volume": 5808.0
+          }
+        ],
+        "pairs": [
+          {
+            "index_a": 0,
+            "index_b": 1,
+            "object_a": "20x20x20.stl #31",
+            "object_b": "20x20x20.stl #50",
+            "status": "touching",
+            "intersection_volume": 0.0,
+            "distance_mm": 0.0,
+            "method": "manifold64+fcl"
+          }
+        ],
+        "overlaps": [],
+        "violations": [
+          {
+            "index_a": 0,
+            "index_b": 1,
+            "object_a": "20x20x20.stl #31",
+            "object_b": "20x20x20.stl #50",
+            "status": "touching",
+            "intersection_volume": 0.0,
+            "distance_mm": 0.0,
+            "method": "manifold64+fcl"
+          }
+        ]
+      }
+    },
+    {
+      "case": "overlap_0.1mm",
+      "controlled_x_gap_mm": -0.1,
+      "required_gap_mm": 0,
+      "expected_pair_status": "overlap",
+      "report": {
+        "status": "violation",
+        "complete": true,
+        "overlap_found": true,
+        "violation_found": true,
+        "object_count": 2,
+        "volume_tolerance": 1e-06,
+        "min_gap_mm": 0.0,
+        "distance_tolerance_mm": 1e-06,
+        "objects": [
+          {
+            "index": 0,
+            "name": "20x20x20.stl #31",
+            "valid": true,
+            "errors": [],
+            "bounds": [
+              [
+                -132.36199927330017,
+                -199.18081665039062,
+                0.0
+              ],
+              [
+                -124.36199975013733,
+                -109.18081665039062,
+                6.0
+              ]
+            ],
+            "volume": 4319.999742507935
+          },
+          {
+            "index": 1,
+            "name": "20x20x20.stl #50",
+            "valid": true,
+            "errors": [],
+            "bounds": [
+              [
+                -124.46199975013732,
+                -138.97042846679688,
+                0.0
+              ],
+              [
+                -102.46199975013732,
+                -116.97042846679688,
+                12.0
+              ]
+            ],
+            "volume": 5808.0
+          }
+        ],
+        "pairs": [
+          {
+            "index_a": 0,
+            "index_b": 1,
+            "object_a": "20x20x20.stl #31",
+            "object_b": "20x20x20.stl #50",
+            "status": "overlap",
+            "intersection_volume": 13.200000000000045,
+            "distance_mm": 0.0,
+            "method": "manifold64+fcl"
+          }
+        ],
+        "overlaps": [
+          {
+            "index_a": 0,
+            "index_b": 1,
+            "object_a": "20x20x20.stl #31",
+            "object_b": "20x20x20.stl #50",
+            "status": "overlap",
+            "intersection_volume": 13.200000000000045,
+            "distance_mm": 0.0,
+            "method": "manifold64+fcl"
+          }
+        ],
+        "violations": [
+          {
+            "index_a": 0,
+            "index_b": 1,
+            "object_a": "20x20x20.stl #31",
+            "object_b": "20x20x20.stl #50",
+            "status": "overlap",
+            "intersection_volume": 13.200000000000045,
+            "distance_mm": 0.0,
+            "method": "manifold64+fcl"
+          }
+        ]
+      }
+    },
+    {
+      "case": "gap_0.5mm_below_required1mm",
+      "controlled_x_gap_mm": 0.5,
+      "required_gap_mm": 1,
+      "expected_pair_status": "too_close",
+      "report": {
+        "status": "violation",
+        "complete": true,
+        "overlap_found": false,
+        "violation_found": true,
+        "object_count": 2,
+        "volume_tolerance": 1e-06,
+        "min_gap_mm": 1.0,
+        "distance_tolerance_mm": 1e-06,
+        "objects": [
+          {
+            "index": 0,
+            "name": "20x20x20.stl #31",
+            "valid": true,
+            "errors": [],
+            "bounds": [
+              [
+                -132.36199927330017,
+                -199.18081665039062,
+                0.0
+              ],
+              [
+                -124.36199975013733,
+                -109.18081665039062,
+                6.0
+              ]
+            ],
+            "volume": 4319.999742507935
+          },
+          {
+            "index": 1,
+            "name": "20x20x20.stl #50",
+            "valid": true,
+            "errors": [],
+            "bounds": [
+              [
+                -123.86199975013733,
+                -138.97042846679688,
+                0.0
+              ],
+              [
+                -101.86199975013733,
+                -116.97042846679688,
+                12.0
+              ]
+            ],
+            "volume": 5808.0
+          }
+        ],
+        "pairs": [
+          {
+            "index_a": 0,
+            "index_b": 1,
+            "object_a": "20x20x20.stl #31",
+            "object_b": "20x20x20.stl #50",
+            "status": "too_close",
+            "intersection_volume": 0.0,
+            "distance_mm": 0.5,
+            "method": "manifold64+fcl",
+            "nearest_points_mm": [
+              [
+                -124.36199975013733,
+                -138.97042846679688,
+                0.0
+              ],
+              [
+                -123.86199975013733,
+                -138.97042846679688,
+                0.0
+              ]
+            ]
+          }
+        ],
+        "overlaps": [],
+        "violations": [
+          {
+            "index_a": 0,
+            "index_b": 1,
+            "object_a": "20x20x20.stl #31",
+            "object_b": "20x20x20.stl #50",
+            "status": "too_close",
+            "intersection_volume": 0.0,
+            "distance_mm": 0.5,
+            "method": "manifold64+fcl",
+            "nearest_points_mm": [
+              [
+                -124.36199975013733,
+                -138.97042846679688,
+                0.0
+              ],
+              [
+                -123.86199975013733,
+                -138.97042846679688,
+                0.0
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "gap_1mm_equal_required1mm",
+      "controlled_x_gap_mm": 1,
+      "required_gap_mm": 1,
+      "expected_pair_status": "clear",
+      "report": {
+        "status": "clear",
+        "complete": true,
+        "overlap_found": false,
+        "violation_found": false,
+        "object_count": 2,
+        "volume_tolerance": 1e-06,
+        "min_gap_mm": 1.0,
+        "distance_tolerance_mm": 1e-06,
+        "objects": [
+          {
+            "index": 0,
+            "name": "20x20x20.stl #31",
+            "valid": true,
+            "errors": [],
+            "bounds": [
+              [
+                -132.36199927330017,
+                -199.18081665039062,
+                0.0
+              ],
+              [
+                -124.36199975013733,
+                -109.18081665039062,
+                6.0
+              ]
+            ],
+            "volume": 4319.999742507935
+          },
+          {
+            "index": 1,
+            "name": "20x20x20.stl #50",
+            "valid": true,
+            "errors": [],
+            "bounds": [
+              [
+                -123.36199975013733,
+                -138.97042846679688,
+                0.0
+              ],
+              [
+                -101.36199975013733,
+                -116.97042846679688,
+                12.0
+              ]
+            ],
+            "volume": 5808.0
+          }
+        ],
+        "pairs": [
+          {
+            "index_a": 0,
+            "index_b": 1,
+            "object_a": "20x20x20.stl #31",
+            "object_b": "20x20x20.stl #50",
+            "status": "clear",
+            "intersection_volume": 0.0,
+            "distance_mm": 1.0,
+            "method": "manifold64+fcl",
+            "nearest_points_mm": [
+              [
+                -124.36199975013733,
+                -138.97042846679688,
+                0.0
+              ],
+              [
+                -123.36199975013733,
+                -138.97042846679688,
+                0.0
+              ]
+            ]
+          }
+        ],
+        "overlaps": [],
+        "violations": []
+      }
+    }
+  ]
+}

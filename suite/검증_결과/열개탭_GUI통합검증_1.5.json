@@ -1,0 +1,335 @@
+{
+  "checks": [
+    "number_tools_does_not_change_existing_theme_styles_fonts",
+    "all_ten_full_interfaces_single_tk",
+    "all_ten_manual_toolbars",
+    "compare_does_not_change_existing_theme_styles_fonts_or_bindings",
+    "fast_default_preserved",
+    "original_shortcuts_remain_scoped_after_compare_mount",
+    "registered_dnd_tcl_unicode_space_paths_and_active_input_lock",
+    "number_tools_unicode_space_drop_handlers",
+    "number_copy_real_worker_raw_bytes_and_JSON_export",
+    "number_missing_real_worker_prefix_duplicates_and_gaps",
+    "shared_stop_cancels_live_number_copy_and_cleans_temps",
+    "real_M1_fast_comparison_and_complete_1825_row_render",
+    "compare_cancel_button_stops_actual_worker",
+    "shared_stop_button_stops_actual_compare_worker",
+    "shared_close_waits_for_actual_compare_worker_and_cleanup",
+    "shared_close_waits_for_actual_number_worker_and_cleanup"
+  ],
+  "tools": {
+    "bjt": {
+      "widgets": 79,
+      "elapsed_seconds": 11.661156099988148
+    },
+    "arrange": {
+      "widgets": 73,
+      "elapsed_seconds": 0.12283719994593412
+    },
+    "overlay": {
+      "widgets": 39,
+      "elapsed_seconds": 0.050739799975417554
+    },
+    "exchanger": {
+      "widgets": 24,
+      "elapsed_seconds": 0.037818900076672435
+    },
+    "alignment": {
+      "widgets": 29,
+      "elapsed_seconds": 0.09259810007642955
+    },
+    "thermal": {
+      "widgets": 168,
+      "elapsed_seconds": 0.7311971999006346
+    },
+    "number_tools": {
+      "widgets": 48,
+      "elapsed_seconds": 0.09883899998385459
+    },
+    "sequence_z": {
+      "widgets": 48,
+      "elapsed_seconds": 0.09589280001819134
+    },
+    "m2_converter": {
+      "widgets": 45,
+      "elapsed_seconds": 0.08572900004219264
+    },
+    "compare": {
+      "widgets": 62,
+      "default_precise": false
+    }
+  },
+  "callback_errors": [],
+  "tcl_background_errors": [],
+  "scope": "Hidden native Tk event-loop tests; DnD registration and Tcl payload handlers are exercised programmatically. No physical OS drag gesture is claimed.",
+  "number_shared_stop": {
+    "kind": "duplicate",
+    "source_path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\복사 원본.png",
+    "output_dir": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output",
+    "min_number": 1000,
+    "max_number": 100000,
+    "requested_count": 99001,
+    "processed_count": 20,
+    "copied_count": 20,
+    "skipped_count": 0,
+    "error_count": 0,
+    "cancelled": true,
+    "completed": false,
+    "items": [
+      {
+        "number": 1000,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1000.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1001,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1001.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1002,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1002.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1003,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1003.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1004,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1004.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1005,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1005.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1006,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1006.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1007,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1007.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1008,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1008.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1009,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1009.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1010,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1010.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1011,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1011.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1012,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1012.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1013,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1013.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1014,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1014.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1015,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1015.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1016,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1016.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1017,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1017.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1018,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1018.png",
+        "status": "copied",
+        "message": ""
+      },
+      {
+        "number": 1019,
+        "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\compare_drop_한글 경로\\number_stop_output\\1019.png",
+        "status": "copied",
+        "message": ""
+      }
+    ],
+    "details_truncated": false,
+    "elapsed_seconds": 0.063
+  },
+  "real_bundle": {
+    "summary": {
+      "total": 1825,
+      "identical": 1602,
+      "different": 0,
+      "left_only": 0,
+      "right_only": 222,
+      "error": 0,
+      "unsupported": 1,
+      "left_files": 1602,
+      "right_files": 1825,
+      "pixels_equal": 1602,
+      "left_layers": 1602,
+      "right_layers": 1824,
+      "overall_identical": false
+    },
+    "tk_completion": {
+      "elapsed_seconds": 3.375,
+      "update_ticks": 612,
+      "max_update_seconds": 0.05871590005699545
+    },
+    "engine_seconds": 3.223951,
+    "performance": {
+      "full_decodes": 0,
+      "decoded_cache_hits": 0,
+      "header_only_files": 3426
+    }
+  },
+  "cancel_button": {
+    "elapsed_seconds": 0.1559999999590218,
+    "update_ticks": 27,
+    "max_update_seconds": 0.001496099983341992
+  },
+  "central_stop": {
+    "elapsed_seconds": 0.10999999998603016,
+    "update_ticks": 18,
+    "max_update_seconds": 0.0006417999975383282
+  },
+  "passed": true,
+  "source_integrity": [
+    {
+      "id": "bjt",
+      "valid": true,
+      "bytes": 534649,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\260914_BJT_model_to_lattice_STL_all_in_one.py"
+    },
+    {
+      "id": "arrange",
+      "valid": true,
+      "bytes": 111281,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slicing arrange.py"
+    },
+    {
+      "id": "overlay",
+      "valid": true,
+      "bytes": 25838,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_folder_overlay.py"
+    },
+    {
+      "id": "exchanger",
+      "valid": true,
+      "bytes": 18784,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py"
+    },
+    {
+      "id": "alignment",
+      "valid": true,
+      "bytes": 137262,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_alignment_checker.py"
+    },
+    {
+      "id": "thermal",
+      "valid": true,
+      "bytes": 161773,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\sic_buildbox_thermal_gui_v5.py"
+    },
+    {
+      "id": "compare",
+      "valid": true,
+      "bytes": 37944,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_compare_app.py"
+    },
+    {
+      "id": "number_tools",
+      "valid": true,
+      "bytes": 35171,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\number_tools.py"
+    },
+    {
+      "id": "sequence_z",
+      "valid": true,
+      "bytes": 28062,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\sequence_z.py"
+    },
+    {
+      "id": "m2_converter",
+      "valid": true,
+      "bytes": 28401,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\m2_converter.py"
+    },
+    {
+      "id": "slice_compare_engine.py",
+      "valid": true,
+      "bytes": 51024,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_compare_engine.py"
+    },
+    {
+      "id": "slice_replace_validation.py",
+      "valid": true,
+      "bytes": 6013,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_replace_validation.py"
+    },
+    {
+      "id": "suite_theme.py",
+      "valid": true,
+      "bytes": 17555,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\suite_theme.py"
+    },
+    {
+      "id": "suite_layout.py",
+      "valid": true,
+      "bytes": 3713,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\suite_layout.py"
+    },
+    {
+      "id": "m2_image_engine.py",
+      "valid": true,
+      "bytes": 16757,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\m2_image_engine.py"
+    }
+  ],
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe"
+}

@@ -1,0 +1,151 @@
+{
+  "passed": true,
+  "original_sources": [
+    {
+      "path": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "identical": true
+    },
+    {
+      "path": "sources/slicing arrange.py",
+      "identical": true
+    },
+    {
+      "path": "sources/slice_folder_overlay.py",
+      "identical": true
+    },
+    {
+      "path": "sources/slice exchanger.py",
+      "identical": true
+    },
+    {
+      "path": "sources/slice_alignment_checker.py",
+      "identical": true
+    },
+    {
+      "path": "sources/sic_buildbox_thermal_gui_v5.py",
+      "identical": true
+    },
+    {
+      "path": "sources/slice_compare_app.py",
+      "identical": true
+    },
+    {
+      "path": "sources/number_tools.py",
+      "identical": true
+    },
+    {
+      "path": "sources/sequence_z.py",
+      "identical": true
+    },
+    {
+      "path": "sources/m2_converter.py",
+      "identical": true
+    },
+    {
+      "path": "slice_compare_engine.py",
+      "identical": true
+    },
+    {
+      "path": "slice_replace_validation.py",
+      "identical": true
+    },
+    {
+      "path": "suite_theme.py",
+      "identical": true
+    },
+    {
+      "path": "suite_layout.py",
+      "identical": true
+    },
+    {
+      "path": "m2_image_engine.py",
+      "identical": true
+    }
+  ],
+  "original_manual_assets": [
+    {
+      "path": "BJT_통합도구/manuals/alignment.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/alignment.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/arrange.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/arrange.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/bjt.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/bjt.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/compare.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/compare.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/exchanger.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/exchanger.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/m2_converter.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/m2_converter.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/manual.css",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/number_tools.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/number_tools.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/overlay.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/overlay.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/sequence_z.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/sequence_z.json",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/thermal.html",
+      "identical": true
+    },
+    {
+      "path": "BJT_통합도구/manuals/thermal.json",
+      "identical": true
+    }
+  ]
+}

@@ -1,24 +1,33 @@
-# BJT Tools Integrated
+# BJT 통합도구
 
-BJT 3D model → slicing → shell/lattice generation → STL integrated Python application.
+11개 도구를 한 창에서 실행하는 Windows 10·11 64비트 프로그램입니다. 최신 통합판 소스는 [suite](suite/)에 있습니다.
 
-## Current source
-- `BJT_model_to_lattice_STL_all_in_one.py` — v5.6 (source snapshot dated 2026-09-11).
-- Single-file application with dependency bootstrap.
-- Run: `python BJT_model_to_lattice_STL_all_in_one.py`
-- Recommended environment: 64-bit Windows with suitable Python; see source's pinned dependencies.
+## 실행
 
-## Important limitations
-The 400-DPI, 0.1-mm layer-print proxy STL mode preserves layer masks, not necessarily continuous CAD geometry or topology. Independently validate with real slicing output before production.
+EXE 배포본을 전체 압축 해제한 뒤 `BJT_통합프로그램.exe`를 실행합니다. 같은 위치의 `_internal` 폴더도 함께 유지하세요. EXE 실행에 Python·Excel·.NET 설치는 필요하지 않습니다.
 
-## Verified historical sources
+소스 실행: `python suite/run_suite.py`. 필요한 Python 환경과 패키지는 [suite/suite_runtime.py](suite/suite_runtime.py)와 [빌드 안내](suite/배포_빌드/재빌드_안내.txt)를 참고하세요.
 
-Authentic earlier code snapshots are stored under `versions/`:
+## 포함 기능
 
-- v5.5 — `versions/v5.5-print400-verified-candidate/BJT_model_to_lattice_STL_all_in_one.py`
-- v4.6 — `versions/v4.6-cap-profiled-fast/BJT_model_to_lattice_STL_all_in_one.py`
-- v4.6 validation-only baseline — `versions/v4.6-cap-profiled-fast/comparison_baseline.py` (not a separate release)
+| 도구 | 기능 |
+| --- | --- |
+| 모델·격자·STL | 모델·슬라이싱 이미지에서 쉘·격자 STL 생성 |
+| 슬라이싱 배치·합성 | 이미지·STL 이동·회전·복제, 레이어 합성 |
+| 폴더 겹치기 | 여러 슬라이싱 폴더를 레이어별로 합성 |
+| 슬라이싱 교체 | 번호 범위 교체·백업·복구·검사 |
+| 슬라이싱 위치 검사 | 교체 경계·인접층의 위치 이동 확인 |
+| 오븐 열확산 시뮬레이터 | 3D 열전달·산소 확산·열전대 보정, 한국어·영어 선택 |
+| 슬라이싱 일치성 검사 | 픽셀·위치·해상도·비트 수·형식 비교 |
+| 번호 복제·누락 검사 | 번호 범위 복제, 누락·중복 확인 |
+| 시퀀스별 Z값 | M1 레이어별 Z값 조회·CSV 저장 |
+| 이미지 변환 | 출력 픽셀·X/Y DPI 설정, 4비트 반전 TIFF 변환 |
+| 치투 오브젝트 검사 | 파일 끌어놓기, 겹침·접촉·최소 간격 검사, 문제 쌍 3D 확인 |
 
-See [HISTORY.md](HISTORY.md) for origin archives, hashes, exclusions and validation limits. Do not reconstruct unknown releases from intermediate function names.
+입력값과 입력 목록은 종료할 때 사용자별로 저장되고 다음 실행에서 복원됩니다. 도구별 조작법은 프로그램의 사용설명서 또는 [오프라인 설명서](suite/manuals/index.html)를 확인하세요.
 
-Changes after these imported snapshots remain traceable through Git commits.
+## 이전 버전
+
+- [통합프로그램 1.6.2](versions/suite-v1.6.2/): 팀드라이브 원본 소스와 출처·무결성 기록.
+- 저장소 루트의 [모델·격자 단일 도구 v5.6](BJT_model_to_lattice_STL_all_in_one.py)은 기존 원본으로 보존했습니다. 통합프로그램 버전과 별도로 관리합니다.
+- 이전 모델·격자 소스와 검증 범위: [HISTORY.md](HISTORY.md).

@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "derived_not_original": true,
+  "selected_original_indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "known_omitted_degenerate_original_indices": [
+    0,
+    12,
+    13,
+    14
+  ],
+  "valid_objects": 11,
+  "invalid_original_indices": [
+    2,
+    3,
+    7,
+    8,
+    9,
+    10,
+    15
+  ],
+  "minimum_distance_mm": 0.6575593948364258,
+  "minimum_pair_original_indices": [
+    6,
+    16
+  ],
+  "load_seconds": 0.721,
+  "check_seconds": 3.915,
+  "pairs": 153,
+  "exact_pairs": 2,
+  "lower_bound_pairs": 53,
+  "failures": [],
+  "scope_note": "Original 22-object input is unchanged. This compares selected original object pairs, not whole-file PASS."
+}

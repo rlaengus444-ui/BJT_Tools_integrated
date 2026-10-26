@@ -1,0 +1,466 @@
+[
+  {
+    "record": "261013-M1-1",
+    "source_page_url": "https://app.notion.com/p/3f705e94a22580e7935bd6947c98717d",
+    "attachment_name": "20261012-M1-1.chitubox",
+    "attachment_bytes": 988132,
+    "attachment_sha256": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+    "minimum_gap_mm": 0.0,
+    "status": "clear",
+    "complete": true,
+    "object_count": 63,
+    "pair_count": 1953,
+    "pair_status_counts": {
+      "clear": 1953
+    },
+    "invalid_objects": [],
+    "nearest_pair": {
+      "index_a": 15,
+      "index_b": 31,
+      "object_a": "20x20x20.stl #31",
+      "object_b": "20x20x20.stl #50",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 2.924621820449829,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -124.36199975013733,
+          -138.97042846679688,
+          0.0
+        ],
+        [
+          -121.4373779296875,
+          -138.97042846679688,
+          0.0
+        ]
+      ]
+    },
+    "check_seconds": 0.7365948520000529,
+    "load_seconds": 0.03476639800010162,
+    "report_file": "20261012-M1-1.gap-0mm.json"
+  },
+  {
+    "record": "261013-M1-1",
+    "source_page_url": "https://app.notion.com/p/3f705e94a22580e7935bd6947c98717d",
+    "attachment_name": "20261012-M1-1.chitubox",
+    "attachment_bytes": 988132,
+    "attachment_sha256": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+    "minimum_gap_mm": 1.0,
+    "status": "clear",
+    "complete": true,
+    "object_count": 63,
+    "pair_count": 1953,
+    "pair_status_counts": {
+      "clear": 1953
+    },
+    "invalid_objects": [],
+    "nearest_pair": {
+      "index_a": 15,
+      "index_b": 31,
+      "object_a": "20x20x20.stl #31",
+      "object_b": "20x20x20.stl #50",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 2.924621820449829,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -124.36199975013733,
+          -138.97042846679688,
+          0.0
+        ],
+        [
+          -121.4373779296875,
+          -138.97042846679688,
+          0.0
+        ]
+      ]
+    },
+    "check_seconds": 0.6835882700002003,
+    "load_seconds": 0.03476639800010162,
+    "report_file": "20261012-M1-1.gap-1mm.json"
+  },
+  {
+    "record": "261013-M1-1",
+    "source_page_url": "https://app.notion.com/p/3f705e94a22580e7935bd6947c98717d",
+    "attachment_name": "20261012-M1-1.chitubox",
+    "attachment_bytes": 988132,
+    "attachment_sha256": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+    "minimum_gap_mm": 3.0,
+    "status": "violation",
+    "complete": true,
+    "object_count": 63,
+    "pair_count": 1953,
+    "pair_status_counts": {
+      "clear": 1952,
+      "too_close": 1
+    },
+    "invalid_objects": [],
+    "nearest_pair": {
+      "index_a": 15,
+      "index_b": 31,
+      "object_a": "20x20x20.stl #31",
+      "object_b": "20x20x20.stl #50",
+      "status": "too_close",
+      "intersection_volume": 0.0,
+      "distance_mm": 2.924621820449829,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -124.36199975013733,
+          -138.97042846679688,
+          0.0
+        ],
+        [
+          -121.4373779296875,
+          -138.97042846679688,
+          0.0
+        ]
+      ]
+    },
+    "check_seconds": 0.80191347400023,
+    "load_seconds": 0.03476639800010162,
+    "report_file": "20261012-M1-1.gap-3mm.json"
+  },
+  {
+    "record": "261014-M1-1",
+    "source_page_url": "https://app.notion.com/p/3f805e94a2258002be3ffa708509d0d5",
+    "attachment_name": "261014-M1-1_살추가O.chitubox",
+    "attachment_bytes": 6126406,
+    "attachment_sha256": "967a7c994549ed3ac21211928e91cfb1f9da97bebdd7c33f4183276d16c99b1d",
+    "minimum_gap_mm": 0.0,
+    "status": "inconclusive",
+    "complete": false,
+    "object_count": 13,
+    "pair_count": 78,
+    "pair_status_counts": {
+      "inconclusive": 23,
+      "clear": 55
+    },
+    "invalid_objects": [
+      {
+        "index": 0,
+        "name": "20x20x20.stl",
+        "valid": false,
+        "errors": [
+          "Mesh is not watertight; a solid volume is required."
+        ],
+        "bounds": [
+          [
+            -157.66296815872192,
+            -203.37103176116943,
+            0.0
+          ],
+          [
+            142.33697080612183,
+            -191.37103366851807,
+            46.709999084472656
+          ]
+        ],
+        "volume": 168146.63023304744
+      },
+      {
+        "index": 1,
+        "name": "20x20x20.stl #1",
+        "valid": false,
+        "errors": [
+          "Mesh is not watertight; a solid volume is required."
+        ],
+        "bounds": [
+          [
+            170.07868671417236,
+            -152.2406668663025,
+            0.0
+          ],
+          [
+            182.07869243621826,
+            147.75927209854126,
+            46.709999084472656
+          ]
+        ],
+        "volume": 168146.73755163234
+      }
+    ],
+    "nearest_pair": {
+      "index_a": 2,
+      "index_b": 3,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 4.345666807347341,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          140.19714069366455,
+          -160.980375289917,
+          1.0
+        ],
+        [
+          143.952730178833,
+          -163.16678047180176,
+          1.0
+        ]
+      ]
+    },
+    "check_seconds": 0.901181175000147,
+    "load_seconds": 0.18907698299972253,
+    "report_file": "261014-M1-1_살추가O.gap-0mm.json"
+  },
+  {
+    "record": "261014-M1-1",
+    "source_page_url": "https://app.notion.com/p/3f805e94a2258002be3ffa708509d0d5",
+    "attachment_name": "261014-M1-1_살추가O.chitubox",
+    "attachment_bytes": 6126406,
+    "attachment_sha256": "967a7c994549ed3ac21211928e91cfb1f9da97bebdd7c33f4183276d16c99b1d",
+    "minimum_gap_mm": 1.0,
+    "status": "inconclusive",
+    "complete": false,
+    "object_count": 13,
+    "pair_count": 78,
+    "pair_status_counts": {
+      "inconclusive": 23,
+      "clear": 55
+    },
+    "invalid_objects": [
+      {
+        "index": 0,
+        "name": "20x20x20.stl",
+        "valid": false,
+        "errors": [
+          "Mesh is not watertight; a solid volume is required."
+        ],
+        "bounds": [
+          [
+            -157.66296815872192,
+            -203.37103176116943,
+            0.0
+          ],
+          [
+            142.33697080612183,
+            -191.37103366851807,
+            46.709999084472656
+          ]
+        ],
+        "volume": 168146.63023304744
+      },
+      {
+        "index": 1,
+        "name": "20x20x20.stl #1",
+        "valid": false,
+        "errors": [
+          "Mesh is not watertight; a solid volume is required."
+        ],
+        "bounds": [
+          [
+            170.07868671417236,
+            -152.2406668663025,
+            0.0
+          ],
+          [
+            182.07869243621826,
+            147.75927209854126,
+            46.709999084472656
+          ]
+        ],
+        "volume": 168146.73755163234
+      }
+    ],
+    "nearest_pair": {
+      "index_a": 2,
+      "index_b": 3,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 4.345666807347341,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          140.19714069366455,
+          -160.980375289917,
+          1.0
+        ],
+        [
+          143.952730178833,
+          -163.16678047180176,
+          1.0
+        ]
+      ]
+    },
+    "check_seconds": 0.721399700999882,
+    "load_seconds": 0.18907698299972253,
+    "report_file": "261014-M1-1_살추가O.gap-1mm.json"
+  },
+  {
+    "record": "261014-M1-1",
+    "source_page_url": "https://app.notion.com/p/3f805e94a2258002be3ffa708509d0d5",
+    "attachment_name": "261014-M1-1_살추가X.chitubox",
+    "attachment_bytes": 6126792,
+    "attachment_sha256": "2f46f9ba486e13930da5287bacd647523871bc0f280af65c21e56f8bc74384d5",
+    "minimum_gap_mm": 0.0,
+    "status": "inconclusive",
+    "complete": false,
+    "object_count": 13,
+    "pair_count": 78,
+    "pair_status_counts": {
+      "inconclusive": 23,
+      "clear": 55
+    },
+    "invalid_objects": [
+      {
+        "index": 0,
+        "name": "20x20x20.stl",
+        "valid": false,
+        "errors": [
+          "Mesh is not watertight; a solid volume is required."
+        ],
+        "bounds": [
+          [
+            -157.6629638671875,
+            -203.37103176116943,
+            0.0
+          ],
+          [
+            142.33697509765625,
+            -191.37103366851807,
+            46.709999084472656
+          ]
+        ],
+        "volume": 168146.6302330474
+      },
+      {
+        "index": 1,
+        "name": "20x20x20.stl #1",
+        "valid": false,
+        "errors": [
+          "Mesh is not watertight; a solid volume is required."
+        ],
+        "bounds": [
+          [
+            170.07868671417236,
+            -152.24066162109375,
+            0.0
+          ],
+          [
+            182.07869243621826,
+            147.75927734375,
+            46.709999084472656
+          ]
+        ],
+        "volume": 168146.73755163234
+      }
+    ],
+    "nearest_pair": {
+      "index_a": 2,
+      "index_b": 3,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 4.345666807347341,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          140.19714069366455,
+          -160.980375289917,
+          1.0
+        ],
+        [
+          143.952730178833,
+          -163.16678047180176,
+          1.0
+        ]
+      ]
+    },
+    "check_seconds": 0.8035245270002633,
+    "load_seconds": 0.1622549160001654,
+    "report_file": "261014-M1-1_살추가X.gap-0mm.json"
+  },
+  {
+    "record": "261014-M1-1",
+    "source_page_url": "https://app.notion.com/p/3f805e94a2258002be3ffa708509d0d5",
+    "attachment_name": "261014-M1-1_살추가X.chitubox",
+    "attachment_bytes": 6126792,
+    "attachment_sha256": "2f46f9ba486e13930da5287bacd647523871bc0f280af65c21e56f8bc74384d5",
+    "minimum_gap_mm": 1.0,
+    "status": "inconclusive",
+    "complete": false,
+    "object_count": 13,
+    "pair_count": 78,
+    "pair_status_counts": {
+      "inconclusive": 23,
+      "clear": 55
+    },
+    "invalid_objects": [
+      {
+        "index": 0,
+        "name": "20x20x20.stl",
+        "valid": false,
+        "errors": [
+          "Mesh is not watertight; a solid volume is required."
+        ],
+        "bounds": [
+          [
+            -157.6629638671875,
+            -203.37103176116943,
+            0.0
+          ],
+          [
+            142.33697509765625,
+            -191.37103366851807,
+            46.709999084472656
+          ]
+        ],
+        "volume": 168146.6302330474
+      },
+      {
+        "index": 1,
+        "name": "20x20x20.stl #1",
+        "valid": false,
+        "errors": [
+          "Mesh is not watertight; a solid volume is required."
+        ],
+        "bounds": [
+          [
+            170.07868671417236,
+            -152.24066162109375,
+            0.0
+          ],
+          [
+            182.07869243621826,
+            147.75927734375,
+            46.709999084472656
+          ]
+        ],
+        "volume": 168146.73755163234
+      }
+    ],
+    "nearest_pair": {
+      "index_a": 2,
+      "index_b": 3,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 4.345666807347341,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          140.19714069366455,
+          -160.980375289917,
+          1.0
+        ],
+        [
+          143.952730178833,
+          -163.16678047180176,
+          1.0
+        ]
+      ]
+    },
+    "check_seconds": 0.6416742869996597,
+    "load_seconds": 0.1622549160001654,
+    "report_file": "261014-M1-1_살추가X.gap-1mm.json"
+  }
+]

@@ -1,0 +1,603 @@
+{
+  "passed": true,
+  "suite_version": "1.4.0",
+  "verified_at_kst": "2026-10-23T17:33:35.177115+09:00",
+  "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구",
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe",
+  "preserved_originals": {
+    "byte_identical_sources": 6,
+    "identical_compiled_bodies": 905
+  },
+  "original_function_parity": {
+    "slice_cases_per_variant": 21,
+    "identical_normalized_artifacts": 86,
+    "bjt_exact_fixture_cases": 6,
+    "thermal_core_assertions": 577,
+    "thermal_gui_semantic_assertions": 1467,
+    "thermal_csv": "22 columns, exact bytes, UTF-8 BOM",
+    "reuse_scope": "Previously executed core output parity remains applicable because original source hashes are unchanged. The new replacement validation helpers and the final presentation layer were independently revalidated."
+  },
+  "unit_tests": {
+    "passed": 79,
+    "compare": 40,
+    "number_tools": 27,
+    "replacement_validation": 12,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "replacement_validation": {
+    "passed": true,
+    "verified_at_kst": "2026-10-23T17:20:23.254734+09:00",
+    "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe",
+    "total_unit_tests": 79,
+    "replacement_unit_tests": 12,
+    "fixture_cases": [
+      {
+        "name": "clean_gray8",
+        "original_succeeds": true,
+        "enhanced_succeeds": true,
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "clean_rgb16",
+        "original_succeeds": true,
+        "enhanced_succeeds": true,
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "mixed_rgb_depth",
+        "original_succeeds": true,
+        "enhanced_succeeds": false,
+        "issue": "native RGB channel depth 8 versus 16",
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "mixed_gray_resolution",
+        "original_succeeds": false,
+        "enhanced_succeeds": false,
+        "issue": "resolution differs outside replaced range",
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "mixed_actual_format",
+        "original_succeeds": false,
+        "enhanced_succeeds": false,
+        "issue": "JPEG bytes named 4.png",
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "mixed_tiff_later_frame",
+        "original_succeeds": true,
+        "enhanced_succeeds": false,
+        "issue": "second TIFF page resolution differs",
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "uniform_multipage_tiff",
+        "original_succeeds": true,
+        "enhanced_succeeds": true,
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "numeric_gap",
+        "original_succeeds": false,
+        "enhanced_succeeds": false,
+        "issue": "number 3 absent outside replacement range",
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "duplicate_numeric",
+        "original_succeeds": false,
+        "enhanced_succeeds": false,
+        "issue": "1.png and 001.png duplicate number",
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "preview_and_backup_ignored",
+        "original_succeeds": true,
+        "enhanced_succeeds": true,
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "corrupt_numeric",
+        "original_succeeds": false,
+        "enhanced_succeeds": false,
+        "issue": "truncated numbered PNG",
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "clean_bmp",
+        "original_succeeds": true,
+        "enhanced_succeeds": true,
+        "outcome_matches_expected": true
+      },
+      {
+        "name": "metadata_only_variation",
+        "original_succeeds": true,
+        "enhanced_succeeds": true,
+        "outcome_matches_expected": true
+      }
+    ],
+    "native_channel_subcases": [
+      {
+        "channels": 1,
+        "bit_depth": 8,
+        "expected_bits_per_pixel": 8
+      },
+      {
+        "channels": 1,
+        "bit_depth": 16,
+        "expected_bits_per_pixel": 16
+      },
+      {
+        "channels": 2,
+        "bit_depth": 8,
+        "expected_bits_per_pixel": 16
+      },
+      {
+        "channels": 2,
+        "bit_depth": 16,
+        "expected_bits_per_pixel": 32
+      },
+      {
+        "channels": 3,
+        "bit_depth": 8,
+        "expected_bits_per_pixel": 24
+      },
+      {
+        "channels": 3,
+        "bit_depth": 16,
+        "expected_bits_per_pixel": 48
+      },
+      {
+        "channels": 4,
+        "bit_depth": 8,
+        "expected_bits_per_pixel": 32
+      },
+      {
+        "channels": 4,
+        "bit_depth": 16,
+        "expected_bits_per_pixel": 64
+      }
+    ],
+    "checks": [
+      "only_three_validation_helpers_replaced_idempotently",
+      "original_transaction_and_worker_objects_preserved",
+      "loader_installs_into_original_transaction_globals",
+      "native_pair_mismatch_rejected_before_backup",
+      "whole_numbered_folder_native_mismatch_runs_original_rollback",
+      "all_TIFF_pages_checked_with_frame_identification",
+      "PNG_valid_CRC_invalid_deflate_rejected_by_full_decode",
+      "normal_different_pixels_not_treated_as_format_mismatch",
+      "BMP_support_preserved",
+      "previews_auxiliary_and_backup_subfolders_ignored_as_original_scope"
+    ],
+    "gui": {
+      "passed": true,
+      "cases": [
+        {
+          "name": "clean_rgb16",
+          "passed": true,
+          "dialog": "info",
+          "postcheck_log": "========== 작업 시작 ==========\nA 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\clean_rgb16\\A\nB 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\clean_rgb16\\B\nA 교체 범위: 2 ~ 2\nB 소스 범위: 10 ~ 10\n총 교체 개수: 1개\n\n[1/6] 숫자 이미지 파일 목록 수집 중...\nA 폴더 숫자 이미지 수: 4\nB 폴더 숫자 이미지 수: 1\n\n[2/6] 지정 범위 누락 파일 검사 중...\n지정 범위 누락 없음.\n\n[3/6] 대응 파일 확장자/해상도/비트수/모드 검사 중...\n  검사 완료: 1 / 1\n대응 파일 형식 검사 통과.\n\n[4/6] A 폴더 원본 백업 중...\n  백업 완료: 1 / 1\n백업 폴더 생성: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\clean_rgb16\\A\\_backup_before_replace_20261023_171753\n\n[5/6] B 이미지 내용으로 A 파일 덮어쓰기 중...\n  교체 완료: 1 / 1\n덮어쓰기 완료.\n\n[6/6] 최종 무결성 검사 중...\nA 폴더 전체 숫자 연속성 검사 통과.\n[최종검사] A 폴더 기준 파일: 1.png\n[최종검사] 기준 형식: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=48 bit/pixel, sample_bits=16, frames=1\n[최종검사] 숫자 슬라이싱 이미지 전체 4개 검사 (미리보기·하위 폴더 제외)\n[최종검사] 형식 검사 완료: 4 / 4\n[최종검사 통과] 4개 · 번호 1~4 · ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=48 bit/pixel, sample_bits=16, frames=1\nA 폴더 전체 이미지 형식 일관성 검사 통과.\n\n========== 작업 성공 ==========\n최종 확인까지 모두 통과했습니다.\n백업 폴더는 보존됩니다: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\clean_rgb16\\A\\_backup_before_replace_20261023_171753\n\n"
+        },
+        {
+          "name": "mixed_rgb_depth",
+          "passed": true,
+          "dialog": "error",
+          "postcheck_log": "========== 작업 시작 ==========\nA 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\mixed_rgb_depth\\A\nB 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\mixed_rgb_depth\\B\nA 교체 범위: 2 ~ 2\nB 소스 범위: 10 ~ 10\n총 교체 개수: 1개\n\n[1/6] 숫자 이미지 파일 목록 수집 중...\nA 폴더 숫자 이미지 수: 4\nB 폴더 숫자 이미지 수: 1\n\n[2/6] 지정 범위 누락 파일 검사 중...\n지정 범위 누락 없음.\n\n[3/6] 대응 파일 확장자/해상도/비트수/모드 검사 중...\n  검사 완료: 1 / 1\n대응 파일 형식 검사 통과.\n\n[4/6] A 폴더 원본 백업 중...\n  백업 완료: 1 / 1\n백업 폴더 생성: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\mixed_rgb_depth\\A\\_backup_before_replace_20261023_171753\n\n[5/6] B 이미지 내용으로 A 파일 덮어쓰기 중...\n  교체 완료: 1 / 1\n덮어쓰기 완료.\n\n[6/6] 최종 무결성 검사 중...\nA 폴더 전체 숫자 연속성 검사 통과.\n[최종검사] A 폴더 기준 파일: 1.png\n[최종검사] 기준 형식: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=24 bit/pixel, sample_bits=8, frames=1\n[최종검사] 숫자 슬라이싱 이미지 전체 4개 검사 (미리보기·하위 폴더 제외)\n[최종검사] 형식 검사 완료: 4 / 4\n\n!!!!!! 최종 검사 또는 교체 중 오류 발생 !!!!!!\nA 폴더 전체 이미지 형식이 일관되지 않습니다.\n기준 파일: 1.png\n기준 형식: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=24 bit/pixel, sample_bits=8, frames=1\n\n문제 파일 예시:\n  4.png: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=48 bit/pixel, sample_bits=16, frames=1\n    프레임 1: 기준={'width': 8, 'height': 6, 'bit_depth': 8, 'channels': 3, 'bits_per_pixel': 24, 'mode': 'RGB', 'dtype': 'uint8'}, 파일={'width': 8, 'height': 6, 'bit_depth': 16, 'channels': 3, 'bits_per_pixel': 48, 'mode': 'RGB', 'dtype': 'uint16'}\n\n[자동복구] 백업 파일로 A 폴더를 이전 상태로 복구합니다...\n[자동복구 완료] A 폴더를 작업 전 상태로 되돌렸습니다.\n백업 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\mixed_rgb_depth\\A\\_backup_before_replace_20261023_171753\n\n========== 오류 상세 ==========\nTraceback (most recent call last):\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 547, in worker\n    safe_replace_images(\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 320, in safe_replace_images\n    check_folder_format_consistency(a_map_after, \"A 폴더\", log)\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_replace_validation.py\", line 108, in check_folder_format_consistency\n    raise RuntimeError('\\n'.join(messages))\nRuntimeError: A 폴더 전체 이미지 형식이 일관되지 않습니다.\n기준 파일: 1.png\n기준 형식: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=24 bit/pixel, sample_bits=8, frames=1\n\n문제 파일 예시:\n  4.png: ext=.png, format=PNG, size=8x6, mode=RGB, bands=('R', 'G', 'B'), bits=48 bit/pixel, sample_bits=16, frames=1\n    프레임 1: 기준={'width': 8, 'height': 6, 'bit_depth': 8, 'channels': 3, 'bits_per_pixel': 24, 'mode': 'RGB', 'dtype': 'uint8'}, 파일={'width': 8, 'height': 6, 'bit_depth': 16, 'channels': 3, 'bits_per_pixel': 48, 'mode': 'RGB', 'dtype': 'uint16'}\n\n\n"
+        },
+        {
+          "name": "numeric_gap",
+          "passed": true,
+          "dialog": "error",
+          "postcheck_log": "========== 작업 시작 ==========\nA 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\numeric_gap\\A\nB 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\numeric_gap\\B\nA 교체 범위: 2 ~ 2\nB 소스 범위: 10 ~ 10\n총 교체 개수: 1개\n\n[1/6] 숫자 이미지 파일 목록 수집 중...\nA 폴더 숫자 이미지 수: 3\nB 폴더 숫자 이미지 수: 1\n\n[2/6] 지정 범위 누락 파일 검사 중...\n지정 범위 누락 없음.\n\n[3/6] 대응 파일 확장자/해상도/비트수/모드 검사 중...\n  검사 완료: 1 / 1\n대응 파일 형식 검사 통과.\n\n[4/6] A 폴더 원본 백업 중...\n  백업 완료: 1 / 1\n백업 폴더 생성: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\numeric_gap\\A\\_backup_before_replace_20261023_171754\n\n[5/6] B 이미지 내용으로 A 파일 덮어쓰기 중...\n  교체 완료: 1 / 1\n덮어쓰기 완료.\n\n[6/6] 최종 무결성 검사 중...\n\n!!!!!! 최종 검사 또는 교체 중 오류 발생 !!!!!!\nA 폴더 전체 숫자 파일에 빠진 번호가 있습니다.\n전체 범위: 1 ~ 4\n누락 번호: 3\n\n[자동복구] 백업 파일로 A 폴더를 이전 상태로 복구합니다...\n[자동복구 완료] A 폴더를 작업 전 상태로 되돌렸습니다.\n백업 폴더: C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\replace_gui_2wzkklfn\\numeric_gap\\A\\_backup_before_replace_20261023_171754\n\n========== 오류 상세 ==========\nTraceback (most recent call last):\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 547, in worker\n    safe_replace_images(\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 317, in safe_replace_images\n    check_folder_continuity_all(a_map_after, \"A 폴더\")\n  File \"C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py\", line 153, in check_folder_continuity_all\n    raise RuntimeError(\nRuntimeError: A 폴더 전체 숫자 파일에 빠진 번호가 있습니다.\n전체 범위: 1 ~ 4\n누락 번호: 3\n\n\n"
+        }
+      ],
+      "heartbeat_ticks": 42,
+      "python_callback_errors": [],
+      "tcl_background_errors": [],
+      "workers_started": [
+        "Thread-1 (worker)",
+        "Thread-2 (worker)",
+        "Thread-3 (worker)"
+      ],
+      "close_waited_for_postcheck": true,
+      "elapsed_seconds": 1.0929999999934807,
+      "checks": [
+        "original_real_worker_success_only_after_native_postcheck",
+        "native_depth_failure_error_dialog_after_original_rollback",
+        "numeric_gap_error_after_original_rollback",
+        "shared_close_waits_for_real_postcheck_and_worker",
+        "tk_heartbeat_and_clean_shutdown"
+      ]
+    },
+    "preserved_original_sources": 6,
+    "preserved_compiled_bodies": 905,
+    "scope": "A selected folder, all strictly numeric image filenames, nonrecursive. Original sequencing, preflight, backup, writes, rollback and worker remain; three validation helpers gain native stored depth and every TIFF page.",
+    "source_sha256": {
+      "slice_replace_validation.py": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "suite_loader.py": "7739ba1e8f5c86ed2e8b3cf0132881b9c7b31c962765142ce7dc3f5b4972fdb7",
+      "slice_compare_engine.py": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "sources/slice exchanger.py": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "tests/test_replace_validation.py": "a673907d124ed1a5200e1b194ee47a8f2740a7646e4da7825dfbc8bfb8f60eca"
+    }
+  },
+  "seven_tool_checkpoint": {
+    "passed": true,
+    "report": "일곱탭_GUI통합검증.json"
+  },
+  "eight_tool_gui": {
+    "passed": true,
+    "checks": [
+      "number_tools_does_not_change_existing_theme_styles_fonts",
+      "all_eight_full_interfaces_single_tk",
+      "all_eight_manual_toolbars",
+      "compare_does_not_change_existing_theme_styles_fonts_or_bindings",
+      "fast_default_preserved",
+      "original_shortcuts_remain_scoped_after_compare_mount",
+      "registered_dnd_tcl_unicode_space_paths_and_active_input_lock",
+      "number_tools_unicode_space_drop_handlers",
+      "number_copy_real_worker_raw_bytes_and_JSON_export",
+      "number_missing_real_worker_prefix_duplicates_and_gaps",
+      "shared_stop_cancels_live_number_copy_and_cleans_temps",
+      "real_M1_fast_comparison_and_complete_1825_row_render",
+      "compare_cancel_button_stops_actual_worker",
+      "shared_stop_button_stops_actual_compare_worker",
+      "shared_close_waits_for_actual_compare_worker_and_cleanup",
+      "shared_close_waits_for_actual_number_worker_and_cleanup"
+    ],
+    "python_callback_errors": 0,
+    "tcl_background_errors": 0,
+    "real_bundle": {
+      "summary": {
+        "total": 1825,
+        "identical": 1602,
+        "different": 0,
+        "left_only": 0,
+        "right_only": 222,
+        "error": 0,
+        "unsupported": 1,
+        "left_files": 1602,
+        "right_files": 1825,
+        "pixels_equal": 1602,
+        "left_layers": 1602,
+        "right_layers": 1824,
+        "overall_identical": false
+      },
+      "tk_completion": {
+        "elapsed_seconds": 4.031000000075437,
+        "update_ticks": 674,
+        "max_update_seconds": 0.13925379991997033
+      },
+      "engine_seconds": 3.88914,
+      "performance": {
+        "full_decodes": 0,
+        "decoded_cache_hits": 0,
+        "header_only_files": 3426
+      }
+    }
+  },
+  "manuals": {
+    "documents": 8,
+    "chapters": 101,
+    "characters": 89186,
+    "checks": [
+      "all_registered_complete_documents",
+      "all_blocks_rendered_in_html",
+      "unique_valid_anchors",
+      "offline_links_and_assets",
+      "library_links",
+      "all_registered_tab_buttons_before_loading",
+      "all_blocks_in_native_viewer",
+      "chapter_navigation_and_bounds",
+      "literal_search_and_cycle",
+      "empty_search_reset",
+      "font_bounds",
+      "readonly_select_copy",
+      "browser_print_targets",
+      "window_reuse_and_reopen",
+      "active_tab_f1_mapping",
+      "modeless_help",
+      "no_core_load_for_help",
+      "toolbar_survives_tool_failure",
+      "shared_shutdown_with_manuals"
+    ]
+  },
+  "ui_unification": {
+    "version": "1.4.0",
+    "layout_evidence": {
+      "passed": true,
+      "sizes": [
+        {
+          "width": 1120,
+          "height": 780,
+          "all_nine_tabs_visible": true,
+          "all_home_actions_visible": true
+        },
+        {
+          "width": 1740,
+          "height": 960,
+          "all_nine_tabs_visible": true,
+          "all_home_actions_visible": true
+        }
+      ],
+      "behavior_preserved": {
+        "bjt": {
+          "widgets": 80,
+          "canvases": 0
+        },
+        "arrange": {
+          "widgets": 74,
+          "canvases": 1
+        },
+        "overlay": {
+          "widgets": 40,
+          "canvases": 0
+        },
+        "exchanger": {
+          "widgets": 25,
+          "canvases": 0
+        },
+        "alignment": {
+          "widgets": 30,
+          "canvases": 0
+        },
+        "thermal": {
+          "widgets": 169,
+          "canvases": 5
+        },
+        "compare": {
+          "widgets": 63,
+          "canvases": 0
+        },
+        "number_tools": {
+          "widgets": 49,
+          "canvases": 0
+        }
+      },
+      "theme": "BjtSuite",
+      "python_callback_errors": [],
+      "close_errors": []
+    },
+    "synthetic_theme_evidence": {
+      "date": "2026-10-23",
+      "scope": "Synthetic 7-control integration checks; full eight-tool visual QA is performed separately.",
+      "runtime": "BJT private CPython 3.12",
+      "module_sha256": "f21121ef4c2408058dc0c38c5c14e9f5b2f9933d6f96f558f8da3023595908a6",
+      "theme": "BjtSuite",
+      "checks": {
+        "control_signatures_preserved": true,
+        "canvas_all_29_options_preserved": true,
+        "original_heading_font_preserved": true,
+        "semantic_status_colors_preserved": true,
+        "repeated_apply_font_count_stable": true,
+        "variable_value_preserved": true,
+        "custom_named_font_reference_and_zoom_preserved": true,
+        "explicit_consolas_font_preserved": true,
+        "original_tool_theme_switch_restored": true,
+        "disabled_precedes_active": true
+      },
+      "controls": 7,
+      "canvas_options": 29,
+      "stable_named_font_count": 17,
+      "nav_tab_padding": "10 6",
+      "disabled_foreground": "#64748b",
+      "disabled_background": "#e8edf4"
+    },
+    "preserved_widget_signatures": 530,
+    "preserved_canvases": 6,
+    "eight_tool_full_gui_retested_at_unified_theme_stage": true,
+    "all_eight_manual_controls_retested": true,
+    "final_arrange_reflow_targeted_gui": {
+      "passed": true,
+      "sizes": [
+        {
+          "width": 1120,
+          "height": 780,
+          "toolbar_controls": 17,
+          "compact_two_rows": true,
+          "source_buttons": 4,
+          "export_cancel_hit_test": true,
+          "side_preview_and_help_hit_test": true
+        },
+        {
+          "width": 1740,
+          "height": 960,
+          "toolbar_controls": 17,
+          "compact_two_rows": false,
+          "source_buttons": 4,
+          "export_cancel_hit_test": true,
+          "side_preview_and_help_hit_test": true
+        },
+        {
+          "width": 1120,
+          "height": 780,
+          "toolbar_controls": 17,
+          "compact_two_rows": true,
+          "source_buttons": 4,
+          "export_cancel_hit_test": true,
+          "side_preview_and_help_hit_test": true
+        }
+      ],
+      "checks": [
+        "17_original_toolbar_widgets_commands_vars_widths_bindtags_preserved",
+        "all_controls_center_hit_test_not_covered_by_new_containers",
+        "four_source_buttons_and_export_cancel_visible",
+        "all_three_side_tabs_and_preview_controls_accessible",
+        "compact_wide_compact_reflow",
+        "original_nudge_copy_paste_duplicate_delete_undo_bindings",
+        "real_canvas_drag_and_undo",
+        "real_control_wheel_zoom_alt_wheel_rotation_middle_pan",
+        "preview_tab_wheel_shift_jump_and_opacity",
+        "fit_and_100_percent_commands",
+        "actual_export_cancel_button_reachable_and_effective",
+        "shared_close_waits_for_actual_export_worker",
+        "clean_python_and_Tcl_shutdown"
+      ],
+      "python_callback_errors": [],
+      "tcl_background_errors": []
+    },
+    "final_arrange_reflow_fresh_output_parity": {
+      "passed": true,
+      "fresh_baseline_cases": {
+        "total": 6,
+        "passed": 6,
+        "cases": [
+          {
+            "name": "arrange_compose_clip_hide_rotate_fallback",
+            "passed": true
+          },
+          {
+            "name": "arrange_alpha_compositing",
+            "passed": true
+          },
+          {
+            "name": "arrange_rotations_geometry_naming",
+            "passed": true
+          },
+          {
+            "name": "arrange_output_formats",
+            "passed": true
+          },
+          {
+            "name": "arrange_stl_slicing_and_cache",
+            "passed": true
+          },
+          {
+            "name": "arrange_parallel_export_length_modes_cancel",
+            "passed": true
+          }
+        ]
+      },
+      "fresh_integrated_cases": {
+        "total": 6,
+        "passed": 6,
+        "cases": [
+          {
+            "name": "arrange_compose_clip_hide_rotate_fallback",
+            "passed": true
+          },
+          {
+            "name": "arrange_alpha_compositing",
+            "passed": true
+          },
+          {
+            "name": "arrange_rotations_geometry_naming",
+            "passed": true
+          },
+          {
+            "name": "arrange_output_formats",
+            "passed": true
+          },
+          {
+            "name": "arrange_stl_slicing_and_cache",
+            "passed": true
+          },
+          {
+            "name": "arrange_parallel_export_length_modes_cancel",
+            "passed": true
+          }
+        ]
+      },
+      "identical_artifacts": 23,
+      "artifact_differences": [],
+      "artifact_sha256": {
+        "results.json": "2d1eac62f90239b687a76e871ee604e307c50095f698775ca43b3e24a8fbab28",
+        "arrange_alpha_compositing\\alpha.png": "3f4869d18027c933946602d8ff792da5d6f64c6ac41db856f4207a4fe2aa8b1d",
+        "arrange_output_formats\\fallback.png": "f08f7bac54057251140c2f2c774689ce96fe2b7c2b16c768a4e68ed22fcda99c",
+        "arrange_output_formats\\out.bmp": "cfba0d764d04be529af51793042e54f5e71d185244cfec0d34f74e6b1f0bb5a3",
+        "arrange_output_formats\\out.jpg": "75114201931559ed39de4e58f824f13fbfc1b3d2df67f7967047fcce6f8edbe2",
+        "arrange_output_formats\\out.png": "d5bc40dd9b91e65bb703d936a505ad5aa2262267fd9f37b3ec493acb9bef5294",
+        "arrange_output_formats\\out.tif": "bf153e28ca588cb5575cdf734d69017a17920ccc7c3b83db544f5ef4745278c5",
+        "arrange_output_formats\\out.webp": "ecd543dbd8e3d72fad7abde43da9a6de4d9d7be30f4733f87497c4fc52efe0c3",
+        "arrange_stl_slicing_and_cache\\box.stl": "027aab8bf2f77e6a79c13ac63e696962b16170698bd15baa64e21456c213b96b",
+        "arrange_compose_clip_hide_rotate_fallback\\other\\1.png": "fe6bd0f06a73a3c35d592f86ef54420699b3a8e06c383e44bd54a02a86a185b7",
+        "arrange_compose_clip_hide_rotate_fallback\\source\\1.png": "12b6e0e29b218f8145cddbe7fa503d13bbd9113c09685aae8726c731470a833b",
+        "arrange_parallel_export_length_modes_cancel\\a\\1.png": "1cd98dc0bfca3982981985dd8c2378efc5f7a83c220702dde86b838bbd8f7e4a",
+        "arrange_parallel_export_length_modes_cancel\\a\\2.png": "bc5f06a24de6685bba83b61d460a349d9a5fe998db9d592c95a37ca106451e39",
+        "arrange_parallel_export_length_modes_cancel\\a\\3.png": "6fae88b0b61226a30f45651b0d08fe94c7747cdb9ac79e75d2db1e5501d6c011",
+        "arrange_parallel_export_length_modes_cancel\\b\\1.png": "af8b5b1d046b055d0987ffc766a45c2974e8c722f436640806c07087aee83a67",
+        "arrange_parallel_export_length_modes_cancel\\max\\1.png": "277b71bfee2e4f064320bba114e40a9334692bf369e5cf2c9f6ad1b6332f2f5e",
+        "arrange_parallel_export_length_modes_cancel\\max\\2.png": "7911061e3fba98ab0e5f5fe1f6ae23efddf9cacc3704831269070146af620914",
+        "arrange_parallel_export_length_modes_cancel\\max\\3.png": "34fb214de43332129bd3f11ccc4b5cf4bdc5f491b697c87af7840c380c5e47d8",
+        "arrange_parallel_export_length_modes_cancel\\min\\1.png": "277b71bfee2e4f064320bba114e40a9334692bf369e5cf2c9f6ad1b6332f2f5e",
+        "arrange_stl_slicing_and_cache\\cache\\CACHE_ID\\1.png": "6ba240577205e871cd2d289e0ffef922e6235a169b1eebf208c5ef00a6644a9c",
+        "arrange_stl_slicing_and_cache\\cache\\CACHE_ID\\2.png": "6ba240577205e871cd2d289e0ffef922e6235a169b1eebf208c5ef00a6644a9c",
+        "arrange_stl_slicing_and_cache\\cache\\CACHE_ID\\3.png": "6ba240577205e871cd2d289e0ffef922e6235a169b1eebf208c5ef00a6644a9c",
+        "arrange_stl_slicing_and_cache\\cache\\CACHE_ID\\manifest.json": "e022215e8c72a1b1eaba990e822cf1edd99bb3b27dcabb33cdc14e96769e535c"
+      },
+      "elapsed_seconds": 2.3097710999427363,
+      "normalizations": [
+        "temporary fixture root path",
+        "STL cache directory ID",
+        "JSON key order"
+      ],
+      "scope": "Fresh six-case arrange algorithm/output fixtures: composition/clipping/visibility/rotation/fallback, alpha, output formats, STL slicing/cache, parallel export length modes and cancellation."
+    }
+  },
+  "verified_scope": [
+    "All six authoritative desktop tool source files remain byte identical; compile-time root class adaptation preserves 905 nested function/method code objects.",
+    "The exchanger intentionally replaces three runtime validation helpers through its separately tested adapter; its original transaction, worker, backup and rollback functions are retained.",
+    "Fresh baseline and integrated runs verify representative original algorithms and normalized output artifacts.",
+    "Hidden Tk tests exercise all eight full interfaces, styles/fonts/shortcut isolation, registered DnD handlers and Tcl Korean/space path parsing.",
+    "Actual copy and comparison workers are cancelled by local/shared controls, and simultaneous live workers are stopped and joined on shared close.",
+    "The real M1 inputs are read-only. Fast mode proves byte identity and validates headers/structure; it does not decode identical compressed pixel streams. Changed bytes still use native decoded comparisons."
+  ],
+  "scope_limits": [
+    "Physical Windows Explorer drag gestures were not automated; native drop registration and handler payload parsing were tested.",
+    "The functional fixtures are representative regression cases, not an exhaustive proof for every possible input."
+  ],
+  "source_sha256_at_validation": {
+    "run_suite.py": "a030e86f0d4e0bbf8815a25eb60151bc7c088f1f569042300e20b9db2cd0038f",
+    "slice_compare_cli.py": "da1ef220fb685cc4e059cc8250f51653f6d23604b50aaf8951ce387aa8fbcec8",
+    "slice_compare_engine.py": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+    "slice_replace_validation.py": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+    "sources/260914_BJT_model_to_lattice_STL_all_in_one.py": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+    "sources/number_tools.py": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+    "sources/sic_buildbox_thermal_gui_v5.py": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+    "sources/slice exchanger.py": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+    "sources/slice_alignment_checker.py": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+    "sources/slice_compare_app.py": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+    "sources/slice_folder_overlay.py": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+    "sources/slicing arrange.py": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+    "suite_layout.py": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+    "suite_loader.py": "7739ba1e8f5c86ed2e8b3cf0132881b9c7b31c962765142ce7dc3f5b4972fdb7",
+    "suite_manuals.py": "f4badabd8ed602edbf9c48170cfcc0f3bc790ed5c1e366800d330924b2b6943c",
+    "suite_runtime.py": "44a64ed1227fd25b4af84521efd1643dbfc60e7c56438a687694bbbb8bde18b9",
+    "suite_theme.py": "f21121ef4c2408058dc0c38c5c14e9f5b2f9933d6f96f558f8da3023595908a6",
+    "suite_ui.py": "27b60f763d88f0c4c1960432d6c71e781ff9ef4975b35e0ccf9076d331018144"
+  },
+  "evidence_reports": [
+    "기존6개_소스동일성.json",
+    "기존기능_bjt.json",
+    "기존기능_slices.json",
+    "기존기능_thermal.json",
+    "기존기능_thermal_GUI_CSV.json",
+    "드래그앤드롭_폴백.json",
+    "모델_STL_비교.json",
+    "배치반응형_새출력동일성.json",
+    "배치반응형_조작회귀.json",
+    "병렬_저장_종료.json",
+    "비동기_단축키_종료.json",
+    "사용설명서_검증.json",
+    "사용설명서_브라우저.json",
+    "슬라이싱_기능.json",
+    "슬라이싱_출력_일치.json",
+    "슬라이싱교체_자동최종검사_GUI.json",
+    "슬라이싱교체_자동최종검사_회귀검증.json",
+    "실행환경_추가패키지.json",
+    "여덟탭_GUI통합검증.json",
+    "열해석_비교.json",
+    "일곱도구_설명서검증.json",
+    "일곱탭_GUI통합검증.json",
+    "자동시험_전체결과.json",
+    "전체도구_설명서검증.json",
+    "최종_소스검증.json",
+    "코드_본문_일치.json",
+    "통일UI_레이아웃검증.json",
+    "통일UI_테마검증.json",
+    "통합_GUI.json"
+  ]
+}

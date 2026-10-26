@@ -1,0 +1,281 @@
+{
+  "passed": true,
+  "tool_count": 11,
+  "python_callback_errors": [],
+  "tools": {
+    "bjt": {
+      "variable_count": 30,
+      "variables": [
+        "axes_var",
+        "batch_var",
+        "center_var",
+        "crop_margin_var",
+        "crop_xy_var",
+        "crop_z_var",
+        "dpi_x_var",
+        "dpi_y_var",
+        "input_var",
+        "intermediate_format_var",
+        "lattice_type_var",
+        "lattice_width_var",
+        "layer_var",
+        "max_triangles_var",
+        "mode_var",
+        "output_var",
+        "pattern_var",
+        "preview_index_var",
+        "print_equivalent_var",
+        "same_dpi_var",
+        "save_lattice_var",
+        "save_raw_var",
+        "shell_method_var",
+        "shell_var",
+        "slice_margin_var",
+        "spacing_var",
+        "surface_mode_var",
+        "unit_var",
+        "verify_layer_xor_var",
+        "workers_var"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": []
+    },
+    "arrange": {
+      "variable_count": 14,
+      "variables": [
+        "canvas_height_var",
+        "canvas_width_var",
+        "dpi_x_var",
+        "dpi_y_var",
+        "layer_scrub_var",
+        "layer_var",
+        "length_mode_var",
+        "merge_mode_var",
+        "opacity_var",
+        "output_folder_var",
+        "stl_layer_height_var",
+        "visible_var",
+        "x_var",
+        "y_var"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": [
+        "copied_id",
+        "current_layer",
+        "output_folder_manual",
+        "placement_order",
+        "placements",
+        "selected_id",
+        "source_by_folder",
+        "sources"
+      ]
+    },
+    "overlay": {
+      "variable_count": 10,
+      "variables": [
+        "background_value_var",
+        "match_mode_var",
+        "material_is_white_var",
+        "material_value_var",
+        "output_dir_var",
+        "output_name_mode_var",
+        "overlay_mode_var",
+        "overwrite_var",
+        "size_mode_var",
+        "threshold_var"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": [
+        "folders"
+      ]
+    },
+    "exchanger": {
+      "variable_count": 6,
+      "variables": [
+        "a_end_var",
+        "a_folder_var",
+        "a_start_var",
+        "b_end_var",
+        "b_folder_var",
+        "b_start_var"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": []
+    },
+    "alignment": {
+      "variable_count": 3,
+      "variables": [
+        "scan_mode",
+        "vars.dpi",
+        "vars.switch_layer"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": [
+        "source"
+      ]
+    },
+    "thermal": {
+      "variable_count": 45,
+      "variables": [
+        "bed_rho",
+        "bottom_gap",
+        "bottom_t",
+        "bottom_view_factor",
+        "box_cp",
+        "box_density",
+        "box_k",
+        "cal_h",
+        "cal_scale",
+        "contact_blend",
+        "cp",
+        "d10",
+        "d50",
+        "d90",
+        "emissivity",
+        "floor_emissivity",
+        "gas_k",
+        "hconv",
+        "initial_temp",
+        "k_eff",
+        "k_solid",
+        "language_var",
+        "lx",
+        "ly",
+        "lz",
+        "max_dt",
+        "nx",
+        "ny",
+        "nz",
+        "o2_ambient",
+        "o2_d25",
+        "o2_enabled_var",
+        "o2_initial",
+        "o2_knudsen_var",
+        "o2_side_access_var",
+        "o2_tau",
+        "o2_temp_exp",
+        "o2_top_access_var",
+        "record_interval",
+        "side_t",
+        "snapshot_interval",
+        "solid_k_exp",
+        "top_open_var",
+        "top_t",
+        "true_rho"
+      ],
+      "unbound_entry_count": 5,
+      "unbound_entries": [
+        "!panedwindow/!frame/!canvas/!frame/!labelframe2/!canonicalcombobox",
+        "!panedwindow/!frame/!canvas/!frame/!labelframe3/!canonicalcombobox",
+        "!panedwindow/!frame/!canvas/!frame/!labelframe3/!canonicalcombobox2",
+        "!panedwindow/!frame/!canvas/!frame/!labelframe5/!canonicalcombobox",
+        "!panedwindow/!frame/!frame/!canonicalcombobox"
+      ],
+      "input_models": [
+        "oven_profile",
+        "tc_data",
+        "tc_path"
+      ]
+    },
+    "compare": {
+      "variable_count": 4,
+      "variables": [
+        "filter",
+        "mode",
+        "search",
+        "verify_identical"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": [
+        "left_paths",
+        "right_paths"
+      ]
+    },
+    "number_tools": {
+      "variable_count": 9,
+      "variables": [
+        "dup_max_var",
+        "dup_min_var",
+        "ext_var",
+        "folder_var",
+        "output_var",
+        "policy_var",
+        "scan_max_var",
+        "scan_min_var",
+        "source_var"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": []
+    },
+    "sequence_z": {
+      "variable_count": 6,
+      "variables": [
+        "end_var",
+        "feeding_drop_var",
+        "initial_z_var",
+        "layer_var",
+        "recoating_rise_var",
+        "start_var"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": []
+    },
+    "m2_converter": {
+      "variable_count": 9,
+      "variables": [
+        "conflict_var",
+        "dpi_x_var",
+        "dpi_y_var",
+        "height_var",
+        "mode_var",
+        "output_var",
+        "padding_var",
+        "start_var",
+        "width_var"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": [
+        "paths"
+      ]
+    },
+    "chitu_checker": {
+      "variable_count": 2,
+      "variables": [
+        "gap_var",
+        "show_all_var"
+      ],
+      "unbound_entry_count": 0,
+      "unbound_entries": [],
+      "input_models": [
+        "paths"
+      ]
+    }
+  },
+  "test_result": {
+    "passed": 13,
+    "subtests_passed": 17,
+    "seconds": 17.89,
+    "python_callback_errors": 0
+  },
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "source_hashes": {
+    "suite_ui.py": "08e1c4790dc75c994062f4f5871daf02edcbf615d992903950ef77b96872ff40",
+    "suite_state.py": "a2452d072cc475c8bf14fe55a00d52ba9b7af1f064a1da5d8b3865d97788b97b",
+    "tests/test_suite_state.py": "31780b4c2b867c688b9f3bdeddf3a791e81c2887bc5611ef166d3f30bb33b7ab"
+  },
+  "manifest_checks": {
+    "count": 26,
+    "all_valid": true
+  },
+  "total_tk_variables": 138,
+  "total_unbound_entries": 5
+}

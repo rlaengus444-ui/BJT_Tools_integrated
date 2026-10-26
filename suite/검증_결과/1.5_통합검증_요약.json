@@ -1,0 +1,221 @@
+{
+  "passed": true,
+  "suite_version": "1.5.0",
+  "tool_count": 10,
+  "source_checks": [
+    {
+      "id": "bjt",
+      "valid": true,
+      "bytes": 534649,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\260914_BJT_model_to_lattice_STL_all_in_one.py"
+    },
+    {
+      "id": "arrange",
+      "valid": true,
+      "bytes": 111281,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slicing arrange.py"
+    },
+    {
+      "id": "overlay",
+      "valid": true,
+      "bytes": 25838,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_folder_overlay.py"
+    },
+    {
+      "id": "exchanger",
+      "valid": true,
+      "bytes": 18784,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py"
+    },
+    {
+      "id": "alignment",
+      "valid": true,
+      "bytes": 137262,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_alignment_checker.py"
+    },
+    {
+      "id": "thermal",
+      "valid": true,
+      "bytes": 161773,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\sic_buildbox_thermal_gui_v5.py"
+    },
+    {
+      "id": "compare",
+      "valid": true,
+      "bytes": 37944,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_compare_app.py"
+    },
+    {
+      "id": "number_tools",
+      "valid": true,
+      "bytes": 35171,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\number_tools.py"
+    },
+    {
+      "id": "sequence_z",
+      "valid": true,
+      "bytes": 28062,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\sequence_z.py"
+    },
+    {
+      "id": "m2_converter",
+      "valid": true,
+      "bytes": 28401,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\m2_converter.py"
+    },
+    {
+      "id": "slice_compare_engine.py",
+      "valid": true,
+      "bytes": 51024,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_compare_engine.py"
+    },
+    {
+      "id": "slice_replace_validation.py",
+      "valid": true,
+      "bytes": 6013,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_replace_validation.py"
+    },
+    {
+      "id": "suite_theme.py",
+      "valid": true,
+      "bytes": 17555,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\suite_theme.py"
+    },
+    {
+      "id": "suite_layout.py",
+      "valid": true,
+      "bytes": 3713,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\suite_layout.py"
+    },
+    {
+      "id": "m2_image_engine.py",
+      "valid": true,
+      "bytes": 16757,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\m2_image_engine.py"
+    }
+  ],
+  "unit_tests": 122,
+  "unit_failures": 0,
+  "unit_errors": 0,
+  "unit_skipped": 0,
+  "manuals": [
+    {
+      "id": "bjt",
+      "chapters": 12,
+      "characters": 11479
+    },
+    {
+      "id": "arrange",
+      "chapters": 10,
+      "characters": 7303
+    },
+    {
+      "id": "overlay",
+      "chapters": 10,
+      "characters": 7644
+    },
+    {
+      "id": "exchanger",
+      "chapters": 10,
+      "characters": 9950
+    },
+    {
+      "id": "alignment",
+      "chapters": 14,
+      "characters": 9339
+    },
+    {
+      "id": "thermal",
+      "chapters": 15,
+      "characters": 19555
+    },
+    {
+      "id": "compare",
+      "chapters": 18,
+      "characters": 14348
+    },
+    {
+      "id": "number_tools",
+      "chapters": 12,
+      "characters": 9568
+    },
+    {
+      "id": "sequence_z",
+      "chapters": 12,
+      "characters": 6552
+    },
+    {
+      "id": "m2_converter",
+      "chapters": 14,
+      "characters": 9220
+    }
+  ],
+  "manual_chapters": 127,
+  "new_gui_checks": 38,
+  "comparison_bundle": {
+    "summary": {
+      "total": 1825,
+      "identical": 1602,
+      "different": 0,
+      "left_only": 0,
+      "right_only": 222,
+      "error": 0,
+      "unsupported": 1,
+      "left_files": 1602,
+      "right_files": 1825,
+      "pixels_equal": 1602,
+      "left_layers": 1602,
+      "right_layers": 1824,
+      "overall_identical": false
+    },
+    "tk_completion": {
+      "elapsed_seconds": 3.375,
+      "update_ticks": 612,
+      "max_update_seconds": 0.05871590005699545
+    },
+    "engine_seconds": 3.223951,
+    "performance": {
+      "full_decodes": 0,
+      "decoded_cache_hits": 0,
+      "header_only_files": 3426
+    }
+  },
+  "visual": {
+    "passed": true,
+    "verified_at": "2026-10-23T18:32:40.700937+09:00",
+    "method": "Windows native screenshots and native input using computer-use skill; generated 1.5 source application.",
+    "reviewed": [
+      "Wide home: all 10 cards and 11 navigation tabs",
+      "Sequence Z: inputs, fixed interval, independent query, table calculation and populated default rows",
+      "M2: single/multi selector, ordered input list, output numbering and conflict options, controls and result area",
+      "Shared navy/light theme, readable typography and shared blue primary actions"
+    ],
+    "minimum_size_scope": "All 10 interfaces tested programmatically at 1120x780; native visual inspection above used wide window.",
+    "user_input_files_modified": false
+  },
+  "evidence": [
+    "1.5_기존기능_보존검증.json",
+    "자동시험_전체결과.json",
+    "M1_M2_GUI검증_1.5.json",
+    "M2_변환_독립회귀검증.json",
+    "통일UI_레이아웃검증_1.5.json",
+    "열개탭_GUI통합검증_1.5.json",
+    "전체도구_설명서검증_1.5.json"
+  ],
+  "exe_validation": "See EXE distribution build/diagnostic/fixture reports after frozen build; source tests alone do not certify the EXE.",
+  "manual_validation": {
+    "documents": 10,
+    "chapters": 127,
+    "characters": 104958,
+    "check_groups": 21,
+    "callback_errors": 0
+  },
+  "exe_environment_observation": {
+    "zip_write": "Windows CreateFileW GENERIC_WRITE returned ACCESS_DENIED 5 for absent .zip targets before fixtures ran.",
+    "same_flags_non_zip": ".bin/.png/.txt creation and deletion succeeded in the same folder.",
+    "zip_read": "Actual M1 directory/ZIP: 1825 rows, 1602 identical pairs, 222 extra images, 1 unsupported file, 0 errors; 3.247069 seconds.",
+    "security_settings_changed": false,
+    "policy_owner_confirmed": false,
+    "scope": "Environment restriction on ZIP writing; source tests and actual frozen ZIP input reading are reported separately."
+  }
+}

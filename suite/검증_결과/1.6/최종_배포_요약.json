@@ -1,0 +1,30 @@
+{
+  "version": "1.6.0",
+  "execution_context": "Windows x64 PE under Wine 10 on Linux Docker; no clean native Windows VM test",
+  "tests": {
+    "total": 200,
+    "passed": 199,
+    "skipped_external_reference": 1,
+    "subtests_passed": 97,
+    "failures": 0,
+    "errors": 0
+  },
+  "frozen_gates": {
+    "diagnose-exe.json": true,
+    "smoke-gui-exe.json": true,
+    "fixtures-exe.json": true,
+    "cli-exe.json": true,
+    "chitu-cli-exe.json": true,
+    "chitu-gui-exe.json": true
+  },
+  "binaries": {
+    "BJT_명령줄.exe": {
+      "bytes": 31417300,
+      "sha256": "be40a795a3c299fb8950f82c3c8b7fed46451c44c8b25a21cd1427de5f71b6d4"
+    },
+    "BJT_통합프로그램.exe": {
+      "bytes": 31413716,
+      "sha256": "348cb8bdd2e8eac5e23036b9c5d4b232e0911ebb40136fa3e82db9e9362a8ae8"
+    }
+  }
+}

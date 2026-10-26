@@ -1,0 +1,4579 @@
+{
+  "candidate_bundle_version": "14.44.35211.0",
+  "candidate_dlls": [
+    {
+      "dll": "msvcp140.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "vcruntime140.dll",
+        "vcruntime140_1.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "vcruntime140.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "vcamp140.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "advapi32.dll",
+        "kernel32.dll",
+        "vcruntime140_1.dll",
+        "vcruntime140.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "msvcp140.dll",
+        "concrt140.dll",
+        "d3d11.dll",
+        "d3dcompiler_47.dll",
+        "dxgi.dll",
+        "version.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "concrt140.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "msvcp140.dll",
+        "vcruntime140_1.dll",
+        "vcruntime140.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "msvcp140_atomic_wait.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "msvcp140.dll",
+        "vcruntime140_1.dll",
+        "vcruntime140.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "advapi32.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "msvcp140_1.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "msvcp140.dll",
+        "vcruntime140.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "vccorlib140.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "kernel32.dll",
+        "vcruntime140_1.dll",
+        "vcruntime140.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "msvcp140.dll",
+        "ole32.dll",
+        "oleaut32.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "api-ms-win-core-winrt-error-l1-1-0.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "vcruntime140_threads.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "vcruntime140.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "msvcp140_2.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "msvcp140.dll",
+        "vcruntime140.dll",
+        "vcruntime140_1.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "msvcp140_codecvt_ids.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "vcruntime140.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "vcomp140.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "kernel32.dll"
+      ],
+      "file_version": null
+    },
+    {
+      "dll": "vcruntime140_1.dll",
+      "machine": "0x8664",
+      "dependencies": [
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "vcruntime140.dll",
+        "kernel32.dll"
+      ],
+      "file_version": null
+    }
+  ],
+  "product_runtime_references": [
+    {
+      "file": "_internal/libcrypto-3.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/tcl86t.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/_ssl.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/_asyncio.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/_ctypes.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/_uuid.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/select.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/_queue.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/_decimal.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/_socket.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/_wmi.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/_wmi.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/_lzma.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/manifold3d.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/manifold3d.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 18
+    },
+    {
+      "file": "_internal/python312.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/_hashlib.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/libssl-3.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/_tkinter.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/tk86t.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/_bz2.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/libffi-8.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/pyexpat.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/_overlapped.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/VCRUNTIME140_1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/_multiprocessing.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/_elementtree.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/unicodedata.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCesium3DTiles-9.3-5dda4683a35399e2a45c8892348ad6db.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCesium3DTiles-9.3-5dda4683a35399e2a45c8892348ad6db.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersHyperTree-9.3-0e7aa44ea9c614c02f3819b400668370.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersHyperTree-9.3-0e7aa44ea9c614c02f3819b400668370.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCellGrid-9.3-7e89b1008048f87c679684fafe61e2f0.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCellGrid-9.3-7e89b1008048f87c679684fafe61e2f0.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOImport-9.3-a47259add08b58cfe49ccc5b46ab01bb.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOImport-9.3-a47259add08b58cfe49ccc5b46ab01bb.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkmdiympi_nompi-a28d157c2fefd9a0ce9925d309ee5deb.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtk.libs/vtkmdiympi_nompi-a28d157c2fefd9a0ce9925d309ee5deb.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersSMP-9.3-61a0bcf44c577673823b21bfd2514b15.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersSMP-9.3-61a0bcf44c577673823b21bfd2514b15.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersTopology-9.3-1f5c3d55d9450b9444a80cf88776021c.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersTopology-9.3-1f5c3d55d9450b9444a80cf88776021c.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVolume-9.3-9f1e4039c9eeb481c60d208d83028d87.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVolume-9.3-9f1e4039c9eeb481c60d208d83028d87.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOExportGL2PS-9.3-a31569745c253e6cc318c674dc2ca82d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOExportGL2PS-9.3-a31569745c253e6cc318c674dc2ca82d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkhdf5-9.3-03db5e67ee574587aa99de246bba3971.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOVideo-9.3-4e51d333ff79f94d47fc4279657b942a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOVideo-9.3-4e51d333ff79f94d47fc4279657b942a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingColor-9.3-02af54397c69032d51b625f644b52558.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingColor-9.3-02af54397c69032d51b625f644b52558.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersGeneric-9.3-ceca58c826cef244917624d45b5eb7d5.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersGeneric-9.3-ceca58c826cef244917624d45b5eb7d5.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOAsynchronous-9.3-63c10a354153c6dd08c705ea920359da.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOAsynchronous-9.3-63c10a354153c6dd08c705ea920359da.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtklibproj-9.3-2854eea44997bc1f204f8d8ba49b9e09.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 21
+    },
+    {
+      "file": "_internal/vtk.libs/vtklibproj-9.3-2854eea44997bc1f204f8d8ba49b9e09.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOSegY-9.3-2fa5a8fcf4cfcf7ccde1ce33d7abf8cf.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOSegY-9.3-2fa5a8fcf4cfcf7ccde1ce33d7abf8cf.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersCellGrid-9.3-82a1d4d893128973834f19c7a36dfe59.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersCellGrid-9.3-82a1d4d893128973834f19c7a36dfe59.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonMath-9.3-28d27bb61d1f92174796e2e41f71d7ae.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonMath-9.3-28d27bb61d1f92174796e2e41f71d7ae.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_density_estimate-9.3-b9c20126cc0806ab2d82a41c2dda8d9d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_density_estimate-9.3-b9c20126cc0806ab2d82a41c2dda8d9d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingGeneral-9.3-e81c5fcfc867df9cd13e545fe21829a5.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingGeneral-9.3-e81c5fcfc867df9cd13e545fe21829a5.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOGeometry-9.3-2e4216d4546f96cfe0df505d3ce130c7.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOGeometry-9.3-2e4216d4546f96cfe0df505d3ce130c7.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOMotionFX-9.3-74fedd31a8c7493cf69ac743ba10d6a3.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOMotionFX-9.3-74fedd31a8c7493cf69ac743ba10d6a3.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOXMLParser-9.3-5702b543ce1b0ba27f40f55aa368f52f.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOXMLParser-9.3-5702b543ce1b0ba27f40f55aa368f52f.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersParallelStatistics-9.3-7859395c0d3d433b96184c778e5758e1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersParallelStatistics-9.3-7859395c0d3d433b96184c778e5758e1.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOTRUCHAS-9.3-7e3d10edd36e760db346ef5a298bfb0e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOTRUCHAS-9.3-7e3d10edd36e760db346ef5a298bfb0e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOVeraOut-9.3-4054b1780b5eae6595cc71f8613be92c.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOVeraOut-9.3-4054b1780b5eae6595cc71f8613be92c.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingHybrid-9.3-c90ee3b5853094c828a3c008c21f0b4e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingHybrid-9.3-c90ee3b5853094c828a3c008c21f0b4e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOTecplotTable-9.3-523c1347f60d71d6ea5bae8343fe310e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOTecplotTable-9.3-523c1347f60d71d6ea5bae8343fe310e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkzlib-9.3-206264e039992453f6ec3c81ae7f59e5.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingExternal-9.3-2b32e17bd0608b9942c4696095923704.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingExternal-9.3-2b32e17bd0608b9942c4696095923704.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkParallelDIY-9.3-30a9682098df95c33aeaa44412e74bd0.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkParallelDIY-9.3-30a9682098df95c33aeaa44412e74bd0.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingCore-9.3-9684d03d6e0ff8d093a025ef70d27508.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingCore-9.3-9684d03d6e0ff8d093a025ef70d27508.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonMisc-9.3-fb377e176695d038561fbc6d4c7cbf31.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonMisc-9.3-fb377e176695d038561fbc6d4c7cbf31.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOImage-9.3-3ad9778f88705d298cf5c48b38ab4f1c.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 18
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOImage-9.3-3ad9778f88705d298cf5c48b38ab4f1c.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkViewsContext2D-9.3-cdc2771200870aab1d1d6c0bbfb72847.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtk.libs/vtkViewsContext2D-9.3-cdc2771200870aab1d1d6c0bbfb72847.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonTransforms-9.3-b0baac606a3223b5a0d78be1cf16c3f0.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonTransforms-9.3-b0baac606a3223b5a0d78be1cf16c3f0.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOExodus-9.3-5a6f81af8a4198f62718dc10e262fd53.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOExodus-9.3-5a6f81af8a4198f62718dc10e262fd53.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVtkJS-9.3-49e87a5fcafdc581e9190d2eb62aafda.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVtkJS-9.3-49e87a5fcafdc581e9190d2eb62aafda.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOLegacy-9.3-54d80c0f01046fc0be487c4a45e00343.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOLegacy-9.3-54d80c0f01046fc0be487c4a45e00343.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersPython-9.3-023b54c64dd55e0c954931eb45cc8166.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersPython-9.3-023b54c64dd55e0c954931eb45cc8166.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkpugixml-9.3-2c5001a0a8cb17e0109850bd2b56d18b.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkpugixml-9.3-2c5001a0a8cb17e0109850bd2b56d18b.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingGL2PSOpenGL2-9.3-5a2beaf4d22e5ee3d65d25d22ff26b0c.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingGL2PSOpenGL2-9.3-5a2beaf4d22e5ee3d65d25d22ff26b0c.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkioss-9.3-1e3d86b7949015d1d8d2dfc18f8eda0c.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 18
+    },
+    {
+      "file": "_internal/vtk.libs/vtkioss-9.3-1e3d86b7949015d1d8d2dfc18f8eda0c.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkChartsCore-9.3-df475d3dc93cdd2d87a1eb47acb3512b.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkChartsCore-9.3-df475d3dc93cdd2d87a1eb47acb3512b.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersParallelDIY2-9.3-4cd38c0735351da21fde9c7f84a21016.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersParallelDIY2-9.3-4cd38c0735351da21fde9c7f84a21016.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonDataModel-9.3-d6c97e73cbce93fc41404cc2c623a932.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonDataModel-9.3-d6c97e73cbce93fc41404cc2c623a932.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOVPIC-9.3-e312baeb30aed678ad36212d46cfd4de.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOVPIC-9.3-e312baeb30aed678ad36212d46cfd4de.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtksys-9.3-a1118232aa87d067f40715cb4b6d859b.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtksys-9.3-a1118232aa87d067f40715cb4b6d859b.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkjsoncpp-9.3-17357ec2720a59ec06aa904878e97c46.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkjsoncpp-9.3-17357ec2720a59ec06aa904878e97c46.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingCore-9.3-0bb08d47c771ff91d7a970cf224f9add.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingCore-9.3-0bb08d47c771ff91d7a970cf224f9add.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_geometry_refinement-9.3-ec9959e87acd46b203122e4fd1c1099d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_geometry_refinement-9.3-ec9959e87acd46b203122e4fd1c1099d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInteractionWidgets-9.3-eee6c3dd3eaadc3719e6b9c108bc6bf1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInteractionWidgets-9.3-eee6c3dd3eaadc3719e6b9c108bc6bf1.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkxdmf2-9.3-57dd2377d04c516ee26a4055512c12e6.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkxdmf2-9.3-57dd2377d04c516ee26a4055512c12e6.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_mesh_info-9.3-a777f9290a39390f9eebeb97f6b8af31.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_mesh_info-9.3-a777f9290a39390f9eebeb97f6b8af31.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtklz4-9.3-a1a9bf62eea8a66dbf80ef6409073786.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtk.libs/vtkViewsInfovis-9.3-78ec3fd812182172decea970b53159a8.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkViewsInfovis-9.3-78ec3fd812182172decea970b53159a8.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkexpat-9.3-201296700c244db5eebbe7c8f6b818cf.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOXML-9.3-4def472f7c148f5ffbb752227abe45be.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOXML-9.3-4def472f7c148f5ffbb752227abe45be.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkWebCore-9.3-ea85904ba9386753f5fded448a17379e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkWebCore-9.3-ea85904ba9386753f5fded448a17379e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkh5part-9.3-e60e1bc611d1ee97d0958cb53acf38fd.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersExtraction-9.3-a4eab4813277441ac9ca7dd82c1643a2.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersExtraction-9.3-a4eab4813277441ac9ca7dd82c1643a2.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOH5part-9.3-9ea02d9503c229ecb027e50fa40b2108.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOH5part-9.3-9ea02d9503c229ecb027e50fa40b2108.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersTexture-9.3-43a39089e11d6b3dc6ad4e1926829c1a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersTexture-9.3-43a39089e11d6b3dc6ad4e1926829c1a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOEnSight-9.3-09f09cb2e163cb3ab240382e6d6ef995.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOEnSight-9.3-09f09cb2e163cb3ab240382e6d6ef995.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOExportPDF-9.3-ce9cc81a3a1c7350d174eca843694358.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOExportPDF-9.3-ce9cc81a3a1c7350d174eca843694358.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingHyperTreeGrid-9.3-0c154a9e307dd64a2b2bc17eda2edbab.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingHyperTreeGrid-9.3-0c154a9e307dd64a2b2bc17eda2edbab.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersVerdict-9.3-d1749c73310a688efe30dd42b5247032.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersVerdict-9.3-d1749c73310a688efe30dd42b5247032.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersStatistics-9.3-367db2bbefa6ef8a1ac1d4bb6cc69d68.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersStatistics-9.3-367db2bbefa6ef8a1ac1d4bb6cc69d68.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_contour-9.3-40da0544afa68b62b08179f7cf2bd5dd.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_contour-9.3-40da0544afa68b62b08179f7cf2bd5dd.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersFlowPaths-9.3-bcc9fb0c1a5c40c9107fb17978136fc1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersFlowPaths-9.3-bcc9fb0c1a5c40c9107fb17978136fc1.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkfmt-9.3-4b28147141d9a889986fd3c5b7943be1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkfmt-9.3-4b28147141d9a889986fd3c5b7943be1.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersHybrid-9.3-85413b59f7778bf7f1ad17909d60bf5d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersHybrid-9.3-85413b59f7778bf7f1ad17909d60bf5d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkAcceleratorsVTKmCore-9.3-9d85826f2c71fb31ee1b6370529961d3.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkAcceleratorsVTKmCore-9.3-9d85826f2c71fb31ee1b6370529961d3.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonComputationalGeometry-9.3-83a8c5c0908fd2bd75b938c5163e7964.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonComputationalGeometry-9.3-83a8c5c0908fd2bd75b938c5163e7964.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkPythonContext2D-9.3-b7a0e264475e44f80808a75d8b70d88f.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkPythonContext2D-9.3-b7a0e264475e44f80808a75d8b70d88f.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingOpenGL2-9.3-c3160e92ccc405a3d0d97c664cd16e0e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingOpenGL2-9.3-c3160e92ccc405a3d0d97c664cd16e0e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingUI-9.3-4bffe03ba17fd11b6d9d91cea0c05ac6.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingUI-9.3-4bffe03ba17fd11b6d9d91cea0c05ac6.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkTestingRendering-9.3-3a49e83c8f12338fe39952dc51ed282b.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkTestingRendering-9.3-3a49e83c8f12338fe39952dc51ed282b.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkjpeg-9.3-fb9c13931ea50c61882e20cc7975330b.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingCellGrid-9.3-5b0378526b827b01d3b246cc22b40526.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingCellGrid-9.3-5b0378526b827b01d3b246cc22b40526.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOPIO-9.3-38484afb6979b5e4e547ee1cafb2c99f.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOPIO-9.3-38484afb6979b5e4e547ee1cafb2c99f.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersCore-9.3-3e6ac57fea1cf65fde02aa165190b10a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersCore-9.3-3e6ac57fea1cf65fde02aa165190b10a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOHDF-9.3-0aa83a00bbeb43e8adf7301392ece467.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOHDF-9.3-0aa83a00bbeb43e8adf7301392ece467.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtklzma-9.3-f491734981f289a130a5cd92e8979c41.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonExecutionModel-9.3-251c29f77d77dbc44887c4d587f8ab55.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonExecutionModel-9.3-251c29f77d77dbc44887c4d587f8ab55.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtksqlite-9.3-5af4208d58775db805d16acf891f86ba.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersImaging-9.3-d5bb5c47f059ed35fcd821aeb1c59f2e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersImaging-9.3-d5bb5c47f059ed35fcd821aeb1c59f2e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOIOSS-9.3-3ef38b98beb11972228073a1788310ea.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOIOSS-9.3-3ef38b98beb11972228073a1788310ea.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOOMF-9.3-2365b1fcb3655769cb780a3c1391f9b1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOOMF-9.3-2365b1fcb3655769cb780a3c1391f9b1.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkglew-9.3-1e9e049b0c70760a9b4885bcde82cbb5.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonCore-9.3-2b002c5aa8518622262a8d925d912cd9.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonCore-9.3-2b002c5aa8518622262a8d925d912cd9.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkViewsCore-9.3-0521b7e8d5bf38bd7d68cba93b15fb15.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkViewsCore-9.3-0521b7e8d5bf38bd7d68cba93b15fb15.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIONetCDF-9.3-1947e1420583a04c32c2e11214003385.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIONetCDF-9.3-1947e1420583a04c32c2e11214003385.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonColor-9.3-6031c1fbeb21eafc1dbdcd0cfa30f60f.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonColor-9.3-6031c1fbeb21eafc1dbdcd0cfa30f60f.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOPLY-9.3-6713b875be06c1ed34579cd2d489ab6a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOPLY-9.3-6713b875be06c1ed34579cd2d489ab6a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingSources-9.3-b296420e4ef5e88de7ea0dcf1c03a3a2.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingSources-9.3-b296420e4ef5e88de7ea0dcf1c03a3a2.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOParallelXML-9.3-40d6794a794013a569c2ce33abd86667.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOParallelXML-9.3-40d6794a794013a569c2ce33abd86667.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingStencil-9.3-3e92d128e76eedf67773fa14d56ed015.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingStencil-9.3-3e92d128e76eedf67773fa14d56ed015.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkAcceleratorsVTKmFilters-9.3-3f8262bccf61b38f7dd5330ec67c5eef.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkAcceleratorsVTKmFilters-9.3-3f8262bccf61b38f7dd5330ec67c5eef.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOH5Rage-9.3-e9c0cb652aeded1572f64972d4f3ebae.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOH5Rage-9.3-e9c0cb652aeded1572f64972d4f3ebae.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingAnnotation-9.3-9d72fe97db4166e62d39e3bf047c86d1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingAnnotation-9.3-9d72fe97db4166e62d39e3bf047c86d1.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersPoints-9.3-e166e8b9df09f3d3a6ede6be7213b218.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersPoints-9.3-e166e8b9df09f3d3a6ede6be7213b218.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingParallel-9.3-25a46edb002ee809f3a9432449d12de6.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingParallel-9.3-25a46edb002ee809f3a9432449d12de6.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkDomainsChemistryOpenGL2-9.3-1f80c0b52bd1414f8fc0e675b29f6c20.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkDomainsChemistryOpenGL2-9.3-1f80c0b52bd1414f8fc0e675b29f6c20.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersAMR-9.3-33b4f358bda17f586eec6d6858b77c1a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersAMR-9.3-33b4f358bda17f586eec6d6858b77c1a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_field_transform-9.3-fd3abc1ffa3e7fdd65afc9617e34cd58.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_field_transform-9.3-fd3abc1ffa3e7fdd65afc9617e34cd58.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_core-9.3-0408624172d27524a1c760927e81472e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_core-9.3-0408624172d27524a1c760927e81472e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInfovisLayout-9.3-650902489c212308911fa7932fd839df.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInfovisLayout-9.3-650902489c212308911fa7932fd839df.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_cont-9.3-b8e807b12542c73d2f088ca96cdbbafc.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_cont-9.3-b8e807b12542c73d2f088ca96cdbbafc.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkverdict-9.3-ea4c89c0fe22d49c45fc3cbe41df23bc.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingMorphological-9.3-288feffbbf490cad96b1cdbac2d3f026.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingMorphological-9.3-288feffbbf490cad96b1cdbac2d3f026.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOExport-9.3-b3cab892da891937abe7244fad652178.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOExport-9.3-b3cab892da891937abe7244fad652178.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingMath-9.3-6cd60423e1c064f6d853eae4782ad493.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingMath-9.3-6cd60423e1c064f6d853eae4782ad493.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_field_conversion-9.3-a87926a5098e5cd7057c5bd5fd4a6ec4.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_field_conversion-9.3-a87926a5098e5cd7057c5bd5fd4a6ec4.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersGeneral-9.3-ad66ce3b3f47bbdc45d9c900ff2e9a20.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersGeneral-9.3-ad66ce3b3f47bbdc45d9c900ff2e9a20.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCGNSReader-9.3-9af3cf74437cdd5db94379cbcd73fe02.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCGNSReader-9.3-9af3cf74437cdd5db94379cbcd73fe02.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersProgrammable-9.3-80c056d9aa4403656893779b71db25db.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersProgrammable-9.3-80c056d9aa4403656893779b71db25db.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkexodusII-9.3-7188562f4795f4de00099cb3e20be2e4.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersParallelImaging-9.3-2e6753a44861c3534d45d263f941b1df.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersParallelImaging-9.3-2e6753a44861c3534d45d263f941b1df.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingFreeType-9.3-c2029edf7c7da93fa155c217bccf4f61.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingFreeType-9.3-c2029edf7c7da93fa155c217bccf4f61.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOOggTheora-9.3-49b8bdbd3440bca5e039d8eacd71fbbb.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOOggTheora-9.3-49b8bdbd3440bca5e039d8eacd71fbbb.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVolumeAMR-9.3-50077b4b53eb8f6c322f8680d5080707.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVolumeAMR-9.3-50077b4b53eb8f6c322f8680d5080707.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_entity_extraction-9.3-275ccb6020ce17f81ae4f6dedde172f5.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_entity_extraction-9.3-275ccb6020ce17f81ae4f6dedde172f5.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_clean_grid-9.3-12d7f3d10c3d114c3372cb4145a242ba.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_clean_grid-9.3-12d7f3d10c3d114c3372cb4145a242ba.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVR-9.3-2254add2e859e26e60582640fa984650.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVR-9.3-2254add2e859e26e60582640fa984650.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtktheora-9.3-0a14400fa7fde86e6b2e8437e331bd25.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCore-9.3-c4e706f9b213ddf7eb4ebadd62543a2d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCore-9.3-c4e706f9b213ddf7eb4ebadd62543a2d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingContext2D-9.3-9c7e794814130cb3265675e30dac67f6.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingContext2D-9.3-9c7e794814130cb3265675e30dac67f6.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingLICOpenGL2-9.3-2228bed04505cc6cb0bfc7171610d279.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingLICOpenGL2-9.3-2228bed04505cc6cb0bfc7171610d279.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_worklet-9.3-0ed5185dcf587118d9110a9c131891be.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_worklet-9.3-0ed5185dcf587118d9110a9c131891be.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOFLUENTCFF-9.3-93f56ab6ed3f8c59b50b6edffa1dc2e2.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOFLUENTCFF-9.3-93f56ab6ed3f8c59b50b6edffa1dc2e2.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOParallelExodus-9.3-38bbeb4f2b35ddb789d77797f1a0e22f.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOParallelExodus-9.3-38bbeb4f2b35ddb789d77797f1a0e22f.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOParallelLSDyna-9.3-1bbf04775b57d03334101df079bd688e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOParallelLSDyna-9.3-1bbf04775b57d03334101df079bd688e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingImage-9.3-5abba61f3be2e49d00e4c62fdb4c75e8.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingImage-9.3-5abba61f3be2e49d00e4c62fdb4c75e8.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOAMR-9.3-372e0f983a1eaf99f9846fb0f3ac2770.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOAMR-9.3-372e0f983a1eaf99f9846fb0f3ac2770.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersGeometryPreview-9.3-5c8a647bbbb47da69b2e8ce32e6920e1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersGeometryPreview-9.3-5c8a647bbbb47da69b2e8ce32e6920e1.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/msvcp140-aa2e4bd331e46f2c89293d7086020d3a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/vtk.libs/msvcp140-aa2e4bd331e46f2c89293d7086020d3a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkfreetype-9.3-e6de104da09f37025f9e793e8110c316.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkDICOMParser-9.3-354354e35dbd191ad30ffcbcfc623719.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkDICOMParser-9.3-354354e35dbd191ad30ffcbcfc623719.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOChemistry-9.3-9ab9586a52a494717d9a10736b38cd28.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOChemistry-9.3-9ab9586a52a494717d9a10736b38cd28.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersReduction-9.3-3a94d26aac477a5eb728270e874117d4.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersReduction-9.3-3a94d26aac477a5eb728270e874117d4.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCityGML-9.3-7a464e262855fa3ea2190e3f593420d5.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCityGML-9.3-7a464e262855fa3ea2190e3f593420d5.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersSources-9.3-912cb6e5cde1972b76f1d11a3d99980e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersSources-9.3-912cb6e5cde1972b76f1d11a3d99980e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkpng-9.3-136e4850a328c1508c3d60bd4970f3b6.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtk.libs/vtkWebGLExporter-9.3-eea5d56de30543dd59895979092bd72a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkWebGLExporter-9.3-eea5d56de30543dd59895979092bd72a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_vector_analysis-9.3-b51518aa86d405fdddb03918e6eb589d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_vector_analysis-9.3-b51518aa86d405fdddb03918e6eb589d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOXdmf2-9.3-d8689d133cdf41afdf05b64443f38dcd.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOXdmf2-9.3-d8689d133cdf41afdf05b64443f38dcd.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkPythonInterpreter-9.3-7615b46b6130f3cf4f77f2c836f741ab.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkPythonInterpreter-9.3-7615b46b6130f3cf4f77f2c836f741ab.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkogg-9.3-5cf98e2d78bd70cbc369442005b90297.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingSceneGraph-9.3-bba2df27d9c2c578749179e69c77f381.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingSceneGraph-9.3-bba2df27d9c2c578749179e69c77f381.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersSelection-9.3-9914e7570edeec05e7a2623ccbe86779.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersSelection-9.3-9914e7570edeec05e7a2623ccbe86779.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_connected_components-9.3-d7f2f8638f90befec42b559951cd1601.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_connected_components-9.3-d7f2f8638f90befec42b559951cd1601.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingLOD-9.3-12697cb378d2c0823eb54a8b435faa37.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingLOD-9.3-12697cb378d2c0823eb54a8b435faa37.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkmetaio-9.3-6dc6e97ffa57d543e20d7f9794180890.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 18
+    },
+    {
+      "file": "_internal/vtk.libs/vtkmetaio-9.3-6dc6e97ffa57d543e20d7f9794180890.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkgl2ps-9.3-31bdf0e8c9cf9947740a3d64f34cc6af.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOInfovis-9.3-310bb3fc864e2194e978f5372fd82946.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOInfovis-9.3-310bb3fc864e2194e978f5372fd82946.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkGeovisCore-9.3-8068ea5dad4cb6665020e70d1d73f5a9.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkGeovisCore-9.3-8068ea5dad4cb6665020e70d1d73f5a9.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkParallelCore-9.3-b8ecee499004c434358262b0b7629b3c.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkParallelCore-9.3-b8ecee499004c434358262b0b7629b3c.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtknetcdf-9.3-72018915dace6ec13984403f8b789293.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingMatplotlib-9.3-6843546c47e5cb34f4026a6ee40ae93c.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingMatplotlib-9.3-6843546c47e5cb34f4026a6ee40ae93c.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersParallel-9.3-129e58c3c74bda64cf7c8e056f11c85d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersParallel-9.3-129e58c3c74bda64cf7c8e056f11c85d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkhdf5_hl-9.3-e0a5eb63c54be38718a389c19a0cf865.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonPython-9.3-be5576bdfe6e362460a4c8179fc1514d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonPython-9.3-be5576bdfe6e362460a4c8179fc1514d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingLabel-9.3-bda139487486dbfee269a499e7bf591a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingLabel-9.3-bda139487486dbfee269a499e7bf591a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVolumeOpenGL2-9.3-70bf9887060b89d2015b68a65923d316.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingVolumeOpenGL2-9.3-70bf9887060b89d2015b68a65923d316.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_resampling-9.3-e0eec3971cff8e06b7a581788dbaebf4.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkm_filter_resampling-9.3-e0eec3971cff8e06b7a581788dbaebf4.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersTensor-9.3-7dbc492af3c0065c3f08ef3796c26d47.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersTensor-9.3-7dbc492af3c0065c3f08ef3796c26d47.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkAcceleratorsVTKmDataModel-9.3-6d617b38582f354ee590267e0377d89d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkAcceleratorsVTKmDataModel-9.3-6d617b38582f354ee590267e0377d89d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkDomainsChemistry-9.3-d1dd3fb92b3f32a05e219f74a0b67cef.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkDomainsChemistry-9.3-d1dd3fb92b3f32a05e219f74a0b67cef.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInteractionImage-9.3-717c8a33d9a6ad2a4a43c3e949a7a286.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInteractionImage-9.3-717c8a33d9a6ad2a4a43c3e949a7a286.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOMINC-9.3-726e035b8ac9a7cfa4bb86941a7d9aae.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOMINC-9.3-726e035b8ac9a7cfa4bb86941a7d9aae.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingOpenGL2-9.3-76dc46de8a550129b1616eaa28f54c5e.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingOpenGL2-9.3-76dc46de8a550129b1616eaa28f54c5e.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOGeoJSON-9.3-940b199fdf168c59d7022ef486be546f.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOGeoJSON-9.3-940b199fdf168c59d7022ef486be546f.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkWrappingPythonCore3.12-9.3-6b216cf0184bf54d747b45ae1ea5ac4d.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkWrappingPythonCore3.12-9.3-6b216cf0184bf54d747b45ae1ea5ac4d.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOParallel-9.3-8637e6ab3e7806cba6b070589e03c7fd.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOParallel-9.3-8637e6ab3e7806cba6b070589e03c7fd.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersGeometry-9.3-e7c403b68894aa931f9a431d9b7b7f06.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersGeometry-9.3-e7c403b68894aa931f9a431d9b7b7f06.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingContextOpenGL2-9.3-8c4abffa31243492798eb42ad743ee07.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkRenderingContextOpenGL2-9.3-8c4abffa31243492798eb42ad743ee07.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtklibxml2-9.3-d4f4800b7cbea3bf40a097a37cad1ab1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtk.libs/vtkkissfft-9.3-d8a3c77647579516cc61a63e6eebfb45.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInfovisCore-9.3-ec2db323f4a650a056d28734adb16dac.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInfovisCore-9.3-ec2db323f4a650a056d28734adb16dac.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkdoubleconversion-9.3-9f9d534f365debe88c5e72bb279bcde4.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtk.libs/vtkdoubleconversion-9.3-9f9d534f365debe88c5e72bb279bcde4.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingStatistics-9.3-d632a2655dae60c5e17c2161561147f4.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingStatistics-9.3-d632a2655dae60c5e17c2161561147f4.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOSQL-9.3-cacac9515a9bee46482611621ccbc3dc.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOSQL-9.3-cacac9515a9bee46482611621ccbc3dc.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkloguru-9.3-914ee19ab17dc000c1b3f0e7033043a2.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkloguru-9.3-914ee19ab17dc000c1b3f0e7033043a2.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersModeling-9.3-c7fbf569fbaeb7f12113fc8f32ec9ced.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkFiltersModeling-9.3-c7fbf569fbaeb7f12113fc8f32ec9ced.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkcgns-9.3-be6c5f6ea9bf09c9d650fb68b5d6396a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtk.libs/vtktiff-9.3-cf279ad5e5997440f261ebbec5d3faa4.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonSystem-9.3-44dc3b442bba909ee53192a9d64d87bf.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/vtk.libs/vtkCommonSystem-9.3-44dc3b442bba909ee53192a9d64d87bf.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInteractionStyle-9.3-93b217c8b988b2d78609165de6f54a3a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkInteractionStyle-9.3-93b217c8b988b2d78609165de6f54a3a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOLSDyna-9.3-8a77e5eaa455bcd6296c094a3aef15d8.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOLSDyna-9.3-8a77e5eaa455bcd6296c094a3aef15d8.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingFourier-9.3-e1a670bfd247b36b2cc3c3ee05f4ee2a.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtk.libs/vtkImagingFourier-9.3-e1a670bfd247b36b2cc3c3ee05f4ee2a.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOMovie-9.3-a6a8649304bc1f263ce661143911029b.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOMovie-9.3-a6a8649304bc1f263ce661143911029b.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCONVERGECFD-9.3-1f8c57747c2ddb57d5d37d7a7f1c30a1.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtk.libs/vtkIOCONVERGECFD-9.3-1f8c57747c2ddb57d5d37d7a7f1c30a1.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtkvpic-9.3-93c8cb63d2728cfb1fda9d76448f3308.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/vtk.libs/vtkvpic-9.3-93c8cb63d2728cfb1fda9d76448f3308.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtk.libs/vtklibharu-9.3-171b20f5f2eaed4c3466535312d3e87f.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/matplotlib/_tri.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/matplotlib/_tri.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 20
+    },
+    {
+      "file": "_internal/matplotlib/_c_internal_utils.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/matplotlib/_c_internal_utils.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 19
+    },
+    {
+      "file": "_internal/matplotlib/_qhull.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/matplotlib/_qhull.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 21
+    },
+    {
+      "file": "_internal/matplotlib/ft2font.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/matplotlib/ft2font.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 27
+    },
+    {
+      "file": "_internal/matplotlib/_path.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/matplotlib/_path.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 19
+    },
+    {
+      "file": "_internal/matplotlib/_image.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/matplotlib/_image.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 19
+    },
+    {
+      "file": "_internal/contourpy/_contourpy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 20
+    },
+    {
+      "file": "_internal/contourpy/_contourpy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/_devicearray.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/numba/_helperlib.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/numba/_dispatcher.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/_dispatcher.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/numba/_dynfunc.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/numba/mviewbuf.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/PIL/_imagingft.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/PIL/_imagingcms.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/PIL/_avif.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/PIL/_webp.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/PIL/_imagingmath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 3
+    },
+    {
+      "file": "_internal/PIL/_imaging.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/PIL/_imagingtk.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 3
+    },
+    {
+      "file": "_internal/Shapely.libs/geos_c-072b7a9224d16d3e4ab2395bb855b2d3.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/Shapely.libs/geos_c-072b7a9224d16d3e4ab2395bb855b2d3.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/Shapely.libs/geos-ae6efa0782962b98e358f10ea539ae5f.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/Shapely.libs/geos-ae6efa0782962b98e358f10ea539ae5f.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/Shapely.libs/msvcp140-90bc62d4947a5878f1dc1057312f3be2.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/Shapely.libs/msvcp140-90bc62d4947a5878f1dc1057312f3be2.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/Cython/LZSS.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/Cython/Utils.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/Cython/StringIOTree.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/fcl/ccd.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/fcl/octomath.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/fcl/fcl.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/fcl/fcl.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/fcl/fcl.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 52
+    },
+    {
+      "file": "_internal/fcl/octomap.dll",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 23
+    },
+    {
+      "file": "_internal/fcl/octomap.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/fcl/octomap.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/llvmlite.libs/msvcp140-8f141b4454fa78db34bc1f28c571b4da.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/llvmlite.libs/msvcp140-8f141b4454fa78db34bc1f28c571b4da.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/shapely/_geometry_helpers.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/shapely/_geos.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/shapely/lib.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/kiwisolver/_cext.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/kiwisolver/_cext.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/imagecodecs/_pixarlog.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_meshopt.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_avif.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/imagecodecs/_rgbe.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_zopfli.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegls.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegls.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegls.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_lzo.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_quantize.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_zlib.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_aec.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_ljpeg.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_jpeg8.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/imagecodecs/_pcodec.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/imagecodecs/_htj2k.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_htj2k.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/imagecodecs/_szip.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegsof3.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_tiff.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_tiff.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 17
+    },
+    {
+      "file": "_internal/imagecodecs/_tiff.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_lzham.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_apng.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/imagecodecs/_ultrahdr.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 44
+    },
+    {
+      "file": "_internal/imagecodecs/_ultrahdr.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 19
+    },
+    {
+      "file": "_internal/imagecodecs/_ultrahdr.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_jpeg2k.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/imagecodecs/_wavpack.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_jetraw.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_lzma.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/imagecodecs/_bcn.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_czi.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_lzf.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_png.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegxr.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/imagecodecs/_shared.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_webp.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/imagecodecs/_wic.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_wic.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/imagecodecs/_shared_cython.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/imagecodecs/_lzfse.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_zstd.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_sperr.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_sperr.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/imagecodecs/_sperr.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_gif.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_imcd.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_pcx.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_blosc2.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/imagecodecs/_bmp.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_h5checksum.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_brotli.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_tga.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_qoi.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_lz4.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegxs.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_deflate.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/imagecodecs/_lerc.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_lerc.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/imagecodecs/_lerc.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_ccitt.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_bz2.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_spng.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/imagecodecs/_bitshuffle.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegxl.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegxl.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 15
+    },
+    {
+      "file": "_internal/imagecodecs/_jpegxl.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_openzl.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_zlibng.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_cms.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/imagecodecs/_blosc.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_blosc.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/imagecodecs/_snappy.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_snappy.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/imagecodecs/_exr.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 2
+    },
+    {
+      "file": "_internal/imagecodecs/_exr.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/imagecodecs/_exr.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_zfp.pyd",
+      "runtime": "vcomp140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/imagecodecs/_zfp.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_mozjpeg.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/imagecodecs/_sz3.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 41
+    },
+    {
+      "file": "_internal/imagecodecs/_sz3.pyd",
+      "runtime": "vcomp140.dll",
+      "imported_symbols": 12
+    },
+    {
+      "file": "_internal/imagecodecs/_sz3.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/imagecodecs/_sz3.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/imagecodecs/_pglz.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/imagecodecs/_heif.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/imagecodecs/_isal.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/imagecodecs/_cfitsio.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersPoints.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersPoints.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkWebGLExporter.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkWebGLExporter.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingGeneral.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVolumeAMR.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingAnnotation.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOMotionFX.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkViewsCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersImaging.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOCellGrid.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInteractionWidgets.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInteractionWidgets.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersGeneral.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersGeneral.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingFourier.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOParallelExodus.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOParallelExodus.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOSQL.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOSQL.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersFlowPaths.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersFlowPaths.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVolumeOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVolumeOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersHybrid.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersHybrid.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingImage.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkViewsInfovis.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkViewsInfovis.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOLegacy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOLegacy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersGeometry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersGeometry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingCellGrid.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOExodus.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOExodus.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingParallel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersPython.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonColor.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonColor.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOGeometry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOGeometry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingFreeType.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingFreeType.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingLOD.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOCONVERGECFD.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersParallelStatistics.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkParallelCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkParallelCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonSystem.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonSystem.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOCGNSReader.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOH5part.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOH5part.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkAcceleratorsVTKmFilters.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkAcceleratorsVTKmFilters.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonMisc.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonMisc.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOEnSight.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIONetCDF.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIONetCDF.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingHyperTreeGrid.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersParallel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersParallel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingMatplotlib.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVtkJS.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVtkJS.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkChartsCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkChartsCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersAMR.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersAMR.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOLSDyna.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOLSDyna.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOCesium3DTiles.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOOMF.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingContext2D.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingContext2D.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkGeovisCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkGeovisCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOImport.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOImport.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOChemistry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInfovisCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInfovisCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkViewsContext2D.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInteractionImage.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOGeoJSON.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOGeoJSON.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOExportGL2PS.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonMath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonMath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingHybrid.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingHybrid.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOExportPDF.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOExportPDF.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingSceneGraph.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInteractionStyle.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInteractionStyle.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVolume.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVolume.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingContextOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingContextOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersReduction.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersReduction.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersTexture.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOVeraOut.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonPython.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonPython.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingLabel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingLabel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOTRUCHAS.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOVideo.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersExtraction.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersExtraction.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkAcceleratorsVTKmDataModel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkAcceleratorsVTKmDataModel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOParallelXML.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOParallelXML.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOOggTheora.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOMINC.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersSMP.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOMovie.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersHyperTree.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersHyperTree.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOAMR.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOAMR.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOPIO.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOSegY.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOAsynchronous.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOImage.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOImage.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOXMLParser.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOXMLParser.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOHDF.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingMath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingLICOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingLICOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersTensor.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersTensor.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersParallelDIY2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersVerdict.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOPLY.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOPLY.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingStencil.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOIOSS.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOIOSS.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingMorphological.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingMorphological.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOXdmf2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOXdmf2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOTecplotTable.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOTecplotTable.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersProgrammable.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVR.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingVR.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingSources.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingSources.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOXML.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOXML.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersGeometryPreview.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersTopology.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOFLUENTCFF.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOFLUENTCFF.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOInfovis.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOInfovis.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkAcceleratorsVTKmCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonExecutionModel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonExecutionModel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkDomainsChemistryOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/vtkmodules/vtkDomainsChemistryOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOParallel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOParallel.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingColor.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersModeling.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersModeling.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOVPIC.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersSelection.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersSources.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersSources.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingUI.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersParallelImaging.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonTransforms.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonTransforms.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingExternal.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersStatistics.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersStatistics.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInfovisLayout.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkInfovisLayout.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOCityGML.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersCellGrid.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkImagingStatistics.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkTestingRendering.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkTestingRendering.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkDomainsChemistry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkDomainsChemistry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOH5Rage.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingGL2PSOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkRenderingGL2PSOpenGL2.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOExport.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOExport.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersGeneric.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/vtkmodules/vtkFiltersGeneric.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkPythonContext2D.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkIOParallelLSDyna.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonComputationalGeometry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkCommonComputationalGeometry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/vtkmodules/vtkWebCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/vtkmodules/vtkWebCore.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/llvmlite/binding/llvmlite.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/llvmlite/binding/llvmlite.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 16
+    },
+    {
+      "file": "_internal/matplotlib/backends/_tkagg.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/matplotlib/backends/_tkagg.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 19
+    },
+    {
+      "file": "_internal/matplotlib/backends/_backend_agg.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/matplotlib/backends/_backend_agg.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 21
+    },
+    {
+      "file": "_internal/numpy/linalg/_umath_linalg.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numpy/_core/_multiarray_tests.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/numpy/random/_bounded_integers.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/numpy/random/_philox.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/numpy/random/_generator.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/numpy/random/_common.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/numpy/random/mtrand.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/numpy/random/_pcg64.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/numpy/random/_sfc64.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/numpy/random/bit_generator.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/numpy/random/_mt19937.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/skimage/filters/_multiotsu.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/_shared/geometry.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/skimage/_shared/fast_exp.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/_shared/transform.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/skimage/_shared/interpolation.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/morphology/_misc_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/morphology/_convex_hull.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/morphology/_max_tree.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/morphology/_flood_fill_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/morphology/_skeletonize_lee_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/skimage/morphology/_grayreconstruct.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/morphology/_skeletonize_various_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/morphology/_extrema_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/transform/_radon_transform.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/transform/_warps_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/transform/_hough_transform.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/segmentation/_felzenszwalb_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/segmentation/_slic.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/segmentation/_quickshift_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/segmentation/_watershed_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/restoration/_nl_means_denoising.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/restoration/_rolling_ball_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/restoration/_denoise_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/restoration/_unwrap_1d.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/restoration/_inpaint.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/restoration/_unwrap_3d.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/restoration/_unwrap_2d.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/graph/_mcp.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/graph/heap.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/graph/_spath.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/graph/_ncut_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/feature/_hessian_det_appx.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 22
+    },
+    {
+      "file": "_internal/skimage/feature/_hessian_det_appx.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/skimage/feature/_haar.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/skimage/feature/_haar.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/skimage/feature/brief_cy.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 21
+    },
+    {
+      "file": "_internal/skimage/feature/brief_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/skimage/feature/corner_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/feature/_cascade.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/skimage/feature/_cascade.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/skimage/feature/_texture.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/feature/_canny_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/feature/_hoghistogram.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/feature/_sift.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/feature/censure_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/feature/orb_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/draw/_draw.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/measure/_pnpoly.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/measure/_find_contours_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/measure/_ccomp.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/measure/_moments_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/measure/_marching_cubes_lewiner_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/util/_remap.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/skimage/util/_remap.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/skimage/filters/rank/core_cy_3d.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/skimage/filters/rank/percentile_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/filters/rank/core_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/skimage/filters/rank/bilateral_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/skimage/filters/rank/generic_cy.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/rtree/lib/spatialindex_c-64.dll",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 42
+    },
+    {
+      "file": "_internal/rtree/lib/spatialindex_c-64.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 13
+    },
+    {
+      "file": "_internal/rtree/lib/spatialindex_c-64.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/rtree/lib/spatialindex-64.dll",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 85
+    },
+    {
+      "file": "_internal/rtree/lib/spatialindex-64.dll",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 14
+    },
+    {
+      "file": "_internal/rtree/lib/spatialindex-64.dll",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/np/ufunc/tbbpool.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/numba/np/ufunc/tbbpool.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/np/ufunc/tbbpool.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 10
+    },
+    {
+      "file": "_internal/numba/np/ufunc/_num_threads.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/numba/np/ufunc/omppool.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/np/ufunc/omppool.cp312-win_amd64.pyd",
+      "runtime": "vcomp140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/numba/np/ufunc/omppool.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/np/ufunc/omppool.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/numba/np/ufunc/workqueue.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/np/ufunc/workqueue.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/np/ufunc/workqueue.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/numba/np/ufunc/_internal.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/numba/cuda/cudadrv/_extras.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/numba/experimental/jitclass/_box.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/numba/core/typeconv/_typeconv.cp312-win_amd64.pyd",
+      "runtime": "msvcp140.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/core/typeconv/_typeconv.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140_1.dll",
+      "imported_symbols": 1
+    },
+    {
+      "file": "_internal/numba/core/typeconv/_typeconv.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 11
+    },
+    {
+      "file": "_internal/numba/core/runtime/_nrt_python.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 4
+    },
+    {
+      "file": "_internal/Cython/Plex/Scanners.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/Cython/Plex/Actions.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/Cython/Plex/Machines.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/Cython/Plex/Transitions.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/Cython/Plex/DFA.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/Cython/Compiler/Visitor.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/Cython/Compiler/Parsing.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/Cython/Compiler/FlowControl.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/Cython/Compiler/Scanning.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    },
+    {
+      "file": "_internal/Cython/Compiler/LineTable.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 5
+    },
+    {
+      "file": "_internal/Cython/Compiler/StringEncoding.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 6
+    },
+    {
+      "file": "_internal/Cython/Compiler/Code.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 9
+    },
+    {
+      "file": "_internal/Cython/Compiler/FusedNode.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 7
+    },
+    {
+      "file": "_internal/Cython/Tempita/_tempita.cp312-win_amd64.pyd",
+      "runtime": "vcruntime140.dll",
+      "imported_symbols": 8
+    }
+  ],
+  "missing_candidate_exports": [],
+  "all_plain_vc_imports_satisfied_by_candidate": true
+}

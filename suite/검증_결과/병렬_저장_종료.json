@@ -1,0 +1,12 @@
+{
+  "cancelled_event_received": true,
+  "export_thread_alive": true,
+  "writes_still_blocked": [
+    false,
+    true,
+    true
+  ],
+  "suite_busy_from_button": true,
+  "export_thread_alive_after_release": false,
+  "suite_busy_after_all_writes": false
+}

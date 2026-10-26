@@ -1,0 +1,90 @@
+{
+  "total": 21,
+  "passed": 21,
+  "cases": [
+    {
+      "name": "exchange_success_and_backup",
+      "passed": true
+    },
+    {
+      "name": "exchange_format_rejection",
+      "passed": true
+    },
+    {
+      "name": "exchange_automatic_rollback",
+      "passed": true
+    },
+    {
+      "name": "exchange_number_validation",
+      "passed": true
+    },
+    {
+      "name": "overlay_grayscale_max",
+      "passed": true
+    },
+    {
+      "name": "overlay_grayscale_min",
+      "passed": true
+    },
+    {
+      "name": "overlay_add_clamp",
+      "passed": true
+    },
+    {
+      "name": "overlay_binary_union",
+      "passed": true
+    },
+    {
+      "name": "overlay_black_material",
+      "passed": true
+    },
+    {
+      "name": "overlay_sizes_and_clipping",
+      "passed": true
+    },
+    {
+      "name": "overlay_file_matching",
+      "passed": true
+    },
+    {
+      "name": "overlay_file_output_cancel_overwrite",
+      "passed": true
+    },
+    {
+      "name": "arrange_compose_clip_hide_rotate_fallback",
+      "passed": true
+    },
+    {
+      "name": "arrange_alpha_compositing",
+      "passed": true
+    },
+    {
+      "name": "arrange_rotations_geometry_naming",
+      "passed": true
+    },
+    {
+      "name": "arrange_output_formats",
+      "passed": true
+    },
+    {
+      "name": "arrange_stl_slicing_and_cache",
+      "passed": true
+    },
+    {
+      "name": "arrange_parallel_export_length_modes_cancel",
+      "passed": true
+    },
+    {
+      "name": "alignment_compare_masks_additions_shift",
+      "passed": true
+    },
+    {
+      "name": "alignment_folder_zip_list_cache_numbering",
+      "passed": true
+    },
+    {
+      "name": "alignment_boundary_full_reports_cancel",
+      "passed": true
+    }
+  ]
+}

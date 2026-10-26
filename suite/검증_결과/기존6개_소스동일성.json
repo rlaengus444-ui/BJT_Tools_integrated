@@ -1,0 +1,147 @@
+{
+  "passed": true,
+  "preserved_tools": 6,
+  "tools": [
+    {
+      "id": "bjt",
+      "bytes": 534649,
+      "sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "baseline_byte_identical": true,
+      "identical_compiled_bodies": 443,
+      "adapted_window_bases": [
+        "App"
+      ],
+      "baseline": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램\\BJT_통합프로그램\\BJT_통합도구\\sources\\260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\260914_BJT_model_to_lattice_STL_all_in_one.py"
+    },
+    {
+      "id": "arrange",
+      "bytes": 111281,
+      "sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "baseline_byte_identical": true,
+      "identical_compiled_bodies": 148,
+      "adapted_window_bases": [],
+      "baseline": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램\\BJT_통합프로그램\\BJT_통합도구\\sources\\slicing arrange.py",
+      "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slicing arrange.py"
+    },
+    {
+      "id": "overlay",
+      "bytes": 25838,
+      "sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "baseline_byte_identical": true,
+      "identical_compiled_bodies": 42,
+      "adapted_window_bases": [
+        "App"
+      ],
+      "baseline": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램\\BJT_통합프로그램\\BJT_통합도구\\sources\\slice_folder_overlay.py",
+      "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_folder_overlay.py"
+    },
+    {
+      "id": "exchanger",
+      "bytes": 18784,
+      "sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "baseline_byte_identical": true,
+      "identical_compiled_bodies": 29,
+      "adapted_window_bases": [],
+      "baseline": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램\\BJT_통합프로그램\\BJT_통합도구\\sources\\slice exchanger.py",
+      "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py"
+    },
+    {
+      "id": "alignment",
+      "bytes": 137262,
+      "sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "baseline_byte_identical": true,
+      "identical_compiled_bodies": 125,
+      "adapted_window_bases": [],
+      "baseline": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램\\BJT_통합프로그램\\BJT_통합도구\\sources\\slice_alignment_checker.py",
+      "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_alignment_checker.py"
+    },
+    {
+      "id": "thermal",
+      "bytes": 161773,
+      "sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+      "baseline_byte_identical": true,
+      "identical_compiled_bodies": 118,
+      "adapted_window_bases": [
+        "ThermalGUI"
+      ],
+      "baseline": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램\\BJT_통합프로그램\\BJT_통합도구\\sources\\sic_buildbox_thermal_gui_v5.py",
+      "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\sic_buildbox_thermal_gui_v5.py"
+    }
+  ],
+  "manifest_integrity": [
+    {
+      "id": "bjt",
+      "valid": true,
+      "bytes": 534649,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\260914_BJT_model_to_lattice_STL_all_in_one.py"
+    },
+    {
+      "id": "arrange",
+      "valid": true,
+      "bytes": 111281,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slicing arrange.py"
+    },
+    {
+      "id": "overlay",
+      "valid": true,
+      "bytes": 25838,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_folder_overlay.py"
+    },
+    {
+      "id": "exchanger",
+      "valid": true,
+      "bytes": 18784,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py"
+    },
+    {
+      "id": "alignment",
+      "valid": true,
+      "bytes": 137262,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_alignment_checker.py"
+    },
+    {
+      "id": "thermal",
+      "valid": true,
+      "bytes": 161773,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\sic_buildbox_thermal_gui_v5.py"
+    },
+    {
+      "id": "compare",
+      "valid": true,
+      "bytes": 37944,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_compare_app.py"
+    },
+    {
+      "id": "number_tools",
+      "valid": true,
+      "bytes": 35171,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\number_tools.py"
+    },
+    {
+      "id": "slice_compare_engine.py",
+      "valid": true,
+      "bytes": 51024,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_compare_engine.py"
+    },
+    {
+      "id": "slice_replace_validation.py",
+      "valid": true,
+      "bytes": 6013,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_replace_validation.py"
+    },
+    {
+      "id": "suite_theme.py",
+      "valid": true,
+      "bytes": 17411,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\suite_theme.py"
+    },
+    {
+      "id": "suite_layout.py",
+      "valid": true,
+      "bytes": 3713,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\suite_layout.py"
+    }
+  ],
+  "scope": "All six original source files are byte identical to the authoritative desktop bundle. compile_tool adapts only root-class bases and preserves nested function/method code objects. The exchanger additionally replaces three validation helper references through a separately tested native-validation adapter; this is not a claim that those three runtime helpers remain unchanged."
+}

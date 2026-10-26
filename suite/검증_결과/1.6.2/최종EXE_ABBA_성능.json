@@ -1,0 +1,502 @@
+{
+  "passed": true,
+  "execution_context": "Actual Windows x64 EXEs under Wine10/LinuxDocker, same session, isolated12GiB/no-swap container",
+  "order": "Initial block: normal63 warmups excluded, then normal63/camera49/largest22 ABBA each. Follow-up: normal63 warmups excluded, then camera49 ABBA. Every measured sample retained.",
+  "timing_scope": "EXE launch, runtime initialization, reading, inspection, JSON export; excludes download, hashing and HTML",
+  "cache_policy": "Warm OS cache, no cache flush; fresh EXE process each sample; no other heavy jobs scheduled",
+  "gap_mm": 1.0,
+  "timing_comparison_is_observational": true,
+  "executables": {
+    "baseline": {
+      "path": "/workspace/bjt-integration/optimization/windows-build/dist/BJT_통합프로그램_1.6.1_EXE/BJT_명령줄.exe",
+      "sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "unchanged": true
+    },
+    "candidate": {
+      "path": "/workspace/bjt-integration/camera-case/windows-build/dist/BJT_통합프로그램_1.6.2_EXE/BJT_명령줄.exe",
+      "sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "unchanged": true
+    }
+  },
+  "medians": {
+    "normal63": {
+      "baseline": {
+        "samples_seconds": [
+          12.289,
+          11.809
+        ],
+        "sample_count": 2,
+        "median_seconds": 12.049,
+        "max_process_vm_hwm_bytes": 715816960
+      },
+      "candidate": {
+        "samples_seconds": [
+          12.076,
+          11.78
+        ],
+        "sample_count": 2,
+        "median_seconds": 11.928,
+        "max_process_vm_hwm_bytes": 713465856
+      },
+      "candidate_over_baseline_ratio": 0.9899576728359201
+    },
+    "camera49": {
+      "baseline": {
+        "samples_seconds": [
+          12.032,
+          12.03,
+          11.308,
+          12.046
+        ],
+        "sample_count": 4,
+        "median_seconds": 12.030999999999999,
+        "max_process_vm_hwm_bytes": 828678144
+      },
+      "candidate": {
+        "samples_seconds": [
+          12.029,
+          12.916,
+          11.531,
+          11.276
+        ],
+        "sample_count": 4,
+        "median_seconds": 11.780000000000001,
+        "max_process_vm_hwm_bytes": 858460160
+      },
+      "candidate_over_baseline_ratio": 0.9791372288255342
+    },
+    "largest22": {
+      "baseline": {
+        "samples_seconds": [
+          32.339,
+          31.334
+        ],
+        "sample_count": 2,
+        "median_seconds": 31.8365,
+        "max_process_vm_hwm_bytes": 4356898816
+      },
+      "candidate": {
+        "samples_seconds": [
+          29.333,
+          28.84
+        ],
+        "sample_count": 2,
+        "median_seconds": 29.0865,
+        "max_process_vm_hwm_bytes": 4356988928
+      },
+      "candidate_over_baseline_ratio": 0.9136211581046911
+    }
+  },
+  "comparisons": {
+    "normal63-2": {
+      "passed": true,
+      "compared_legacy_pairs": 1953,
+      "failures": []
+    },
+    "normal63-3": {
+      "passed": true,
+      "compared_legacy_pairs": 1953,
+      "failures": []
+    },
+    "camera49-2": {
+      "passed": true,
+      "compared_legacy_pairs": 1081,
+      "failures": []
+    },
+    "camera49-3": {
+      "passed": true,
+      "compared_legacy_pairs": 1081,
+      "failures": []
+    },
+    "largest22-2": {
+      "passed": true,
+      "compared_legacy_pairs": 231,
+      "failures": []
+    },
+    "largest22-3": {
+      "passed": true,
+      "compared_legacy_pairs": 231,
+      "failures": []
+    },
+    "follow-up-camera49-2": {
+      "passed": true,
+      "compared_legacy_pairs": 1081,
+      "failures": []
+    },
+    "follow-up-camera49-3": {
+      "passed": true,
+      "compared_legacy_pairs": 1081,
+      "failures": []
+    }
+  },
+  "runs": [
+    {
+      "case": "normal63",
+      "label": "baseline",
+      "warmup": true,
+      "ordinal": 1,
+      "elapsed_seconds": 11.777,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 715808768,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/warmups/01-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/warmups/01-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "normal63",
+      "label": "candidate",
+      "warmup": true,
+      "ordinal": 2,
+      "elapsed_seconds": 10.771,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 712650752,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/warmups/02-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/warmups/02-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "normal63",
+      "label": "baseline",
+      "warmup": false,
+      "ordinal": 1,
+      "elapsed_seconds": 12.289,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 714833920,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/normal63/01-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/normal63/01-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "normal63",
+      "label": "candidate",
+      "warmup": false,
+      "ordinal": 2,
+      "elapsed_seconds": 12.076,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 710680576,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/normal63/02-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/normal63/02-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "normal63",
+      "label": "candidate",
+      "warmup": false,
+      "ordinal": 3,
+      "elapsed_seconds": 11.78,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 713465856,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/normal63/03-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/normal63/03-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "normal63",
+      "label": "baseline",
+      "warmup": false,
+      "ordinal": 4,
+      "elapsed_seconds": 11.809,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 715816960,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/normal63/04-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/normal63/04-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "camera49",
+      "label": "baseline",
+      "warmup": false,
+      "ordinal": 1,
+      "elapsed_seconds": 12.032,
+      "exit_code": 2,
+      "process_vm_hwm_bytes": 828067840,
+      "oom_kill_delta": 0,
+      "status": "inconclusive",
+      "complete": false,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/camera49/01-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/camera49/01-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "camera49",
+      "label": "candidate",
+      "warmup": false,
+      "ordinal": 2,
+      "elapsed_seconds": 12.029,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 845144064,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/camera49/02-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/camera49/02-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "camera49",
+      "label": "candidate",
+      "warmup": false,
+      "ordinal": 3,
+      "elapsed_seconds": 12.916,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 858460160,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/camera49/03-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/camera49/03-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "camera49",
+      "label": "baseline",
+      "warmup": false,
+      "ordinal": 4,
+      "elapsed_seconds": 12.03,
+      "exit_code": 2,
+      "process_vm_hwm_bytes": 828563456,
+      "oom_kill_delta": 0,
+      "status": "inconclusive",
+      "complete": false,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/camera49/04-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/camera49/04-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "largest22",
+      "label": "baseline",
+      "warmup": false,
+      "ordinal": 1,
+      "elapsed_seconds": 32.339,
+      "exit_code": 1,
+      "process_vm_hwm_bytes": 4356898816,
+      "oom_kill_delta": 0,
+      "status": "violation",
+      "complete": false,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/largest22/01-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/largest22/01-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "largest22",
+      "label": "candidate",
+      "warmup": false,
+      "ordinal": 2,
+      "elapsed_seconds": 29.333,
+      "exit_code": 1,
+      "process_vm_hwm_bytes": 4356988928,
+      "oom_kill_delta": 0,
+      "status": "violation",
+      "complete": false,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/largest22/02-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/largest22/02-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "largest22",
+      "label": "candidate",
+      "warmup": false,
+      "ordinal": 3,
+      "elapsed_seconds": 28.84,
+      "exit_code": 1,
+      "process_vm_hwm_bytes": 4356800512,
+      "oom_kill_delta": 0,
+      "status": "violation",
+      "complete": false,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/largest22/03-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/largest22/03-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "largest22",
+      "label": "baseline",
+      "warmup": false,
+      "ordinal": 4,
+      "elapsed_seconds": 31.334,
+      "exit_code": 1,
+      "process_vm_hwm_bytes": 4356423680,
+      "oom_kill_delta": 0,
+      "status": "violation",
+      "complete": false,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/largest22/04-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/largest22/04-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "normal63",
+      "label": "baseline",
+      "warmup": true,
+      "ordinal": 1,
+      "elapsed_seconds": 10.785,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 713293824,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/warmups/01-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/warmups/01-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "normal63",
+      "label": "candidate",
+      "warmup": true,
+      "ordinal": 2,
+      "elapsed_seconds": 9.772,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 714436608,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/warmups/02-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/warmups/02-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "camera49",
+      "label": "baseline",
+      "warmup": false,
+      "ordinal": 1,
+      "elapsed_seconds": 11.308,
+      "exit_code": 2,
+      "process_vm_hwm_bytes": 828678144,
+      "oom_kill_delta": 0,
+      "status": "inconclusive",
+      "complete": false,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/camera49/01-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/camera49/01-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "camera49",
+      "label": "candidate",
+      "warmup": false,
+      "ordinal": 2,
+      "elapsed_seconds": 11.531,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 847601664,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/camera49/02-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/camera49/02-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "camera49",
+      "label": "candidate",
+      "warmup": false,
+      "ordinal": 3,
+      "elapsed_seconds": 11.276,
+      "exit_code": 0,
+      "process_vm_hwm_bytes": 858398720,
+      "oom_kill_delta": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/camera49/03-candidate",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/camera49/03-candidate/largest-exe-result.json",
+      "basic_gates_passed": true
+    },
+    {
+      "case": "camera49",
+      "label": "baseline",
+      "warmup": false,
+      "ordinal": 4,
+      "elapsed_seconds": 12.046,
+      "exit_code": 2,
+      "process_vm_hwm_bytes": 828678144,
+      "oom_kill_delta": 0,
+      "status": "inconclusive",
+      "complete": false,
+      "processing_completed": true,
+      "source_unchanged": true,
+      "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "directory": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/camera49/04-baseline",
+      "result_file": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/camera49/04-baseline/largest-exe-result.json",
+      "basic_gates_passed": true
+    }
+  ],
+  "camera_follow_up": {
+    "reason": "One initial candidate cold-start sample was slower; extended balanced ABBA to four measured samples per label without removing or replacing any sample.",
+    "initial_summary": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-performance/initial-summary.json",
+    "additional_summary": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat/summary.json",
+    "additional_log": "/workspace/bjt-integration/camera-case/windows-build/paired-pe-camera-repeat.log",
+    "included_all_initial_and_additional_measured_samples": true
+  },
+  "created_utc": "2026-10-25T18:08:33.462937+00:00"
+}

@@ -1,0 +1,137 @@
+{
+  "passed": true,
+  "created_utc": "2026-10-24T08:14:46.685284+00:00",
+  "suite_version": "1.6.1",
+  "execution_context": "Actual Windows x64 PE under Wine 10 in 12 GiB Docker on Linux; not a native Windows VM",
+  "executables": [
+    {
+      "name": "BJT_통합프로그램.exe",
+      "bytes": 31443828,
+      "sha256": "3c501e6b4a705e32ccb6cb3080db1d2de62be40c8d21f3a7904363fb6dfa4124",
+      "modified_utc": "2026-10-24T07:56:00.516214+00:00",
+      "mz_header": "MZ",
+      "machine": "0x8664",
+      "file_version": "1.6.1.0",
+      "unchanged_since_measured": true
+    },
+    {
+      "name": "BJT_명령줄.exe",
+      "bytes": 31447412,
+      "sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+      "modified_utc": "2026-10-24T07:56:00.416218+00:00",
+      "mz_header": "MZ",
+      "machine": "0x8664",
+      "file_version": "1.6.1.0",
+      "unchanged_since_measured": true
+    }
+  ],
+  "gates": [
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/diagnose-exe.json",
+      "passed": true,
+      "sha256": "7545b21625d7de8cb770102f02bc4e1b5fe803f6ea950d78fec01b1a527a7e0e",
+      "modified_utc": "2026-10-24T08:07:57.951593+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/smoke-exe.json",
+      "passed": true,
+      "sha256": "d942e18e114c3eee12da6f39b22f0afed4ae88a2e3e449fe0c263e513d293b08",
+      "modified_utc": "2026-10-24T08:07:57.122475+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/smoke-gui-exe.json",
+      "passed": true,
+      "sha256": "d942e18e114c3eee12da6f39b22f0afed4ae88a2e3e449fe0c263e513d293b08",
+      "modified_utc": "2026-10-24T08:07:58.082431+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/fixtures-exe.json",
+      "passed": true,
+      "sha256": "4c591caa31a837d19c95cee6608d053ffff22562ee9a7d738924d90d42fae99e",
+      "modified_utc": "2026-10-24T08:08:45.440236+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/fixtures-gui-exe.json",
+      "passed": true,
+      "sha256": "df1dab86dce73e88d1d6d05455274f3922ee959f607d1721f436f16dbd6009e5",
+      "modified_utc": "2026-10-24T08:08:46.362119+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/cli-exe.json",
+      "passed": true,
+      "sha256": "23d3b53ff643e77d3c491bd7c616e46adda671aad965c2f34074f3da21f1b044",
+      "modified_utc": "2026-10-24T08:10:55.580197+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/chitu-cli-exe.json",
+      "passed": true,
+      "sha256": "cc80cd9f720d949cd2530ae23d2e8839bded9719e986452968ecdb54c88ab98e",
+      "modified_utc": "2026-10-24T08:07:38.823330+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/chitu-gui-exe.json",
+      "passed": true,
+      "sha256": "13926696972cb0b4ba835fdda8d3421cd46865decb02668ba206a5f0ceec2374",
+      "modified_utc": "2026-10-24T08:07:13.584510+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/final-frozen-source-parity.json",
+      "passed": true,
+      "sha256": "bb2a0fa66f00d7139eab3b26f319f6fb6a327b7241120fc6aba972307ff8e25b",
+      "modified_utc": "2026-10-24T08:10:07.516705+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/native-runtime-closure.json",
+      "passed": true,
+      "sha256": "7e47c7353a875149c1a5650d98b8c13c496b693682a63bae4db9c1f192504992",
+      "modified_utc": "2026-10-24T07:57:16.907482+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/final-pe-benchmark-summary.json",
+      "passed": true,
+      "sha256": "a138b59a0f5ddb38c05a4dad2474b2b6c8d6b1516941739d1cf077dcc2078051",
+      "modified_utc": "2026-10-24T08:00:34.407089+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/runs/pe-large-gui/large-gui-exe.json",
+      "passed": true,
+      "sha256": "f0e2cc47635463d262d985bc9e4a8abdda3754a45ef0a274e88b3819d32b87a9",
+      "modified_utc": "2026-10-24T08:02:58.392283+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/verification/full-suite-windows-1.6.1.json",
+      "passed": true,
+      "sha256": "3b6d9dec385e744c1fb5e5607652f55e05c171e6a1bd4fe0ca5380bfd51e5371",
+      "modified_utc": "2026-10-24T07:52:13.009571+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/verification/final-exe-original-real-cases.json",
+      "passed": true,
+      "sha256": "601215d43c651f81db927e9f72c6bae3d5debaf48c8275a39413dd5fb0e8c9c3",
+      "modified_utc": "2026-10-24T08:06:37.152034+00:00"
+    },
+    {
+      "file": "/workspace/bjt-integration/optimization/windows-build/cpython-license-supplement.json",
+      "passed": true,
+      "sha256": "bf14ed5954977ae3ee6f2a5af2c8b2e60b7e08e874aba26a34cc7f86910a77ae",
+      "modified_utc": "2026-10-24T08:14:26.003286+00:00"
+    }
+  ],
+  "generic_cli_checks": 10,
+  "chitu_cli_checks": 4,
+  "largest_gui_checks": 22,
+  "largest_exe_seconds": [
+    33.324,
+    30.37
+  ],
+  "largest_exe_process_hwm_bytes": [
+    4361461760,
+    4361158656
+  ],
+  "largest_input_result": "Known FAIL at min gap1 mm: pair6/16 distance0.6575593948364258 mm; 11 invalid solids and176 inconclusive pairs remain explicitly reported; processing_completed true and complete false. This is not a full-file PASS.",
+  "gui_memory_evidence_supported": false,
+  "gui_memory_note": "Sampler did not observe the actual GUI worker RSS; this value is excluded from memory claims. Final CLI two-run memory measurements are authoritative.",
+  "initial_cli_parallel_timeout_note": "cli-parallel-timeout-note.json preserves an incomplete initial parallel verification attempt. The same script and unchanged PE passed all10 checks in an isolated rerun; no code or timeout modification.",
+  "report_update_note": "Source-stage-frozen data parity captured before root appended final nonruntime verification reports; runtime source and PE hashes unchanged.",
+  "license_supplement_note": "Official CPython LICENSE.txt and inventory entry added as distribution data after verification. Both portable build recipes now accept LICENSE_PYTHON.txt or LICENSE.txt. Both PE files and runtime source remain unchanged."
+}

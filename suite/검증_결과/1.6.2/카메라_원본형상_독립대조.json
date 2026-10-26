@@ -1,0 +1,1118 @@
+{
+  "source": "/workspace/attachments/c3a6db7b-02d8-4032-a1c3-b341a9c025b7/260928-M1-1__.chitubox",
+  "source_sha256": "c22dc0cfc58b42a0f6528e512ae9b1947222c6bbfc8fad67747b807cad2270ad",
+  "source_and_loaded_original_meshes_unchanged": true,
+  "objects": [
+    {
+      "index": 4,
+      "name": "카메라모듈_200mm_v2_For_8t_기본.STEP.step",
+      "exact_partition_proofs": [
+        {
+          "removed_degenerate_face": 4486,
+          "long_edge_vertices": [
+            5037,
+            4021
+          ],
+          "existing_interior_vertex": 1575,
+          "exact_edge_parameter": "22205/41192",
+          "original_retained_face": 4488,
+          "original_triangle": [
+            5037,
+            620,
+            4021
+          ],
+          "replacement_triangles": [
+            [
+              4021,
+              1575,
+              620
+            ],
+            [
+              1575,
+              5037,
+              620
+            ]
+          ],
+          "predicate_arithmetic": "exact rational values of original float64 coordinates",
+          "proof": "interior point lies exactly on existing edge; two oriented children partition its triangle; removed rank-one image is covered by that retained edge"
+        },
+        {
+          "removed_degenerate_face": 7313,
+          "long_edge_vertices": [
+            421,
+            4660
+          ],
+          "existing_interior_vertex": 3178,
+          "exact_edge_parameter": "170883/1853638",
+          "original_retained_face": 6890,
+          "original_triangle": [
+            421,
+            1509,
+            4660
+          ],
+          "replacement_triangles": [
+            [
+              4660,
+              3178,
+              1509
+            ],
+            [
+              3178,
+              421,
+              1509
+            ]
+          ],
+          "predicate_arithmetic": "exact rational values of original float64 coordinates",
+          "proof": "interior point lies exactly on existing edge; two oriented children partition its triangle; removed rank-one image is covered by that retained edge"
+        }
+      ],
+      "validation": {
+        "index": 4,
+        "name": "카메라모듈_200mm_v2_For_8t_기본.STEP.step",
+        "valid": true,
+        "errors": [],
+        "bounds": [
+          [
+            -26.573387145996094,
+            -20.084396362304688,
+            44.0
+          ],
+          [
+            174.96857452392578,
+            181.4575653076172,
+            74.0
+          ]
+        ],
+        "volume": 63964.05573131497
+      },
+      "partitioned_structure": {
+        "vertices": 5715,
+        "faces": 11454,
+        "bounds_mm": [
+          [
+            -26.573387145996094,
+            -20.084396362304688,
+            44.0
+          ],
+          [
+            174.96857452392578,
+            181.4575653076172,
+            74.0
+          ]
+        ],
+        "signed_volume_mm3": 63964.05573131497,
+        "mesh_arrays_sha256": "c5ed32d10ed606c145ddca0dcc7389f46fb111ebffda827d2027afb66bd04b29",
+        "strict_topology": [
+          true,
+          true
+        ],
+        "degenerate_faces": [],
+        "degenerate_face_indices": [],
+        "degenerate_coordinates_mm": [],
+        "duplicate_triangle_groups": 0,
+        "duplicate_extra_triangles": 0,
+        "edge_incidence_histogram": {
+          "2": 17181
+        },
+        "face_edge_components": 1,
+        "component_faces": [
+          11454
+        ],
+        "euler_characteristic": -12,
+        "native_status_diagnostic_only": "Error.NoError",
+        "native_component_count_diagnostic_only": 1,
+        "native_component_volumes_mm3_diagnostic_only": [
+          63964.05573131497
+        ]
+      },
+      "native_symmetric_difference_diagnostic": {
+        "original_minus_partitioned_mm3": 0.0,
+        "partitioned_minus_original_mm3": 0.0
+      },
+      "vertex_coordinates_bitwise_unchanged": true,
+      "bounds_bitwise_unchanged": true
+    },
+    {
+      "index": 5,
+      "name": "카메라모듈_200mm_v2_For_6t_기본.STEP.step",
+      "exact_partition_proofs": [
+        {
+          "removed_degenerate_face": 4501,
+          "long_edge_vertices": [
+            3324,
+            5597
+          ],
+          "existing_interior_vertex": 1792,
+          "exact_edge_parameter": "570572/741455",
+          "original_retained_face": 4503,
+          "original_triangle": [
+            5597,
+            3324,
+            2196
+          ],
+          "replacement_triangles": [
+            [
+              5597,
+              1792,
+              2196
+            ],
+            [
+              1792,
+              3324,
+              2196
+            ]
+          ],
+          "predicate_arithmetic": "exact rational values of original float64 coordinates",
+          "proof": "interior point lies exactly on existing edge; two oriented children partition its triangle; removed rank-one image is covered by that retained edge"
+        },
+        {
+          "removed_degenerate_face": 7319,
+          "long_edge_vertices": [
+            4119,
+            3043
+          ],
+          "existing_interior_vertex": 5042,
+          "exact_edge_parameter": "170883/1853638",
+          "original_retained_face": 6896,
+          "original_triangle": [
+            4119,
+            4873,
+            3043
+          ],
+          "replacement_triangles": [
+            [
+              3043,
+              5042,
+              4873
+            ],
+            [
+              5042,
+              4119,
+              4873
+            ]
+          ],
+          "predicate_arithmetic": "exact rational values of original float64 coordinates",
+          "proof": "interior point lies exactly on existing edge; two oriented children partition its triangle; removed rank-one image is covered by that retained edge"
+        }
+      ],
+      "validation": {
+        "index": 5,
+        "name": "카메라모듈_200mm_v2_For_6t_기본.STEP.step",
+        "valid": true,
+        "errors": [],
+        "bounds": [
+          [
+            -156.0568084716797,
+            -217.74729919433594,
+            44.0
+          ],
+          [
+            45.48515319824219,
+            -16.205337524414062,
+            74.00000762939453
+          ]
+        ],
+        "volume": 55822.76251731706
+      },
+      "partitioned_structure": {
+        "vertices": 5718,
+        "faces": 11460,
+        "bounds_mm": [
+          [
+            -156.0568084716797,
+            -217.74729919433594,
+            44.0
+          ],
+          [
+            45.48515319824219,
+            -16.205337524414062,
+            74.00000762939453
+          ]
+        ],
+        "signed_volume_mm3": 55822.762517317045,
+        "mesh_arrays_sha256": "793f53c8cb91885b82862cf81d82b9eb98d1c6d76ebccb864c28b884226da18c",
+        "strict_topology": [
+          true,
+          true
+        ],
+        "degenerate_faces": [],
+        "degenerate_face_indices": [],
+        "degenerate_coordinates_mm": [],
+        "duplicate_triangle_groups": 0,
+        "duplicate_extra_triangles": 0,
+        "edge_incidence_histogram": {
+          "2": 17190
+        },
+        "face_edge_components": 1,
+        "component_faces": [
+          11460
+        ],
+        "euler_characteristic": -12,
+        "native_status_diagnostic_only": "Error.NoError",
+        "native_component_count_diagnostic_only": 1,
+        "native_component_volumes_mm3_diagnostic_only": [
+          55822.76251731704
+        ]
+      },
+      "native_symmetric_difference_diagnostic": {
+        "original_minus_partitioned_mm3": 0.0,
+        "partitioned_minus_original_mm3": 0.0
+      },
+      "vertex_coordinates_bitwise_unchanged": true,
+      "bounds_bitwise_unchanged": true
+    }
+  ],
+  "pair_count_compared": 95,
+  "max_raw_vs_partitioned_surface_distance_delta_mm": 0.0,
+  "max_raw_vs_partitioned_intersection_volume_delta_mm3": 0.0,
+  "project_reports": {
+    "0": {
+      "status": "clear",
+      "complete": true,
+      "object_count": 49,
+      "total_pair_count": 1176,
+      "minimum_distance_mm": 1.4999923706054688,
+      "minimum_distance_pair": [
+        5,
+        6
+      ],
+      "violations": []
+    },
+    "1": {
+      "status": "clear",
+      "complete": true,
+      "object_count": 49,
+      "total_pair_count": 1176,
+      "minimum_distance_mm": 1.4999923706054688,
+      "minimum_distance_pair": [
+        5,
+        6
+      ],
+      "violations": []
+    },
+    "1.5": {
+      "status": "violation",
+      "complete": true,
+      "object_count": 49,
+      "total_pair_count": 1176,
+      "minimum_distance_mm": 1.4999923706054688,
+      "minimum_distance_pair": [
+        5,
+        6
+      ],
+      "violations": [
+        {
+          "index_a": 5,
+          "index_b": 6,
+          "status": "too_close",
+          "distance_mm": 1.4999923706054688,
+          "intersection_volume": 0.0
+        }
+      ]
+    },
+    "2": {
+      "status": "violation",
+      "complete": true,
+      "object_count": 49,
+      "total_pair_count": 1176,
+      "minimum_distance_mm": 1.4999923706054688,
+      "minimum_distance_pair": [
+        5,
+        6
+      ],
+      "violations": [
+        {
+          "index_a": 1,
+          "index_b": 4,
+          "status": "too_close",
+          "distance_mm": 1.5000076293945312,
+          "intersection_volume": 0.0
+        },
+        {
+          "index_a": 2,
+          "index_b": 4,
+          "status": "too_close",
+          "distance_mm": 1.5,
+          "intersection_volume": 0.0
+        },
+        {
+          "index_a": 5,
+          "index_b": 6,
+          "status": "too_close",
+          "distance_mm": 1.4999923706054688,
+          "intersection_volume": 0.0
+        },
+        {
+          "index_a": 5,
+          "index_b": 7,
+          "status": "too_close",
+          "distance_mm": 1.5000038146972656,
+          "intersection_volume": 0.0
+        }
+      ]
+    }
+  },
+  "pair_comparison": [
+    {
+      "indices": [
+        4,
+        0
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        1
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        2
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        3
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        5
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        6
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        7
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        8
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        9
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        10
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        11
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        12
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        13
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        14
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        15
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        16
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        17
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        18
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        19
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        20
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        21
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        22
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        23
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        24
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        25
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        26
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        27
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        28
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        29
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        30
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        31
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        32
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        33
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        34
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        35
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        36
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        37
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        38
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        39
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        40
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        41
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        42
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        43
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        44
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        45
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        46
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        47
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        4,
+        48
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        0
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        1
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        2
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        3
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        6
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        7
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        8
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        9
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        10
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        11
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        12
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        13
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        14
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        15
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        16
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        17
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        18
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        19
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        20
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        21
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        22
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        23
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        24
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        25
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        26
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        27
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        28
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        29
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        30
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        31
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        32
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        33
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        34
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        35
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        36
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        37
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        38
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        39
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        40
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        41
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        42
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        43
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        44
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        45
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        46
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        47
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    },
+    {
+      "indices": [
+        5,
+        48
+      ],
+      "distance_delta_mm": 0.0,
+      "intersection_volume_delta_mm3": 0.0
+    }
+  ],
+  "elapsed_seconds": 11.093107451999913
+}

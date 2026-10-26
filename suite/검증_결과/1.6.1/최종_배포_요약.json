@@ -1,0 +1,41 @@
+{
+  "version": "1.6.1",
+  "passed": true,
+  "windows_executables": {
+    "BJT_명령줄.exe": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+    "BJT_통합프로그램.exe": "3c501e6b4a705e32ccb6cb3080db1d2de62be40c8d21f3a7904363fb6dfa4124"
+  },
+  "largest_exe_seconds": [
+    33.324,
+    30.37
+  ],
+  "largest_process_peak_bytes": 4361461760,
+  "largest_process_peak_gib": 4.061927795410156,
+  "goals": {
+    "exe_launch_to_json_seconds_at_most": 90,
+    "process_peak_gib_below": 6
+  },
+  "timing_scope": "EXE launch + runtime initialization + file reading + inspection + JSON export; excludes download and HTML",
+  "source_unchanged": true,
+  "largest_verdict": {
+    "status": "violation",
+    "complete": false,
+    "processing_completed": true,
+    "known_too_close_pairs": 1,
+    "invalid_objects": 11,
+    "inconclusive_pairs": 176,
+    "closest_valid_pair": [
+      6,
+      16
+    ],
+    "distance_mm": 0.6575593948364258
+  },
+  "windows_suite": {
+    "collected": 239,
+    "passed": 238,
+    "skipped": 1,
+    "subtests_passed": 97
+  },
+  "environment": "Windows x64 EXEs run under Wine 10 / Linux Docker, child container 12 GiB, no clean Windows VM test",
+  "original_project_not_included": true
+}
