@@ -1,0 +1,3 @@
+# Imported source snapshots and integrity manifests require exact bytes.
+# Keep original LF/CRLF sequences on every checkout, including Windows.
+* -text
