@@ -1,0 +1,1362 @@
+{
+  "passed": true,
+  "frozen": true,
+  "checks": {
+    "slice_tools": {
+      "passed": true,
+      "result": {
+        "total": 21,
+        "passed": 21,
+        "cases": [
+          {
+            "name": "exchange_success_and_backup",
+            "passed": true
+          },
+          {
+            "name": "exchange_format_rejection",
+            "passed": true
+          },
+          {
+            "name": "exchange_automatic_rollback",
+            "passed": true
+          },
+          {
+            "name": "exchange_number_validation",
+            "passed": true
+          },
+          {
+            "name": "overlay_grayscale_max",
+            "passed": true
+          },
+          {
+            "name": "overlay_grayscale_min",
+            "passed": true
+          },
+          {
+            "name": "overlay_add_clamp",
+            "passed": true
+          },
+          {
+            "name": "overlay_binary_union",
+            "passed": true
+          },
+          {
+            "name": "overlay_black_material",
+            "passed": true
+          },
+          {
+            "name": "overlay_sizes_and_clipping",
+            "passed": true
+          },
+          {
+            "name": "overlay_file_matching",
+            "passed": true
+          },
+          {
+            "name": "overlay_file_output_cancel_overwrite",
+            "passed": true
+          },
+          {
+            "name": "arrange_compose_clip_hide_rotate_fallback",
+            "passed": true
+          },
+          {
+            "name": "arrange_alpha_compositing",
+            "passed": true
+          },
+          {
+            "name": "arrange_rotations_geometry_naming",
+            "passed": true
+          },
+          {
+            "name": "arrange_output_formats",
+            "passed": true
+          },
+          {
+            "name": "arrange_stl_slicing_and_cache",
+            "passed": true
+          },
+          {
+            "name": "arrange_parallel_export_length_modes_cancel",
+            "passed": true
+          },
+          {
+            "name": "alignment_compare_masks_additions_shift",
+            "passed": true
+          },
+          {
+            "name": "alignment_folder_zip_list_cache_numbering",
+            "passed": true
+          },
+          {
+            "name": "alignment_boundary_full_reports_cancel",
+            "passed": true
+          }
+        ]
+      }
+    },
+    "bjt_pipeline": {
+      "passed": true,
+      "result": {
+        "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+        "version": "5.8-faithful-contact-aware",
+        "cases": [
+          {
+            "case": "reconstruct_crop_center",
+            "status": "passed",
+            "stats": {
+              "triangles": 72,
+              "bytes": 3684,
+              "bounds_min": [
+                -1.2000000476837158,
+                -1.2000000476837158,
+                0.0
+              ],
+              "bounds_max": [
+                1.2000000476837158,
+                1.2000000476837158,
+                1.0
+              ],
+              "extents": [
+                2.4000000953674316,
+                2.4000000953674316,
+                1.0
+              ],
+              "degenerate_triangles": 0,
+              "sha256": "7f632e8ed858386ba89522f5439ead13e38853a39dc564dcfd26365088c547fe"
+            },
+            "images": {
+              "raw": [],
+              "lattice": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ]
+            },
+            "previews_count": 1,
+            "progress_ends_at_100": true,
+            "report_status": "completed",
+            "seconds": 22.031517399999757
+          },
+          {
+            "case": "hex_line_xyz_bmp",
+            "status": "passed",
+            "stats": {
+              "triangles": 1532,
+              "bytes": 76684,
+              "bounds_min": [
+                -1.2000000476837158,
+                -1.2000000476837158,
+                0.0
+              ],
+              "bounds_max": [
+                1.2000000476837158,
+                1.2000000476837158,
+                1.0
+              ],
+              "extents": [
+                2.4000000953674316,
+                2.4000000953674316,
+                1.0
+              ],
+              "degenerate_triangles": 0,
+              "sha256": "97a0f54dabee124ec008f5a3c79bdcb566bad16a0607d2ddf889c749592f07d4"
+            },
+            "images": {
+              "raw": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ],
+              "lattice": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "32c30a54d4f2e7a7e2cdad27a52e8209b677e361e0cb743d8d50289bbc5812de"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "9add1c9d689907fd09b06945d0948f286841c059695edf9c612d20c4ac9e2e58"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "8287e27765baa2fc9a2f0fcb1d0938439f4bfb5f44ac3013244d2fb7e5d14a46"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "4a03c0421f2933cf62501b3cd77797c15ca232434634f8c38a8a6ad04d4be41c"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "8287e27765baa2fc9a2f0fcb1d0938439f4bfb5f44ac3013244d2fb7e5d14a46"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "9add1c9d689907fd09b06945d0948f286841c059695edf9c612d20c4ac9e2e58"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "32c30a54d4f2e7a7e2cdad27a52e8209b677e361e0cb743d8d50289bbc5812de"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "32c30a54d4f2e7a7e2cdad27a52e8209b677e361e0cb743d8d50289bbc5812de"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ]
+            },
+            "previews_count": 2,
+            "progress_ends_at_100": true,
+            "report_status": "completed",
+            "seconds": 4.096280100000058
+          },
+          {
+            "case": "square_line_xy_png",
+            "status": "passed",
+            "stats": {
+              "triangles": 464,
+              "bytes": 23284,
+              "bounds_min": [
+                0.6000000238418579,
+                0.4000000059604645,
+                0.0
+              ],
+              "bounds_max": [
+                3.0,
+                2.799999952316284,
+                1.0
+              ],
+              "extents": [
+                2.399999976158142,
+                2.3999999463558197,
+                1.0
+              ],
+              "degenerate_triangles": 0,
+              "sha256": "0a8aa316fe64bd177723215ba52d4cb4dc07b263f48cd9dac670355aec023dfe"
+            },
+            "images": {
+              "raw": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ],
+              "lattice": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "5a6df55ec6c042af1c1060a76bac73a492465a5fc72125a3bde05ac79f933e19"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "d70328191b3b2916af911c8996f4389af36b9e8da05ad79e7d53c49a5fa32fff"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "0b1a9a8f8511710f39b8b33afaa7676e81e6f4b27fcaf97c90b53cf6842dc098"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "0b1a9a8f8511710f39b8b33afaa7676e81e6f4b27fcaf97c90b53cf6842dc098"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "0b1a9a8f8511710f39b8b33afaa7676e81e6f4b27fcaf97c90b53cf6842dc098"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "d70328191b3b2916af911c8996f4389af36b9e8da05ad79e7d53c49a5fa32fff"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "5a6df55ec6c042af1c1060a76bac73a492465a5fc72125a3bde05ac79f933e19"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "5a6df55ec6c042af1c1060a76bac73a492465a5fc72125a3bde05ac79f933e19"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ]
+            },
+            "previews_count": 2,
+            "progress_ends_at_100": true,
+            "report_status": "completed",
+            "seconds": 0.597486900000149
+          },
+          {
+            "case": "hex_face_xyz",
+            "status": "passed",
+            "stats": {
+              "triangles": 1532,
+              "bytes": 76684,
+              "bounds_min": [
+                -1.2000000476837158,
+                -1.2000000476837158,
+                0.0
+              ],
+              "bounds_max": [
+                1.2000000476837158,
+                1.2000000476837158,
+                1.0
+              ],
+              "extents": [
+                2.4000000953674316,
+                2.4000000953674316,
+                1.0
+              ],
+              "degenerate_triangles": 0,
+              "sha256": "97a0f54dabee124ec008f5a3c79bdcb566bad16a0607d2ddf889c749592f07d4"
+            },
+            "images": {
+              "raw": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ],
+              "lattice": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "32c30a54d4f2e7a7e2cdad27a52e8209b677e361e0cb743d8d50289bbc5812de"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "9add1c9d689907fd09b06945d0948f286841c059695edf9c612d20c4ac9e2e58"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "8287e27765baa2fc9a2f0fcb1d0938439f4bfb5f44ac3013244d2fb7e5d14a46"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "4a03c0421f2933cf62501b3cd77797c15ca232434634f8c38a8a6ad04d4be41c"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "8287e27765baa2fc9a2f0fcb1d0938439f4bfb5f44ac3013244d2fb7e5d14a46"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "9add1c9d689907fd09b06945d0948f286841c059695edf9c612d20c4ac9e2e58"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "32c30a54d4f2e7a7e2cdad27a52e8209b677e361e0cb743d8d50289bbc5812de"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "32c30a54d4f2e7a7e2cdad27a52e8209b677e361e0cb743d8d50289bbc5812de"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ]
+            },
+            "previews_count": 2,
+            "progress_ends_at_100": true,
+            "report_status": "completed",
+            "seconds": 0.7813390999999683
+          },
+          {
+            "case": "shell_only",
+            "status": "passed",
+            "stats": {
+              "triangles": 252,
+              "bytes": 12684,
+              "bounds_min": [
+                -1.2000000476837158,
+                -1.2000000476837158,
+                0.0
+              ],
+              "bounds_max": [
+                1.2000000476837158,
+                1.2000000476837158,
+                1.0
+              ],
+              "extents": [
+                2.4000000953674316,
+                2.4000000953674316,
+                1.0
+              ],
+              "degenerate_triangles": 0,
+              "sha256": "38d92ac929491c868c7aba0de0a6ba411887949975666ff6121a21c936914c23"
+            },
+            "images": {
+              "raw": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c886238c052bfd5e567190204be81978285b18a30b468bdfa1a7a5766d4c2be9"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ],
+              "lattice": [
+                {
+                  "name": "layer_0000.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                },
+                {
+                  "name": "layer_0001.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "ff2a05fff77cb7da1817cf0022a883bed78184e60be885e37c870e2efbf99953"
+                },
+                {
+                  "name": "layer_0002.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "52ac3305f74b219153d31c5338fa0fd3c1cabed447d2dce2269fdf183c73e998"
+                },
+                {
+                  "name": "layer_0003.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "501627680a2ff8e615fccbdcf5d1107c47beeadecd1623db99a50e75b7b46888"
+                },
+                {
+                  "name": "layer_0004.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "501627680a2ff8e615fccbdcf5d1107c47beeadecd1623db99a50e75b7b46888"
+                },
+                {
+                  "name": "layer_0005.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "501627680a2ff8e615fccbdcf5d1107c47beeadecd1623db99a50e75b7b46888"
+                },
+                {
+                  "name": "layer_0006.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "52ac3305f74b219153d31c5338fa0fd3c1cabed447d2dce2269fdf183c73e998"
+                },
+                {
+                  "name": "layer_0007.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "ff2a05fff77cb7da1817cf0022a883bed78184e60be885e37c870e2efbf99953"
+                },
+                {
+                  "name": "layer_0008.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "ff2a05fff77cb7da1817cf0022a883bed78184e60be885e37c870e2efbf99953"
+                },
+                {
+                  "name": "layer_0009.png",
+                  "size": [
+                    36,
+                    32
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "c85eccfaf6d0df259e424165ae983270712a7525c03f28a4d9c0722bc976c025"
+                }
+              ]
+            },
+            "previews_count": 2,
+            "progress_ends_at_100": true,
+            "report_status": "completed",
+            "seconds": 0.5936852999998337
+          },
+          {
+            "case": "model_full",
+            "status": "passed",
+            "stats": {
+              "triangles": 568,
+              "bytes": 28484,
+              "bounds_min": [
+                -1.25,
+                -1.25,
+                0.0
+              ],
+              "bounds_max": [
+                1.149999976158142,
+                1.149999976158142,
+                1.0
+              ],
+              "extents": [
+                2.399999976158142,
+                2.399999976158142,
+                1.0
+              ],
+              "degenerate_triangles": 0,
+              "sha256": "98bcec3138ae967511f7fd7ae64bf583163639215f7ef86fd3e706a3023616b1"
+            },
+            "images": {
+              "raw": [
+                {
+                  "name": "000001.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000002.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000003.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000004.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000005.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000006.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000007.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000008.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000009.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000010.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                }
+              ],
+              "lattice": [
+                {
+                  "name": "000001.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                },
+                {
+                  "name": "000002.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "66abefedde754bd805c944214cb63da2a413856b73237411b265a04ac43a4c44"
+                },
+                {
+                  "name": "000003.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "66abefedde754bd805c944214cb63da2a413856b73237411b265a04ac43a4c44"
+                },
+                {
+                  "name": "000004.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "66abefedde754bd805c944214cb63da2a413856b73237411b265a04ac43a4c44"
+                },
+                {
+                  "name": "000005.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "12336bf7115afa27a605a6ae887647c046d2a8258e87188d4fa08f472f7f716e"
+                },
+                {
+                  "name": "000006.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "66abefedde754bd805c944214cb63da2a413856b73237411b265a04ac43a4c44"
+                },
+                {
+                  "name": "000007.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "66abefedde754bd805c944214cb63da2a413856b73237411b265a04ac43a4c44"
+                },
+                {
+                  "name": "000008.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "66abefedde754bd805c944214cb63da2a413856b73237411b265a04ac43a4c44"
+                },
+                {
+                  "name": "000009.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "66abefedde754bd805c944214cb63da2a413856b73237411b265a04ac43a4c44"
+                },
+                {
+                  "name": "000010.bmp",
+                  "size": [
+                    29,
+                    29
+                  ],
+                  "mode": "L",
+                  "sha256_pixels": "b9a3a04e9dfbfbc22003a4dbd14bc7584c73280d67b0df1fa46ce34467771caa"
+                }
+              ]
+            },
+            "previews_count": 2,
+            "progress_ends_at_100": true,
+            "report_status": "completed",
+            "seconds": 4.793203700000049
+          }
+        ]
+      }
+    },
+    "thermal_physics": {
+      "passed": true,
+      "result": {
+        "assertions": 577,
+        "cases": [
+          "psd_uniform_o2",
+          "manual_heat_only_closed_lid",
+          "calibrated_gradient_o2_side_access",
+          "manual_tortuosity_no_knudsen",
+          "sealed_o2_and_cooling",
+          "no_radiation_no_snapshots",
+          "16 validation failures",
+          "cancellation",
+          "synthetic thermocouple calibration"
+        ],
+        "scope": "Bundled solver smoke, deterministic repeat and physical invariants; no external baseline loaded"
+      }
+    },
+    "test_slice_compare": {
+      "passed": true,
+      "tests": 40,
+      "skipped": [],
+      "output": "........................................\n----------------------------------------------------------------------\nRan 40 tests in 3.112s\n\nOK\n"
+    },
+    "test_replace_validation": {
+      "passed": true,
+      "tests": 12,
+      "skipped": [],
+      "output": "............\n----------------------------------------------------------------------\nRan 12 tests in 2.550s\n\nOK\n"
+    },
+    "test_number_tools": {
+      "passed": true,
+      "tests": 27,
+      "skipped": [
+        {
+          "test": "test_original_valid_conflict_policies_match_file_bytes_and_metadata (_bjt_frozen_fixture_test_number_tools.NumberToolTests.test_original_valid_conflict_policies_match_file_bytes_and_metadata)",
+          "reason": "Original supplied tool is only present in the integration workspace"
+        }
+      ],
+      "output": "..............s............\n----------------------------------------------------------------------\nRan 27 tests in 1.610s\n\nOK (skipped=1)\n"
+    },
+    "test_sequence_z": {
+      "passed": true,
+      "tests": 20,
+      "skipped": [],
+      "output": "....................\n----------------------------------------------------------------------\nRan 20 tests in 0.301s\n\nOK\n"
+    },
+    "test_m2_image_engine": {
+      "passed": true,
+      "tests": 23,
+      "skipped": [],
+      "output": ".......................\n----------------------------------------------------------------------\nRan 23 tests in 11.251s\n\nOK\n"
+    }
+  },
+  "scope": "full developer fixtures including ZIP writing",
+  "seconds": 83.237
+}

@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "checks": {
+    "eleven_registered_tools": true,
+    "selector_visible_at_1120": true,
+    "selector_opens_chitu_tab": true,
+    "real_gap3_fail_complete": true,
+    "real_gap3_expected_pair": true,
+    "real_gap3_expected_distance": true,
+    "fail_label_and_row": true,
+    "selected_failed_pair": true,
+    "json_export_settings_and_pair": true,
+    "html_open_requested_without_real_browser": true,
+    "html_selected_pair_and_inline_viewer": true,
+    "changed_settings_invalidate_previous_result": true,
+    "real_gap1_pass_complete": true,
+    "cancel_does_not_pass": true,
+    "close_waits_for_worker_cleanup": true,
+    "no_callback_or_tcl_errors": true,
+    "source_file_unchanged": true
+  },
+  "callback_errors": [],
+  "screenshot": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\chitu-gui-exe.png",
+  "tcl_bgerrors": [],
+  "project_sha256": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+  "project_name": "20261012-M1-1.chitubox",
+  "frozen": true
+}

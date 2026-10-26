@@ -1,0 +1,235 @@
+{
+  "passed": true,
+  "executable": "/workspace/bjt-integration/optimization/windows-build/dist/BJT_통합프로그램_1.6.1_EXE/BJT_명령줄.exe",
+  "executable_sha256": "ea2d4c0009772718e347dc34daca9f47ba6a9f85efec1b6f53f6551b93e32cd5",
+  "executable_unchanged": true,
+  "input_sha256_before": {
+    "20261012-M1-1.chitubox": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+    "261014-M1-1_살추가O.chitubox": "967a7c994549ed3ac21211928e91cfb1f9da97bebdd7c33f4183276d16c99b1d",
+    "261014-M1-1_살추가X.chitubox": "2f46f9ba486e13930da5287bacd647523871bc0f280af65c21e56f8bc74384d5"
+  },
+  "input_sha256_after": {
+    "20261012-M1-1.chitubox": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+    "261014-M1-1_살추가O.chitubox": "967a7c994549ed3ac21211928e91cfb1f9da97bebdd7c33f4183276d16c99b1d",
+    "261014-M1-1_살추가X.chitubox": "2f46f9ba486e13930da5287bacd647523871bc0f280af65c21e56f8bc74384d5"
+  },
+  "inputs_unchanged": true,
+  "execution_context": "Actual final Windows x64 PE under Wine10 in isolated 12GiB Docker; not Python source execution or native Windows VM",
+  "all_seven_cases_match_original_pair_classifications_and_validity": true,
+  "cases": [
+    {
+      "case": "20261012-M1-1.gap-0mm",
+      "passed": true,
+      "project_sha256": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+      "project_bytes": 988132,
+      "minimum_gap_mm": 0.0,
+      "seconds": 11.302,
+      "exit_code": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "object_count": 63,
+      "pair_count": 1953,
+      "pair_status_counts": {
+        "clear": 1953
+      },
+      "invalid_object_indices": [],
+      "nearest_valid_pair": {
+        "index_a": 15,
+        "index_b": 31,
+        "distance_mm": 2.924621820449829,
+        "status": "clear"
+      },
+      "max_exact_distance_error_mm": 0.0,
+      "original_validation_sha256": "055937ffc3fe78f322da28a80d67bda55ec80b130b7471d3c1f132c0b3f9285d",
+      "result_file": "final-exe-original-real-cases/20261012-M1-1.gap-0mm.json",
+      "failures": []
+    },
+    {
+      "case": "20261012-M1-1.gap-1mm",
+      "passed": true,
+      "project_sha256": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+      "project_bytes": 988132,
+      "minimum_gap_mm": 1.0,
+      "seconds": 9.387,
+      "exit_code": 0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "object_count": 63,
+      "pair_count": 1953,
+      "pair_status_counts": {
+        "clear": 1953
+      },
+      "invalid_object_indices": [],
+      "nearest_valid_pair": {
+        "index_a": 15,
+        "index_b": 31,
+        "distance_mm": 2.924621820449829,
+        "status": "clear"
+      },
+      "max_exact_distance_error_mm": 0.0,
+      "original_validation_sha256": "d6b7fad0092c263a927e7c2f50105f1679566bc923f13e8ffc3818308179d844",
+      "result_file": "final-exe-original-real-cases/20261012-M1-1.gap-1mm.json",
+      "failures": []
+    },
+    {
+      "case": "20261012-M1-1.gap-3mm",
+      "passed": true,
+      "project_sha256": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+      "project_bytes": 988132,
+      "minimum_gap_mm": 3.0,
+      "seconds": 9.361,
+      "exit_code": 1,
+      "status": "violation",
+      "complete": true,
+      "processing_completed": true,
+      "object_count": 63,
+      "pair_count": 1953,
+      "pair_status_counts": {
+        "clear": 1952,
+        "too_close": 1
+      },
+      "invalid_object_indices": [],
+      "nearest_valid_pair": {
+        "index_a": 15,
+        "index_b": 31,
+        "distance_mm": 2.924621820449829,
+        "status": "too_close"
+      },
+      "max_exact_distance_error_mm": 0.0,
+      "original_validation_sha256": "4c91a7c7236e530cc94f2172f78eb9d094c7bdb46decf23af869b7c8cacc8ea1",
+      "result_file": "final-exe-original-real-cases/20261012-M1-1.gap-3mm.json",
+      "failures": []
+    },
+    {
+      "case": "261014-M1-1_살추가O.gap-0mm",
+      "passed": true,
+      "project_sha256": "967a7c994549ed3ac21211928e91cfb1f9da97bebdd7c33f4183276d16c99b1d",
+      "project_bytes": 6126406,
+      "minimum_gap_mm": 0.0,
+      "seconds": 10.843,
+      "exit_code": 2,
+      "status": "inconclusive",
+      "complete": false,
+      "processing_completed": true,
+      "object_count": 13,
+      "pair_count": 78,
+      "pair_status_counts": {
+        "inconclusive": 23,
+        "clear": 55
+      },
+      "invalid_object_indices": [
+        0,
+        1
+      ],
+      "nearest_valid_pair": {
+        "index_a": 2,
+        "index_b": 3,
+        "distance_mm": 4.345666807347341,
+        "status": "clear"
+      },
+      "max_exact_distance_error_mm": 0.0,
+      "original_validation_sha256": "a63426afe09a71a8d7074b651122e04fbb1f517d671bd160ee6251736799e720",
+      "result_file": "final-exe-original-real-cases/261014-M1-1_살추가O.gap-0mm.json",
+      "failures": []
+    },
+    {
+      "case": "261014-M1-1_살추가O.gap-1mm",
+      "passed": true,
+      "project_sha256": "967a7c994549ed3ac21211928e91cfb1f9da97bebdd7c33f4183276d16c99b1d",
+      "project_bytes": 6126406,
+      "minimum_gap_mm": 1.0,
+      "seconds": 10.941,
+      "exit_code": 2,
+      "status": "inconclusive",
+      "complete": false,
+      "processing_completed": true,
+      "object_count": 13,
+      "pair_count": 78,
+      "pair_status_counts": {
+        "inconclusive": 23,
+        "clear": 55
+      },
+      "invalid_object_indices": [
+        0,
+        1
+      ],
+      "nearest_valid_pair": {
+        "index_a": 2,
+        "index_b": 3,
+        "distance_mm": 4.345666807347341,
+        "status": "clear"
+      },
+      "max_exact_distance_error_mm": 0.0,
+      "original_validation_sha256": "78581bf3c14278b442b69e2ec95049e9d156cf5dcf13ea04433b0da5add0c1f1",
+      "result_file": "final-exe-original-real-cases/261014-M1-1_살추가O.gap-1mm.json",
+      "failures": []
+    },
+    {
+      "case": "261014-M1-1_살추가X.gap-0mm",
+      "passed": true,
+      "project_sha256": "2f46f9ba486e13930da5287bacd647523871bc0f280af65c21e56f8bc74384d5",
+      "project_bytes": 6126792,
+      "minimum_gap_mm": 0.0,
+      "seconds": 12.597,
+      "exit_code": 2,
+      "status": "inconclusive",
+      "complete": false,
+      "processing_completed": true,
+      "object_count": 13,
+      "pair_count": 78,
+      "pair_status_counts": {
+        "inconclusive": 23,
+        "clear": 55
+      },
+      "invalid_object_indices": [
+        0,
+        1
+      ],
+      "nearest_valid_pair": {
+        "index_a": 2,
+        "index_b": 3,
+        "distance_mm": 4.345666807347341,
+        "status": "clear"
+      },
+      "max_exact_distance_error_mm": 0.0,
+      "original_validation_sha256": "194c7257133cb3508ba81e5d74943051f3b65e4c852013c4c72fe2c0c1a1282c",
+      "result_file": "final-exe-original-real-cases/261014-M1-1_살추가X.gap-0mm.json",
+      "failures": []
+    },
+    {
+      "case": "261014-M1-1_살추가X.gap-1mm",
+      "passed": true,
+      "project_sha256": "2f46f9ba486e13930da5287bacd647523871bc0f280af65c21e56f8bc74384d5",
+      "project_bytes": 6126792,
+      "minimum_gap_mm": 1.0,
+      "seconds": 14.293,
+      "exit_code": 2,
+      "status": "inconclusive",
+      "complete": false,
+      "processing_completed": true,
+      "object_count": 13,
+      "pair_count": 78,
+      "pair_status_counts": {
+        "inconclusive": 23,
+        "clear": 55
+      },
+      "invalid_object_indices": [
+        0,
+        1
+      ],
+      "nearest_valid_pair": {
+        "index_a": 2,
+        "index_b": 3,
+        "distance_mm": 4.345666807347341,
+        "status": "clear"
+      },
+      "max_exact_distance_error_mm": 0.0,
+      "original_validation_sha256": "be20c262fde9e8f6a8899f977cfda54d83467c859c139b713d3124a57fb94f1e",
+      "result_file": "final-exe-original-real-cases/261014-M1-1_살추가X.gap-1mm.json",
+      "failures": []
+    }
+  ],
+  "failures": []
+}

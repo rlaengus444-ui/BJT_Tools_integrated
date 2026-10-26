@@ -1,0 +1,137 @@
+{
+  "checks": [
+    "all_seven_full_interfaces_single_tk",
+    "all_seven_manual_toolbars",
+    "compare_does_not_change_existing_theme_styles_fonts_or_bindings",
+    "fast_default_preserved",
+    "original_shortcuts_remain_scoped_after_compare_mount",
+    "registered_dnd_tcl_unicode_space_paths_and_active_input_lock",
+    "real_M1_fast_comparison_and_complete_1825_row_render",
+    "compare_cancel_button_stops_actual_worker",
+    "shared_stop_button_stops_actual_compare_worker",
+    "shared_close_waits_for_actual_compare_worker_and_cleanup"
+  ],
+  "tools": {
+    "bjt": {
+      "widgets": 79,
+      "elapsed_seconds": 10.337262000073679
+    },
+    "arrange": {
+      "widgets": 67,
+      "elapsed_seconds": 0.10526350000873208
+    },
+    "overlay": {
+      "widgets": 39,
+      "elapsed_seconds": 0.03797090006992221
+    },
+    "exchanger": {
+      "widgets": 24,
+      "elapsed_seconds": 0.02572240005247295
+    },
+    "alignment": {
+      "widgets": 29,
+      "elapsed_seconds": 0.08239210001192987
+    },
+    "thermal": {
+      "widgets": 168,
+      "elapsed_seconds": 0.7809081999585032
+    },
+    "compare": {
+      "widgets": 62,
+      "default_precise": false
+    }
+  },
+  "callback_errors": [],
+  "tcl_background_errors": [],
+  "scope": "Hidden native Tk event-loop tests; DnD registration and Tcl payload handlers are exercised programmatically. No physical OS drag gesture is claimed.",
+  "real_bundle": {
+    "summary": {
+      "total": 1825,
+      "identical": 1602,
+      "different": 0,
+      "left_only": 0,
+      "right_only": 222,
+      "error": 0,
+      "unsupported": 1,
+      "left_files": 1602,
+      "right_files": 1825,
+      "pixels_equal": 1602,
+      "left_layers": 1602,
+      "right_layers": 1824,
+      "overall_identical": false
+    },
+    "tk_completion": {
+      "elapsed_seconds": 3.25,
+      "update_ticks": 579,
+      "max_update_seconds": 0.09943389997351915
+    },
+    "engine_seconds": 3.101606,
+    "performance": {
+      "full_decodes": 0,
+      "decoded_cache_hits": 0,
+      "header_only_files": 3426
+    }
+  },
+  "cancel_button": {
+    "elapsed_seconds": 0.14099999994505197,
+    "update_ticks": 25,
+    "max_update_seconds": 0.002769499900750816
+  },
+  "central_stop": {
+    "elapsed_seconds": 0.10900000005494803,
+    "update_ticks": 18,
+    "max_update_seconds": 0.0009648000122979283
+  },
+  "passed": true,
+  "source_integrity": [
+    {
+      "id": "bjt",
+      "valid": true,
+      "bytes": 534649,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\260914_BJT_model_to_lattice_STL_all_in_one.py"
+    },
+    {
+      "id": "arrange",
+      "valid": true,
+      "bytes": 111281,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slicing arrange.py"
+    },
+    {
+      "id": "overlay",
+      "valid": true,
+      "bytes": 25838,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_folder_overlay.py"
+    },
+    {
+      "id": "exchanger",
+      "valid": true,
+      "bytes": 18784,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice exchanger.py"
+    },
+    {
+      "id": "alignment",
+      "valid": true,
+      "bytes": 137262,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_alignment_checker.py"
+    },
+    {
+      "id": "thermal",
+      "valid": true,
+      "bytes": 161773,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\sic_buildbox_thermal_gui_v5.py"
+    },
+    {
+      "id": "compare",
+      "valid": true,
+      "bytes": 37507,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\sources\\slice_compare_app.py"
+    },
+    {
+      "id": "slice_compare_engine.py",
+      "valid": true,
+      "bytes": 51024,
+      "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\slice_compare_engine.py"
+    }
+  ],
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe"
+}

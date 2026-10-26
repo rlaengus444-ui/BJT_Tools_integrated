@@ -1,0 +1,32 @@
+{
+  "review_passed": true,
+  "timestamp_utc": "2026-10-25T17:44:55.000518+00:00",
+  "suite_version": "1.6.2",
+  "review_scope": "Independent read-only source review, corroborated by existing diagnostic evidence; native execution gates are recorded separately",
+  "module_sha256": {
+    "seams.py": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418",
+    "geometry.py": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+    "chitubox.py": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+    "viewer.py": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8"
+  },
+  "seam_equivalence_invariants": [
+    "Fallback only follows ordinary degenerate-triangle failure; valid ordinary meshes keep the established path.",
+    "Original indexed surface must have exactly two opposing incidences for every edge, before any retriangulation.",
+    "Every seam has three distinct indices, exactly rational-collinear coordinates, and a middle vertex strictly inside its longest segment. Floating underflow alone cannot certify collinearity.",
+    "The longest seam segment must border exactly one surviving nondegenerate face. That face is partitioned at an existing vertex with its original orientation; no vertex is moved or welded.",
+    "Private repaired copy must pass ordinary strict solid validation and have exactly unchanged coordinate array. Open, nonmanifold, inconsistent and unsupported damaged surfaces remain inconclusive.",
+    "Face count, seam count and chunk budgets bound work; cancellation before/during repair cannot become a completed pass."
+  ],
+  "distance_invariants": [
+    "All ordinary small-scene pairs preserve their exact queries and ordering. Only normalized-object pairs gain certified-distance bounds.",
+    "A pair is skipped only when its AABB lower bound certifies the requested gap/contact condition and cannot improve the best exact distance.",
+    "All possible gap/contact violations and the global closest valid pair therefore retain exact measurements; lower bounds use a separate nullable-distance representation.",
+    "Intersection volume is evaluated before accepting positive surface separation when AABBs overlap, preserving containment behavior.",
+    "Normalized-scene Manifold cache is local to one inspection, keyed by placed object index and bounded by a conservative64MiB LRU estimate."
+  ],
+  "diagnostic_reports_read": [
+    "diagnostics/generic-production-independent-review.json",
+    "diagnostics/production-scene-clearance-independent-review.json"
+  ],
+  "blocking_findings": []
+}

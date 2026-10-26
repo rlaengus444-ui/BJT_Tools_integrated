@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "scope": "Early source functional/memory gate; final EXE A/B timing is separate.",
+  "input_sha256": "6e57d3f9c041b624e7e09065e06ddb1fbc460ad3dde2e0f07e98df905551315a",
+  "triangle_count": 36329658,
+  "object_count": 22,
+  "pair_status_counts": {
+    "inconclusive": 176,
+    "clear": 54,
+    "too_close": 1
+  },
+  "invalid_indices": [
+    0,
+    2,
+    3,
+    7,
+    8,
+    9,
+    10,
+    12,
+    13,
+    14,
+    15
+  ],
+  "normalization_count": 0,
+  "known_minimum_distance_mm": 0.6575593948364258,
+  "load_check_seconds": 15.019892852999874,
+  "peak_rss_bytes": 3812384768,
+  "source_unchanged": true
+}

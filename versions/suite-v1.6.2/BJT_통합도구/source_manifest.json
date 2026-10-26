@@ -1,0 +1,212 @@
+{
+  "suite_version": "1.6.2",
+  "tools": [
+    {
+      "id": "bjt",
+      "label": "모델·격자·STL",
+      "description": "3D 모델·슬라이싱 이미지에서 쉘·격자 STL 생성",
+      "source": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "original_path": "C:\\Users\\Kain\\PycharmProjects\\shellprinting\\260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "bytes": 534649,
+      "controller": "App",
+      "embedded_base": true
+    },
+    {
+      "id": "arrange",
+      "label": "슬라이싱 배치·합성",
+      "description": "이미지·STL 배치, 이동·회전·복제 및 레이어 합성",
+      "source": "sources/slicing arrange.py",
+      "original_path": "C:\\Users\\Kain\\PycharmProjects\\shellprinting\\slicing arrange.py",
+      "sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "bytes": 111281,
+      "controller": "SliceLayoutApp",
+      "embedded_base": false
+    },
+    {
+      "id": "overlay",
+      "label": "폴더 겹치기",
+      "description": "여러 슬라이싱 폴더의 레이어별 합성",
+      "source": "sources/slice_folder_overlay.py",
+      "original_path": "C:\\Users\\Kain\\PycharmProjects\\shellprinting\\slice_folder_overlay.py",
+      "sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "bytes": 25838,
+      "controller": "App",
+      "embedded_base": true
+    },
+    {
+      "id": "exchanger",
+      "label": "슬라이싱 교체",
+      "description": "번호 범위 검사, 백업 및 안전한 이미지 교체",
+      "source": "sources/slice exchanger.py",
+      "original_path": "C:\\Users\\Kain\\PycharmProjects\\shellprinting\\slice exchanger.py",
+      "sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "bytes": 18784,
+      "controller": "ImageReplaceApp",
+      "embedded_base": false,
+      "integration_adapter": "slice_replace_validation.py",
+      "adaptation": "원본 교체/백업/롤백 코드를 보존하고 실제 비트수·TIFF 전체 프레임 형식 검사와 최종검사 진행 로그를 연결."
+    },
+    {
+      "id": "alignment",
+      "label": "슬라이싱 위치 검사",
+      "description": "치환 경계·전체 인접층의 위치 이동 신호 검사",
+      "source": "sources/slice_alignment_checker.py",
+      "original_path": "C:\\Users\\Kain\\PycharmProjects\\slicing checker\\slice_alignment_checker.py",
+      "sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "bytes": 137262,
+      "controller": "SimpleAlignmentApp",
+      "embedded_base": false
+    },
+    {
+      "id": "thermal",
+      "label": "열·산소 확산",
+      "description": "SiC 빌드박스 3D 열전달·산소 확산 및 실측 보정",
+      "source": "sources/sic_buildbox_thermal_gui_v5.py",
+      "original_path": "C:\\Users\\Kain\\PycharmProjects\\build oven profile\\sic_buildbox_thermal_gui_v5.py",
+      "sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+      "bytes": 161773,
+      "controller": "ThermalGUI",
+      "embedded_base": true
+    },
+    {
+      "id": "compare",
+      "label": "슬라이싱 일치성 검사",
+      "description": "두 폴더·ZIP의 픽셀·위치·해상도·비트 수·파일 형식 비교",
+      "source": "sources/slice_compare_app.py",
+      "original_path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\slice-compare\\app.py",
+      "sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "bytes": 37944,
+      "controller": "Application",
+      "embedded_base": false,
+      "adaptation": "통합 탭의 스타일 분리, 모듈 이름 및 작업 수명 추적. 비교 엔진은 원본과 바이트 일치."
+    },
+    {
+      "id": "number_tools",
+      "label": "번호 복제·누락 검사",
+      "description": "번호 범위 파일 복제, 충돌 처리 및 누락·중복 번호 확인",
+      "source": "sources/number_tools.py",
+      "original_path": "C:/Users/Kain/Downloads/BJ Tools.zip!FileNumberDuplicatorPlus.py",
+      "original_archive_sha256": "1b1d3bd3528b1df7385b99f29b87d50c2bd5e3f2b491373899418eb50665fea6",
+      "sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "bytes": 35171,
+      "controller": "NumberToolsApp",
+      "embedded_base": false,
+      "adaptation": "번호 복제와 누락 검사 핵심 기능 통합. 중복 속성 일치 검사 제외, 파일 단위 안전 저장·중단 처리 추가."
+    },
+    {
+      "id": "sequence_z",
+      "label": "시퀀스별 Z값",
+      "description": "M1의 레이어별 프린팅·이동/피딩·리코팅 Z값 조회 및 CSV 저장",
+      "source": "sources/sequence_z.py",
+      "controller": "SequenceZApp",
+      "embedded_base": false,
+      "original_path": "C:/Users/Kain/Desktop/work/Tools/M1 Tools.xlsm!M1 Z축",
+      "original_sha256": "2865e4965090b129739478120f8d5737c927eb24c34d0409ea7d9c60cc20a61d",
+      "adaptation": "원본 수식의 고정 0.1 간격과 이동 +0.1 보정 보존. Decimal 계산, 단일 조회·표·CSV 제공. Excel/VBA 실행 불필요.",
+      "sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+      "bytes": 28062
+    },
+    {
+      "id": "m2_converter",
+      "label": "M2 이미지 변환",
+      "description": "싱글·멀티 선택, 원본 방식 4비트 반전 TIFF 변환 및 출력 형식 검증",
+      "source": "sources/m2_converter.py",
+      "controller": "M2ConverterApp",
+      "embedded_base": false,
+      "original_path": "C:/Users/Kain/Downloads/M2_싱글 ImageConverter.zip; C:/Users/Kain/Downloads/M2_멀티 ImageConverter.zip",
+      "original_archives": [
+        {
+          "name": "M2_싱글 ImageConverter.zip",
+          "sha256": "71295c1b958ae3410e63e68738808d11ca34d90d7c34fe0c503c07deed1f54b7"
+        },
+        {
+          "name": "M2_멀티 ImageConverter.zip",
+          "sha256": "1073d46066aee6c31af8e014c1ce75dde81daf2570fb4cc11ab3b8887e834274"
+        }
+      ],
+      "integration_adapter": "m2_image_engine.py",
+      "adaptation": "정적 분석한 원본 GDI+ 호출(리사이즈·4비트 VGA 팔레트·RGB 반전·LZW) 보존. 순서 관리, 안전 저장, 건너뛰기/덮어쓰기, 중단, 출력 태그 검사 추가.",
+      "sha256": "f8de5a13f876560c1bb4f1395f30709f73c7bbc799b701074cca6a69efc60183",
+      "bytes": 28401
+    },
+    {
+      "id": "chitu_checker",
+      "label": "치투 오브젝트 검사",
+      "description": "CHITUBOX 오브젝트의 겹침·접촉·최소 간격 검사와 3D 배치 확인",
+      "source": "sources/chitu_checker.py",
+      "controller": "ChituCheckerApp",
+      "embedded_base": false,
+      "sha256": "f2e06f2ea23a306e1b26beda1f8549df2152d0c1bc5cbfac8a2bfdc58b074503",
+      "bytes": 25414,
+      "adaptation": "CHITUBOX Basic 배치 유지, 표면 접촉 금지, 최소 간격 mm, 비동기 검사·중단, JSON 및 오프라인 3D HTML."
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "slice_compare_engine.py",
+      "sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "original_path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\slice-compare\\compare_engine.py"
+    },
+    {
+      "path": "slice_replace_validation.py",
+      "sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "purpose": "슬라이싱 교체 전후 실제 비트수·전체 프레임 형식 검증"
+    },
+    {
+      "path": "suite_theme.py",
+      "sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "purpose": "10개 탭 공통 디자인과 외관 전용 어댑터"
+    },
+    {
+      "path": "suite_layout.py",
+      "sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+      "purpose": "배치 도구 반응형 설정줄·좌측 조작 탭·하단 출력 고정"
+    },
+    {
+      "path": "m2_image_engine.py",
+      "purpose": "M2 원본 GDI+ 변환과 TIFF 형식 검사·안전 저장",
+      "sha256": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2"
+    },
+    {
+      "path": "chitu_overlap/__init__.py",
+      "sha256": "51b552f2fd61b2d2223717feb394f5183ea71b0967a4f79621f8449e7a7c584f",
+      "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
+    },
+    {
+      "path": "chitu_overlap/__main__.py",
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
+    },
+    {
+      "path": "chitu_overlap/chitubox.py",
+      "sha256": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+      "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
+    },
+    {
+      "path": "chitu_overlap/cli.py",
+      "sha256": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d",
+      "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
+    },
+    {
+      "path": "chitu_overlap/geometry.py",
+      "sha256": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+      "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
+    },
+    {
+      "path": "chitu_overlap/inputs.py",
+      "sha256": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c",
+      "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
+    },
+    {
+      "path": "chitu_overlap/viewer.py",
+      "sha256": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8",
+      "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
+    },
+    {
+      "path": "chitu_overlap/seams.py",
+      "purpose": "원본 좌표·표면을 보존하는 공선 CAD 연결면의 정확한 재삼각화",
+      "sha256": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418"
+    }
+  ]
+}

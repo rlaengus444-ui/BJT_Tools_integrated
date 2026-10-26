@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "assertions": 577,
+  "cases": [
+    "psd_uniform_o2",
+    "manual_heat_only_closed_lid",
+    "calibrated_gradient_o2_side_access",
+    "manual_tortuosity_no_knudsen",
+    "sealed_o2_and_cooling",
+    "no_radiation_no_snapshots",
+    "16 validation failures",
+    "cancellation",
+    "synthetic thermocouple calibration"
+  ],
+  "scope": "Bit-for-bit equality of native simulation arrays, scalar/dictionary fields, solver validation, cancellation and calibration.",
+  "elapsed_seconds": 2.5976230000378564,
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe",
+  "baseline": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램\\BJT_통합프로그램\\BJT_통합도구",
+  "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구"
+}

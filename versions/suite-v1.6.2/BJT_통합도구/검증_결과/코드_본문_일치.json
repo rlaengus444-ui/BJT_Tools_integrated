@@ -1,0 +1,44 @@
+[
+  {
+    "id": "bjt",
+    "identical_compiled_bodies": 443,
+    "adapted_window_bases": [
+      "App"
+    ],
+    "all_identical": true
+  },
+  {
+    "id": "arrange",
+    "identical_compiled_bodies": 148,
+    "adapted_window_bases": [],
+    "all_identical": true
+  },
+  {
+    "id": "overlay",
+    "identical_compiled_bodies": 42,
+    "adapted_window_bases": [
+      "App"
+    ],
+    "all_identical": true
+  },
+  {
+    "id": "exchanger",
+    "identical_compiled_bodies": 29,
+    "adapted_window_bases": [],
+    "all_identical": true
+  },
+  {
+    "id": "alignment",
+    "identical_compiled_bodies": 125,
+    "adapted_window_bases": [],
+    "all_identical": true
+  },
+  {
+    "id": "thermal",
+    "identical_compiled_bodies": 118,
+    "adapted_window_bases": [
+      "ThermalGUI"
+    ],
+    "all_identical": true
+  }
+]

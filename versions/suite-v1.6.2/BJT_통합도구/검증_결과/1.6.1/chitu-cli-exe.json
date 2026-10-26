@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "frozen_executable": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\BJT_명령줄.exe",
+  "source_project": "20261012-M1-1.chitubox",
+  "source_sha256": "99ad12278631953f701f7f0e1336ed205e1e6a95e34a77e6ba478cd45ea43413",
+  "python_removed_from_child_path": true,
+  "seconds": 55.02800000000025,
+  "checks": [
+    {
+      "name": "genuine_project_gap_1mm",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "object_count": 63,
+      "status": "clear",
+      "minimum_distance_mm": 2.924621820449829,
+      "html_bytes": 6330357,
+      "stdout": "3D 배치 결과: C:\\users\\root\\AppData\\Local\\Temp\\BJT_Chitu_EXE_kf3ic5lz\\gap-1.html\n오브젝트 63개 / 비교 쌍 1953개\n측정된 최소 간격: 2.92462182 mm ([15] ↔ [31])\n합격: 겹침·접촉 없음, 최소 간격 1 mm 충족\n",
+      "stderr": ""
+    },
+    {
+      "name": "genuine_project_gap_3mm",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "passed": true,
+      "object_count": 63,
+      "status": "violation",
+      "minimum_distance_mm": 2.924621820449829,
+      "html_bytes": 6330694,
+      "stdout": "3D 배치 결과: C:\\users\\root\\AppData\\Local\\Temp\\BJT_Chitu_EXE_kf3ic5lz\\gap-3.html\n오브젝트 63개 / 비교 쌍 1953개\n측정된 최소 간격: 2.92462182 mm ([15] ↔ [31])\n불합격: 1쌍 (요구 간격 3 mm / 표면 접촉 금지)\n  [15] 20x20x20.stl #31 ↔ [31] 20x20x20.stl #50: 최소 간격 미달, 간격 2.92462182 mm\n",
+      "stderr": ""
+    },
+    {
+      "name": "unsupported_format_exit_2",
+      "exit_code": 2,
+      "passed": true,
+      "stdout": "",
+      "stderr": "판정 불가: ChituboxFormatError: 지원하는 CHITUBOX Basic 바이너리(매직 0xAB231243)가 아닙니다. 확장자만으로 형식을 추정하지 않습니다. .ctb/.ctp는 지원하지 않습니다.\n"
+    },
+    {
+      "name": "original_project_unchanged",
+      "passed": true
+    }
+  ]
+}

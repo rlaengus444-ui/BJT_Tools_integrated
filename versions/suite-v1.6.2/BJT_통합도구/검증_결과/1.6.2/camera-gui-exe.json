@@ -1,0 +1,139 @@
+{
+  "passed": true,
+  "frozen": true,
+  "checks": {
+    "eleven_registered_tools": true,
+    "selector_visible_at_1120": true,
+    "selector_opens_chitu_tab": true,
+    "gap_0_invalidates_previous_result": true,
+    "gap_0_complete_expected_result": true,
+    "gap_0_status_label": true,
+    "gap_0_progress100": true,
+    "gap_0_two_normalization_notices": true,
+    "gap_1_invalidates_previous_result": true,
+    "gap_1_complete_expected_result": true,
+    "gap_1_status_label": true,
+    "gap_1_progress100": true,
+    "gap_1_two_normalization_notices": true,
+    "gap_1.5_invalidates_previous_result": true,
+    "gap_1.5_complete_expected_result": true,
+    "gap_1.5_status_label": true,
+    "gap_1.5_progress100": true,
+    "gap_1.5_two_normalization_notices": true,
+    "gap15_exact_boundary_distance": true,
+    "gap15_one_failure_row": true,
+    "selected_failed_pair": true,
+    "selected_pair_detail_visible": true,
+    "json_preserves_selected_pair_and_normalization": true,
+    "html_open_requested_without_real_browser": true,
+    "html_preserves_selected_pair_and_normalization": true,
+    "html_offline_and_normalization_notice": true,
+    "gap_2_invalidates_previous_result": true,
+    "gap_2_complete_expected_result": true,
+    "gap_2_status_label": true,
+    "gap_2_progress100": true,
+    "gap_2_two_normalization_notices": true,
+    "gap2_four_failure_rows": true,
+    "all1176_pairs_visible": true,
+    "cancel_does_not_pass": true,
+    "close_waits_for_worker_cleanup": true,
+    "no_callback_or_tcl_errors": true,
+    "source_file_unchanged": true
+  },
+  "callback_errors": [],
+  "timings_seconds": {
+    "gap_0_worker": 5.746000000000095,
+    "gap_1_worker": 4.708999999999833,
+    "gap_1.5_worker": 4.491999999999734,
+    "json_export": 0.17800000000033833,
+    "html_export": 0.5979999999999563,
+    "gap_2_worker": 5.519000000000233
+  },
+  "threshold_results": [
+    {
+      "min_gap_mm": 0.0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "pair_status_counts": {
+        "clear": 1176
+      },
+      "violation_pairs": [],
+      "normalized_indices": [
+        4,
+        5
+      ]
+    },
+    {
+      "min_gap_mm": 1.0,
+      "status": "clear",
+      "complete": true,
+      "processing_completed": true,
+      "pair_status_counts": {
+        "clear": 1176
+      },
+      "violation_pairs": [],
+      "normalized_indices": [
+        4,
+        5
+      ]
+    },
+    {
+      "min_gap_mm": 1.5,
+      "status": "violation",
+      "complete": true,
+      "processing_completed": true,
+      "pair_status_counts": {
+        "clear": 1175,
+        "too_close": 1
+      },
+      "violation_pairs": [
+        [
+          5,
+          6
+        ]
+      ],
+      "normalized_indices": [
+        4,
+        5
+      ]
+    },
+    {
+      "min_gap_mm": 2.0,
+      "status": "violation",
+      "complete": true,
+      "processing_completed": true,
+      "pair_status_counts": {
+        "clear": 1172,
+        "too_close": 4
+      },
+      "violation_pairs": [
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          7
+        ]
+      ],
+      "normalized_indices": [
+        4,
+        5
+      ]
+    }
+  ],
+  "project_name": "260928-M1-1__.chitubox",
+  "project_sha256": "c22dc0cfc58b42a0f6528e512ae9b1947222c6bbfc8fad67747b807cad2270ad",
+  "screenshot": "Z:\\workspace\\bjt-integration\\camera-case\\windows-build\\camera-gui-exe.png",
+  "html_bytes": 12674698,
+  "tcl_bgerrors": []
+}

@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "verified_at": "2026-10-23T17:34:21.903048+09:00",
+  "method": "Windows native screenshots and inputs through the Computer Use skill after user unlocked Windows.",
+  "reviewed": [
+    "1.4 home at 1120x780: all eight cards, nine navigation tabs and status visible",
+    "comparison input, matching controls, action text, result table and detail tabs",
+    "arrange at 1120x780: two-row toolbar, all file/STL/copy/delete actions, coordinates and fixed export/cancel visible",
+    "arrange preview tab: layer and opacity controls visible; wide window restores single toolbar row",
+    "thermal inputs and inner tabs share the theme; scientific plot colors preserved",
+    "model/lattice/STL controls, nested pages, log and primary action share the theme",
+    "number-copy/missing and replacement manuals: readable content, TOC and F1 (reviewed before final theme; final theme zoom/search revalidated programmatically)"
+  ],
+  "python_callback_errors": 0,
+  "user_data_writes": false
+}

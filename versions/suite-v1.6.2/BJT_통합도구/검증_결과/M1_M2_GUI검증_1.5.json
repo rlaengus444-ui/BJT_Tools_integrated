@@ -1,0 +1,73 @@
+{
+  "checks": [
+    "sequence_z no controls outside host",
+    "M1 default independent query",
+    "M1 query clipboard",
+    "M1 table bounded 200",
+    "M1 next page 201",
+    "M1 selected clipboard",
+    "M1 input invalidates query and table",
+    "M1 locks while export",
+    "M1 full CSV worker BOM",
+    "M1 billion range bounded",
+    "M1 cancel atomic original preserved",
+    "m2_converter no controls outside host",
+    "M2 DnD registered",
+    "M2 folder natural order and nonrecursive",
+    "M2 stable selected block move up",
+    "M2 stable selected block move down",
+    "M2 drop accepted",
+    "M2 explicit drop preserves order",
+    "M2 rejects ZIP",
+    "M2 no duplicate input path",
+    "M2 mode fixed dimensions DPI",
+    "M2 accepts no padding",
+    "M2 rejects padding above 12",
+    "M2 frozen controls",
+    "M2 busy drop refused",
+    "M2 exact job order",
+    "M2 completed report correct",
+    "M2 readonly restored",
+    "M2 JSON TXT save",
+    "M2 settings invalidates saved report",
+    "M2 cancellation is incomplete",
+    "M2 programmatic stale change invalidates",
+    "M2 real engine skip API",
+    "M2 close waits for worker",
+    "M2 deferred close cleaned worker",
+    "M1 close waits for worker",
+    "M1 deferred close cleaned worker",
+    "No Tk callback exceptions"
+  ],
+  "callback_errors": [],
+  "dialogs": [
+    [
+      "warning",
+      "입력 확인",
+      "PNG·JPEG·BMP·TIF·TIFF 이미지 또는 이미지 폴더만 추가할 수 있습니다. ZIP은 지원하지 않습니다.\n\nC:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\integration\\m1-m2-gui-fixture\\input\\bad.zip"
+    ]
+  ],
+  "layout": {
+    "sequence_z": {
+      "host_w_h_reqw_reqh": [
+        1068,
+        565,
+        876,
+        691
+      ],
+      "clipped_leaf_widgets": [],
+      "tree_height": 236
+    },
+    "m2_converter": {
+      "host_w_h_reqw_reqh": [
+        1068,
+        565,
+        1021,
+        686
+      ],
+      "clipped_leaf_widgets": [],
+      "tree_height": 99
+    }
+  },
+  "passed": true
+}

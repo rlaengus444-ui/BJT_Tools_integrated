@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-23",
+  "scope": "Synthetic 7-control integration checks; full eight-tool visual QA is performed separately.",
+  "runtime": "BJT private CPython 3.12",
+  "module_sha256": "f21121ef4c2408058dc0c38c5c14e9f5b2f9933d6f96f558f8da3023595908a6",
+  "theme": "BjtSuite",
+  "checks": {
+    "control_signatures_preserved": true,
+    "canvas_all_29_options_preserved": true,
+    "original_heading_font_preserved": true,
+    "semantic_status_colors_preserved": true,
+    "repeated_apply_font_count_stable": true,
+    "variable_value_preserved": true,
+    "custom_named_font_reference_and_zoom_preserved": true,
+    "explicit_consolas_font_preserved": true,
+    "original_tool_theme_switch_restored": true,
+    "disabled_precedes_active": true
+  },
+  "controls": 7,
+  "canvas_options": 29,
+  "stable_named_font_count": 17,
+  "nav_tab_padding": "10 6",
+  "disabled_foreground": "#64748b",
+  "disabled_background": "#e8edf4"
+}

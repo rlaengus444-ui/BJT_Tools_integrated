@@ -1,0 +1,20 @@
+{
+  "total": 2,
+  "passed": 2,
+  "cases": [
+    {
+      "scenario": "missing_package",
+      "normal_tk_created": true,
+      "partial_root_cleaned": true,
+      "dnd_flags_disabled": true,
+      "passed": true
+    },
+    {
+      "scenario": "native_binary_failure",
+      "normal_tk_created": true,
+      "partial_root_cleaned": true,
+      "dnd_flags_disabled": true,
+      "passed": true
+    }
+  ]
+}

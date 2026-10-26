@@ -1,0 +1,324 @@
+{
+  "passed": true,
+  "created_utc": "2026-10-23T09:29:58.224266+00:00",
+  "baseline": {
+    "launcher": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램_1.4\\BJT_통합프로그램.pyw",
+    "launcher_sha256": "396518c9ce912a7a0e355bdc031cd99a439447ac0cfde2d76b95144f6f9134f3",
+    "payload_sha256": "9011299cb922d2734aa7bbc43940e3fe9a844f8b9edf9d8e719f2ab01810f4e9",
+    "version": "1.4.0",
+    "tools": 8,
+    "crc_valid": true,
+    "fingerprint": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\m1-z-tests\\baseline_1.4.json",
+    "launcher_executed": false
+  },
+  "current": {
+    "suite": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구",
+    "version": "1.5.0",
+    "tools": 10,
+    "manifest_sha256": "46a1f15d56eff8d1a52f348b5d0ddd9029eb179a9bbd7e7091b759f5f6df74b2",
+    "added_tool_ids": [
+      "m2_converter",
+      "sequence_z"
+    ]
+  },
+  "existing_tool_sources": {
+    "count": 8,
+    "all_bytes_identical": true,
+    "all_manifest_entries_unchanged": true,
+    "details": [
+      {
+        "id": "bjt",
+        "path": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+        "baseline_bytes": 534649,
+        "current_bytes": 534649,
+        "baseline_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+        "current_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+        "baseline_manifest_hash_valid": true,
+        "current_manifest_hash_valid": true,
+        "source_bytes_identical": true,
+        "old_tool_manifest_entry_unchanged": true
+      },
+      {
+        "id": "arrange",
+        "path": "sources/slicing arrange.py",
+        "baseline_bytes": 111281,
+        "current_bytes": 111281,
+        "baseline_sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+        "current_sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+        "baseline_manifest_hash_valid": true,
+        "current_manifest_hash_valid": true,
+        "source_bytes_identical": true,
+        "old_tool_manifest_entry_unchanged": true
+      },
+      {
+        "id": "overlay",
+        "path": "sources/slice_folder_overlay.py",
+        "baseline_bytes": 25838,
+        "current_bytes": 25838,
+        "baseline_sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+        "current_sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+        "baseline_manifest_hash_valid": true,
+        "current_manifest_hash_valid": true,
+        "source_bytes_identical": true,
+        "old_tool_manifest_entry_unchanged": true
+      },
+      {
+        "id": "exchanger",
+        "path": "sources/slice exchanger.py",
+        "baseline_bytes": 18784,
+        "current_bytes": 18784,
+        "baseline_sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+        "current_sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+        "baseline_manifest_hash_valid": true,
+        "current_manifest_hash_valid": true,
+        "source_bytes_identical": true,
+        "old_tool_manifest_entry_unchanged": true
+      },
+      {
+        "id": "alignment",
+        "path": "sources/slice_alignment_checker.py",
+        "baseline_bytes": 137262,
+        "current_bytes": 137262,
+        "baseline_sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+        "current_sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+        "baseline_manifest_hash_valid": true,
+        "current_manifest_hash_valid": true,
+        "source_bytes_identical": true,
+        "old_tool_manifest_entry_unchanged": true
+      },
+      {
+        "id": "thermal",
+        "path": "sources/sic_buildbox_thermal_gui_v5.py",
+        "baseline_bytes": 161773,
+        "current_bytes": 161773,
+        "baseline_sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+        "current_sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+        "baseline_manifest_hash_valid": true,
+        "current_manifest_hash_valid": true,
+        "source_bytes_identical": true,
+        "old_tool_manifest_entry_unchanged": true
+      },
+      {
+        "id": "compare",
+        "path": "sources/slice_compare_app.py",
+        "baseline_bytes": 37944,
+        "current_bytes": 37944,
+        "baseline_sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+        "current_sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+        "baseline_manifest_hash_valid": true,
+        "current_manifest_hash_valid": true,
+        "source_bytes_identical": true,
+        "old_tool_manifest_entry_unchanged": true
+      },
+      {
+        "id": "number_tools",
+        "path": "sources/number_tools.py",
+        "baseline_bytes": 35171,
+        "current_bytes": 35171,
+        "baseline_sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+        "current_sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+        "baseline_manifest_hash_valid": true,
+        "current_manifest_hash_valid": true,
+        "source_bytes_identical": true,
+        "old_tool_manifest_entry_unchanged": true
+      }
+    ]
+  },
+  "preserved_computation_support": {
+    "all_bytes_identical": true,
+    "details": [
+      {
+        "path": "slice_compare_engine.py",
+        "baseline_sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+        "current_sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+        "bytes": 51024,
+        "bytes_identical": true,
+        "baseline_fingerprint_valid": true
+      },
+      {
+        "path": "slice_replace_validation.py",
+        "baseline_sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+        "current_sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+        "bytes": 6013,
+        "bytes_identical": true,
+        "baseline_fingerprint_valid": true
+      },
+      {
+        "path": "slice_compare_cli.py",
+        "baseline_sha256": "da1ef220fb685cc4e059cc8250f51653f6d23604b50aaf8951ce387aa8fbcec8",
+        "current_sha256": "da1ef220fb685cc4e059cc8250f51653f6d23604b50aaf8951ce387aa8fbcec8",
+        "bytes": 1939,
+        "bytes_identical": true,
+        "baseline_fingerprint_valid": true
+      },
+      {
+        "path": "suite_layout.py",
+        "baseline_sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+        "current_sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+        "bytes": 3713,
+        "bytes_identical": true,
+        "baseline_fingerprint_valid": true
+      },
+      {
+        "path": "tests/test_slice_compare.py",
+        "baseline_sha256": "0f981ce1525257d36024997502d9d8d93fc72eb01168099d6ccc9b8daf96a02a",
+        "current_sha256": "0f981ce1525257d36024997502d9d8d93fc72eb01168099d6ccc9b8daf96a02a",
+        "bytes": 25650,
+        "bytes_identical": true,
+        "baseline_fingerprint_valid": true
+      },
+      {
+        "path": "tests/test_number_tools.py",
+        "baseline_sha256": "040fcf7eadd686b4e8d7fd8224aba2861ee157c21f7e19e545c9916de97a2fa5",
+        "current_sha256": "040fcf7eadd686b4e8d7fd8224aba2861ee157c21f7e19e545c9916de97a2fa5",
+        "bytes": 17435,
+        "bytes_identical": true,
+        "baseline_fingerprint_valid": true
+      },
+      {
+        "path": "tests/test_replace_validation.py",
+        "baseline_sha256": "a673907d124ed1a5200e1b194ee47a8f2740a7646e4da7825dfbc8bfb8f60eca",
+        "current_sha256": "a673907d124ed1a5200e1b194ee47a8f2740a7646e4da7825dfbc8bfb8f60eca",
+        "bytes": 13776,
+        "bytes_identical": true,
+        "baseline_fingerprint_valid": true
+      }
+    ]
+  },
+  "current_manifest_checks": {
+    "count": 15,
+    "all_valid": true,
+    "details": [
+      {
+        "path": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+        "sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+        "valid": true
+      },
+      {
+        "path": "sources/slicing arrange.py",
+        "sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+        "valid": true
+      },
+      {
+        "path": "sources/slice_folder_overlay.py",
+        "sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+        "valid": true
+      },
+      {
+        "path": "sources/slice exchanger.py",
+        "sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+        "valid": true
+      },
+      {
+        "path": "sources/slice_alignment_checker.py",
+        "sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+        "valid": true
+      },
+      {
+        "path": "sources/sic_buildbox_thermal_gui_v5.py",
+        "sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+        "valid": true
+      },
+      {
+        "path": "sources/slice_compare_app.py",
+        "sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+        "valid": true
+      },
+      {
+        "path": "sources/number_tools.py",
+        "sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+        "valid": true
+      },
+      {
+        "path": "sources/sequence_z.py",
+        "sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+        "valid": true
+      },
+      {
+        "path": "sources/m2_converter.py",
+        "sha256": "f8de5a13f876560c1bb4f1395f30709f73c7bbc799b701074cca6a69efc60183",
+        "valid": true
+      },
+      {
+        "path": "slice_compare_engine.py",
+        "sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+        "valid": true
+      },
+      {
+        "path": "slice_replace_validation.py",
+        "sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+        "valid": true
+      },
+      {
+        "path": "suite_theme.py",
+        "sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+        "valid": true
+      },
+      {
+        "path": "suite_layout.py",
+        "sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+        "valid": true
+      },
+      {
+        "path": "m2_image_engine.py",
+        "sha256": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2",
+        "valid": true
+      }
+    ]
+  },
+  "shared_integration_files": [
+    {
+      "path": "run_suite.py",
+      "baseline_sha256": "a030e86f0d4e0bbf8815a25eb60151bc7c088f1f569042300e20b9db2cd0038f",
+      "current_sha256": "a030e86f0d4e0bbf8815a25eb60151bc7c088f1f569042300e20b9db2cd0038f",
+      "bytes_identical": true
+    },
+    {
+      "path": "suite_loader.py",
+      "baseline_sha256": "7739ba1e8f5c86ed2e8b3cf0132881b9c7b31c962765142ce7dc3f5b4972fdb7",
+      "current_sha256": "212111c96a9be54799945d5370fe74dff152fe617e78a7ade1b95cda519e27dc",
+      "bytes_identical": false
+    },
+    {
+      "path": "suite_runtime.py",
+      "baseline_sha256": "44a64ed1227fd25b4af84521efd1643dbfc60e7c56438a687694bbbb8bde18b9",
+      "current_sha256": "44a64ed1227fd25b4af84521efd1643dbfc60e7c56438a687694bbbb8bde18b9",
+      "bytes_identical": true
+    },
+    {
+      "path": "suite_ui.py",
+      "baseline_sha256": "27b60f763d88f0c4c1960432d6c71e781ff9ef4975b35e0ccf9076d331018144",
+      "current_sha256": "ee0cc54b56867713cbb23846e7ca996430f8ff36c28cc1b5f31554402674283c",
+      "bytes_identical": false
+    },
+    {
+      "path": "suite_manuals.py",
+      "baseline_sha256": "f4badabd8ed602edbf9c48170cfcc0f3bc790ed5c1e366800d330924b2b6943c",
+      "current_sha256": "d14466e819d2992a365b8d0a26ef2cb9306129e33df47f96cc09ae7a0de35150",
+      "bytes_identical": false
+    },
+    {
+      "path": "suite_theme.py",
+      "baseline_sha256": "f21121ef4c2408058dc0c38c5c14e9f5b2f9933d6f96f558f8da3023595908a6",
+      "current_sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "bytes_identical": false
+    }
+  ],
+  "unit_evidence": {
+    "path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\검증_결과\\자동시험_전체결과.json",
+    "sha256": "3295300e2147ba72b7ed00798e9dbf424ba78131a96e8e461511913dc3d7a2b5",
+    "passed": true,
+    "tests": 122,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "scope": [
+    "Read baseline Desktop launcher constants with AST; decode and CRC-check embedded ZIP without executing launcher.",
+    "Compare actual bytes for all8 existing tool sources, not only manifest declarations.",
+    "Comparison engine, comparison CLI, native replacement validation, responsive arrangement adapter and existing79 unit-test source files remain byte-identical to1.4.",
+    "All10 current tool and5 dependency hashes verified; syntax compiled in memory without running modules.",
+    "Shared launcher/runtime/loader/UI/manual/theme integration may change to add2 tools and frozen EXE support; their hashes are listed separately and no claim of entire distribution identity is made.",
+    "This proves source/logic preservation and records the completed122-unit run. It does not claim unexecuted GUI behavior or package parity; final source ZIP/launcher checks will run after packaging READY."
+  ]
+}

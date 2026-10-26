@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "fixture_cases": [
+    {
+      "case": "reconstruct_crop_center",
+      "passed": true,
+      "stl_sha256": "7f632e8ed858386ba89522f5439ead13e38853a39dc564dcfd26365088c547fe",
+      "triangles": 72
+    },
+    {
+      "case": "hex_line_xyz_bmp",
+      "passed": true,
+      "stl_sha256": "97a0f54dabee124ec008f5a3c79bdcb566bad16a0607d2ddf889c749592f07d4",
+      "triangles": 1532
+    },
+    {
+      "case": "square_line_xy_png",
+      "passed": true,
+      "stl_sha256": "0a8aa316fe64bd177723215ba52d4cb4dc07b263f48cd9dac670355aec023dfe",
+      "triangles": 464
+    },
+    {
+      "case": "hex_face_xyz",
+      "passed": true,
+      "stl_sha256": "97a0f54dabee124ec008f5a3c79bdcb566bad16a0607d2ddf889c749592f07d4",
+      "triangles": 1532
+    },
+    {
+      "case": "shell_only",
+      "passed": true,
+      "stl_sha256": "38d92ac929491c868c7aba0de0a6ba411887949975666ff6121a21c936914c23",
+      "triangles": 252
+    },
+    {
+      "case": "model_full",
+      "passed": true,
+      "stl_sha256": "98bcec3138ae967511f7fd7ae64bf583163639215f7ef86fd3e706a3023616b1",
+      "triangles": 568
+    }
+  ],
+  "certifications": {
+    "_AIO_V35_ADJ_OK": true,
+    "_AIO_V32_SELFTEST_OK": true,
+    "_AIO_V33_SELFTEST_OK": true,
+    "_AIO_V36_STATIC_SELFTEST_OK": true,
+    "_AIO_V41_NUMBA_CERT_OK": true,
+    "_AIO_V50_SELFTEST_OK": true,
+    "_AIO_V51_SELFTEST_OK": true,
+    "_AIO_V52_SELFTEST_OK": true,
+    "_AIO_V53_SELFTEST_OK": true
+  },
+  "scope": "Fresh desktop-baseline versus embedded-source runs: exact STL bytes, native image pixel hashes, output statistics, callbacks and completion status.",
+  "elapsed_seconds": 57.50692940002773,
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe",
+  "baseline": "C:\\Users\\Kain\\Desktop\\BJT_통합프로그램\\BJT_통합프로그램\\BJT_통합도구",
+  "candidate": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구"
+}

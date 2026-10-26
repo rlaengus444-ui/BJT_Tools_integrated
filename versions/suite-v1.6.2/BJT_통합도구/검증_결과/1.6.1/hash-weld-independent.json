@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "production_B_not_prototype": true,
+  "cases": [
+    {
+      "case": "actual_hash",
+      "all_9000_positions_bitwise_equal": true,
+      "unique_count_matches_exact_V12": true
+    },
+    {
+      "case": "forced_17_buckets",
+      "all_9000_positions_bitwise_equal": true,
+      "unique_count_matches_exact_V12": true
+    }
+  ]
+}

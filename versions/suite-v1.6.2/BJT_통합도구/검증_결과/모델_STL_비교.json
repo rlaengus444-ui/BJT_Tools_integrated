@@ -1,0 +1,62 @@
+{
+  "all_identical": true,
+  "comparisons": [
+    {
+      "case": "reconstruct_crop_center",
+      "identical": true,
+      "differences": {},
+      "stl_sha256_original": "7f632e8ed858386ba89522f5439ead13e38853a39dc564dcfd26365088c547fe",
+      "stl_sha256_suite": "7f632e8ed858386ba89522f5439ead13e38853a39dc564dcfd26365088c547fe"
+    },
+    {
+      "case": "hex_line_xyz_bmp",
+      "identical": true,
+      "differences": {},
+      "stl_sha256_original": "97a0f54dabee124ec008f5a3c79bdcb566bad16a0607d2ddf889c749592f07d4",
+      "stl_sha256_suite": "97a0f54dabee124ec008f5a3c79bdcb566bad16a0607d2ddf889c749592f07d4"
+    },
+    {
+      "case": "square_line_xy_png",
+      "identical": true,
+      "differences": {},
+      "stl_sha256_original": "0a8aa316fe64bd177723215ba52d4cb4dc07b263f48cd9dac670355aec023dfe",
+      "stl_sha256_suite": "0a8aa316fe64bd177723215ba52d4cb4dc07b263f48cd9dac670355aec023dfe"
+    },
+    {
+      "case": "hex_face_xyz",
+      "identical": true,
+      "differences": {},
+      "stl_sha256_original": "97a0f54dabee124ec008f5a3c79bdcb566bad16a0607d2ddf889c749592f07d4",
+      "stl_sha256_suite": "97a0f54dabee124ec008f5a3c79bdcb566bad16a0607d2ddf889c749592f07d4"
+    },
+    {
+      "case": "shell_only",
+      "identical": true,
+      "differences": {},
+      "stl_sha256_original": "38d92ac929491c868c7aba0de0a6ba411887949975666ff6121a21c936914c23",
+      "stl_sha256_suite": "38d92ac929491c868c7aba0de0a6ba411887949975666ff6121a21c936914c23"
+    },
+    {
+      "case": "model_full",
+      "identical": true,
+      "differences": {},
+      "stl_sha256_original": "98bcec3138ae967511f7fd7ae64bf583163639215f7ef86fd3e706a3023616b1",
+      "stl_sha256_suite": "98bcec3138ae967511f7fd7ae64bf583163639215f7ef86fd3e706a3023616b1"
+    }
+  ],
+  "certifications": {
+    "_AIO_V35_ADJ_OK": true,
+    "_AIO_V32_SELFTEST_OK": true,
+    "_AIO_V33_SELFTEST_OK": true,
+    "_AIO_V36_STATIC_SELFTEST_OK": true,
+    "_AIO_V41_NUMBA_CERT_OK": true,
+    "_AIO_V50_SELFTEST_OK": true,
+    "_AIO_V51_SELFTEST_OK": true,
+    "_AIO_V52_SELFTEST_OK": true,
+    "_AIO_V53_SELFTEST_OK": true
+  },
+  "all_certifications_pass": true,
+  "version": "5.8-faithful-contact-aware",
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe",
+  "python": "3.12.14 | packaged by conda-forge | (main, Sep  2 2026, 23:18:20) [MSC v.1944 64 bit (AMD64)]"
+}

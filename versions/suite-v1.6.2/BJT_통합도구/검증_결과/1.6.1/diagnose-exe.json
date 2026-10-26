@@ -1,0 +1,210 @@
+{
+  "passed": true,
+  "frozen": true,
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "asset_root": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal",
+  "state_root": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\test-profile\\Local\\BJT_통합프로그램\\1.6.1",
+  "numba_cache_root": "\\\\?\\Z:\\workspace\\bjt-integration\\optimization\\windows-build\\test-profile\\Local\\BJT\\n161_885398bb48",
+  "seconds": 71.272,
+  "checks": {
+    "asset_hashes": [
+      {
+        "id": "bjt",
+        "valid": true,
+        "bytes": 534649,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\260914_BJT_model_to_lattice_STL_all_in_one.py"
+      },
+      {
+        "id": "arrange",
+        "valid": true,
+        "bytes": 111281,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\slicing arrange.py"
+      },
+      {
+        "id": "overlay",
+        "valid": true,
+        "bytes": 25838,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\slice_folder_overlay.py"
+      },
+      {
+        "id": "exchanger",
+        "valid": true,
+        "bytes": 18784,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\slice exchanger.py"
+      },
+      {
+        "id": "alignment",
+        "valid": true,
+        "bytes": 137262,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\slice_alignment_checker.py"
+      },
+      {
+        "id": "thermal",
+        "valid": true,
+        "bytes": 161773,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\sic_buildbox_thermal_gui_v5.py"
+      },
+      {
+        "id": "compare",
+        "valid": true,
+        "bytes": 37944,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\slice_compare_app.py"
+      },
+      {
+        "id": "number_tools",
+        "valid": true,
+        "bytes": 35171,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\number_tools.py"
+      },
+      {
+        "id": "sequence_z",
+        "valid": true,
+        "bytes": 28062,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\sequence_z.py"
+      },
+      {
+        "id": "m2_converter",
+        "valid": true,
+        "bytes": 28401,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\m2_converter.py"
+      },
+      {
+        "id": "chitu_checker",
+        "valid": true,
+        "bytes": 25060,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\sources\\chitu_checker.py"
+      },
+      {
+        "id": "slice_compare_engine.py",
+        "valid": true,
+        "bytes": 51024,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\slice_compare_engine.py"
+      },
+      {
+        "id": "slice_replace_validation.py",
+        "valid": true,
+        "bytes": 6013,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\slice_replace_validation.py"
+      },
+      {
+        "id": "suite_theme.py",
+        "valid": true,
+        "bytes": 17555,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\suite_theme.py"
+      },
+      {
+        "id": "suite_layout.py",
+        "valid": true,
+        "bytes": 3713,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\suite_layout.py"
+      },
+      {
+        "id": "m2_image_engine.py",
+        "valid": true,
+        "bytes": 16757,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\m2_image_engine.py"
+      },
+      {
+        "id": "chitu_overlap/__init__.py",
+        "valid": true,
+        "bytes": 263,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\chitu_overlap\\__init__.py"
+      },
+      {
+        "id": "chitu_overlap/__main__.py",
+        "valid": true,
+        "bytes": 48,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\chitu_overlap\\__main__.py"
+      },
+      {
+        "id": "chitu_overlap/chitubox.py",
+        "valid": true,
+        "bytes": 17326,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\chitu_overlap\\chitubox.py"
+      },
+      {
+        "id": "chitu_overlap/cli.py",
+        "valid": true,
+        "bytes": 6581,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\chitu_overlap\\cli.py"
+      },
+      {
+        "id": "chitu_overlap/geometry.py",
+        "valid": true,
+        "bytes": 23361,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\chitu_overlap\\geometry.py"
+      },
+      {
+        "id": "chitu_overlap/inputs.py",
+        "valid": true,
+        "bytes": 2406,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\chitu_overlap\\inputs.py"
+      },
+      {
+        "id": "chitu_overlap/viewer.py",
+        "valid": true,
+        "bytes": 19792,
+        "path": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\chitu_overlap\\viewer.py"
+      }
+    ],
+    "png16_native": true,
+    "cv2_native": true,
+    "shapely_geos": true,
+    "rtree_spatialindex": true,
+    "vtk_native": true,
+    "scipy_optimize": true,
+    "scipy_ndimage": true,
+    "trimesh": true,
+    "chitu_manifold_fcl_contact": true,
+    "plotly_offline_bundle": true,
+    "bjt_numba_jit": true,
+    "dynamic_tools_loaded": [
+      "alignment",
+      "arrange",
+      "bjt",
+      "chitu_checker",
+      "compare",
+      "exchanger",
+      "m2_converter",
+      "number_tools",
+      "overlay",
+      "sequence_z",
+      "thermal"
+    ],
+    "distribution_metadata": {
+      "numpy": "2.3.5",
+      "Pillow": "12.3.0",
+      "scipy": "1.17.0",
+      "scikit-image": "0.26.0",
+      "trimesh": "5.1.0",
+      "shapely": "2.1.2",
+      "numba": "0.67.0",
+      "llvmlite": "0.49.0",
+      "rtree": "1.4.1",
+      "opencv-python": "5.0.0.93",
+      "tkinterdnd2": "0.6.3",
+      "vtk": "9.3.1",
+      "matplotlib": "3.11.2",
+      "tifffile": "2026.9.9",
+      "pypng": "0.20220715.0",
+      "imagecodecs": "2026.10.10",
+      "manifold3d": "3.5.4",
+      "python-fcl": "0.7.0.11",
+      "plotly": "7.1.0"
+    },
+    "native_module_paths": {
+      "numpy": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\numpy\\__init__.py",
+      "scipy": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\scipy\\__init__.py",
+      "PIL": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\PIL\\__init__.py",
+      "numba": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\numba\\__init__.py",
+      "llvmlite": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\llvmlite\\__init__.py",
+      "vtk": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\vtk.py",
+      "cv2": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\cv2\\__init__.py",
+      "imagecodecs": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\dist\\BJT_통합프로그램_1.6.1_EXE\\_internal\\imagecodecs\\__init__.py"
+    },
+    "ucrt_module_paths": [
+      "C:\\windows\\system32\\ucrtbase.dll"
+    ],
+    "one_system_ucrt": true
+  }
+}

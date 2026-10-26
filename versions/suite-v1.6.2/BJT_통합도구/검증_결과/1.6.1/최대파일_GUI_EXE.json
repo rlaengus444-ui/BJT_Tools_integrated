@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "frozen": true,
+  "checks": {
+    "eleven_registered_tools": true,
+    "selector_opens_chitu": true,
+    "gap1_processed_with_bad_inputs": true,
+    "eleven_invalid_objects_preserved": true,
+    "known_pair_and_exact_gap": true,
+    "fail_and_unknowns_visible": true,
+    "progress100_does_not_imply_pass": true,
+    "selected_failed_pair": true,
+    "json_preserves_partial_failure": true,
+    "html_open_requested_without_browser": true,
+    "selected_pair_exact_180k_geometry": true,
+    "large_context_bounds_caption": true,
+    "standalone_html_below20MiB": true,
+    "settings_invalidate_old_result": true,
+    "gap05_inconclusive_not_pass": true,
+    "gap05_progress100": true,
+    "all231_pairs_visible": true,
+    "lower_bound_row_is_labeled": true,
+    "cancel_during_read_not_pass": true,
+    "close_waits_for_worker_cleanup": true,
+    "no_callback_or_tcl_errors": true,
+    "source_file_unchanged": true
+  },
+  "callback_errors": [],
+  "timings_seconds": {
+    "gap1_worker": 22.24200000000019,
+    "json_export": 0.10200000000077125,
+    "html_export": 1.5280000000002474,
+    "gap05_worker": 20.49699999999939
+  },
+  "screenshot": "Z:\\workspace\\bjt-integration\\optimization\\windows-build\\runs\\pe-large-gui\\large-gui-exe.png",
+  "html_bytes": 13174631,
+  "tcl_bgerrors": [],
+  "project_name": "26.04.08_set.2.chitubox",
+  "project_sha256": "6e57d3f9c041b624e7e09065e06ddb1fbc460ad3dde2e0f07e98df905551315a",
+  "invalid_indices": [
+    0,
+    2,
+    3,
+    7,
+    8,
+    9,
+    10,
+    12,
+    13,
+    14,
+    15
+  ],
+  "known_fail_pair": [
+    6,
+    16
+  ],
+  "known_gap_mm": 0.6575593948364258
+}

@@ -1,0 +1,85 @@
+{
+  "suite_version": "1.4.0",
+  "all_valid": true,
+  "engine_byte_identical": true,
+  "sources": [
+    {
+      "id": "bjt",
+      "sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "valid": true
+    },
+    {
+      "id": "arrange",
+      "sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "valid": true
+    },
+    {
+      "id": "overlay",
+      "sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "valid": true
+    },
+    {
+      "id": "exchanger",
+      "sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "valid": true
+    },
+    {
+      "id": "alignment",
+      "sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "valid": true
+    },
+    {
+      "id": "thermal",
+      "sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+      "valid": true
+    },
+    {
+      "id": "compare",
+      "sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "valid": true
+    },
+    {
+      "id": "number_tools",
+      "sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "valid": true
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "slice_compare_engine.py",
+      "sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "original_path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\slice-compare\\compare_engine.py"
+    },
+    {
+      "path": "slice_replace_validation.py",
+      "sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "purpose": "슬라이싱 교체 전후 실제 비트수·전체 프레임 형식 검증"
+    },
+    {
+      "path": "suite_theme.py",
+      "sha256": "f21121ef4c2408058dc0c38c5c14e9f5b2f9933d6f96f558f8da3023595908a6",
+      "purpose": "8개 탭 공통 디자인과 외관 전용 어댑터"
+    },
+    {
+      "path": "suite_layout.py",
+      "sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+      "purpose": "배치 도구 반응형 설정줄·좌측 조작 탭·하단 출력 고정"
+    }
+  ],
+  "visual_review": {
+    "passed": true,
+    "verified_at": "2026-10-23T17:34:21.903048+09:00",
+    "method": "Windows native screenshots and inputs through the Computer Use skill after user unlocked Windows.",
+    "reviewed": [
+      "1.4 home at 1120x780: all eight cards, nine navigation tabs and status visible",
+      "comparison input, matching controls, action text, result table and detail tabs",
+      "arrange at 1120x780: two-row toolbar, all file/STL/copy/delete actions, coordinates and fixed export/cancel visible",
+      "arrange preview tab: layer and opacity controls visible; wide window restores single toolbar row",
+      "thermal inputs and inner tabs share the theme; scientific plot colors preserved",
+      "model/lattice/STL controls, nested pages, log and primary action share the theme",
+      "number-copy/missing and replacement manuals: readable content, TOC and F1 (reviewed before final theme; final theme zoom/search revalidated programmatically)"
+    ],
+    "python_callback_errors": 0,
+    "user_data_writes": false
+  }
+}

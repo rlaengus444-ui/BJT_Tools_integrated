@@ -1,0 +1,46 @@
+{
+  "runtime": "C:\\Users\\Kain\\AppData\\Local\\BJT\\python-envs\\cp312-76b7b8d17300fc01\\python.exe",
+  "installed_missing": [
+    "pypng==0.20220715.0",
+    "imagecodecs==2026.10.10"
+  ],
+  "packages": [
+    {
+      "requirement": "matplotlib==3.11.2",
+      "module": "matplotlib",
+      "version": "3.11.2",
+      "error": null
+    },
+    {
+      "requirement": "pypng==0.20220715.0",
+      "module": "png",
+      "version": "0.20220715.0",
+      "error": null
+    },
+    {
+      "requirement": "tifffile==2026.10.15",
+      "module": "tifffile",
+      "version": "2026.9.9",
+      "error": null
+    },
+    {
+      "requirement": "imagecodecs==2026.10.10",
+      "module": "imagecodecs",
+      "version": "2026.10.10",
+      "error": null
+    }
+  ],
+  "original_pins": [
+    "numpy==2.3.5",
+    "scipy==1.17.0",
+    "Pillow==12.3.0",
+    "scikit-image==0.26.0",
+    "trimesh==5.1.0",
+    "shapely==2.1.2",
+    "numba==0.67.0",
+    "rtree==1.4.1",
+    "opencv-python==5.0.0.93",
+    "tkinterdnd2==0.6.3",
+    "vtk==9.3.1"
+  ]
+}

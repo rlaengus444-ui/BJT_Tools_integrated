@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "version": "1.6.2",
+  "release_date": "2026-10-26",
+  "release_timezone": "Asia/Seoul",
+  "windows_executables": {
+    "BJT_명령줄.exe": "eb93920c866e855686fa88c3fbbb5d828c6aec86d3cad3c4052e75bbe61e6106",
+    "BJT_통합프로그램.exe": "5a449029336f4093905c7f6e1b36d12fd24dc158c6264694871c24b20f889cc0"
+  },
+  "actual_exe_medians": {
+    "normal63": {
+      "baseline": {
+        "samples_seconds": [
+          12.289,
+          11.809
+        ],
+        "sample_count": 2,
+        "median_seconds": 12.049,
+        "max_process_vm_hwm_bytes": 715816960
+      },
+      "candidate": {
+        "samples_seconds": [
+          12.076,
+          11.78
+        ],
+        "sample_count": 2,
+        "median_seconds": 11.928,
+        "max_process_vm_hwm_bytes": 713465856
+      },
+      "candidate_over_baseline_ratio": 0.9899576728359201
+    },
+    "camera49": {
+      "baseline": {
+        "samples_seconds": [
+          12.032,
+          12.03,
+          11.308,
+          12.046
+        ],
+        "sample_count": 4,
+        "median_seconds": 12.030999999999999,
+        "max_process_vm_hwm_bytes": 828678144
+      },
+      "candidate": {
+        "samples_seconds": [
+          12.029,
+          12.916,
+          11.531,
+          11.276
+        ],
+        "sample_count": 4,
+        "median_seconds": 11.780000000000001,
+        "max_process_vm_hwm_bytes": 858460160
+      },
+      "candidate_over_baseline_ratio": 0.9791372288255342
+    },
+    "largest22": {
+      "baseline": {
+        "samples_seconds": [
+          32.339,
+          31.334
+        ],
+        "sample_count": 2,
+        "median_seconds": 31.8365,
+        "max_process_vm_hwm_bytes": 4356898816
+      },
+      "candidate": {
+        "samples_seconds": [
+          29.333,
+          28.84
+        ],
+        "sample_count": 2,
+        "median_seconds": 29.0865,
+        "max_process_vm_hwm_bytes": 4356988928
+      },
+      "candidate_over_baseline_ratio": 0.9136211581046911
+    }
+  },
+  "performance_acceptance": {
+    "candidate_over_baseline_median_at_most": 1.05,
+    "scope": "Same-environment observational test; all raw samples retained; not a worst-case latency guarantee."
+  },
+  "camera_case": {
+    "objects": 49,
+    "pairs": 1176,
+    "normalized_objects": [
+      4,
+      5
+    ],
+    "exact_seams_each": 2,
+    "previous_inconclusive_pairs_resolved": 95,
+    "minimum_distance_mm": 1.4999923706054688,
+    "minimum_pair": [
+      5,
+      6
+    ],
+    "gap0_and_gap1": "clear",
+    "gap1_5_violations": 1,
+    "gap2_violations": 4
+  },
+  "windows_suite": {
+    "collected": 281,
+    "passed": 280,
+    "skipped": 1,
+    "subtests_passed": 97
+  },
+  "linux_suite": {
+    "passed": 254,
+    "platform_skipped": 27,
+    "subtests_passed": 90
+  },
+  "original_input_files_excluded": true,
+  "environment": "Actual Windows x64 EXEs under Wine10/LinuxDocker, same session, isolated12GiB/no-swap container"
+}

@@ -1,0 +1,455 @@
+{
+  "created_utc": "2026-10-25T17:56:11.520152+00:00",
+  "passed": true,
+  "checked_source_stage_frozen_data": 64,
+  "checks": [
+    {
+      "path": "1.6.1_최종_배포_검증.txt",
+      "stage_sha256": "e93561f2f80db45a29664d1af637a2007ff920cb66c08498378e7c5ead2c2390",
+      "source_sha256": "e93561f2f80db45a29664d1af637a2007ff920cb66c08498378e7c5ead2c2390",
+      "frozen_data_sha256": "e93561f2f80db45a29664d1af637a2007ff920cb66c08498378e7c5ead2c2390",
+      "passed": true
+    },
+    {
+      "path": "1.6_최종_배포_검증.txt",
+      "stage_sha256": "b6848fe189f3a8206c6034f723eb310abf045301e8afacfeb8fb84dc33033603",
+      "source_sha256": "b6848fe189f3a8206c6034f723eb310abf045301e8afacfeb8fb84dc33033603",
+      "frozen_data_sha256": "b6848fe189f3a8206c6034f723eb310abf045301e8afacfeb8fb84dc33033603",
+      "passed": true
+    },
+    {
+      "path": "BJT_Tools_통합.pyw",
+      "stage_sha256": "43a80203634a64dd6f447f5218b5ae13595d6440cb0f09b7056546831b32107a",
+      "source_sha256": "43a80203634a64dd6f447f5218b5ae13595d6440cb0f09b7056546831b32107a",
+      "frozen_data_sha256": "43a80203634a64dd6f447f5218b5ae13595d6440cb0f09b7056546831b32107a",
+      "passed": true
+    },
+    {
+      "path": "BJT_통합도구.pyw",
+      "stage_sha256": "43a80203634a64dd6f447f5218b5ae13595d6440cb0f09b7056546831b32107a",
+      "source_sha256": "43a80203634a64dd6f447f5218b5ae13595d6440cb0f09b7056546831b32107a",
+      "frozen_data_sha256": "43a80203634a64dd6f447f5218b5ae13595d6440cb0f09b7056546831b32107a",
+      "passed": true
+    },
+    {
+      "path": "CHITU_THIRD_PARTY_NOTICES.md",
+      "stage_sha256": "9601f7d2e9388240e94a2f267c65b81805b29357b9c3b61afc37342ad0c8fb8d",
+      "source_sha256": "9601f7d2e9388240e94a2f267c65b81805b29357b9c3b61afc37342ad0c8fb8d",
+      "frozen_data_sha256": "9601f7d2e9388240e94a2f267c65b81805b29357b9c3b61afc37342ad0c8fb8d",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/THIRD_PARTY_NOTICES.md",
+      "stage_sha256": "9601f7d2e9388240e94a2f267c65b81805b29357b9c3b61afc37342ad0c8fb8d",
+      "source_sha256": "9601f7d2e9388240e94a2f267c65b81805b29357b9c3b61afc37342ad0c8fb8d",
+      "frozen_data_sha256": "9601f7d2e9388240e94a2f267c65b81805b29357b9c3b61afc37342ad0c8fb8d",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/__init__.py",
+      "stage_sha256": "51b552f2fd61b2d2223717feb394f5183ea71b0967a4f79621f8449e7a7c584f",
+      "source_sha256": "51b552f2fd61b2d2223717feb394f5183ea71b0967a4f79621f8449e7a7c584f",
+      "frozen_data_sha256": "51b552f2fd61b2d2223717feb394f5183ea71b0967a4f79621f8449e7a7c584f",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/__main__.py",
+      "stage_sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "source_sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "frozen_data_sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/chitubox.py",
+      "stage_sha256": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+      "source_sha256": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+      "frozen_data_sha256": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/cli.py",
+      "stage_sha256": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d",
+      "source_sha256": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d",
+      "frozen_data_sha256": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/geometry.py",
+      "stage_sha256": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+      "source_sha256": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+      "frozen_data_sha256": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/inputs.py",
+      "stage_sha256": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c",
+      "source_sha256": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c",
+      "frozen_data_sha256": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/seams.py",
+      "stage_sha256": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418",
+      "source_sha256": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418",
+      "frozen_data_sha256": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418",
+      "passed": true
+    },
+    {
+      "path": "chitu_overlap/viewer.py",
+      "stage_sha256": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8",
+      "source_sha256": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8",
+      "frozen_data_sha256": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8",
+      "passed": true
+    },
+    {
+      "path": "m2_image_engine.py",
+      "stage_sha256": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2",
+      "source_sha256": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2",
+      "frozen_data_sha256": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2",
+      "passed": true
+    },
+    {
+      "path": "manuals/alignment.html",
+      "stage_sha256": "eccf82e4c5a5e5338d99857ee0d0a472c6de610f6bdc2802a109364509667b69",
+      "source_sha256": "eccf82e4c5a5e5338d99857ee0d0a472c6de610f6bdc2802a109364509667b69",
+      "frozen_data_sha256": "eccf82e4c5a5e5338d99857ee0d0a472c6de610f6bdc2802a109364509667b69",
+      "passed": true
+    },
+    {
+      "path": "manuals/alignment.json",
+      "stage_sha256": "ebac393b2446682f1fa30ed9993fc23b31713e40453edb9634dd001ebf7a6ac4",
+      "source_sha256": "ebac393b2446682f1fa30ed9993fc23b31713e40453edb9634dd001ebf7a6ac4",
+      "frozen_data_sha256": "ebac393b2446682f1fa30ed9993fc23b31713e40453edb9634dd001ebf7a6ac4",
+      "passed": true
+    },
+    {
+      "path": "manuals/arrange.html",
+      "stage_sha256": "cfa1c838a2b0b3225b1a239f73435f128cd6369433a3c7446e0bd62c775d6824",
+      "source_sha256": "cfa1c838a2b0b3225b1a239f73435f128cd6369433a3c7446e0bd62c775d6824",
+      "frozen_data_sha256": "cfa1c838a2b0b3225b1a239f73435f128cd6369433a3c7446e0bd62c775d6824",
+      "passed": true
+    },
+    {
+      "path": "manuals/arrange.json",
+      "stage_sha256": "7943b5efa7403a94092efd9976031f9da970ac103c1ba114d08bfec685cbb99c",
+      "source_sha256": "7943b5efa7403a94092efd9976031f9da970ac103c1ba114d08bfec685cbb99c",
+      "frozen_data_sha256": "7943b5efa7403a94092efd9976031f9da970ac103c1ba114d08bfec685cbb99c",
+      "passed": true
+    },
+    {
+      "path": "manuals/bjt.html",
+      "stage_sha256": "8731258c0656fc49da2f5f16c21730ba10f6edbc5920113c21430fb96d178de1",
+      "source_sha256": "8731258c0656fc49da2f5f16c21730ba10f6edbc5920113c21430fb96d178de1",
+      "frozen_data_sha256": "8731258c0656fc49da2f5f16c21730ba10f6edbc5920113c21430fb96d178de1",
+      "passed": true
+    },
+    {
+      "path": "manuals/bjt.json",
+      "stage_sha256": "2bd9d3f1602385653ccb24e0eaf9a38fecb24e29a2a19318b232d2fccf048551",
+      "source_sha256": "2bd9d3f1602385653ccb24e0eaf9a38fecb24e29a2a19318b232d2fccf048551",
+      "frozen_data_sha256": "2bd9d3f1602385653ccb24e0eaf9a38fecb24e29a2a19318b232d2fccf048551",
+      "passed": true
+    },
+    {
+      "path": "manuals/chitu_checker.html",
+      "stage_sha256": "faf3b52d7755505e3d447d01d204c80954249e660aaa0a3b81888427b818b2a9",
+      "source_sha256": "faf3b52d7755505e3d447d01d204c80954249e660aaa0a3b81888427b818b2a9",
+      "frozen_data_sha256": "faf3b52d7755505e3d447d01d204c80954249e660aaa0a3b81888427b818b2a9",
+      "passed": true
+    },
+    {
+      "path": "manuals/chitu_checker.json",
+      "stage_sha256": "40926eb682151904c4873f22c14ea5c59938a2de5c176c375b11d3695fd924f8",
+      "source_sha256": "40926eb682151904c4873f22c14ea5c59938a2de5c176c375b11d3695fd924f8",
+      "frozen_data_sha256": "40926eb682151904c4873f22c14ea5c59938a2de5c176c375b11d3695fd924f8",
+      "passed": true
+    },
+    {
+      "path": "manuals/compare.html",
+      "stage_sha256": "18606ff6680d809e7e19b97196bff031c385ce504d99f41e322dc4e4f655d76a",
+      "source_sha256": "18606ff6680d809e7e19b97196bff031c385ce504d99f41e322dc4e4f655d76a",
+      "frozen_data_sha256": "18606ff6680d809e7e19b97196bff031c385ce504d99f41e322dc4e4f655d76a",
+      "passed": true
+    },
+    {
+      "path": "manuals/compare.json",
+      "stage_sha256": "60cb91555045e40155db8e7a60fe78c3117f9837d5b622d932f35c8457fd4342",
+      "source_sha256": "60cb91555045e40155db8e7a60fe78c3117f9837d5b622d932f35c8457fd4342",
+      "frozen_data_sha256": "60cb91555045e40155db8e7a60fe78c3117f9837d5b622d932f35c8457fd4342",
+      "passed": true
+    },
+    {
+      "path": "manuals/exchanger.html",
+      "stage_sha256": "db8e06a70b86bb8dcc4b4f28a26560c340c5c86f899c752612421ea62017d6cd",
+      "source_sha256": "db8e06a70b86bb8dcc4b4f28a26560c340c5c86f899c752612421ea62017d6cd",
+      "frozen_data_sha256": "db8e06a70b86bb8dcc4b4f28a26560c340c5c86f899c752612421ea62017d6cd",
+      "passed": true
+    },
+    {
+      "path": "manuals/exchanger.json",
+      "stage_sha256": "6c54efd12e7736eacc10fed960168d019e86576641cd2b9c7fd7efd5987354e4",
+      "source_sha256": "6c54efd12e7736eacc10fed960168d019e86576641cd2b9c7fd7efd5987354e4",
+      "frozen_data_sha256": "6c54efd12e7736eacc10fed960168d019e86576641cd2b9c7fd7efd5987354e4",
+      "passed": true
+    },
+    {
+      "path": "manuals/index.html",
+      "stage_sha256": "109e84a3da1f36e1a2693d126d368fed43b30bffeaf94accd445e8f1ee826bcb",
+      "source_sha256": "109e84a3da1f36e1a2693d126d368fed43b30bffeaf94accd445e8f1ee826bcb",
+      "frozen_data_sha256": "109e84a3da1f36e1a2693d126d368fed43b30bffeaf94accd445e8f1ee826bcb",
+      "passed": true
+    },
+    {
+      "path": "manuals/m2_converter.html",
+      "stage_sha256": "3e2e07c15864b629bbf747a09b98d5d9f50e53f9155e31d7e823c6d362baa5a1",
+      "source_sha256": "3e2e07c15864b629bbf747a09b98d5d9f50e53f9155e31d7e823c6d362baa5a1",
+      "frozen_data_sha256": "3e2e07c15864b629bbf747a09b98d5d9f50e53f9155e31d7e823c6d362baa5a1",
+      "passed": true
+    },
+    {
+      "path": "manuals/m2_converter.json",
+      "stage_sha256": "9883be67318fd10bef119679f1bc1e47d300b8d6fefdd29e38327365a9cce259",
+      "source_sha256": "9883be67318fd10bef119679f1bc1e47d300b8d6fefdd29e38327365a9cce259",
+      "frozen_data_sha256": "9883be67318fd10bef119679f1bc1e47d300b8d6fefdd29e38327365a9cce259",
+      "passed": true
+    },
+    {
+      "path": "manuals/manual.css",
+      "stage_sha256": "eeeebedb22519373e6afad42c589cdfdb68dfe996c4085b9e0808d758c648aa1",
+      "source_sha256": "eeeebedb22519373e6afad42c589cdfdb68dfe996c4085b9e0808d758c648aa1",
+      "frozen_data_sha256": "eeeebedb22519373e6afad42c589cdfdb68dfe996c4085b9e0808d758c648aa1",
+      "passed": true
+    },
+    {
+      "path": "manuals/number_tools.html",
+      "stage_sha256": "cca2b958f3a52ea03b8be0340c4680d1459b5aba8d24c99c94136ff19d4ef9fb",
+      "source_sha256": "cca2b958f3a52ea03b8be0340c4680d1459b5aba8d24c99c94136ff19d4ef9fb",
+      "frozen_data_sha256": "cca2b958f3a52ea03b8be0340c4680d1459b5aba8d24c99c94136ff19d4ef9fb",
+      "passed": true
+    },
+    {
+      "path": "manuals/number_tools.json",
+      "stage_sha256": "24903cc8c833b5511d6567203bf20870953b7b92009c5673e51332c1acf16ac7",
+      "source_sha256": "24903cc8c833b5511d6567203bf20870953b7b92009c5673e51332c1acf16ac7",
+      "frozen_data_sha256": "24903cc8c833b5511d6567203bf20870953b7b92009c5673e51332c1acf16ac7",
+      "passed": true
+    },
+    {
+      "path": "manuals/overlay.html",
+      "stage_sha256": "92212c1ef49a71ede1ba18c864f56b43d45fb43244836a0608b91505a96f9f0e",
+      "source_sha256": "92212c1ef49a71ede1ba18c864f56b43d45fb43244836a0608b91505a96f9f0e",
+      "frozen_data_sha256": "92212c1ef49a71ede1ba18c864f56b43d45fb43244836a0608b91505a96f9f0e",
+      "passed": true
+    },
+    {
+      "path": "manuals/overlay.json",
+      "stage_sha256": "dac8908b9fa0e43f9427568fce1e6ad914ff7875936794c48cbdfbb8d0413c15",
+      "source_sha256": "dac8908b9fa0e43f9427568fce1e6ad914ff7875936794c48cbdfbb8d0413c15",
+      "frozen_data_sha256": "dac8908b9fa0e43f9427568fce1e6ad914ff7875936794c48cbdfbb8d0413c15",
+      "passed": true
+    },
+    {
+      "path": "manuals/sequence_z.html",
+      "stage_sha256": "ddb442b7340a93259bbb306eccf2db2df9cddc2dff5becc5b3197eda1f59d1ba",
+      "source_sha256": "ddb442b7340a93259bbb306eccf2db2df9cddc2dff5becc5b3197eda1f59d1ba",
+      "frozen_data_sha256": "ddb442b7340a93259bbb306eccf2db2df9cddc2dff5becc5b3197eda1f59d1ba",
+      "passed": true
+    },
+    {
+      "path": "manuals/sequence_z.json",
+      "stage_sha256": "d201bb942859ea956818631aab6712f85e7373be55aa5aec727a05c2cd5d4e61",
+      "source_sha256": "d201bb942859ea956818631aab6712f85e7373be55aa5aec727a05c2cd5d4e61",
+      "frozen_data_sha256": "d201bb942859ea956818631aab6712f85e7373be55aa5aec727a05c2cd5d4e61",
+      "passed": true
+    },
+    {
+      "path": "manuals/thermal.html",
+      "stage_sha256": "ead9ddce99b5965b08c06dec721ba30c43a8df3c061a48d9cccd79b5c97311a2",
+      "source_sha256": "ead9ddce99b5965b08c06dec721ba30c43a8df3c061a48d9cccd79b5c97311a2",
+      "frozen_data_sha256": "ead9ddce99b5965b08c06dec721ba30c43a8df3c061a48d9cccd79b5c97311a2",
+      "passed": true
+    },
+    {
+      "path": "manuals/thermal.json",
+      "stage_sha256": "a5b8e6315f64b6a3653c65a6856bc2743bce2ffcb3c099a99a0de93094aac398",
+      "source_sha256": "a5b8e6315f64b6a3653c65a6856bc2743bce2ffcb3c099a99a0de93094aac398",
+      "frozen_data_sha256": "a5b8e6315f64b6a3653c65a6856bc2743bce2ffcb3c099a99a0de93094aac398",
+      "passed": true
+    },
+    {
+      "path": "run_suite.py",
+      "stage_sha256": "162d0ef281677a2ec97aa09226620810363b77614447f13b0d690c2155ed078d",
+      "source_sha256": "162d0ef281677a2ec97aa09226620810363b77614447f13b0d690c2155ed078d",
+      "frozen_data_sha256": "162d0ef281677a2ec97aa09226620810363b77614447f13b0d690c2155ed078d",
+      "passed": true
+    },
+    {
+      "path": "slice_compare_cli.py",
+      "stage_sha256": "da1ef220fb685cc4e059cc8250f51653f6d23604b50aaf8951ce387aa8fbcec8",
+      "source_sha256": "da1ef220fb685cc4e059cc8250f51653f6d23604b50aaf8951ce387aa8fbcec8",
+      "frozen_data_sha256": "da1ef220fb685cc4e059cc8250f51653f6d23604b50aaf8951ce387aa8fbcec8",
+      "passed": true
+    },
+    {
+      "path": "slice_compare_engine.py",
+      "stage_sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "source_sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "frozen_data_sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca",
+      "passed": true
+    },
+    {
+      "path": "slice_replace_validation.py",
+      "stage_sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "source_sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "frozen_data_sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c",
+      "passed": true
+    },
+    {
+      "path": "source_manifest.json",
+      "stage_sha256": "5bc8bf9a6a3d0bcfdc3c59816bc85ca0a9916eb70a0866633c5b9e1eb2bdb5a7",
+      "source_sha256": "5bc8bf9a6a3d0bcfdc3c59816bc85ca0a9916eb70a0866633c5b9e1eb2bdb5a7",
+      "frozen_data_sha256": "5bc8bf9a6a3d0bcfdc3c59816bc85ca0a9916eb70a0866633c5b9e1eb2bdb5a7",
+      "passed": true
+    },
+    {
+      "path": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "stage_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "frozen_data_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "passed": true
+    },
+    {
+      "path": "sources/chitu_checker.py",
+      "stage_sha256": "f2e06f2ea23a306e1b26beda1f8549df2152d0c1bc5cbfac8a2bfdc58b074503",
+      "source_sha256": "f2e06f2ea23a306e1b26beda1f8549df2152d0c1bc5cbfac8a2bfdc58b074503",
+      "frozen_data_sha256": "f2e06f2ea23a306e1b26beda1f8549df2152d0c1bc5cbfac8a2bfdc58b074503",
+      "passed": true
+    },
+    {
+      "path": "sources/m2_converter.py",
+      "stage_sha256": "f8de5a13f876560c1bb4f1395f30709f73c7bbc799b701074cca6a69efc60183",
+      "source_sha256": "f8de5a13f876560c1bb4f1395f30709f73c7bbc799b701074cca6a69efc60183",
+      "frozen_data_sha256": "f8de5a13f876560c1bb4f1395f30709f73c7bbc799b701074cca6a69efc60183",
+      "passed": true
+    },
+    {
+      "path": "sources/number_tools.py",
+      "stage_sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "source_sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "frozen_data_sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "passed": true
+    },
+    {
+      "path": "sources/sequence_z.py",
+      "stage_sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+      "source_sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+      "frozen_data_sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+      "passed": true
+    },
+    {
+      "path": "sources/sic_buildbox_thermal_gui_v5.py",
+      "stage_sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+      "source_sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+      "frozen_data_sha256": "9a1b9f002c9c9f0674fde543a32603a623bb6e4914a34896bca2de4f531a4451",
+      "passed": true
+    },
+    {
+      "path": "sources/slice exchanger.py",
+      "stage_sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "source_sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "frozen_data_sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "passed": true
+    },
+    {
+      "path": "sources/slice_alignment_checker.py",
+      "stage_sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "source_sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "frozen_data_sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "passed": true
+    },
+    {
+      "path": "sources/slice_compare_app.py",
+      "stage_sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "source_sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "frozen_data_sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "passed": true
+    },
+    {
+      "path": "sources/slice_folder_overlay.py",
+      "stage_sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "source_sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "frozen_data_sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "passed": true
+    },
+    {
+      "path": "sources/slicing arrange.py",
+      "stage_sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "source_sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "frozen_data_sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "passed": true
+    },
+    {
+      "path": "suite_layout.py",
+      "stage_sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+      "source_sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+      "frozen_data_sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be",
+      "passed": true
+    },
+    {
+      "path": "suite_loader.py",
+      "stage_sha256": "3ffd075ce5945eed54ff73b2f5203992b2a962249a3ceac60d8b06ef18ed7153",
+      "source_sha256": "3ffd075ce5945eed54ff73b2f5203992b2a962249a3ceac60d8b06ef18ed7153",
+      "frozen_data_sha256": "3ffd075ce5945eed54ff73b2f5203992b2a962249a3ceac60d8b06ef18ed7153",
+      "passed": true
+    },
+    {
+      "path": "suite_manuals.py",
+      "stage_sha256": "4814d62ce13ed34f9bccf6fa95b04fade6718698650cd76b3aefa8994ac1baff",
+      "source_sha256": "4814d62ce13ed34f9bccf6fa95b04fade6718698650cd76b3aefa8994ac1baff",
+      "frozen_data_sha256": "4814d62ce13ed34f9bccf6fa95b04fade6718698650cd76b3aefa8994ac1baff",
+      "passed": true
+    },
+    {
+      "path": "suite_runtime.py",
+      "stage_sha256": "4bb9ee7c668934e9794c477c8dd36b82de4f935c27327df774433007af64fb7e",
+      "source_sha256": "4bb9ee7c668934e9794c477c8dd36b82de4f935c27327df774433007af64fb7e",
+      "frozen_data_sha256": "4bb9ee7c668934e9794c477c8dd36b82de4f935c27327df774433007af64fb7e",
+      "passed": true
+    },
+    {
+      "path": "suite_theme.py",
+      "stage_sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "source_sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "frozen_data_sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "passed": true
+    },
+    {
+      "path": "suite_ui.py",
+      "stage_sha256": "16b93b7c5037d935c918820bd7ac9c41eb7c590c0ac7dc248c114f63361142ef",
+      "source_sha256": "16b93b7c5037d935c918820bd7ac9c41eb7c590c0ac7dc248c114f63361142ef",
+      "frozen_data_sha256": "16b93b7c5037d935c918820bd7ac9c41eb7c590c0ac7dc248c114f63361142ef",
+      "passed": true
+    },
+    {
+      "path": "사용_안내.txt",
+      "stage_sha256": "8f7c2f9305860b05ca0721a995cfc52391712482c43dbb1e8baaa67dc8d4eb86",
+      "source_sha256": "8f7c2f9305860b05ca0721a995cfc52391712482c43dbb1e8baaa67dc8d4eb86",
+      "frozen_data_sha256": "8f7c2f9305860b05ca0721a995cfc52391712482c43dbb1e8baaa67dc8d4eb86",
+      "passed": true
+    },
+    {
+      "path": "치투검사_실제파일_검증.md",
+      "stage_sha256": "16e6857fb37c72e9436129891bda67202446f1b7a26a095fc23e9d73dc9a57b7",
+      "source_sha256": "16e6857fb37c72e9436129891bda67202446f1b7a26a095fc23e9d73dc9a57b7",
+      "frozen_data_sha256": "16e6857fb37c72e9436129891bda67202446f1b7a26a095fc23e9d73dc9a57b7",
+      "passed": true
+    },
+    {
+      "path": "통합_검증_보고서.txt",
+      "stage_sha256": "5d874a46a8d087988a347d33e4d1dcbb172db310387214bc274d183a719bc315",
+      "source_sha256": "5d874a46a8d087988a347d33e4d1dcbb172db310387214bc274d183a719bc315",
+      "frozen_data_sha256": "5d874a46a8d087988a347d33e4d1dcbb172db310387214bc274d183a719bc315",
+      "passed": true
+    }
+  ]
+}

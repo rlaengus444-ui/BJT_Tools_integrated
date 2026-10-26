@@ -1,0 +1,1718 @@
+{
+  "status": "inconclusive",
+  "complete": false,
+  "overlap_found": false,
+  "violation_found": false,
+  "object_count": 13,
+  "volume_tolerance": 1e-06,
+  "min_gap_mm": 1.0,
+  "distance_tolerance_mm": 1e-06,
+  "objects": [
+    {
+      "index": 0,
+      "name": "20x20x20.stl",
+      "valid": false,
+      "errors": [
+        "Mesh is not watertight; a solid volume is required."
+      ],
+      "bounds": [
+        [
+          -157.66296815872192,
+          -203.37103176116943,
+          0.0
+        ],
+        [
+          142.33697080612183,
+          -191.37103366851807,
+          46.709999084472656
+        ]
+      ],
+      "volume": 168146.63023304744
+    },
+    {
+      "index": 1,
+      "name": "20x20x20.stl #1",
+      "valid": false,
+      "errors": [
+        "Mesh is not watertight; a solid volume is required."
+      ],
+      "bounds": [
+        [
+          170.07868671417236,
+          -152.2406668663025,
+          0.0
+        ],
+        [
+          182.07869243621826,
+          147.75927209854126,
+          46.709999084472656
+        ]
+      ],
+      "volume": 168146.73755163234
+    },
+    {
+      "index": 2,
+      "name": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          118.19714546203613,
+          -160.980375289917,
+          0.0
+        ],
+        [
+          140.19714164733887,
+          -138.98037910461426,
+          12.0
+        ]
+      ],
+      "volume": 1806.0310742645652
+    },
+    {
+      "index": 3,
+      "name": "20x20x20.stl #2",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          143.952730178833,
+          -185.1667766571045,
+          0.0
+        ],
+        [
+          165.95272636413574,
+          -163.16678047180176,
+          12.0
+        ]
+      ],
+      "volume": 5807.997985840018
+    },
+    {
+      "index": 4,
+      "name": "20x20x20.stl #3",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          99.29593849182129,
+          169.02920722961426,
+          0.0
+        ],
+        [
+          121.29593467712402,
+          191.029203414917,
+          12.0
+        ]
+      ],
+      "volume": 5807.997985840018
+    },
+    {
+      "index": 5,
+      "name": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          -168.25585746765137,
+          -149.31298637390137,
+          0.0
+        ],
+        [
+          -146.25586128234863,
+          -127.31299018859863,
+          12.0
+        ]
+      ],
+      "volume": 1806.0316690477327
+    },
+    {
+      "index": 6,
+      "name": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          -169.886625289917,
+          165.94034004211426,
+          0.0
+        ],
+        [
+          -147.88662910461426,
+          187.940336227417,
+          12.0
+        ]
+      ],
+      "volume": 1806.0310742645681
+    },
+    {
+      "index": 7,
+      "name": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          130.2980670928955,
+          144.06360054016113,
+          0.0
+        ],
+        [
+          152.29806327819824,
+          166.06359672546387,
+          12.0
+        ]
+      ],
+      "volume": 1806.0310742645652
+    },
+    {
+      "index": 8,
+      "name": "20x20x20.stl #4",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          -140.714430809021,
+          139.35452556610107,
+          0.0
+        ],
+        [
+          -118.71443271636963,
+          161.35451984405518,
+          11.999999046325684
+        ]
+      ],
+      "volume": 5807.997020721901
+    },
+    {
+      "index": 9,
+      "name": "20x20x20.stl #5",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          -138.74481010437012,
+          -177.88168144226074,
+          0.0
+        ],
+        [
+          -116.74481391906738,
+          -155.881685256958,
+          12.0
+        ]
+      ],
+      "volume": 5807.997985840018
+    },
+    {
+      "index": 10,
+      "name": "20x20x20.stl #6",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          -57.56920528411865,
+          180.72689962387085,
+          0.0
+        ],
+        [
+          32.430771827697754,
+          188.7268967628479,
+          6.0
+        ]
+      ],
+      "volume": 4319.997356415188
+    },
+    {
+      "index": 11,
+      "name": "20x20x20.stl #7",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          -183.88044786453247,
+          -50.23450231552124,
+          0.0
+        ],
+        [
+          -175.88044691085815,
+          39.765467166900635,
+          6.0
+        ]
+      ],
+      "volume": 4319.996603966419
+    },
+    {
+      "index": 12,
+      "name": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "valid": true,
+      "errors": [],
+      "bounds": [
+        [
+          -169.38853073120117,
+          -171.9683403968811,
+          0.0
+        ],
+        [
+          162.58562088012695,
+          160.00571966171265,
+          46.70909118652344
+        ]
+      ],
+      "volume": 2529411.211016633
+    }
+  ],
+  "pairs": [
+    {
+      "index_a": 0,
+      "index_b": 1,
+      "object_a": "20x20x20.stl",
+      "object_b": "20x20x20.stl #1",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 2,
+      "object_a": "20x20x20.stl",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 3,
+      "object_a": "20x20x20.stl",
+      "object_b": "20x20x20.stl #2",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 4,
+      "object_a": "20x20x20.stl",
+      "object_b": "20x20x20.stl #3",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 5,
+      "object_a": "20x20x20.stl",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 6,
+      "object_a": "20x20x20.stl",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 7,
+      "object_a": "20x20x20.stl",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 8,
+      "object_a": "20x20x20.stl",
+      "object_b": "20x20x20.stl #4",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 9,
+      "object_a": "20x20x20.stl",
+      "object_b": "20x20x20.stl #5",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 10,
+      "object_a": "20x20x20.stl",
+      "object_b": "20x20x20.stl #6",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 11,
+      "object_a": "20x20x20.stl",
+      "object_b": "20x20x20.stl #7",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 0,
+      "index_b": 12,
+      "object_a": "20x20x20.stl",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 2,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 3,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "20x20x20.stl #2",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 4,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "20x20x20.stl #3",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 5,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 6,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 7,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 8,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "20x20x20.stl #4",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 9,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "20x20x20.stl #5",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 10,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "20x20x20.stl #6",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 11,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "20x20x20.stl #7",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 1,
+      "index_b": 12,
+      "object_a": "20x20x20.stl #1",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "inconclusive",
+      "intersection_volume": null,
+      "distance_mm": null,
+      "error": "One or both objects failed solid-mesh validation."
+    },
+    {
+      "index_a": 2,
+      "index_b": 3,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 4.345666807347341,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          140.19714069366455,
+          -160.980375289917,
+          1.0
+        ],
+        [
+          143.952730178833,
+          -163.16678047180176,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 4,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #3",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 308.0095863342285,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          119.46260166168213,
+          -138.98037910461426,
+          1.0
+        ],
+        [
+          119.46260166168213,
+          169.02920722961426,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 5,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 264.45300674438477,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          118.19714546203613,
+          -148.31298637390137,
+          1.0
+        ],
+        [
+          -146.25586128234863,
+          -148.31298637390137,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 6,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 404.69398447175263,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          118.19714641571045,
+          -138.98037910461426,
+          1.0
+        ],
+        [
+          -147.88663005828857,
+          165.94034004211426,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 7,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 283.0439796447754,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          140.19714069366455,
+          -138.98037910461426,
+          1.0
+        ],
+        [
+          140.19714069366455,
+          144.06360054016113,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 8,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #4",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 365.50980217350127,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          118.19714641571045,
+          -138.98037910461426,
+          1.0
+        ],
+        [
+          -118.71443271636963,
+          139.35452556610107,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 9,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #5",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 234.94195938110352,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          118.19714546203613,
+          -157.7150182723999,
+          1.0
+        ],
+        [
+          -116.74481391906738,
+          -157.7150182723999,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 10,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #6",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 331.0115029450556,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          118.19714641571045,
+          -138.98037910461426,
+          1.0
+        ],
+        [
+          32.430771827697754,
+          180.72689962387085,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 11,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 307.17659667333305,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          118.19714641571045,
+          -138.98037910461426,
+          6.0
+        ],
+        [
+          -175.88044691085815,
+          -50.23450231552124,
+          6.0
+        ]
+      ]
+    },
+    {
+      "index_a": 2,
+      "index_b": 12,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 14.216228179751248,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          118.19714641571045,
+          -138.98037910461426,
+          1.0
+        ],
+        [
+          108.5276553148122,
+          -128.55914666749806,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 4,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "20x20x20.stl #3",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 332.9677231013925,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          143.952730178833,
+          -163.16678047180176,
+          12.0
+        ],
+        [
+          121.29593467712402,
+          169.02920722961426,
+          12.0
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 5,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 290.5390770203691,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          143.952730178833,
+          -163.16678047180176,
+          11.0
+        ],
+        [
+          -146.25586318969727,
+          -149.31298637390137,
+          11.0
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 6,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 439.8655578203114,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          143.952730178833,
+          -163.16678047180176,
+          1.0
+        ],
+        [
+          -147.88663005828857,
+          165.94034004211426,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 7,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 307.2303810119629,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          152.29806232452393,
+          -163.16678047180176,
+          4.5520001414906135
+        ],
+        [
+          152.29806232452393,
+          144.06360054016113,
+          4.5520001414906135
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 8,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "20x20x20.stl #4",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 400.64096030023364,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          143.952730178833,
+          -163.16678047180176,
+          11.999999046325684
+        ],
+        [
+          -118.71443271636963,
+          139.35452556610107,
+          11.999999046325684
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 9,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "20x20x20.stl #5",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 260.6975440979004,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          143.952730178833,
+          -163.16678047180176,
+          12.0
+        ],
+        [
+          -116.74481391906738,
+          -163.16678047180176,
+          12.0
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 10,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "20x20x20.stl #6",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 361.5245640398687,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          143.952730178833,
+          -163.16678047180176,
+          0.0
+        ],
+        [
+          32.430771827697754,
+          180.72689962387085,
+          0.0
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 11,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 339.1857317412589,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          143.952730178833,
+          -163.16678047180176,
+          0.0
+        ],
+        [
+          -175.88044691085815,
+          -50.23450231552124,
+          0.0
+        ]
+      ]
+    },
+    {
+      "index_a": 3,
+      "index_b": 12,
+      "object_a": "20x20x20.stl #2",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 49.46436095624466,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          143.952730178833,
+          -163.16678047180176,
+          12.0
+        ],
+        [
+          110.30841946361232,
+          -126.90683892045135,
+          12.0
+        ]
+      ]
+    },
+    {
+      "index_a": 4,
+      "index_b": 5,
+      "object_a": "20x20x20.stl #3",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 384.85631770791406,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          99.29593849182129,
+          169.02920722961426,
+          11.0
+        ],
+        [
+          -146.25586318969727,
+          -127.31299018859863,
+          11.0
+        ]
+      ]
+    },
+    {
+      "index_a": 4,
+      "index_b": 6,
+      "object_a": "20x20x20.stl #3",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 247.18256759643555,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          99.29593849182129,
+          169.02920722961426,
+          1.0
+        ],
+        [
+          -147.88662910461426,
+          169.02920722961426,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 4,
+      "index_b": 7,
+      "object_a": "20x20x20.stl #3",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 9.478040454841747,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          121.29593467712402,
+          169.02920722961426,
+          1.0
+        ],
+        [
+          130.29806804656982,
+          166.06359672546387,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 4,
+      "index_b": 8,
+      "object_a": "20x20x20.stl #3",
+      "object_b": "20x20x20.stl #4",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 218.14541849977695,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          99.29593849182129,
+          169.02920722961426,
+          0.0
+        ],
+        [
+          -118.71443462371826,
+          161.35451984405518,
+          0.0
+        ]
+      ]
+    },
+    {
+      "index_a": 4,
+      "index_b": 9,
+      "object_a": "20x20x20.stl #3",
+      "object_b": "20x20x20.stl #5",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 390.1803362019719,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          99.29593849182129,
+          169.02920722961426,
+          0.0
+        ],
+        [
+          -116.74481391906738,
+          -155.881685256958,
+          0.0
+        ]
+      ]
+    },
+    {
+      "index_a": 4,
+      "index_b": 10,
+      "object_a": "20x20x20.stl #3",
+      "object_b": "20x20x20.stl #6",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 66.86516666412354,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          99.29593849182129,
+          180.72689962387085,
+          6.0
+        ],
+        [
+          32.430771827697754,
+          180.72689962387085,
+          6.0
+        ]
+      ]
+    },
+    {
+      "index_a": 4,
+      "index_b": 11,
+      "object_a": "20x20x20.stl #3",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 304.0249333054067,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          99.29593849182129,
+          169.02920722961426,
+          0.0
+        ],
+        [
+          -175.88045144081116,
+          39.765467166900635,
+          0.0
+        ]
+      ]
+    },
+    {
+      "index_a": 4,
+      "index_b": 12,
+      "object_a": "20x20x20.stl #3",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 36.92520688983639,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          99.29593849182129,
+          169.02920722961426,
+          7.179224179295932
+        ],
+        [
+          80.83333725311967,
+          137.05103874926013,
+          7.179224179295933
+        ]
+      ]
+    },
+    {
+      "index_a": 5,
+      "index_b": 6,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 293.2533302307129,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -147.88663005828857,
+          -127.31299018859863,
+          1.0
+        ],
+        [
+          -147.88663005828857,
+          165.94034004211426,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 5,
+      "index_b": 7,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 387.4626832067815,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -146.25586318969727,
+          -127.31299018859863,
+          11.0
+        ],
+        [
+          130.29806804656982,
+          144.06360054016113,
+          11.0
+        ]
+      ]
+    },
+    {
+      "index_a": 5,
+      "index_b": 8,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "object_b": "20x20x20.stl #4",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 266.7250859082278,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -146.25586318969727,
+          -127.31299018859863,
+          1.0
+        ],
+        [
+          -140.71442890167236,
+          139.35452556610107,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 5,
+      "index_b": 9,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "object_b": "20x20x20.stl #5",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 9.978162329150194,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -146.25586318969727,
+          -149.31298637390137,
+          1.0
+        ],
+        [
+          -138.74481010437012,
+          -155.881685256958,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 5,
+      "index_b": 10,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "object_b": "20x20x20.stl #6",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 320.55248713142043,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -146.25586318969727,
+          -127.31299018859863,
+          6.0
+        ],
+        [
+          -57.56920528411865,
+          180.72689962387085,
+          6.0
+        ]
+      ]
+    },
+    {
+      "index_a": 5,
+      "index_b": 11,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 77.45468149868736,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -168.25585556030273,
+          -127.31299018859863,
+          6.0
+        ],
+        [
+          -175.88044691085815,
+          -50.23450231552124,
+          6.0
+        ]
+      ]
+    },
+    {
+      "index_a": 5,
+      "index_b": 12,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #1",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 21.43628042533823,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -146.25586318969727,
+          -127.31299018859863,
+          11.0
+        ],
+        [
+          -129.83473375000756,
+          -113.53399797586061,
+          11.0
+        ]
+      ]
+    },
+    {
+      "index_a": 6,
+      "index_b": 7,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "object_b": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 278.1846981048584,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -147.88663005828857,
+          166.06359577178955,
+          11.0
+        ],
+        [
+          130.29806804656982,
+          166.06359577178955,
+          11.0
+        ]
+      ]
+    },
+    {
+      "index_a": 6,
+      "index_b": 8,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "object_b": "20x20x20.stl #4",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 8.512942438435788,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -147.88663005828857,
+          165.94034004211426,
+          1.0
+        ],
+        [
+          -140.714430809021,
+          161.35451984405518,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 6,
+      "index_b": 9,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "object_b": "20x20x20.stl #5",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 321.95184242315895,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -147.88663005828857,
+          165.94034004211426,
+          1.0
+        ],
+        [
+          -138.74481010437012,
+          -155.881685256958,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 6,
+      "index_b": 10,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "object_b": "20x20x20.stl #6",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 90.3174238204956,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -147.88662910461426,
+          180.72689962387085,
+          6.0
+        ],
+        [
+          -57.56920528411865,
+          180.72689962387085,
+          6.0
+        ]
+      ]
+    },
+    {
+      "index_a": 6,
+      "index_b": 11,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 126.3171584086492,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -169.88662433624268,
+          165.94034004211426,
+          6.0
+        ],
+        [
+          -175.88045144081116,
+          39.765467166900635,
+          6.0
+        ]
+      ]
+    },
+    {
+      "index_a": 6,
+      "index_b": 12,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #2",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 58.58586909136548,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -147.88663005828857,
+          165.94034004211426,
+          1.0
+        ],
+        [
+          -110.22837687929744,
+          121.06094583165708,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 7,
+      "index_b": 8,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "object_b": "20x20x20.stl #4",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 249.0125003042278,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          130.2980670928955,
+          145.06360054016113,
+          8.885969364640768
+        ],
+        [
+          -118.71443321133135,
+          145.06357895135315,
+          8.885969364640768
+        ]
+      ]
+    },
+    {
+      "index_a": 7,
+      "index_b": 9,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "object_b": "20x20x20.stl #5",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 388.5837876208981,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          130.29806804656982,
+          144.06360054016113,
+          1.0
+        ],
+        [
+          -116.74481391906738,
+          -155.881685256958,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 7,
+      "index_b": 10,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "object_b": "20x20x20.stl #6",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 98.95968937442599,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          130.29806804656982,
+          166.06359672546387,
+          1.0
+        ],
+        [
+          32.430771827697754,
+          180.72689962387085,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 7,
+      "index_b": 11,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 323.45538551805095,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          130.29806804656982,
+          144.06360054016113,
+          1.0
+        ],
+        [
+          -175.88045144081116,
+          39.765467166900635,
+          1.0
+        ]
+      ]
+    },
+    {
+      "index_a": 7,
+      "index_b": 12,
+      "object_a": "Closed des.cup_밀폐형 밀도컵 표준 260527.stl #3",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 34.98089439981337,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          130.29806804656982,
+          144.06360054016113,
+          11.0
+        ],
+        [
+          107.15173136556736,
+          117.83556074949865,
+          11.0
+        ]
+      ]
+    },
+    {
+      "index_a": 8,
+      "index_b": 9,
+      "object_a": "20x20x20.stl #4",
+      "object_b": "20x20x20.stl #5",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 295.2362108230591,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -138.74481010437012,
+          139.35452556610107,
+          11.999999046325684
+        ],
+        [
+          -138.74481010437012,
+          -155.881685256958,
+          12.0
+        ]
+      ]
+    },
+    {
+      "index_a": 8,
+      "index_b": 10,
+      "object_a": "20x20x20.stl #4",
+      "object_b": "20x20x20.stl #6",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 64.14069043380843,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -118.71443462371826,
+          161.35451984405518,
+          6.0
+        ],
+        [
+          -57.56920528411865,
+          180.72689962387085,
+          6.0
+        ]
+      ]
+    },
+    {
+      "index_a": 8,
+      "index_b": 11,
+      "object_a": "20x20x20.stl #4",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 105.61548037131003,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -140.71442890167236,
+          139.35452556610107,
+          0.0
+        ],
+        [
+          -175.88045144081116,
+          39.765467166900635,
+          0.0
+        ]
+      ]
+    },
+    {
+      "index_a": 8,
+      "index_b": 12,
+      "object_a": "20x20x20.stl #4",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 19.537561226698056,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -118.71443271636963,
+          139.35452556610107,
+          11.999999046325684
+        ],
+        [
+          -106.53295353331804,
+          124.0794522896858,
+          11.999999046325684
+        ]
+      ]
+    },
+    {
+      "index_a": 9,
+      "index_b": 10,
+      "object_a": "20x20x20.stl #5",
+      "object_b": "20x20x20.stl #6",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 341.7705254593948,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -116.74481391906738,
+          -155.881685256958,
+          0.0
+        ],
+        [
+          -57.56920528411865,
+          180.72689962387085,
+          0.0
+        ]
+      ]
+    },
+    {
+      "index_a": 9,
+      "index_b": 11,
+      "object_a": "20x20x20.stl #5",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 111.98385055214344,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -138.74481010437012,
+          -155.881685256958,
+          0.0
+        ],
+        [
+          -175.88044691085815,
+          -50.23450231552124,
+          0.0
+        ]
+      ]
+    },
+    {
+      "index_a": 9,
+      "index_b": 12,
+      "object_a": "20x20x20.stl #5",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 21.94064397543875,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -116.74481391906738,
+          -155.881685256958,
+          12.0
+        ],
+        [
+          -103.49694999232361,
+          -138.39208950875852,
+          12.0
+        ]
+      ]
+    },
+    {
+      "index_a": 10,
+      "index_b": 11,
+      "object_a": "20x20x20.stl #6",
+      "object_b": "20x20x20.stl #7",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 184.0317266328566,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -57.56920528411865,
+          180.72689962387085,
+          6.0
+        ],
+        [
+          -175.88045144081116,
+          39.765467166900635,
+          6.0
+        ]
+      ]
+    },
+    {
+      "index_a": 10,
+      "index_b": 12,
+      "object_a": "20x20x20.stl #6",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 20.721179962158203,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -1.332042932510376,
+          180.72689962387085,
+          7.62939453125e-06
+        ],
+        [
+          -1.332042932510376,
+          160.00571966171265,
+          7.62939453125e-06
+        ]
+      ]
+    },
+    {
+      "index_a": 11,
+      "index_b": 12,
+      "object_a": "20x20x20.stl #7",
+      "object_b": "261013_Caleb_프린팅공정_그린광학 주반사경 3D 모델링_덧살_경면 보강살 추가.STEP.step",
+      "status": "clear",
+      "intersection_volume": 0.0,
+      "distance_mm": 6.491918302886128,
+      "method": "manifold64+fcl",
+      "nearest_points_mm": [
+        [
+          -175.8804490340873,
+          -8.050718872670306,
+          9.5367431640625e-06
+        ],
+        [
+          -169.38853073120117,
+          -8.050718545913696,
+          9.5367431640625e-06
+        ]
+      ]
+    }
+  ],
+  "overlaps": [],
+  "violations": [],
+  "provenance": {
+    "record": "261014-M1-1",
+    "source_page_url": "https://app.notion.com/p/3f805e94a2258002be3ffa708509d0d5",
+    "attachment_name": "261014-M1-1_살추가O.chitubox",
+    "attachment_bytes": 6126406,
+    "attachment_sha256": "967a7c994549ed3ac21211928e91cfb1f9da97bebdd7c33f4183276d16c99b1d"
+  },
+  "generated_at": "2026-10-24T05:14:16.657990+00:00",
+  "load_seconds": 0.18907698299972253,
+  "check_seconds": 0.721399700999882,
+  "validation_kind": "real-project"
+}

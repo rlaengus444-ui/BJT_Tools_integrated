@@ -1,0 +1,16 @@
+{
+  "test": "verify_cli.py",
+  "initial_parallel_attempt": {
+    "completed": false,
+    "error": "subprocess.TimeoutExpired",
+    "command": [
+      "BJT_명령줄.exe",
+      "--tool",
+      "bjt",
+      "--help"
+    ],
+    "timeout_seconds": 60,
+    "context": "Initial attempt ran alongside seven other frozen verification processes; all seven other reports passed. This attempt did not produce a complete report."
+  },
+  "follow_up": "One isolated rerun with the same unmodified executable and verification script; result is cli-exe.json."
+}

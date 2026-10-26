@@ -1,0 +1,503 @@
+{
+  "recorded_utc": "2026-10-23T09:26:19.973075+00:00",
+  "passed": true,
+  "test_file": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\BJT_통합도구\\tests\\test_m2_image_engine.py",
+  "test_sha256": "8c014f557bfaeea69aff2df4eb80d92a71c60b4e2bd1b1db1a340f8e2a5832c8",
+  "engine_sha256": "d0390f35d817eb971ec9ea35155de63054eb62f517a483042079941ffe6a14c2",
+  "runtime": "C:/Users/Kain/AppData/Local/BJT/python-envs/cp312-76b7b8d17300fc01/python.exe",
+  "test_results": {
+    "total": 23,
+    "passed": 23,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "small_batch": {
+      "class": "M2BatchTests",
+      "tests": 21,
+      "elapsed_seconds": 0.236
+    },
+    "full_reference": {
+      "class": "M2FullReferenceTests",
+      "tests": 2,
+      "elapsed_seconds": 9.782
+    }
+  },
+  "native_reference": {
+    "helper": "GdiReference.cs",
+    "helper_sha256": "c70c8f59d310a5a845c4ba9bb7261661363aeb039d69535a75c473702e971857",
+    "runtime": ".NET Framework CLR4.0.30319.42000 + Windows GDI+; x64 helper",
+    "original_exe_loaded": false,
+    "scope": "Exact original operation calls; width/height arguments altered only for small algorithm fixtures. Full single and multi used exact original dimensions/DPI once each."
+  },
+  "original_inputs": [
+    {
+      "kind": "multi",
+      "source": "C:\\Users\\Kain\\Downloads\\M2_멀티 ImageConverter.zip",
+      "zip_sha256": "1073d46066aee6c31af8e014c1ce75dde81daf2570fb4cc11ab3b8887e834274",
+      "exe_copy": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\m2-converter\\multi\\M2_멀티 ImageConverter.exe",
+      "exe_bytes": 44032,
+      "exe_sha256": "4dc02358a2f2d12b771077564ac0b3caea5c6334f50f21022547265d3bc20ccb",
+      "executed": false
+    },
+    {
+      "kind": "single",
+      "source": "C:\\Users\\Kain\\Downloads\\M2_싱글 ImageConverter.zip",
+      "zip_sha256": "71295c1b958ae3410e63e68738808d11ca34d90d7c34fe0c503c07deed1f54b7",
+      "exe_copy": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\work\\m2-converter\\single\\M2_싱글 ImageConverter.exe",
+      "exe_bytes": 44032,
+      "exe_sha256": "ebdc83a5c7d81f2ff35bf8dfec7c228135c20f9621436bec681409250577a296",
+      "executed": false
+    }
+  ],
+  "original_exes_executed": false,
+  "input_archives_unchanged": true,
+  "fixture_comparisons": [
+    {
+      "name": "alpha-small.tif",
+      "width": 7,
+      "height": 5,
+      "expected_unpacked_indices_sha256": "b511aee735d396c881cd0f8d2107ac7465f01e6b80115b2138f967b3ed3f9c33",
+      "expected_rendered_rgb_sha256": "a9f960e452c5641226c7363758b8b3e7600f560150fb520645e95ffa29dff795",
+      "matched": true,
+      "palette": [
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          0
+        ],
+        [
+          255,
+          0,
+          255
+        ],
+        [
+          255,
+          0,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ],
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          0,
+          255
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          63,
+          63,
+          63
+        ],
+        [
+          127,
+          127,
+          127
+        ],
+        [
+          127,
+          255,
+          255
+        ],
+        [
+          255,
+          127,
+          255
+        ],
+        [
+          255,
+          255,
+          127
+        ],
+        [
+          127,
+          127,
+          255
+        ],
+        [
+          127,
+          255,
+          127
+        ],
+        [
+          255,
+          127,
+          127
+        ]
+      ],
+      "tags": {
+        "256": 7,
+        "257": 5,
+        "258": [
+          4
+        ],
+        "259": 5,
+        "262": 3,
+        "277": 1,
+        "278": 5,
+        "282": 400.0,
+        "283": 800.0,
+        "296": 2,
+        "317": 1,
+        "254": 0
+      }
+    },
+    {
+      "name": "opaque-multi-full.tif",
+      "width": 8504,
+      "height": 13228,
+      "expected_unpacked_indices_sha256": "a78cbf595fa2395d3f13d7cab8f5a42cb6497f595332ba752898d648bf6f62e1",
+      "expected_rendered_rgb_sha256": "eb6c834fd122bfa539a3d67d25d953b93058ea473c8a5728881d21db1e5191c6",
+      "matched": true,
+      "palette": [
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          0
+        ],
+        [
+          255,
+          0,
+          255
+        ],
+        [
+          255,
+          0,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ],
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          0,
+          255
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          63,
+          63,
+          63
+        ],
+        [
+          127,
+          127,
+          127
+        ],
+        [
+          127,
+          255,
+          255
+        ],
+        [
+          255,
+          127,
+          255
+        ],
+        [
+          255,
+          255,
+          127
+        ],
+        [
+          127,
+          127,
+          255
+        ],
+        [
+          127,
+          255,
+          127
+        ],
+        [
+          255,
+          127,
+          127
+        ]
+      ],
+      "tags": {
+        "256": 8504,
+        "257": 13228,
+        "258": [
+          4
+        ],
+        "259": 5,
+        "262": 3,
+        "277": 1,
+        "278": 13228,
+        "282": 400.0,
+        "283": 800.0,
+        "296": 2,
+        "317": 1,
+        "254": 0
+      }
+    },
+    {
+      "name": "opaque-single-full.tif",
+      "width": 8504,
+      "height": 6614,
+      "expected_unpacked_indices_sha256": "639f56973564e43d0fb3007e4b7ddd732cc8015a1e289e00bea13b599c461462",
+      "expected_rendered_rgb_sha256": "753797732b56515fc940f86c2ee9b575e5eb907ffeb8f4cfd6dda1f11642a84a",
+      "matched": true,
+      "palette": [
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          0
+        ],
+        [
+          255,
+          0,
+          255
+        ],
+        [
+          255,
+          0,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ],
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          0,
+          255
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          63,
+          63,
+          63
+        ],
+        [
+          127,
+          127,
+          127
+        ],
+        [
+          127,
+          255,
+          255
+        ],
+        [
+          255,
+          127,
+          255
+        ],
+        [
+          255,
+          255,
+          127
+        ],
+        [
+          127,
+          127,
+          255
+        ],
+        [
+          127,
+          255,
+          127
+        ],
+        [
+          255,
+          127,
+          127
+        ]
+      ],
+      "tags": {
+        "256": 8504,
+        "257": 6614,
+        "258": [
+          4
+        ],
+        "259": 5,
+        "262": 3,
+        "277": 1,
+        "278": 6614,
+        "282": 400.0,
+        "283": 400.0,
+        "296": 2,
+        "317": 1,
+        "254": 0
+      }
+    },
+    {
+      "name": "opaque-small.tif",
+      "width": 7,
+      "height": 5,
+      "expected_unpacked_indices_sha256": "85497e6e131c52302625ea385a48c7f7d9bd6c455b0faa1251cd30b86f9733df",
+      "expected_rendered_rgb_sha256": "adc832fb358d30dda7beb945074493a2a52f1082d29aa764fd030474a1d24803",
+      "matched": true,
+      "palette": [
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          255,
+          255,
+          0
+        ],
+        [
+          255,
+          0,
+          255
+        ],
+        [
+          255,
+          0,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ],
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          0,
+          255
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          63,
+          63,
+          63
+        ],
+        [
+          127,
+          127,
+          127
+        ],
+        [
+          127,
+          255,
+          255
+        ],
+        [
+          255,
+          127,
+          255
+        ],
+        [
+          255,
+          255,
+          127
+        ],
+        [
+          127,
+          127,
+          255
+        ],
+        [
+          127,
+          255,
+          127
+        ],
+        [
+          255,
+          127,
+          127
+        ]
+      ],
+      "tags": {
+        "256": 7,
+        "257": 5,
+        "258": [
+          4
+        ],
+        "259": 5,
+        "262": 3,
+        "277": 1,
+        "278": 5,
+        "282": 400.0,
+        "283": 400.0,
+        "296": 2,
+        "317": 1,
+        "254": 0
+      }
+    }
+  ],
+  "coverage": [
+    "Entire unpacked indices and rendered RGB arrays match independent C# reference for exact full single and multi dimensions.",
+    "Opaque and partial/full transparent RGBA small fixtures match all pixels, not only samples.",
+    "TIFF4-bit palette/16colors/LZW/1sample/1frame/DPI and no alpha extra sample.",
+    "Selected input order and minimum3-digit sequential naming beyond999.",
+    "Skip leaves existing destination unchanged without decoding.",
+    "Overwrite commits only after verified complete output.",
+    "All-source preflight prevents same path, early-output/later-input, and hardlink alias overwrite.",
+    "Concurrent source alias introduced during conversion blocks overwrite.",
+    "Concurrent target creation at skip publication retains other process bytes.",
+    "Precancel, after first completed file, during native save, and after validation clean active temp and preserve old destination.",
+    "Corrupt second input stops following work and retains prior completed prefix.",
+    "Invalid native output, native exception, atomic commit failure clean temp and retain old files.",
+    "GDI+ state closes on exception; a new conversion succeeds after cancellation.",
+    "Invalid settings, unsupported extension, invalid output, report serialization and progress stages."
+  ],
+  "fixed_regression": {
+    "found": "Windows os.fsync on rb read-only handle failed with Errno9; all successful conversions aborted before publication.",
+    "fix_owner": "root",
+    "fix": "Open temporary TIFF rb+ for fsync.",
+    "verified": "21 small batch tests and2 full-size reference tests passed after fix."
+  },
+  "scope": "Production engine and user inputs were not modified by the independent test agent. Tests use temporary synthetic files. Full-size pixels match a separate helper implementing original decompiled calls; original converter EXEs were never executed."
+}

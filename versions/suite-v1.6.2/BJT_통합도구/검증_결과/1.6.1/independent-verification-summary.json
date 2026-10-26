@@ -1,0 +1,116 @@
+{
+  "passed": true,
+  "timestamp_utc": "2026-10-24T07:39:05.298995+00:00",
+  "source_version": "1.6.1",
+  "production_module_sha256": {
+    "chitubox.py": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+    "geometry.py": "e81da846dac99ff086c0ce80abb345b4be39f2dba3be903881f92beec9c0a4dc",
+    "viewer.py": "8e550a2d639746e0cee6ad633171e756d8fbfdd6331b0700509b75c8a5cb10a0"
+  },
+  "manifest_all_sources_match": true,
+  "oracle": {
+    "geometric_fixtures": 63,
+    "real_project_gap_cases": 9,
+    "modes": [
+      "ordinary_exact",
+      "forced_certified_fcl_block256"
+    ],
+    "result_files": [
+      "optimized-oracle-exact.json",
+      "optimized-oracle-certified.json"
+    ]
+  },
+  "loader": {
+    "native_fixtures": 6,
+    "stale_metadata_checks": 2,
+    "hash_collision_production_verified": true
+  },
+  "actual_largest_derived_subset": {
+    "passed": true,
+    "derived_not_original": true,
+    "selected_original_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "known_omitted_degenerate_original_indices": [
+      0,
+      12,
+      13,
+      14
+    ],
+    "valid_objects": 11,
+    "invalid_original_indices": [
+      2,
+      3,
+      7,
+      8,
+      9,
+      10,
+      15
+    ],
+    "minimum_distance_mm": 0.6575593948364258,
+    "minimum_pair_original_indices": [
+      6,
+      16
+    ],
+    "load_seconds": 0.721,
+    "check_seconds": 3.915,
+    "pairs": 153,
+    "exact_pairs": 2,
+    "lower_bound_pairs": 53,
+    "failures": [],
+    "scope_note": "Original 22-object input is unchanged. This compares selected original object pairs, not whole-file PASS."
+  },
+  "linux_suite": {
+    "tests": 328,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 27,
+    "passed": 301
+  },
+  "linux_suite_note": "pytest summary: 211 passed, 27 skipped, 90 subtests passed. XML includes subtest reporting; refer to full-suite-linux.log for top-level count.",
+  "release_caveats": [
+    "The original 22-object project must not be labeled PASS: known invalid original objects are 0,2,3,7,8,9,10,12,13,14,15. Pairs involving invalid solids remain inconclusive.",
+    "Exact closest-distance claim is scoped to valid objects, with original pair 6/16 at 0.6575593948364258 mm. Pruned clear pair distances are lower bounds, not exact numeric distances.",
+    "Derived 18-object project preserves original per-object geometry/placement bytes but is not the original file. Full-file timing, final EXE tests, and publication are separate parent-agent gates."
+  ],
+  "windows_suite": {
+    "passed": true,
+    "collected": 239,
+    "passed_tests": 238,
+    "skipped": [
+      {
+        "test": "tests/test_number_tools.py::NumberToolTests::test_original_valid_conflict_policies_match_file_bytes_and_metadata",
+        "reason": "('Z:\\\\workspace\\\\bjt-integration\\\\source\\\\BJT_통합도구\\\\tests\\\\test_number_tools.py', 237, 'Skipped: Original supplied tool is only present in the integration workspace')"
+      }
+    ],
+    "subtests_passed": 97,
+    "seconds": 28.08600000000115,
+    "source_unchanged_during_run": true,
+    "matches_independent_oracle_production_module_hashes": true,
+    "native_runtime_preloaded": true,
+    "strict_native_override": "msvcp140=n;vcomp140=n",
+    "forced_memmap_cleanup_passed": true,
+    "artifacts": [
+      "full-suite-windows-1.6.1.json",
+      "full-suite-windows-1.6.1.xml",
+      "full-suite-windows-1.6.1.log"
+    ]
+  }
+}

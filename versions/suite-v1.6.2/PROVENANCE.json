@@ -1,0 +1,10 @@
+{
+  "origin": "3D printing team Drive",
+  "drive_file_id": "1mIeCQyKJLxgG4PG_hMjStVqkg-XzjfKu",
+  "archive_sha256": "a36979a2f6b0ae43a3c8021983dfc9bc43ad239e9748ef28a975a42ac8375d46",
+  "archive_bytes": 3869244,
+  "suite_version": "1.6.2",
+  "verified_source_hashes": 24,
+  "all_hashes_valid": true,
+  "preservation": "Each245archivefile extracted byte-identically; original names and history retained."
+}

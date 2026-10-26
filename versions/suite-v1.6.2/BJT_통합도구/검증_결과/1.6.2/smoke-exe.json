@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "frozen": true,
+  "tool_count": 11,
+  "checks": {
+    "tkdnd_available": true,
+    "matplotlib_tkagg_render": true,
+    "tkdnd_tcl_version": "2.10.2",
+    "tools_loaded": [
+      "bjt",
+      "arrange",
+      "overlay",
+      "exchanger",
+      "alignment",
+      "thermal",
+      "compare",
+      "number_tools",
+      "sequence_z",
+      "m2_converter",
+      "chitu_checker"
+    ],
+    "python_errors": [],
+    "load_failures": {},
+    "close_errors": [],
+    "tcl_bgerrors": []
+  }
+}
