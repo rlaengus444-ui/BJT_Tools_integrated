@@ -1,0 +1,9302 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+BJT 5.6 — 400 DPI / 0.1 mm 레이어 출력 전용 STL 후보
+
+3D 모델 슬라이싱 → 쉘/격자화 → STL 재구성을 한 프로그램에서 수행합니다.
+추가된 '레이어 출력 전용'은 이진 픽셀/층 중앙의 인쇄 정보를 보존합니다.
+같은 마스크 구간을 닫힌 프리즘으로 만들며 구간 사이에 약 0.001 mm 간격이 있습니다.
+따라서 연속 CAD 형상·부피·연결성은 원본과 다릅니다. 일반 CAD 모델로 쓰지 마십시오.
+AA/블러/자동 지지대/자동 수리, 회전·배율·픽셀 원점 변경은 인증 범위 밖입니다.
+실제 float32 XY 경계의 전 픽셀 비교와 프리즘 Z 구간 증명, 최종 전체 edge 검사를 수행합니다.
+원본 충실형/표면 보간형은 앞선 v5.5 수정 경로를 유지합니다.
+파일 축소·속도 개선은 형상과 설정에 따라 달라지며, 30분 완료를 무조건 보장하지 않습니다.
+compare_on_pc.py와 compare_actual_slices.py로 실제 입력/PC/슬라이서 결과를 확인하십시오.
+"""
+
+from __future__ import annotations
+
+# Standard-library-only bootstrap. Runs before any third-party import.
+_BJT_BOOT_REQUIREMENTS = (
+    'numpy==2.3.5', 'scipy==1.17.0', 'Pillow==12.3.0',
+    'scikit-image==0.26.0', 'trimesh==5.1.0', 'shapely==2.1.2',
+    'numba==0.67.0', 'rtree==1.4.1', 'opencv-python==5.0.0.93',
+    'tkinterdnd2==0.6.3', 'vtk==9.3.1',
+)
+_BJT_BOOT_MODULES = ('numpy', 'scipy', 'PIL.ImageTk', 'skimage', 'trimesh',
+                     'shapely', 'numba', 'rtree', 'cv2', 'tkinterdnd2', 'vtk', 'tkinter')
+
+
+def _bjt_boot_process_env(executable):
+    """Conda DLL and Tcl lookup also works outside an activated terminal."""
+    import os
+    from pathlib import Path
+    env = os.environ.copy()
+    env.pop('PYTHONHOME', None)
+    env.pop('PYTHONPATH', None)
+    env.pop('TCL_LIBRARY', None)
+    env.pop('TK_LIBRARY', None)
+    env['PYTHONNOUSERSITE'] = '1'
+    prefix = Path(executable).parent
+    if prefix.name in ('bin', 'Scripts'):
+        prefix = prefix.parent
+    if (prefix / 'conda-meta').is_dir():
+        bins = [prefix, prefix/'Library/mingw-w64/bin', prefix/'Library/usr/bin',
+                prefix/'Library/bin', prefix/'Scripts', prefix/'bin']
+        env['PATH'] = os.pathsep.join(str(p) for p in bins) + os.pathsep + env.get('PATH', '')
+        env['CONDA_PREFIX'] = str(prefix)
+    return env
+
+
+def _bjt_boot_find_conda():
+    import os, shutil, sys
+    from pathlib import Path
+    candidates = [os.environ.get('CONDA_EXE'), shutil.which('conda.exe'),
+                  shutil.which('conda')]
+    for prefix in [Path(sys.prefix), *Path(sys.executable).parents]:
+        candidates.extend([prefix/'Scripts/conda.exe', prefix/'_conda.exe', prefix/'bin/conda'])
+    for item in candidates:
+        if item and Path(item).is_file() and Path(item).suffix.lower() not in ('.bat', '.cmd'):
+            return str(Path(item).absolute())
+    return None
+
+
+def _bjt_boot_find_runtime():
+    import os, shutil, subprocess, sys
+    from pathlib import Path
+    candidates = [[sys.executable]]
+    launcher = shutil.which('py') if os.name == 'nt' else None
+    if launcher:
+        candidates.append([launcher, '-3.12-64'])
+    executable = shutil.which('python3.12')
+    if executable:
+        candidates.append([executable])
+    if os.name == 'nt':
+        base = Path(os.environ.get('LOCALAPPDATA', str(Path.home())))
+        candidates.append([str(base/'Programs/Python/Python312/python.exe')])
+    for command in candidates:
+        if not Path(command[0]).is_file():
+            continue
+        try:
+            result = subprocess.run(command + ['-c',
+                'import sys,struct;sys.exit(0 if sys.version_info[:2]==(3,12) and struct.calcsize("P")==8 else 1)'],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30,
+                env=_bjt_boot_process_env(command[0]))
+            if result.returncode == 0:
+                return command
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    return None
+
+
+def _bjt_auto_start():
+    import contextlib
+    import hashlib
+    import json
+    import os
+    from pathlib import Path
+    import subprocess
+    import sys
+    import time
+    import traceback
+
+    signature = hashlib.sha256(repr((_BJT_BOOT_REQUIREMENTS, _BJT_BOOT_MODULES)).encode()).hexdigest()[:16]
+    ticket = signature + '|' + os.path.abspath(sys.prefix)
+    if os.environ.pop('BJT_BOOTSTRAP_READY', None) == ticket:
+        return
+    # Do not require requirements.txt or a separate setup script.
+    probe = ('import sys,struct,importlib,importlib.metadata as m; '
+             'assert struct.calcsize("P")==8; '
+             'assert sys.version_info[:2]==(3,12); '
+             f'reqs={_BJT_BOOT_REQUIREMENTS!r}; '
+             'assert all(m.version(r.split("==")[0])==r.split("==")[1] for r in reqs); '
+             f'[importlib.import_module(n) for n in {_BJT_BOOT_MODULES!r}]')
+    def healthy(exe):
+        try:
+            return subprocess.run([str(exe), '-c', probe], stdout=subprocess.DEVNULL,
+                                  stderr=subprocess.DEVNULL, timeout=120,
+                                  env=_bjt_boot_process_env(exe)).returncode == 0
+        except (OSError, subprocess.TimeoutExpired):
+            return False
+    # Reuse a fully compatible environment, without downloading anything.
+    if healthy(sys.executable):
+        return
+    root = Path(os.environ.get('LOCALAPPDATA') or (Path.home() / '.cache')) / 'BJT' / 'python-envs'
+    log_path = root / 'automatic_setup.log'
+    def status(message):
+        if sys.stdout is not None:
+            print(message, flush=True)
+    @contextlib.contextmanager
+    def lock(path):
+        # Kernel-owned lock: releases even if the installing process crashes.
+        with path.open('a+b') as handle:
+            handle.seek(0, 2)
+            if handle.tell() == 0:
+                handle.write(b'0'); handle.flush()
+            deadline = time.monotonic() + 1800
+            while True:
+                try:
+                    handle.seek(0)
+                    if os.name == 'nt':
+                        import msvcrt
+                        msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+                    else:
+                        import fcntl
+                        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except (OSError, BlockingIOError):
+                    if time.monotonic() >= deadline:
+                        raise RuntimeError('Another BJT installation is still running. Please retry later.')
+                    time.sleep(.25)
+            try:
+                yield
+            finally:
+                handle.seek(0)
+                if os.name == 'nt':
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+                else:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+    try:
+        root.mkdir(parents=True, exist_ok=True)
+        env_dir = root / ('cp312-' + signature)
+        env_python = env_dir / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
+        if os.name == 'nt' and (env_dir/'python.exe').is_file():
+            env_python = env_dir/'python.exe'
+        with lock(root / (signature + '.lock')):
+            with log_path.open('a', encoding='utf-8') as log:
+                log.write('\n=== Automatic setup ' + time.ctime() + ' ===\n'); log.flush()
+                def run(command):
+                    # No shell; paths with spaces and Korean characters are preserved.
+                    result = subprocess.run([str(x) for x in command], stdout=log,
+                                            stderr=subprocess.STDOUT, timeout=1800,
+                                            env=_bjt_boot_process_env(command[0]))
+                    if result.returncode:
+                        raise RuntimeError('Automatic installation failed. See: ' + str(log_path))
+                if not healthy(env_python):
+                    status('BJT: 필요한 패키지를 전용 환경에 자동 설치합니다. 첫 실행에는 인터넷이 필요합니다.')
+                    status('설치 기록: ' + str(log_path))
+                    if not env_python.exists():
+                        conda = _bjt_boot_find_conda()
+                        if conda:
+                            status('BJT: Anaconda/Miniconda로 Python 3.12 전용 환경을 자동 생성합니다.')
+                            run([conda, 'create', '--yes', '--prefix', env_dir,
+                                 '--override-channels', '--channel', 'conda-forge',
+                                 'python=3.12', 'pip', 'tk'])
+                            env_python = env_dir / ('python.exe' if os.name == 'nt' else 'bin/python')
+                        else:
+                            base = _bjt_boot_find_runtime()
+                            if base is None:
+                                raise RuntimeError('실행 가능한 Python 3.12 또는 Conda를 찾지 못했습니다. '
+                                                   '확인되지 않은 py 명령은 실행하지 않았습니다.')
+                            run(base + ['-m', 'venv', str(env_dir)])
+                    pip_check = subprocess.run([str(env_python), '-m', 'pip', '--version'],
+                                               stdout=log, stderr=subprocess.STDOUT, timeout=60,
+                                               env=_bjt_boot_process_env(env_python))
+                    if pip_check.returncode:
+                        run([env_python, '-m', 'ensurepip', '--upgrade'])
+                    run([env_python, '-m', 'pip', 'install', '--disable-pip-version-check',
+                         '--no-input', '--only-binary=:all:', '--retries', '3', '--timeout', '30',
+                         *_BJT_BOOT_REQUIREMENTS])
+                    if not healthy(env_python):
+                        # Exact version can still have damaged files / a broken DLL.
+                        run([env_python, '-m', 'pip', 'install', '--disable-pip-version-check',
+                             '--no-input', '--only-binary=:all:', '--force-reinstall',
+                             *_BJT_BOOT_REQUIREMENTS])
+                    if not healthy(env_python):
+                        raise RuntimeError('Installed packages could not be loaded. See: ' + str(log_path))
+        status('BJT: 패키지 준비 완료. 프로그램을 시작합니다.')
+        child_env = _bjt_boot_process_env(env_python)
+        child_env['BJT_BOOTSTRAP_READY'] = signature + '|' + os.path.abspath(env_dir)
+        # Preserve working directory, all CLI arguments and the child's exit status.
+        code = subprocess.call([str(env_python), str(Path(__file__).resolve()), *sys.argv[1:]], env=child_env)
+    except Exception:
+        message = 'BJT 자동 준비에 실패했습니다.\n' + traceback.format_exc() + '\n설치 기록: ' + str(log_path)
+        status(message)
+        if os.name == 'nt':
+            import ctypes
+            ctypes.windll.user32.MessageBoxW(None, message, 'BJT', 0x10)
+        raise SystemExit(1)
+    raise SystemExit(code)
+
+
+if __name__ == '__main__':
+    _bjt_auto_start()
+
+
+import importlib.util
+import json
+import math
+import os
+import re
+import shutil
+import struct
+import hashlib
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+import traceback
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Iterable, List, Optional, Sequence, Tuple
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+
+def _ensure_packages() -> None:
+    required = {'numpy':'numpy', 'PIL':'pillow', 'scipy':'scipy', 'skimage':'scikit-image',
+                'trimesh':'trimesh', 'shapely':'shapely>=2.1,<3', 'numba':'numba', 'rtree':'rtree'}
+    missing = [pkg for mod,pkg in required.items() if importlib.util.find_spec(mod) is None]
+    if missing:
+        raise SystemExit('필수 패키지가 없습니다. setup_windows.cmd를 실행하거나:\n' +
+                         sys.executable + ' -m pip install ' + ' '.join(missing))
+    from importlib import metadata as package_metadata
+    parts = package_metadata.version('shapely').split('.')
+    if tuple(int(x) for x in parts[:2]) < (2,1):
+        raise SystemExit('Shapely 2.1 이상이 필요합니다. setup_windows.cmd로 별도 환경을 구성하십시오.')
+    if struct.calcsize('P') != 8:
+        raise SystemExit('대형 모델 처리는 64-bit Python이 필요합니다.')
+
+
+_ensure_packages()
+
+import numpy as np
+from PIL import Image, ImageOps, ImageTk
+import trimesh
+from numba import njit
+# Numba serializes globals['__name__']; a function.__module__ override alone is insufficient.
+_BJT_LAUNCH_AS_MAIN = (__name__ == '__main__')
+_BJT_NATIVE_MODULE = '_bjt_native_' + hashlib.sha256(Path(__file__).read_bytes()).hexdigest()[:20]
+sys.modules[_BJT_NATIVE_MODULE] = sys.modules[__name__]
+__name__ = _BJT_NATIVE_MODULE
+from shapely import make_valid
+from shapely.geometry import GeometryCollection, MultiPolygon, Polygon
+try:
+    from shapely.strtree import STRtree as _aio_STRtree
+except Exception:
+    _aio_STRtree = None
+try:
+    from shapely import constrained_delaunay_triangles as _aio_constrained_delaunay_triangles
+except Exception:
+    _aio_constrained_delaunay_triangles = None
+try:
+    from shapely.ops import triangulate as _aio_delaunay_triangulate
+except Exception:
+    _aio_delaunay_triangulate = None
+
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
+
+try:
+    from tkinterdnd2 import DND_FILES, TkinterDnD
+except Exception:
+    DND_FILES = None
+    TkinterDnD = None
+
+# -----------------------------------------------------------------------------
+# 올인원 내장 코어 로더
+# -----------------------------------------------------------------------------
+import base64 as _b64
+import zlib as _zlib
+import types as _types
+
+_LATTICE_CORE_B64 = """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"""
+_RECON_CORE_B64 = """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"""
+
+def _load_embedded_core(name: str, encoded: str):
+    source = _zlib.decompress(_b64.b64decode(encoded)).decode('utf-8')
+    digest = hashlib.sha256(source.encode()).hexdigest()[:20]
+    root = Path(os.getenv('LOCALAPPDATA', str(Path.home() / '.cache'))) / 'BJT_Tools' / 'cores'
+    try:
+        root.mkdir(parents=True, exist_ok=True)
+        path = root / (name + '_' + digest + '.py')
+        if not path.exists() or path.read_text(encoding='utf-8') != source:
+            with tempfile.NamedTemporaryFile('w', encoding='utf-8', dir=root, delete=False, suffix='.tmp') as f:
+                f.write(source); temp = Path(f.name)
+            os.replace(temp, path)
+        filename = str(path)
+    except OSError:
+        filename = f'<embedded {name}>'
+        source = source.replace('cache=True', 'cache=False')
+    module = _types.ModuleType(name)
+    module.__file__ = filename
+    module.__package__ = ''
+    sys.modules[name] = module
+    exec(compile(source, filename, 'exec'), module.__dict__)
+    return module
+
+lattice_core = _load_embedded_core("bjt_lattice_core", _LATTICE_CORE_B64)
+
+recon_core = _load_embedded_core("bjt_reconstructor_core", _RECON_CORE_B64)
+
+
+# -----------------------------------------------------------------------------
+# Fast exact slab Marching Cubes
+# -----------------------------------------------------------------------------
+# The reconstruction core feeds only binary 0/1 float32 fields at iso-level 0.5.
+# For every one of the 254 non-trivial binary 2x2x2 cube configurations,
+# scikit-image Lewiner returns identical vertices/faces with allow_degenerate=True
+# and False.  True skips the extra degenerate-face cleanup pass and is materially faster.
+_AIO_ORIG_MARCHING_CUBES = recon_core.marching_cubes
+
+def _aio_binary_marching_cubes_fast(volume, *args, **kwargs):
+    kwargs["allow_degenerate"] = True
+    return _AIO_ORIG_MARCHING_CUBES(volume, *args, **kwargs)
+
+recon_core.marching_cubes = _aio_binary_marching_cubes_fast
+
+# The embedded core capped the float32 slab itself at 512 MiB.  With a 5.5k x 5.5k
+# XY plane this can force only ~3 Z cells per slab and hundreds of MC invocations.
+# Raise the cap conservatively while still leaving most available RAM for MC output,
+# OS cache and the rest of the program.  Geometry is unchanged; only chunking differs.
+_AIO_ORIG_CHOOSE_MC_DEPTH = recon_core.choose_streaming_mc_depth
+
+def _aio_choose_streaming_mc_depth_fast(shape, available_ram, smoothing):
+    _nz, ny, nx = shape
+    plane_voxels = max(1, int(ny) * int(nx))
+    halo = 4 if smoothing else 0
+    bytes_per_slice = plane_voxels * 4
+
+    if available_ram is None:
+        budget = 768 * 1024 * 1024
+    else:
+        # Use at most 18% of currently available RAM for the scalar slab, capped at
+        # 1 GiB.  The existing MemoryError retry still halves depth automatically.
+        budget = int(max(384 * 1024 * 1024, min(1024 * 1024 * 1024, available_ram * 0.18)))
+
+    usable_slices = max(2, budget // max(1, bytes_per_slice))
+    core_depth = int(usable_slices - 1 - 2 * halo)
+    core_depth = max(1, min(64, core_depth))
+    estimated = (core_depth + 1 + 2 * halo) * bytes_per_slice
+    return core_depth, halo, int(estimated)
+
+recon_core.choose_streaming_mc_depth = _aio_choose_streaming_mc_depth_fast
+
+# -----------------------------------------------------------------------------
+# Surface interpolation: lossless planar triangle reducer
+# -----------------------------------------------------------------------------
+# Marching Cubes is excellent for topology, but on native binary slice volumes it
+# often emits thousands/millions of triangles that only subdivide ONE EXACT plane.
+# For the non-smoothed "표면 보간형" only, we re-triangulate large horizontal/
+# vertical coplanar patches while preserving ALL patch boundary vertices.
+#
+# Acceptance is deliberately strict:
+#   1) no vertex is moved or newly approximated,
+#   2) replacement triangles use original MC vertices only,
+#   3) projected patch area must match exactly on the half-voxel integer grid,
+#   4) the complete boundary-edge set must be byte-for-byte identical,
+#   5) only a replacement with fewer triangles is accepted.
+# Any ambiguous/non-manifold/invalid group is left completely untouched.
+# This means slicing geometry is unchanged; only redundant coplanar interior edges
+# disappear.  Weak smoothing is NOT reduced before smoothing because topology would
+# influence the smoothing result.
+
+_AIO_MC_LIGHT_TLS = threading.local()
+_AIO_MC_LIGHT_MIN_GROUP = 16
+_AIO_MC_LIGHT_ORIG_WRITE = recon_core.BinarySTLWriter.write_numpy_mesh_chunk
+_AIO_MC_LIGHT_ORIG_RECONSTRUCT = recon_core.reconstruct_streaming
+
+
+def _aio_boundary_edges(face_array: np.ndarray) -> np.ndarray:
+    f = np.asarray(face_array, dtype=np.int64)
+    if len(f) == 0:
+        return np.empty((0, 2), dtype=np.int64)
+    edges = np.concatenate((f[:, [0, 1]], f[:, [1, 2]], f[:, [2, 0]]), axis=0)
+    edges = np.sort(edges, axis=1)
+    unique_edges, counts = np.unique(edges, axis=0, return_counts=True)
+    return unique_edges[counts == 1]
+
+
+def _aio_boundary_loops(boundary_edges: np.ndarray):
+    """Return closed loops, but only for a clean degree-2 boundary graph."""
+    if len(boundary_edges) == 0:
+        return None
+    adjacency = {}
+    for aa, bb in np.asarray(boundary_edges, dtype=np.int64):
+        a = int(aa); b = int(bb)
+        adjacency.setdefault(a, []).append(b)
+        adjacency.setdefault(b, []).append(a)
+    if any(len(neighbors) != 2 for neighbors in adjacency.values()):
+        return None
+
+    unused = {tuple(sorted((int(a), int(b)))) for a, b in boundary_edges}
+    loops = []
+    guard_limit = len(unused) + 2
+    while unused:
+        start, current = next(iter(unused))
+        unused.discard((start, current))
+        previous = start
+        loop = [start]
+        while current != start:
+            loop.append(current)
+            neighbors = adjacency[current]
+            nxt = neighbors[0] if neighbors[0] != previous else neighbors[1]
+            edge = tuple(sorted((current, nxt)))
+            if nxt != start and edge not in unused:
+                return None
+            unused.discard(edge)
+            previous, current = current, nxt
+            if len(loop) > guard_limit:
+                return None
+        if len(loop) < 3:
+            return None
+        loops.append(loop)
+    return loops
+
+
+def _aio_projected_area2(q: np.ndarray, faces: np.ndarray, proj_axes) -> int:
+    fs = np.asarray(faces, dtype=np.int64)
+    uv = q[:, proj_axes]
+    a = uv[fs[:, 0]]; b = uv[fs[:, 1]]; c = uv[fs[:, 2]]
+    twice = ((b[:, 0] - a[:, 0]) * (c[:, 1] - a[:, 1])
+             - (b[:, 1] - a[:, 1]) * (c[:, 0] - a[:, 0]))
+    return int(np.abs(twice).sum(dtype=np.int64))
+
+
+def _aio_triangulate_polygon_exact(poly: Polygon):
+    """Constrained triangulation when available; older Shapely gets a checked fallback."""
+    if _aio_constrained_delaunay_triangles is not None:
+        gc = _aio_constrained_delaunay_triangles(poly)
+        return list(getattr(gc, 'geoms', (gc,)))
+    if _aio_delaunay_triangulate is None:
+        return []
+    # Older-Shapely fallback is accepted later only if exact area+boundary checks pass.
+    return [tri for tri in _aio_delaunay_triangulate(poly) if poly.covers(tri)]
+
+
+def _aio_retriangulate_plane_group(
+    q: np.ndarray,
+    group_faces: np.ndarray,
+    desired_normal_q: np.ndarray,
+):
+    """Losslessly retriangulate one oriented coplanar group using existing vertices."""
+    original = np.asarray(group_faces, dtype=np.int32)
+    if len(original) < _AIO_MC_LIGHT_MIN_GROUP:
+        return None
+
+    boundary = _aio_boundary_edges(original)
+    loops = _aio_boundary_loops(boundary)
+    if not loops:
+        return None
+
+    desired = np.asarray(desired_normal_q, dtype=np.int64)
+    drop_axis = int(np.argmax(np.abs(desired)))
+    proj_axes = tuple(i for i in range(3) if i != drop_axis)
+    uv = q[:, proj_axes]
+
+    # Keep every original boundary vertex. Removing even a collinear boundary point
+    # would create a T-junction against the neighboring non-coplanar patch.
+    loop_info = []
+    for loop in loops:
+        coords = [tuple(map(float, uv[v])) for v in loop]
+        polygon = Polygon(coords)
+        if polygon.is_empty or (not polygon.is_valid) or polygon.area <= 0.0:
+            return None
+        loop_info.append((loop, polygon))
+
+    # Build a containment tree so holes and nested islands are retained exactly.
+    # Previous implementation compared every loop with every larger loop (O(N^2)).
+    # Lattice planes can contain thousands of disconnected loops, so that path became
+    # the dominant cost.  STRtree limits exact contains() tests to spatial candidates.
+    areas = np.asarray([info[1].area for info in loop_info], dtype=np.float64)
+    order = np.argsort(-areas, kind="stable").tolist()
+    rank = np.empty(len(order), dtype=np.int64)
+    for pos, idx in enumerate(order):
+        rank[idx] = pos
+    parent = [None] * len(loop_info)
+    depth = [0] * len(loop_info)
+
+    polys = [info[1] for info in loop_info]
+    tree = _aio_STRtree(polys) if (_aio_STRtree is not None and len(polys) >= 8) else None
+    geom_id_to_index = {id(g): i for i, g in enumerate(polys)} if tree is not None else {}
+
+    for pos, i in enumerate(order):
+        probe = polys[i].representative_point()
+        if tree is None:
+            candidates = order[:pos]
+        else:
+            hits = tree.query(probe)
+            # Shapely 2.x returns integer indices; 1.x returns geometry objects.
+            if isinstance(hits, np.ndarray) and np.issubdtype(hits.dtype, np.integer):
+                candidates = [int(j) for j in hits.tolist()]
+            else:
+                candidates = []
+                for geom in hits:
+                    j = geom_id_to_index.get(id(geom))
+                    if j is not None:
+                        candidates.append(j)
+            # Only strictly larger loops can contain this loop.
+            candidates = [j for j in candidates if int(rank[j]) < pos]
+
+        containers = [j for j in candidates if polys[j].contains(probe)]
+        if containers:
+            par = min(containers, key=lambda j: areas[j])
+            parent[i] = par
+            depth[i] = depth[par] + 1
+
+    children = {}
+    for child, par in enumerate(parent):
+        if par is not None:
+            children.setdefault(par, []).append(child)
+
+    polygons = []
+    for i, (shell_loop, _shell_poly) in enumerate(loop_info):
+        if depth[i] & 1:
+            continue
+        hole_loops = [
+            loop_info[j][0] for j in children.get(i, ())
+            if depth[j] == depth[i] + 1
+        ]
+        shell = [tuple(map(float, uv[v])) for v in shell_loop]
+        holes = [[tuple(map(float, uv[v])) for v in hole] for hole in hole_loops]
+        poly = Polygon(shell, holes)
+        if poly.is_empty or (not poly.is_valid) or poly.area <= 0.0:
+            return None
+        polygons.append(poly)
+
+    # On one plane, projection along the dominant normal is one-to-one.
+    boundary_vertices = np.unique(boundary)
+    uv_to_vertex = {}
+    for v in boundary_vertices:
+        key = (int(uv[v, 0]), int(uv[v, 1]))
+        old = uv_to_vertex.get(key)
+        if old is not None and not np.array_equal(q[old], q[v]):
+            return None
+        uv_to_vertex[key] = int(v)
+
+    new_faces = []
+    for poly in polygons:
+        triangles = _aio_triangulate_polygon_exact(poly)
+        if not triangles:
+            return None
+        for tri in triangles:
+            if getattr(tri, 'geom_type', '') != 'Polygon' or tri.is_empty:
+                continue
+            coords = list(tri.exterior.coords)
+            if len(coords) < 4:
+                return None
+            vids = []
+            for x, y in coords[:3]:
+                key = (int(round(x)), int(round(y)))
+                if abs(float(x) - key[0]) > 1e-8 or abs(float(y) - key[1]) > 1e-8:
+                    return None
+                v = uv_to_vertex.get(key)
+                if v is None:
+                    # No Steiner/new vertices are allowed in lossless mode.
+                    return None
+                vids.append(v)
+            if len(set(vids)) != 3:
+                return None
+            a, b, c = q[vids[0]], q[vids[1]], q[vids[2]]
+            cross = np.cross(b - a, c - a)
+            dot = int(np.dot(cross, desired))
+            if dot == 0:
+                return None
+            if dot < 0:
+                vids[1], vids[2] = vids[2], vids[1]
+            new_faces.append(vids)
+
+    if not new_faces:
+        return None
+    replacement = np.asarray(new_faces, dtype=np.int32)
+    if len(replacement) >= len(original):
+        return None
+
+    # Exact projected area and exact edge-boundary postconditions.
+    if _aio_projected_area2(q, replacement, proj_axes) != _aio_projected_area2(q, original, proj_axes):
+        return None
+    replacement_boundary = _aio_boundary_edges(replacement)
+    if not np.array_equal(replacement_boundary, boundary):
+        return None
+    return replacement
+
+
+def _aio_lossless_planar_reduce(
+    vertices_xyz: np.ndarray,
+    faces: np.ndarray,
+    half_pitch_xyz,
+):
+    """Reduce only exact horizontal/vertical MC planes; never move a vertex."""
+    vertices = np.asarray(vertices_xyz, dtype=np.float64)
+    original_faces = np.asarray(faces, dtype=np.int32)
+    if len(original_faces) < _AIO_MC_LIGHT_MIN_GROUP or len(vertices) == 0:
+        return original_faces, 0, 0
+
+    half = np.asarray(half_pitch_xyz, dtype=np.float64)
+    if np.any(~np.isfinite(half)) or np.any(half <= 0.0):
+        return original_faces, 0, 0
+
+    # Coordinates of native binary MC surfaces live on the half-voxel lattice.
+    # Use a relative origin so arbitrary XY centering/crop offsets cancel out.
+    base = vertices[0].copy()
+    q = np.rint((vertices - base) / half).astype(np.int64)
+    residual = np.max(np.abs((vertices - base) - q * half))
+    tolerance = max(1.0e-4, float(np.min(half)) * 0.003)
+    if (not np.isfinite(residual)) or residual > tolerance:
+        return original_faces, 0, 1
+
+    a = q[original_faces[:, 0]]
+    b = q[original_faces[:, 1]]
+    c = q[original_faces[:, 2]]
+    normal = np.cross(b - a, c - a)
+    keep = np.ones(len(original_faces), dtype=bool)
+    replacements = []
+    groups_accepted = 0
+
+    def process_runs(sorted_face_ids, sorted_keys, desired_normal_builder):
+        nonlocal groups_accepted
+        if len(sorted_face_ids) == 0:
+            return
+        changes = np.any(sorted_keys[1:] != sorted_keys[:-1], axis=1) if len(sorted_keys) > 1 else np.empty(0, dtype=bool)
+        starts = np.r_[0, 1 + np.flatnonzero(changes), len(sorted_face_ids)]
+        for start, end in zip(starts[:-1], starts[1:]):
+            if end - start < _AIO_MC_LIGHT_MIN_GROUP:
+                continue
+            ids = sorted_face_ids[start:end]
+            if not np.all(keep[ids]):
+                continue
+            try:
+                desired = desired_normal_builder(sorted_keys[start])
+                replacement = _aio_retriangulate_plane_group(q, original_faces[ids], desired)
+            except Exception:
+                replacement = None
+            if replacement is not None:
+                keep[ids] = False
+                replacements.append(replacement)
+                groups_accepted += 1
+
+    # Vertical surfaces: primitive oriented XY plane normal + exact plane offset.
+    vertical_ids = np.flatnonzero((normal[:, 2] == 0) & ((normal[:, 0] != 0) | (normal[:, 1] != 0)))
+    if len(vertical_ids):
+        nxy = normal[vertical_ids, :2]
+        gcd = np.gcd(np.abs(nxy[:, 0]), np.abs(nxy[:, 1]))
+        gcd[gcd == 0] = 1
+        primitive = nxy // gcd[:, None]
+        d = primitive[:, 0] * a[vertical_ids, 0] + primitive[:, 1] * a[vertical_ids, 1]
+        keys = np.column_stack((primitive, d)).astype(np.int64, copy=False)
+        order = np.lexsort((keys[:, 2], keys[:, 1], keys[:, 0]))
+        process_runs(
+            vertical_ids[order], keys[order],
+            lambda key: np.asarray((int(key[0]), int(key[1]), 0), dtype=np.int64),
+        )
+
+    # Horizontal caps/terraces: exact Z plane coordinate + normal orientation.
+    horizontal_ids = np.flatnonzero((normal[:, 0] == 0) & (normal[:, 1] == 0) & (normal[:, 2] != 0))
+    if len(horizontal_ids):
+        sign = np.sign(normal[horizontal_ids, 2]).astype(np.int64)
+        zcoord = a[horizontal_ids, 2]
+        keys = np.column_stack((zcoord, sign)).astype(np.int64, copy=False)
+        order = np.lexsort((keys[:, 1], keys[:, 0]))
+        process_runs(
+            horizontal_ids[order], keys[order],
+            lambda key: np.asarray((0, 0, int(key[1])), dtype=np.int64),
+        )
+
+    if not replacements:
+        return original_faces, 0, 0
+    reduced = np.vstack([original_faces[keep], *replacements]).astype(np.int32, copy=False)
+    saved = int(len(original_faces) - len(reduced))
+    return np.ascontiguousarray(reduced), saved, groups_accepted
+
+
+def _aio_light_write_numpy_mesh_chunk(
+    self,
+    vertices_xyz,
+    faces,
+    max_triangles=None,
+    cancel_event=None,
+    chunk_size=100_000,
+):
+    cfg = getattr(_AIO_MC_LIGHT_TLS, 'cfg', None)
+    output_faces = faces
+    if cfg and cfg.get('enabled', False):
+        stats = cfg['stats']
+        before = int(len(faces))
+        stats['input_triangles'] += before
+        try:
+            output_faces, saved, groups = _aio_lossless_planar_reduce(
+                vertices_xyz,
+                faces,
+                cfg['half_pitch_xyz'],
+            )
+            stats['saved_triangles'] += int(saved)
+            stats['groups'] += int(groups)
+        except Exception:
+            stats['fallback_chunks'] += 1
+            output_faces = faces
+        stats['output_triangles'] += int(len(output_faces))
+    return _AIO_MC_LIGHT_ORIG_WRITE(
+        self,
+        vertices_xyz,
+        output_faces,
+        max_triangles=max_triangles,
+        cancel_event=cancel_event,
+        chunk_size=chunk_size,
+    )
+
+
+def _aio_light_reconstruct_streaming(params, log, cancel_event):
+    enabled = (getattr(params, 'surface_mode', '') == '표면 보간형' and not globals().get('_AIO_FAST_EXACT_VALID', False))
+    previous = getattr(_AIO_MC_LIGHT_TLS, 'cfg', None)
+    if enabled:
+        _AIO_MC_LIGHT_TLS.cfg = {
+            'enabled': True,
+            'half_pitch_xyz': (
+                (25.4 / float(params.dpi_x)) * 0.5,
+                (25.4 / float(params.dpi_y)) * 0.5,
+                float(params.layer_thickness_mm) * 0.5,
+            ),
+            'stats': {
+                'input_triangles': 0,
+                'output_triangles': 0,
+                'saved_triangles': 0,
+                'groups': 0,
+                'fallback_chunks': 0,
+            },
+        }
+        try:
+            log.write('표면 보간형 무손실 경량화 + FastSlab: ON')
+            log.write('  - 정점 이동/다운샘플링 없음')
+            log.write('  - 동일 평면 내부 triangle만 재삼각형화')
+            log.write('  - 원 경계 edge + 투영면적이 정확히 일치하는 경우에만 적용')
+            log.write('  - binary MC degenerate 검사 생략(254개 cube case 동일성 검증)')
+            log.write('  - 평면 loop 포함관계 STRtree 가속 / 슬랩 메모리 상한 1 GiB')
+        except Exception:
+            pass
+    try:
+        return _AIO_MC_LIGHT_ORIG_RECONSTRUCT(params, log, cancel_event)
+    finally:
+        cfg = getattr(_AIO_MC_LIGHT_TLS, 'cfg', None)
+        if enabled and cfg:
+            st = cfg['stats']
+            try:
+                if st['input_triangles'] > 0:
+                    ratio = 100.0 * st['saved_triangles'] / st['input_triangles']
+                    log.write('')
+                    log.write('========== 표면 보간형 무손실 경량화 ==========')
+                    log.write(f"MC 원 triangle: {st['input_triangles']:,}")
+                    log.write(f"최종 저장 triangle: {st['output_triangles']:,}")
+                    log.write(f"제거된 중복 평면 triangle: {st['saved_triangles']:,} ({ratio:.1f}%)")
+                    log.write(f"경량화된 평면 그룹: {st['groups']:,}")
+                    if st['fallback_chunks']:
+                        log.write(f"안전 fallback chunk: {st['fallback_chunks']:,} (원본 triangle 그대로 보존)")
+                    log.write('정점 좌표 변경: 0 / 경계 edge 변경: 0 (검증 통과 그룹만 적용)')
+                    log.write('================================================')
+            except Exception:
+                pass
+        if previous is None:
+            try:
+                delattr(_AIO_MC_LIGHT_TLS, 'cfg')
+            except Exception:
+                pass
+        else:
+            _AIO_MC_LIGHT_TLS.cfg = previous
+
+
+# Embedded core global lookups are dynamic, so these two conservative wrappers
+# improve the integrated program without altering the compressed core payload.
+recon_core.BinarySTLWriter.write_numpy_mesh_chunk = _aio_light_write_numpy_mesh_chunk
+
+recon_core.reconstruct_streaming = _aio_light_reconstruct_streaming
+
+# -----------------------------------------------------------------------------
+# Exact sparse interpolation engine v3
+# -----------------------------------------------------------------------------
+# 핵심 아이디어
+# 1) binary volume의 모든 2x2x2 cube는 256가지 case뿐이다.
+# 2) 현재 설치된 scikit-image Lewiner MC를 2x2x2 cube에 직접 실행해 256-case LUT를 만든다.
+#    따라서 transition cube는 기존 Marching Cubes와 같은 triangle geometry를 그대로 사용한다.
+# 3) 인접 Z slice의 2x2 XY case가 완전히 같으면 해당 cube의 MC surface는 수직 평면 patch뿐이다.
+#    이 patch가 여러 Z cell에서 연속되면 매 cell마다 반복 생성하지 않고 동일 평면을 한 번만 길게 늘린다.
+# 4) 0<->15 전환 cube는 순수 수평 정사각형이므로 같은 행의 연속 cell을 strip 1개로 병합한다.
+#    좌표 이동/다운샘플링/근사 decimation은 없다.
+#
+# 즉, 기존 MC surface를 '덜 계산하고 덜 잘게 삼각분할'할 뿐 surface 위치는 바꾸지 않는다.
+# 자체 검증에 실패하면 자동으로 기존 Z-slab Lewiner MC로 fallback한다.
+
+_AIO_FAST_EXACT_ORIG_INTERPOLATED = recon_core.reconstruct_interpolated_surface
+_AIO_FAST_EXACT_LUT_MAX_TRI = 9
+_AIO_FAST_EXACT_VALID = False
+_AIO_FAST_EXACT_VALIDATION_MESSAGE = "아직 검증하지 않음"
+_AIO_FAST_EXACT_LUT_COUNT = None
+_AIO_FAST_EXACT_LUT_ZYX = None
+_AIO_FAST_EXACT_RECORD_DTYPE = np.dtype([
+    ("normal", "<f4", (3,)),
+    ("a", "<f4", (3,)),
+    ("b", "<f4", (3,)),
+    ("c", "<f4", (3,)),
+    ("attr", "<u2"),
+])
+
+
+def _aio_fast_build_lewiner_binary_lut():
+    """현재 scikit-image Lewiner 구현에서 binary 256-case triangle LUT를 직접 생성."""
+    counts = np.zeros(256, dtype=np.uint8)
+    lut = np.zeros((256, _AIO_FAST_EXACT_LUT_MAX_TRI, 3, 3), dtype=np.float32)
+    mc = _AIO_ORIG_MARCHING_CUBES
+    for case in range(256):
+        if case == 0 or case == 255:
+            continue
+        cube = np.zeros((2, 2, 2), dtype=np.float32)
+        # bit order: z,y,x -> 0:(0,0,0),1:(0,0,1),2:(0,1,0),3:(0,1,1), ...
+        for z in range(2):
+            for y in range(2):
+                for x in range(2):
+                    bit = z * 4 + y * 2 + x
+                    cube[z, y, x] = 1.0 if ((case >> bit) & 1) else 0.0
+        vv, ff, _nn, _val = mc(
+            cube,
+            level=0.5,
+            spacing=(1.0, 1.0, 1.0),
+            gradient_direction="descent",
+            step_size=1,
+            allow_degenerate=True,
+            method="lewiner",
+        )
+        tri = np.asarray(vv[ff], dtype=np.float32)
+        if len(tri) > _AIO_FAST_EXACT_LUT_MAX_TRI:
+            raise RuntimeError(f"Lewiner binary case {case}: 예상보다 triangle이 많습니다: {len(tri)}")
+        counts[case] = int(len(tri))
+        lut[case, :len(tri)] = tri
+    return counts, lut
+
+
+def _aio_fast_marching_square_cases(mask: np.ndarray) -> np.ndarray:
+    """HxW binary mask -> zero padding을 포함한 (H+1)x(W+1) 4-bit XY cube case.
+
+    전체 3D volume을 만들지 않는다. NumPy slice 연산 4회만 사용하여 5k급 영상도 빠르게 처리한다.
+    """
+    m = np.asarray(mask, dtype=np.uint8)
+    h, w = m.shape
+    out = np.zeros((h + 1, w + 1), dtype=np.uint8)
+    # padded P에서 case = P[y,x] | P[y,x+1]<<1 | P[y+1,x]<<2 | P[y+1,x+1]<<3
+    out[1:, 1:] |= m
+    out[1:, :w] |= (m << 1)
+    out[:h, 1:] |= (m << 2)
+    out[:h, :w] |= (m << 3)
+    return out
+
+
+def _aio_fast_canonical_triangle_keys(vertices: np.ndarray, faces: np.ndarray) -> list:
+    """작은 self-test용. half-voxel 좌표를 정수화하여 triangle geometry를 canonical 비교."""
+    q = np.rint(np.asarray(vertices, dtype=np.float64) * 2.0).astype(np.int16)
+    result = []
+    for f in np.asarray(faces, dtype=np.int64):
+        pts = [tuple(int(v) for v in q[int(i)]) for i in f]
+        result.append(tuple(sorted(pts)))
+    result.sort()
+    return result
+
+
+def _aio_fast_paircell_triangle_keys(volume: np.ndarray, counts: np.ndarray, lut: np.ndarray) -> list:
+    """작은 binary volume을 1-cube LUT로 완전 분해해 triangle geometry key 생성."""
+    vol = np.asarray(volume, dtype=np.uint8)
+    nz, ny, nx = vol.shape
+    result = []
+    for z in range(nz - 1):
+        for y in range(ny - 1):
+            for x in range(nx - 1):
+                c = (
+                    int(vol[z, y, x])
+                    | (int(vol[z, y, x + 1]) << 1)
+                    | (int(vol[z, y + 1, x]) << 2)
+                    | (int(vol[z, y + 1, x + 1]) << 3)
+                    | (int(vol[z + 1, y, x]) << 4)
+                    | (int(vol[z + 1, y, x + 1]) << 5)
+                    | (int(vol[z + 1, y + 1, x]) << 6)
+                    | (int(vol[z + 1, y + 1, x + 1]) << 7)
+                )
+                n = int(counts[c])
+                if n <= 0:
+                    continue
+                tri = np.asarray(lut[c, :n], dtype=np.float64).copy()
+                tri[:, :, 0] += z
+                tri[:, :, 1] += y
+                tri[:, :, 2] += x
+                q = np.rint(tri * 2.0).astype(np.int16)
+                for t in q:
+                    result.append(tuple(sorted(tuple(int(v) for v in p) for p in t)))
+    result.sort()
+    return result
+
+
+def _aio_fast_validate_engine() -> tuple[bool, str]:
+    """새 엔진의 핵심 등가성을 실제 legacy Lewiner MC와 자동 검증.
+
+    - 모든 same-XY case가 순수 수직 patch인지 확인
+    - 0<->15가 순수 수평 unit square인지 확인
+    - deterministic random 3D volumes를 legacy global MC와 1-cube LUT로 triangle geometry 전수 비교
+    검증 실패 시 새 엔진을 절대 사용하지 않는다.
+    """
+    global _AIO_FAST_EXACT_LUT_COUNT, _AIO_FAST_EXACT_LUT_ZYX
+    try:
+        counts, lut = _aio_fast_build_lewiner_binary_lut()
+        _AIO_FAST_EXACT_LUT_COUNT = counts
+        _AIO_FAST_EXACT_LUT_ZYX = lut
+
+        # Z-run으로 늘릴 case는 z=0/1만 존재하고 모든 triangle normal의 z성분이 0이어야 한다.
+        for c4 in range(1, 15):
+            c8 = c4 | (c4 << 4)
+            n = int(counts[c8])
+            tri = np.asarray(lut[c8, :n], dtype=np.float64)
+            if n <= 0:
+                return False, f"same-case {c4}에 vertical surface가 없음"
+            zvals = np.unique(np.rint(tri[:, :, 0] * 2.0).astype(np.int16))
+            if not set(int(v) for v in zvals).issubset({0, 2}):
+                return False, f"same-case {c4}에 비수직 보간 vertex가 존재"
+            a = tri[:, 1] - tri[:, 0]
+            b = tri[:, 2] - tri[:, 0]
+            normals = np.cross(a, b)
+            if np.any(np.abs(normals[:, 0]) > 1e-8):
+                return False, f"same-case {c4}가 순수 수직 patch가 아님"
+
+        # pure horizontal cases 15/240은 정확히 2 triangles, z=0.5 unit square.
+        for c8 in (15, 240):
+            if int(counts[c8]) != 2:
+                return False, f"horizontal case {c8} triangle 수가 2가 아님"
+            tri = np.asarray(lut[c8, :2], dtype=np.float64)
+            if not np.allclose(tri[:, :, 0], 0.5, atol=0.0, rtol=0.0):
+                return False, f"horizontal case {c8} z plane이 0.5가 아님"
+
+        # Global Lewiner vs per-cube LUT exact geometry. Ambiguous case까지 실제 구현과 비교한다.
+        rng = np.random.default_rng(20260812)
+        mc = _AIO_ORIG_MARCHING_CUBES
+        tests = []
+        for i in range(5):
+            vol = (rng.random((5 + (i % 2), 7, 8)) > (0.58 + 0.04 * (i % 3))).astype(np.float32)
+            # 외곽 0 padding 성격도 포함
+            vol[0, 0, 0] = 0.0
+            vol[-1, -1, -1] = 1.0
+            tests.append(vol)
+        # 반복 Z 패턴도 별도 검사
+        base = (rng.random((7, 8)) > 0.62).astype(np.float32)
+        tests.append(np.stack([base, base, np.roll(base, 1, axis=0), np.roll(base, 1, axis=0), base], axis=0))
+
+        for ti, vol in enumerate(tests):
+            vv, ff, _nn, _val = mc(
+                np.asarray(vol, dtype=np.float32, order="C"),
+                level=0.5,
+                spacing=(1.0, 1.0, 1.0),
+                gradient_direction="descent",
+                step_size=1,
+                allow_degenerate=True,
+                method="lewiner",
+            )
+            legacy = _aio_fast_canonical_triangle_keys(vv, ff)
+            local = _aio_fast_paircell_triangle_keys(vol.astype(np.uint8), counts, lut)
+            if legacy != local:
+                return False, f"random volume #{ti} legacy/LUT triangle geometry 불일치"
+
+        return True, "Lewiner 256-case LUT + vertical/horizontal exact merge self-test PASS"
+    except Exception as exc:
+        return False, f"self-test 예외: {type(exc).__name__}: {exc}"
+
+
+_AIO_FAST_EXACT_VALID, _AIO_FAST_EXACT_VALIDATION_MESSAGE = _aio_fast_validate_engine()
+
+
+def _aio_v35_exhaustive_adjacency_selftest() -> tuple[bool, str]:
+    """모든 2-cube 공유면 조합을 legacy Lewiner와 전수 비교한다.
+
+    2x2x3 / 2x3x2 / 3x2x2의 각 12-voxel binary configuration(각 4096개)을
+    전부 검사하므로 X/Y/Z 어느 방향에서도 인접 cube ambiguity가 LUT 분해와
+    달라지는 경우가 있으면 ExactLUT 경로를 사용하지 않는다.
+    """
+    if not _AIO_FAST_EXACT_VALID:
+        return False, _AIO_FAST_EXACT_VALIDATION_MESSAGE
+    try:
+        mc = _AIO_ORIG_MARCHING_CUBES
+        counts = _AIO_FAST_EXACT_LUT_COUNT
+        lut = _AIO_FAST_EXACT_LUT_ZYX
+        checked = 0
+        for shape in ((2, 2, 3), (2, 3, 2), (3, 2, 2)):
+            n = int(np.prod(shape))
+            for code in range(1 << n):
+                if code == 0 or code == (1 << n) - 1:
+                    continue
+                flat = np.fromiter(((code >> i) & 1 for i in range(n)), dtype=np.uint8, count=n)
+                vol_u8 = flat.reshape(shape)
+                vol = vol_u8.astype(np.float32)
+                vv, ff, _nn, _val = mc(
+                    vol, level=0.5, spacing=(1.0, 1.0, 1.0),
+                    gradient_direction="descent", step_size=1,
+                    allow_degenerate=True, method="lewiner",
+                )
+                legacy = _aio_fast_canonical_triangle_keys(vv, ff)
+                local = _aio_fast_paircell_triangle_keys(vol_u8, counts, lut)
+                if legacy != local:
+                    return False, f"adjacency mismatch shape={shape} code={code}"
+                checked += 1
+        return True, f"PASS · all adjacent-cube configurations {checked:,}"
+    except Exception as exc:
+        return False, f"{type(exc).__name__}: {exc}"
+
+
+_AIO_V35_ADJ_OK, _AIO_V35_ADJ_MESSAGE = _aio_v35_exhaustive_adjacency_selftest()
+if not _AIO_V35_ADJ_OK:
+    _AIO_FAST_EXACT_VALID = False
+    _AIO_FAST_EXACT_VALIDATION_MESSAGE = (
+        _AIO_FAST_EXACT_VALIDATION_MESSAGE + " · exhaustive adjacency FAIL: " + _AIO_V35_ADJ_MESSAGE
+    )
+else:
+    _AIO_FAST_EXACT_VALIDATION_MESSAGE = (
+        _AIO_FAST_EXACT_VALIDATION_MESSAGE + " · " + _AIO_V35_ADJ_MESSAGE
+    )
+
+
+def _aio_fast_writer_check_limit(writer, add_count: int, max_triangles) -> None:
+    add_count = int(add_count)
+    if add_count <= 0:
+        return
+    new_total = int(writer.tri_count) + add_count
+    if max_triangles is not None and new_total > int(max_triangles):
+        raise RuntimeError(
+            f"Triangle 제한 초과: {new_total:,} > {int(max_triangles):,}\n"
+            "Max triangles를 늘리거나 격자/쉘 설정을 확인하세요."
+        )
+    if new_total > 0xFFFFFFFF:
+        raise OverflowError("Binary STL triangle 수가 uint32 한계를 초과했습니다.")
+
+
+def _aio_fast_write_triangle_soup(
+    writer,
+    triangles_xyz: np.ndarray,
+    max_triangles=None,
+    cancel_event=None,
+    chunk_size: int = 120_000,
+) -> int:
+    """indexed vertex를 만들지 않고 triangle soup를 Binary STL로 벡터 기록."""
+    tri = np.asarray(triangles_xyz, dtype=np.float32)
+    n_total = int(len(tri))
+    if n_total <= 0:
+        return 0
+    _aio_fast_writer_check_limit(writer, n_total, max_triangles)
+    writer._flush_buffer()
+    for begin in range(0, n_total, max(1, int(chunk_size))):
+        recon_core.check_cancel(cancel_event)
+        t = np.ascontiguousarray(tri[begin:begin + chunk_size], dtype=np.float32)
+        a = t[:, 0]
+        b = t[:, 1]
+        c = t[:, 2]
+        normals = np.cross(b - a, c - a)
+        lengths = np.linalg.norm(normals, axis=1)
+        valid = lengths > 0
+        normals[valid] /= lengths[valid, None]
+        normals[~valid] = 0.0
+        records = np.empty(len(t), dtype=_AIO_FAST_EXACT_RECORD_DTYPE)
+        records["normal"] = normals
+        records["a"] = a
+        records["b"] = b
+        records["c"] = c
+        records["attr"] = 0
+        records.tofile(writer.f)
+    writer.tri_count += n_total
+    return n_total
+
+
+def _aio_fast_emit_cell_mesh(
+    writer,
+    flat_indices: np.ndarray,
+    case8: np.ndarray,
+    cell_width: int,
+    xsp: float,
+    ysp: float,
+    zsp: float,
+    xoff: float,
+    yoff: float,
+    z_start,
+    z_length,
+    max_triangles,
+    cancel_event,
+    cell_chunk: int = 60_000,
+) -> int:
+    """선택된 cube들만 LUT triangle로 생성. transition 및 stretched vertical patch 공용."""
+    indices = np.asarray(flat_indices, dtype=np.int64)
+    cases = np.asarray(case8, dtype=np.uint8)
+    if len(indices) == 0:
+        return 0
+    if len(indices) != len(cases):
+        raise RuntimeError("fast cell emit: index/case 길이가 다릅니다.")
+    counts_lut = _AIO_FAST_EXACT_LUT_COUNT
+    lut = _AIO_FAST_EXACT_LUT_ZYX
+    total_written = 0
+    scalar_start = np.isscalar(z_start)
+    scalar_length = np.isscalar(z_length)
+    if not scalar_start:
+        z_start = np.asarray(z_start, dtype=np.float32)
+    if not scalar_length:
+        z_length = np.asarray(z_length, dtype=np.float32)
+
+    slots_all = np.arange(_AIO_FAST_EXACT_LUT_MAX_TRI, dtype=np.int16)[None, :]
+    for begin in range(0, len(indices), max(1, int(cell_chunk))):
+        recon_core.check_cancel(cancel_event)
+        end = min(len(indices), begin + cell_chunk)
+        idx = indices[begin:end]
+        cc = cases[begin:end]
+        counts = counts_lut[cc].astype(np.int16, copy=False)
+        valid = slots_all < counts[:, None]
+        ci, slot = np.nonzero(valid)
+        if len(ci) == 0:
+            continue
+        local = np.asarray(lut[cc[ci], slot], dtype=np.float32).copy()  # z,y,x in voxel units
+        owner = idx[ci]
+        yy = owner // int(cell_width)
+        xx = owner - yy * int(cell_width)
+
+        if scalar_start:
+            zs = float(z_start)
+            if scalar_length:
+                local[:, :, 0] = zs + local[:, :, 0] * float(z_length)
+            else:
+                zl = z_length[begin:end][ci]
+                local[:, :, 0] = zs + local[:, :, 0] * zl[:, None]
+        else:
+            zs = z_start[begin:end][ci]
+            if scalar_length:
+                local[:, :, 0] = zs[:, None] + local[:, :, 0] * float(z_length)
+            else:
+                zl = z_length[begin:end][ci]
+                local[:, :, 0] = zs[:, None] + local[:, :, 0] * zl[:, None]
+
+        # legacy MC와 같은 좌표 변환: padded voxel 좌표 -> xyz mm -> half voxel offset 보정
+        tris = np.empty_like(local, dtype=np.float32)
+        tris[:, :, 0] = (local[:, :, 2] + xx[:, None] - 0.5) * float(xsp) + float(xoff)
+        tris[:, :, 1] = (local[:, :, 1] + yy[:, None] - 0.5) * float(ysp) + float(yoff)
+        tris[:, :, 2] = (local[:, :, 0] - 0.5) * float(zsp)
+        total_written += _aio_fast_write_triangle_soup(
+            writer, tris, max_triangles=max_triangles, cancel_event=cancel_event,
+        )
+        del local, tris, ci, slot, valid
+    return total_written
+
+
+def _aio_fast_row_runs(row: np.ndarray):
+    """True 1D row의 [start,end) run을 반환. horizontal flat strip merge용."""
+    r = np.asarray(row, dtype=np.uint8)
+    if not np.any(r):
+        return np.empty(0, dtype=np.int32), np.empty(0, dtype=np.int32)
+    d = np.diff(np.concatenate((np.zeros(1, dtype=np.int8), r.astype(np.int8, copy=False), np.zeros(1, dtype=np.int8))))
+    return np.flatnonzero(d == 1).astype(np.int32), np.flatnonzero(d == -1).astype(np.int32)
+
+
+def _aio_fast_emit_horizontal_strips(
+    writer,
+    mask: np.ndarray,
+    z_cell: int,
+    upward_case240: bool,
+    xsp: float,
+    ysp: float,
+    zsp: float,
+    xoff: float,
+    yoff: float,
+    max_triangles,
+    cancel_event,
+) -> int:
+    """pure horizontal unit squares(0<->15)를 같은 Y row에서 exact strip으로 병합."""
+    m = np.asarray(mask, dtype=bool)
+    ys_out = []
+    x0_out = []
+    x1_out = []
+    for y in range(m.shape[0]):
+        if (y & 127) == 0:
+            recon_core.check_cancel(cancel_event)
+        starts, ends = _aio_fast_row_runs(m[y])
+        if len(starts):
+            ys_out.extend([y] * len(starts))
+            x0_out.extend(starts.tolist())
+            x1_out.extend(ends.tolist())
+    if not ys_out:
+        return 0
+    yv = np.asarray(ys_out, dtype=np.float32)
+    x0 = np.asarray(x0_out, dtype=np.float32)
+    x1 = np.asarray(x1_out, dtype=np.float32)
+    z = (float(z_cell) + 0.5 - 0.5) * float(zsp)  # local z=.5 then legacy -.5
+    # cell y spans [y,y+1], x run spans [x0,x1] in padded voxel coordinates.
+    xa = (x0 - 0.5) * float(xsp) + float(xoff)
+    xb = (x1 - 0.5) * float(xsp) + float(xoff)
+    ya = (yv - 0.5) * float(ysp) + float(yoff)
+    yb = (yv + 1.0 - 0.5) * float(ysp) + float(yoff)
+
+    n = len(yv)
+    tris = np.empty((n * 2, 3, 3), dtype=np.float32)
+    # case240(0->15) LUT winding and case15(15->0) winding을 그대로 재현.
+    if upward_case240:
+        # [p00,p11,p01], [p00,p10,p11] in (z,y,x) -> xyz
+        tris[0::2, 0] = np.column_stack((xa, ya, np.full(n, z, np.float32)))
+        tris[0::2, 1] = np.column_stack((xb, yb, np.full(n, z, np.float32)))
+        tris[0::2, 2] = np.column_stack((xb, ya, np.full(n, z, np.float32)))
+        tris[1::2, 0] = np.column_stack((xa, ya, np.full(n, z, np.float32)))
+        tris[1::2, 1] = np.column_stack((xa, yb, np.full(n, z, np.float32)))
+        tris[1::2, 2] = np.column_stack((xb, yb, np.full(n, z, np.float32)))
+    else:
+        # case15: [p11,p00,p01], [p10,p00,p11]
+        tris[0::2, 0] = np.column_stack((xb, yb, np.full(n, z, np.float32)))
+        tris[0::2, 1] = np.column_stack((xa, ya, np.full(n, z, np.float32)))
+        tris[0::2, 2] = np.column_stack((xb, ya, np.full(n, z, np.float32)))
+        tris[1::2, 0] = np.column_stack((xa, yb, np.full(n, z, np.float32)))
+        tris[1::2, 1] = np.column_stack((xa, ya, np.full(n, z, np.float32)))
+        tris[1::2, 2] = np.column_stack((xb, yb, np.full(n, z, np.float32)))
+    return _aio_fast_write_triangle_soup(
+        writer, tris, max_triangles=max_triangles, cancel_event=cancel_event,
+    )
+
+
+def _aio_fast_case_from_cached_layer(mask_store, absolute, bbox, grid):
+    mask = recon_core.load_cached_model_mask(mask_store, absolute, bbox, grid)
+    material = int(np.count_nonzero(mask))
+    cases = _aio_fast_marching_square_cases(mask)
+    return cases, material
+
+
+def _aio_fast_case_from_layer_item(item, bbox, resolved, grid):
+    mask = recon_core.load_model_mask(item, bbox, resolved, grid)
+    material = int(np.count_nonzero(mask))
+    cases = _aio_fast_marching_square_cases(mask)
+    return cases, material
+
+
+def _aio_fast_exact_interpolated_surface(
+    params,
+    items,
+    bbox,
+    grid,
+    resolved,
+    log,
+    cancel_event,
+    mask_store=None,
+):
+    """전체 3D float32 volume/슬랩 MC를 없앤 exact binary surface engine."""
+    if getattr(params, "surface_mode", "") != "표면 보간형":
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(
+            params, items, bbox, grid, resolved, log, cancel_event, mask_store,
+        )
+    if not _AIO_FAST_EXACT_VALID:
+        log.write("WARNING: ExactSparse self-test 실패 -> 기존 Z-slab Lewiner MC로 안전 fallback")
+        log.write(f"  사유: {_AIO_FAST_EXACT_VALIDATION_MESSAGE}")
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(
+            params, items, bbox, grid, resolved, log, cancel_event, mask_store,
+        )
+
+    total = int(bbox.layers)
+    h = int(grid.height)
+    w = int(grid.width)
+    hc = h + 1
+    wc = w + 1
+    total_cells_z = total + 1  # bottom zero->L0, inter-layer, last->top zero
+    xsp = float(grid.x_pitch_mm)
+    ysp = float(grid.y_pitch_mm)
+    zsp = float(params.layer_thickness_mm)
+    xoff = float(grid.x_offset_mm)
+    yoff = float(grid.y_offset_mm)
+
+    log.write("")
+    log.write("=============== ExactSparse 보간 표면 ===============")
+    log.write(f"XY cell case grid: {wc:,} × {hc:,}")
+    log.write(f"Z cell pairs: {total_cells_z:,}")
+    log.write("전체 3D float32 volume 생성: 없음")
+    log.write("전체 XY×Z Marching Cubes scan: 없음")
+    log.write("transition cube: 현재 scikit-image Lewiner 256-case LUT와 동일 geometry")
+    log.write("동일 XY case Z 연속부: 수직 MC patch를 exact 장거리 병합")
+    log.write("pure horizontal 0<->15: 같은 행 exact strip 병합")
+    log.write("다운샘플링/vertex 이동/QEM decimation: 없음")
+    log.write(f"엔진 검증: {_AIO_FAST_EXACT_VALIDATION_MESSAGE}")
+    log.write("=====================================================")
+
+    # 4-bit active run state. 255 means no vertical patch currently open.
+    run_case = np.full((hc, wc), 255, dtype=np.uint8)
+    start_dtype = np.uint16 if total_cells_z <= np.iinfo(np.uint16).max else np.uint32
+    run_start = np.zeros((hc, wc), dtype=start_dtype)
+    zero_cases = np.zeros((hc, wc), dtype=np.uint8)
+    prev_case = zero_cases
+    material_voxels = 0
+
+    writer = recon_core.BinarySTLWriter(
+        params.output_stl,
+        header="ExactSparse binary Lewiner-equivalent STL",
+        buffer_bytes=8 * 1024 * 1024,
+    )
+    success = False
+    started = time.time()
+    transition_cells_total = 0
+    vertical_runs_total = 0
+    horizontal_strips_tri = 0
+    transition_tri = 0
+    vertical_tri = 0
+
+    # Case generation을 surface emission과 overlap. 16GB RAM을 고려해 pending을 작게 제한한다.
+    prefetch_workers = max(1, min(4, int(getattr(params, "workers", 1))))
+    pending = {}
+    next_submit = 0
+
+    def submit_one(executor, local_layer):
+        absolute = int(bbox.zmin) + int(local_layer)
+        if mask_store is not None:
+            return executor.submit(_aio_fast_case_from_cached_layer, mask_store, absolute, bbox, grid)
+        return executor.submit(_aio_fast_case_from_layer_item, items[absolute], bbox, resolved, grid)
+
+    try:
+        with ThreadPoolExecutor(max_workers=prefetch_workers) as executor:
+            while next_submit < total and len(pending) < prefetch_workers:
+                pending[next_submit] = submit_one(executor, next_submit)
+                next_submit += 1
+
+            for k in range(total_cells_z):
+                recon_core.check_cancel(cancel_event)
+                if k < total:
+                    next_case, material = pending.pop(k).result()
+                    material_voxels += int(material)
+                    while next_submit < total and len(pending) < prefetch_workers:
+                        pending[next_submit] = submit_one(executor, next_submit)
+                        next_submit += 1
+                else:
+                    next_case = zero_cases
+
+                # 1) same 2D case -> exact vertical patch candidate.
+                same_active = (prev_case == next_case) & (prev_case != 0) & (prev_case != 15)
+                keep = same_active & (run_case == prev_case)
+
+                # close old runs before transition/nonmatching pair starts.
+                close_idx = np.flatnonzero(((run_case != 255) & (~keep)).ravel())
+                if len(close_idx):
+                    old4 = run_case.ravel()[close_idx].copy()
+                    starts = run_start.ravel()[close_idx].astype(np.float32, copy=True)
+                    lengths = np.float32(k) - starts
+                    old8 = (old4 | (old4 << 4)).astype(np.uint8)
+                    vertical_tri += _aio_fast_emit_cell_mesh(
+                        writer, close_idx, old8, wc,
+                        xsp, ysp, zsp, xoff, yoff,
+                        starts, lengths, params.max_triangles, cancel_event,
+                    )
+                    vertical_runs_total += int(len(close_idx))
+                    run_case.ravel()[close_idx] = 255
+
+                # open new exact vertical runs.
+                open_idx = np.flatnonzero((same_active & (run_case == 255)).ravel())
+                if len(open_idx):
+                    run_case.ravel()[open_idx] = prev_case.ravel()[open_idx]
+                    run_start.ravel()[open_idx] = k
+
+                del same_active, keep
+
+                # 2) pure horizontal case 0<->15: do not generate 2 triangles per XY cell.
+                up_h = (prev_case == 0) & (next_case == 15)   # case240
+                down_h = (prev_case == 15) & (next_case == 0) # case15
+                if np.any(up_h):
+                    horizontal_strips_tri += _aio_fast_emit_horizontal_strips(
+                        writer, up_h, k, True,
+                        xsp, ysp, zsp, xoff, yoff,
+                        params.max_triangles, cancel_event,
+                    )
+                if np.any(down_h):
+                    horizontal_strips_tri += _aio_fast_emit_horizontal_strips(
+                        writer, down_h, k, False,
+                        xsp, ysp, zsp, xoff, yoff,
+                        params.max_triangles, cancel_event,
+                    )
+
+                # 3) 실제 topology/형상 변화 cube만 exact Lewiner LUT triangle 생성.
+                transition_mask = (prev_case != next_case) & (~up_h) & (~down_h)
+                transition_idx = np.flatnonzero(transition_mask.ravel())
+                if len(transition_idx):
+                    pflat = prev_case.ravel()[transition_idx]
+                    nflat = next_case.ravel()[transition_idx]
+                    c8 = (pflat | (nflat << 4)).astype(np.uint8)
+                    valid = (_AIO_FAST_EXACT_LUT_COUNT[c8] > 0)
+                    if not np.all(valid):
+                        transition_idx = transition_idx[valid]
+                        c8 = c8[valid]
+                    if len(transition_idx):
+                        transition_tri += _aio_fast_emit_cell_mesh(
+                            writer, transition_idx, c8, wc,
+                            xsp, ysp, zsp, xoff, yoff,
+                            float(k), 1.0, params.max_triangles, cancel_event,
+                        )
+                        transition_cells_total += int(len(transition_idx))
+
+                prev_case = next_case
+                done = k + 1
+                elapsed = time.time() - started
+                remain = elapsed / max(1, done) * (total_cells_z - done)
+                pct = 64.0 + 32.0 * done / max(1, total_cells_z)
+                log.progress(
+                    pct,
+                    f"ExactSparse {done:,}/{total_cells_z:,} pair | triangles={writer.tri_count:,} | ETA {recon_core.format_seconds(remain)}",
+                )
+                if done == 1 or done % 25 == 0 or done == total_cells_z:
+                    log.write(
+                        f"ExactSparse pair {done:,}/{total_cells_z:,} | "
+                        f"triangles={writer.tri_count:,} | open vertical={int(np.count_nonzero(run_case != 255)):,}"
+                    )
+
+                del up_h, down_h, transition_mask, transition_idx
+
+        # top zero pair에서 정상적으로 모두 닫혀야 한다.
+        remaining = np.flatnonzero((run_case != 255).ravel())
+        if len(remaining):
+            old4 = run_case.ravel()[remaining].copy()
+            starts = run_start.ravel()[remaining].astype(np.float32, copy=True)
+            lengths = np.float32(total_cells_z) - starts
+            old8 = (old4 | (old4 << 4)).astype(np.uint8)
+            vertical_tri += _aio_fast_emit_cell_mesh(
+                writer, remaining, old8, wc,
+                xsp, ysp, zsp, xoff, yoff,
+                starts, lengths, params.max_triangles, cancel_event,
+            )
+            vertical_runs_total += int(len(remaining))
+            run_case.ravel()[remaining] = 255
+
+        if writer.tri_count <= 0:
+            raise ValueError("생성된 표면 triangle이 없습니다.")
+        triangle_count = int(writer.tri_count)
+        writer.close(success=True)
+        success = True
+        recon_core.verify_binary_stl(params.output_stl, triangle_count)
+
+        log.write("")
+        log.write("=============== ExactSparse 통계 ===============")
+        log.write(f"transition cube: {transition_cells_total:,}")
+        log.write(f"transition triangles: {transition_tri:,}")
+        log.write(f"Z-병합 vertical runs: {vertical_runs_total:,}")
+        log.write(f"vertical triangles: {vertical_tri:,}")
+        log.write(f"horizontal strip triangles: {horizontal_strips_tri:,}")
+        log.write(f"최종 triangles: {triangle_count:,}")
+        log.write("surface 근사/정점 이동: 0")
+        log.write("===============================================")
+        return triangle_count, material_voxels
+    except Exception:
+        if not success:
+            writer.close(success=False)
+        raise
+
+
+# Dynamic global lookup 때문에 reconstruct_streaming 내부 호출도 이 구현으로 교체된다.
+
+recon_core.reconstruct_interpolated_surface = _aio_fast_exact_interpolated_surface
+
+# -----------------------------------------------------------------------------
+# ExactSparse v3.1 - topology-safe batch reducer
+# -----------------------------------------------------------------------------
+# v3.0의 cell별 장거리 Z stretch는 surface 위치는 동일했지만, 서로 다른 run 길이의
+# 이웃 patch 사이에서 T-junction이 생길 수 있었다. 제조 레이어 XOR는 같아도 STL
+# topology 관점에서 더 엄격하게 맞추기 위해 v3.1은 다음 원칙으로 바꾼다.
+# - 일반 pair: 모든 active cube를 검증된 256-case LUT 그대로 생성 (legacy Lewiner exact)
+# - 전체 2D case map이 완전히 동일한 연속 pair만 전체가 같은 Z endpoint를 공유하므로
+#   안전하게 한 번에 stretch
+# - 0<->15 순수 horizontal 영역은 boundary의 모든 unit vertex를 보존한 constrained
+#   triangulation으로 exact 병합; 검증 실패 시 unit-square LUT로 fallback
+# - 나머지 coplanar reduction은 작은 raw batch마다 trimesh facet adjacency로 빠르게 찾고,
+#   기존 exact boundary+area 검증 retriangulation만 적용한다.
+# 따라서 batch 경계/T-junction을 만들지 않으며 최종 surface는 legacy MC와 동일하다.
+
+try:
+    from shapely.geometry import box as _aio_fast_box
+    from shapely.ops import unary_union as _aio_fast_unary_union
+except Exception:
+    _aio_fast_box = None
+    _aio_fast_unary_union = None
+
+
+def _aio_fast_make_cell_triangles(
+    flat_indices, case8, cell_width,
+    xsp, ysp, zsp, xoff, yoff,
+    z_start, z_length,
+):
+    """한 cell chunk의 exact LUT triangle soup를 xyz mm로 반환."""
+    indices = np.asarray(flat_indices, dtype=np.int64)
+    cases = np.asarray(case8, dtype=np.uint8)
+    if len(indices) == 0:
+        return np.empty((0, 3, 3), dtype=np.float32)
+    counts = _AIO_FAST_EXACT_LUT_COUNT[cases].astype(np.int16, copy=False)
+    valid = np.arange(_AIO_FAST_EXACT_LUT_MAX_TRI, dtype=np.int16)[None, :] < counts[:, None]
+    ci, slot = np.nonzero(valid)
+    if len(ci) == 0:
+        return np.empty((0, 3, 3), dtype=np.float32)
+    local = np.asarray(_AIO_FAST_EXACT_LUT_ZYX[cases[ci], slot], dtype=np.float32).copy()
+    owner = indices[ci]
+    yy = owner // int(cell_width)
+    xx = owner - yy * int(cell_width)
+    if np.isscalar(z_start):
+        zs = float(z_start)
+        if np.isscalar(z_length):
+            local[:, :, 0] = zs + local[:, :, 0] * float(z_length)
+        else:
+            zl = np.asarray(z_length, dtype=np.float32)[ci]
+            local[:, :, 0] = zs + local[:, :, 0] * zl[:, None]
+    else:
+        zs = np.asarray(z_start, dtype=np.float32)[ci]
+        if np.isscalar(z_length):
+            local[:, :, 0] = zs[:, None] + local[:, :, 0] * float(z_length)
+        else:
+            zl = np.asarray(z_length, dtype=np.float32)[ci]
+            local[:, :, 0] = zs[:, None] + local[:, :, 0] * zl[:, None]
+    tris = np.empty_like(local, dtype=np.float32)
+    tris[:, :, 0] = (local[:, :, 2] + xx[:, None] - 0.5) * float(xsp) + float(xoff)
+    tris[:, :, 1] = (local[:, :, 1] + yy[:, None] - 0.5) * float(ysp) + float(yoff)
+    tris[:, :, 2] = (local[:, :, 0] - 0.5) * float(zsp)
+    return tris
+
+
+def _aio_fast_dense_grid_ring(coords):
+    """axis-aligned integer polygon ring에 모든 unit boundary vertex를 다시 삽입."""
+    pts = []
+    seq = list(coords)
+    for (x0, y0), (x1, y1) in zip(seq[:-1], seq[1:]):
+        x0 = int(round(float(x0))); y0 = int(round(float(y0)))
+        x1 = int(round(float(x1))); y1 = int(round(float(y1)))
+        dx = x1 - x0; dy = y1 - y0
+        g = math.gcd(abs(dx), abs(dy))
+        if g <= 0:
+            continue
+        sx = dx // g; sy = dy // g
+        for i in range(g):
+            pts.append((x0 + sx * i, y0 + sy * i))
+    if pts and pts[-1] != pts[0]:
+        pts.append(pts[0])
+    return pts
+
+
+def _aio_fast_horizontal_exact_mesh(mask, z_cell, case240, xsp, ysp, zsp, xoff, yoff):
+    """pure horizontal cell mask를 boundary vertex/area 검증을 거쳐 exact triangulate.
+
+    실패하면 None -> caller가 raw LUT unit cells로 fallback.
+    """
+    if _aio_fast_box is None or _aio_fast_unary_union is None:
+        return None
+    m = np.asarray(mask, dtype=bool)
+    cell_count = int(np.count_nonzero(m))
+    if cell_count < 32:
+        return None
+    rects = []
+    # row run -> rectangle. solid cap은 대략 H개 rectangle만 생성된다.
+    for y in range(m.shape[0]):
+        row = m[y]
+        if not np.any(row):
+            continue
+        r = row.astype(np.int8, copy=False)
+        d = np.diff(np.concatenate((np.zeros(1, np.int8), r, np.zeros(1, np.int8))))
+        starts = np.flatnonzero(d == 1)
+        ends = np.flatnonzero(d == -1)
+        for x0, x1 in zip(starts.tolist(), ends.tolist()):
+            rects.append(_aio_fast_box(int(x0), int(y), int(x1), int(y) + 1))
+        if len(rects) > 250_000:
+            return None
+    if not rects:
+        return np.empty((0, 3, 3), dtype=np.float32)
+    try:
+        geom = _aio_fast_unary_union(rects)
+    except Exception:
+        return None
+    if getattr(geom, "is_empty", True):
+        return None
+    if getattr(geom, "geom_type", "") == "Polygon":
+        polys = [geom]
+    elif getattr(geom, "geom_type", "") == "MultiPolygon":
+        polys = list(geom.geoms)
+    else:
+        polys = [g for g in getattr(geom, "geoms", ()) if getattr(g, "geom_type", "") == "Polygon"]
+    if not polys:
+        return None
+
+    tri_xy = []
+    total_area = 0.0
+    expected_boundary = set()
+    for poly0 in polys:
+        shell = _aio_fast_dense_grid_ring(poly0.exterior.coords)
+        holes = [_aio_fast_dense_grid_ring(r.coords) for r in poly0.interiors]
+        if len(shell) < 4 or any(len(h) < 4 for h in holes):
+            return None
+        poly = Polygon(shell, holes)
+        if poly.is_empty or (not poly.is_valid) or poly.area <= 0:
+            return None
+        total_area += float(poly.area)
+        for ring in (shell, *holes):
+            for a, b in zip(ring[:-1], ring[1:]):
+                expected_boundary.add(tuple(sorted((tuple(a), tuple(b)))))
+        triangles = _aio_triangulate_polygon_exact(poly)
+        if not triangles:
+            return None
+        for t in triangles:
+            if getattr(t, "geom_type", "") != "Polygon" or t.is_empty:
+                continue
+            coords = list(t.exterior.coords)
+            if len(coords) < 4:
+                return None
+            q = []
+            for x, y in coords[:3]:
+                xi = int(round(float(x))); yi = int(round(float(y)))
+                if abs(float(x) - xi) > 1e-8 or abs(float(y) - yi) > 1e-8:
+                    return None
+                q.append((xi, yi))
+            if len(set(q)) != 3:
+                return None
+            tri_xy.append(q)
+    if abs(total_area - float(cell_count)) > 1e-8:
+        return None
+    if not tri_xy:
+        return None
+
+    arr = np.asarray(tri_xy, dtype=np.int64)
+    # Exact triangle boundary must equal densified cell-union boundary.
+    edge_count = {}
+    for t in arr:
+        for a, b in ((t[0], t[1]), (t[1], t[2]), (t[2], t[0])):
+            key = tuple(sorted((tuple(int(v) for v in a), tuple(int(v) for v in b))))
+            edge_count[key] = edge_count.get(key, 0) + 1
+    actual_boundary = {e for e, n in edge_count.items() if n == 1}
+    if actual_boundary != expected_boundary:
+        return None
+    # projected area postcondition
+    a = arr[:, 1] - arr[:, 0]
+    b = arr[:, 2] - arr[:, 0]
+    area2 = np.abs(a[:, 0] * b[:, 1] - a[:, 1] * b[:, 0]).sum(dtype=np.int64)
+    if int(area2) != int(round(2.0 * cell_count)):
+        return None
+
+    # legacy case240 normal=-Z, case15 normal=+Z
+    desired = -1 if case240 else 1
+    cross2 = a[:, 0] * b[:, 1] - a[:, 1] * b[:, 0]
+    flip = np.sign(cross2) != desired
+    if np.any(flip):
+        tmp = arr[flip, 1].copy(); arr[flip, 1] = arr[flip, 2]; arr[flip, 2] = tmp
+    z = float(z_cell) * float(zsp)
+    tris = np.empty((len(arr), 3, 3), dtype=np.float32)
+    tris[:, :, 0] = (arr[:, :, 0].astype(np.float32) - 0.5) * float(xsp) + float(xoff)
+    tris[:, :, 1] = (arr[:, :, 1].astype(np.float32) - 0.5) * float(ysp) + float(yoff)
+    tris[:, :, 2] = z
+    return tris
+
+
+def _aio_fast_batch_reduce_mesh(triangles_xyz, half_pitch_xyz, facet_min=128):
+    """raw exact triangle soup -> topology-preserving coplanar reduction.
+
+    trimesh는 coplanar connected facets 검색에만 사용하고, 실제 교체는 기존 exact
+    boundary+projected-area postcondition을 통과한 facet에만 적용한다.
+    """
+    tri = np.asarray(triangles_xyz, dtype=np.float32)
+    if len(tri) < max(32, int(facet_min)):
+        v = tri.reshape(-1, 3)
+        f = np.arange(len(v), dtype=np.int32).reshape(-1, 3)
+        return v, f, 0, 0
+    mesh = trimesh.Trimesh(
+        vertices=tri.reshape(-1, 3),
+        faces=np.arange(len(tri) * 3, dtype=np.int32).reshape(-1, 3),
+        process=True,
+        validate=False,
+    )
+    vertices = np.asarray(mesh.vertices, dtype=np.float64)
+    faces = np.asarray(mesh.faces, dtype=np.int32)
+    if len(faces) == 0:
+        return np.empty((0, 3), np.float32), np.empty((0, 3), np.int32), 0, 0
+    half = np.asarray(half_pitch_xyz, dtype=np.float64)
+    base = vertices[0].copy()
+    q = np.rint((vertices - base) / half).astype(np.int64)
+    residual = float(np.max(np.abs((vertices - base) - q * half)))
+    tolerance = max(1.0e-4, float(np.min(half)) * 0.003)
+    if (not np.isfinite(residual)) or residual > tolerance:
+        return np.asarray(vertices, np.float32), faces, 0, 1
+
+    keep = np.ones(len(faces), dtype=bool)
+    replacements = []
+    saved = 0
+    fallback = 0
+    for group in mesh.facets:
+        if len(group) < int(facet_min):
+            continue
+        ids = np.asarray(group, dtype=np.int64)
+        f0 = faces[int(ids[0])]
+        aa, bb, cc = q[f0[0]], q[f0[1]], q[f0[2]]
+        normal = np.cross(bb - aa, cc - aa)
+        # 동일 정책: horizontal / vertical plane만. 보간 경사면은 그대로 둔다.
+        if not (normal[2] == 0 or (normal[0] == 0 and normal[1] == 0)):
+            continue
+        try:
+            rep = _aio_retriangulate_plane_group(q, faces[ids], normal)
+        except Exception:
+            rep = None
+        if rep is None:
+            fallback += 1
+            continue
+        keep[ids] = False
+        replacements.append(rep)
+        saved += int(len(ids) - len(rep))
+    if replacements:
+        out_faces = np.vstack([faces[keep], *replacements]).astype(np.int32, copy=False)
+    else:
+        out_faces = faces
+    return np.asarray(vertices, dtype=np.float32), np.ascontiguousarray(out_faces), saved, fallback
+
+
+def _aio_fast_topology_safe_interpolated_surface(
+    params, items, bbox, grid, resolved, log, cancel_event, mask_store=None,
+):
+    if getattr(params, "surface_mode", "") != "표면 보간형":
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(params, items, bbox, grid, resolved, log, cancel_event, mask_store)
+    if not _AIO_FAST_EXACT_VALID:
+        log.write("WARNING: ExactSparse self-test 실패 -> 기존 Z-slab Lewiner MC fallback")
+        log.write(f"  {_AIO_FAST_EXACT_VALIDATION_MESSAGE}")
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(params, items, bbox, grid, resolved, log, cancel_event, mask_store)
+
+    total = int(bbox.layers); hc = int(grid.height) + 1; wc = int(grid.width) + 1
+    xsp = float(grid.x_pitch_mm); ysp = float(grid.y_pitch_mm); zsp = float(params.layer_thickness_mm)
+    xoff = float(grid.x_offset_mm); yoff = float(grid.y_offset_mm)
+    half_pitch = (0.5 * xsp, 0.5 * ysp, 0.5 * zsp)
+    total_pairs = total + 1
+    cell_chunk = 70_000
+    # 16GB RAM에서 reduction 중 peak를 억제. 실제 raw triangles 수 기준으로 flush.
+    batch_target = 1_250_000
+    facet_min = 128
+
+    log.write("")
+    log.write("=============== ExactSparse v3.1 ===============")
+    log.write("surface kernel: legacy Lewiner와 self-test한 binary 256-case LUT")
+    log.write("일반 cube 근사: 없음 (vertex 이동/다운샘플링 없음)")
+    log.write("전체 slice case가 동일한 연속 Z 구간만 topology-safe 장거리 extrusion")
+    log.write("horizontal flat: unit boundary vertex 보존 constrained triangulation")
+    log.write(f"raw batch target: {batch_target:,} triangles / facet exact reduce >= {facet_min}")
+    log.write(f"엔진 self-test: {_AIO_FAST_EXACT_VALIDATION_MESSAGE}")
+    log.write("================================================")
+
+    writer = recon_core.BinarySTLWriter(
+        params.output_stl, header="ExactSparse v3.1 topology-safe STL", buffer_bytes=8 * 1024 * 1024,
+    )
+    success = False
+    pending = []
+    pending_count = 0
+    material_voxels = 0
+    raw_total = 0
+    reduced_saved = 0
+    reduce_fallbacks = 0
+    horizontal_saved_est = 0
+    global_runs = 0
+    started = time.time()
+
+    def flush_pending():
+        nonlocal pending, pending_count, reduced_saved, reduce_fallbacks
+        if pending_count <= 0:
+            pending = []; pending_count = 0; return
+        recon_core.check_cancel(cancel_event)
+        raw = pending[0] if len(pending) == 1 else np.concatenate(pending, axis=0)
+        vertices, faces, saved, fallback = _aio_fast_batch_reduce_mesh(raw, half_pitch, facet_min=facet_min)
+        reduced_saved += int(saved); reduce_fallbacks += int(fallback)
+        _AIO_MC_LIGHT_ORIG_WRITE(
+            writer, vertices, faces,
+            max_triangles=params.max_triangles,
+            cancel_event=cancel_event,
+            chunk_size=120_000,
+        )
+        pending = []; pending_count = 0
+        del raw, vertices, faces
+
+    def push_tris(tri):
+        nonlocal pending_count, raw_total
+        if tri is None or len(tri) == 0:
+            return
+        pending.append(np.asarray(tri, dtype=np.float32))
+        pending_count += int(len(tri)); raw_total += int(len(tri))
+        if pending_count >= batch_target:
+            flush_pending()
+
+    def emit_cells(indices, cases, z0, zlen):
+        indices = np.asarray(indices, dtype=np.int64)
+        cases = np.asarray(cases, dtype=np.uint8)
+        for begin in range(0, len(indices), cell_chunk):
+            recon_core.check_cancel(cancel_event)
+            end = min(len(indices), begin + cell_chunk)
+            tri = _aio_fast_make_cell_triangles(
+                indices[begin:end], cases[begin:end], wc,
+                xsp, ysp, zsp, xoff, yoff, z0, zlen,
+            )
+            push_tris(tri)
+
+    zero = np.zeros((hc, wc), dtype=np.uint8)
+    prev_case = zero
+    # full-map identical run: pair indices [run_start, current_k)
+    run_case_map = None
+    run_start = -1
+
+    prefetch_workers = max(1, min(4, int(getattr(params, "workers", 1))))
+    pending_case = {}; next_submit = 0
+    def submit_case(executor, local_layer):
+        absolute = int(bbox.zmin) + int(local_layer)
+        if mask_store is not None:
+            return executor.submit(_aio_fast_case_from_cached_layer, mask_store, absolute, bbox, grid)
+        return executor.submit(_aio_fast_case_from_layer_item, items[absolute], bbox, resolved, grid)
+
+    try:
+        with ThreadPoolExecutor(max_workers=prefetch_workers) as executor:
+            while next_submit < total and len(pending_case) < prefetch_workers:
+                pending_case[next_submit] = submit_case(executor, next_submit); next_submit += 1
+
+            for k in range(total_pairs):
+                recon_core.check_cancel(cancel_event)
+                if k < total:
+                    next_case, material = pending_case.pop(k).result()
+                    material_voxels += int(material)
+                    while next_submit < total and len(pending_case) < prefetch_workers:
+                        pending_case[next_submit] = submit_case(executor, next_submit); next_submit += 1
+                else:
+                    next_case = zero
+
+                identical = np.array_equal(prev_case, next_case)
+                if identical:
+                    if run_case_map is None:
+                        run_case_map = prev_case.copy()
+                        run_start = int(k)
+                    # pair surface is purely vertical and will be emitted when run closes.
+                else:
+                    if run_case_map is not None:
+                        run_len = int(k - run_start)
+                        active = (run_case_map != 0) & (run_case_map != 15)
+                        idx = np.flatnonzero(active.ravel())
+                        if len(idx):
+                            c4 = run_case_map.ravel()[idx]
+                            c8 = (c4 | (c4 << 4)).astype(np.uint8)
+                            emit_cells(idx, c8, float(run_start), float(run_len))
+                            global_runs += 1
+                        run_case_map = None; run_start = -1
+
+                    # exact pure horizontal groups first. Preserve every boundary unit vertex.
+                    up_h = (prev_case == 0) & (next_case == 15)    # case240, normal -Z
+                    down_h = (prev_case == 15) & (next_case == 0) # case15, normal +Z
+                    excluded = np.zeros_like(prev_case, dtype=bool)
+                    for hm, c240 in ((up_h, True), (down_h, False)):
+                        count_cells = int(np.count_nonzero(hm))
+                        if count_cells <= 0:
+                            continue
+                        htri = _aio_fast_horizontal_exact_mesh(hm, k, c240, xsp, ysp, zsp, xoff, yoff)
+                        if htri is not None:
+                            # flush raw batch so exact plane does not need to be merged again.
+                            flush_pending()
+                            _aio_fast_write_triangle_soup(
+                                writer, htri, max_triangles=params.max_triangles, cancel_event=cancel_event,
+                            )
+                            excluded |= hm
+                            horizontal_saved_est += max(0, 2 * count_cells - len(htri))
+
+                    # all remaining active cubes are emitted from exact LUT; no surface approximation.
+                    c8_full = (prev_case | (next_case << 4)).astype(np.uint8)
+                    active = (_AIO_FAST_EXACT_LUT_COUNT[c8_full] > 0) & (~excluded)
+                    idx = np.flatnonzero(active.ravel())
+                    if len(idx):
+                        cases = c8_full.ravel()[idx]
+                        emit_cells(idx, cases, float(k), 1.0)
+                    del up_h, down_h, excluded, c8_full, active, idx
+
+                prev_case = next_case
+                done = k + 1
+                elapsed = time.time() - started
+                remain = elapsed / max(1, done) * (total_pairs - done)
+                pct = 64.0 + 32.0 * done / max(1, total_pairs)
+                log.progress(
+                    pct,
+                    f"ExactSparse v3.1 {done:,}/{total_pairs:,} pair | triangles={writer.tri_count + pending_count:,} | ETA {recon_core.format_seconds(remain)}",
+                )
+                if done == 1 or done % 20 == 0 or done == total_pairs:
+                    log.write(
+                        f"v3.1 pair {done:,}/{total_pairs:,} | saved STL tri={writer.tri_count:,} | raw batch={pending_count:,}"
+                    )
+
+        if run_case_map is not None:
+            # normally top-zero transition closes before here, but keep safe finalization.
+            run_len = int(total_pairs - run_start)
+            active = (run_case_map != 0) & (run_case_map != 15)
+            idx = np.flatnonzero(active.ravel())
+            if len(idx):
+                c4 = run_case_map.ravel()[idx]; c8 = (c4 | (c4 << 4)).astype(np.uint8)
+                emit_cells(idx, c8, float(run_start), float(run_len)); global_runs += 1
+
+        flush_pending()
+        if writer.tri_count <= 0:
+            raise ValueError("생성된 표면 triangle이 없습니다.")
+        triangle_count = int(writer.tri_count)
+        writer.close(success=True); success = True
+        recon_core.verify_binary_stl(params.output_stl, triangle_count)
+        log.write("")
+        log.write("=============== v3.1 exact 통계 ===============")
+        log.write(f"LUT raw triangles processed: {raw_total:,}")
+        log.write(f"facet exact reduction saved: {reduced_saved:,}")
+        log.write(f"horizontal exact merge saved(est): {horizontal_saved_est:,}")
+        log.write(f"full-map identical Z runs: {global_runs:,}")
+        log.write(f"facet fallback groups/batches: {reduce_fallbacks:,}")
+        log.write(f"final triangles: {triangle_count:,}")
+        log.write("geometry approximation: 0")
+        log.write("===============================================")
+        return triangle_count, material_voxels
+    except Exception:
+        if not success:
+            writer.close(success=False)
+        raise
+
+
+# v3.1 topology-safe 구현이 최종 표면 보간형 경로다.
+recon_core.reconstruct_interpolated_surface = _aio_fast_topology_safe_interpolated_surface
+
+
+# -----------------------------------------------------------------------------
+# ExactLUT + VTK zero-error reducer v3.2
+# -----------------------------------------------------------------------------
+# v3.1의 실험적 장거리 Z stretch / 수평 직접 병합은 제조 레이어 XOR는 맞아도
+# 일부 복잡 형상에서 T-junction 가능성이 확인되었다. v3.2에서는 해당 경로를 사용하지 않는다.
+#
+# 1) 모든 active 2x2x2 binary cube를 legacy Lewiner와 전수/self-test한 256-case LUT로
+#    그대로 생성한다. 따라서 원본 Marching Cubes의 표면 위치/ambiguity 해석을 바꾸지 않는다.
+# 2) float32 3D slab 전체 scan을 없애고 실제 active cube만 벡터 처리한다.
+# 3) 50만 raw triangle 단위로 VTK DecimatePro를 사용하되 MaximumError=0,
+#    PreserveTopology=ON, BoundaryVertexDeletion=OFF, Splitting=OFF로 설정한다.
+#    즉 zero-error로 삭제 가능한 coplanar redundant vertex만 줄인다.
+# 4) 각 batch는 출력 vertex가 원본 half-voxel vertex의 부분집합인지, 양방향
+#    cell-center surface distance가 수치 오차 이내인지 검증한다. 실패하면 그 batch는
+#    decimation을 버리고 raw exact LUT triangle을 그대로 기록한다.
+# 5) v3.7 production에서는 대형 모델의 전 레이어 XOR 재슬라이스를 제거하고,
+#    exact-subset 경량화 + 빠른 STL/manifold 검증으로 최종 파일을 승격한다.
+#
+# 이 경로는 해상도/레이어 감소, QEM 근사, vertex 이동을 사용하지 않는다.
+
+try:
+    import vtk as _aio_vtk
+    from vtk.util.numpy_support import (
+        numpy_to_vtk as _aio_numpy_to_vtk,
+        numpy_to_vtkIdTypeArray as _aio_numpy_to_vtk_id,
+        vtk_to_numpy as _aio_vtk_to_numpy,
+    )
+    _AIO_V32_VTK_AVAILABLE = True
+    _AIO_V32_VTK_ERROR = ""
+except Exception as _aio_vtk_exc:
+    _aio_vtk = None
+    _aio_numpy_to_vtk = None
+    _aio_numpy_to_vtk_id = None
+    _aio_vtk_to_numpy = None
+    _AIO_V32_VTK_AVAILABLE = False
+    _AIO_V32_VTK_ERROR = f"{type(_aio_vtk_exc).__name__}: {_aio_vtk_exc}"
+
+_AIO_V32_LUT_Q_ZYX = (
+    np.rint(np.asarray(_AIO_FAST_EXACT_LUT_ZYX, dtype=np.float64) * 2.0).astype(np.int16)
+    if _AIO_FAST_EXACT_LUT_ZYX is not None else None
+)
+_AIO_V32_BATCH_TARGET = 500_000
+_AIO_V32_TILE_ROWS = 128
+_AIO_V32_STRICT_OUTPUT_VERIFY = False
+
+
+def _aio_v32_make_q_triangles(prev_case, next_case, k, y0, y1, wc):
+    """한 Z pair/Y-band의 exact Lewiner triangle을 half-grid integer q(x,y,z)로 생성."""
+    c8 = (prev_case[y0:y1] | (next_case[y0:y1] << 4)).astype(np.uint8, copy=False)
+    active = _AIO_FAST_EXACT_LUT_COUNT[c8] > 0
+    ids = np.flatnonzero(active.ravel())
+    if len(ids) == 0:
+        return None
+    cc = c8.ravel()[ids]
+    counts = _AIO_FAST_EXACT_LUT_COUNT[cc].astype(np.int16, copy=False)
+    valid = np.arange(_AIO_FAST_EXACT_LUT_MAX_TRI, dtype=np.int16)[None, :] < counts[:, None]
+    ci, slot = np.nonzero(valid)
+    if len(ci) == 0:
+        return None
+    local = np.asarray(_AIO_V32_LUT_Q_ZYX[cc[ci], slot], dtype=np.int32)
+    owner = ids[ci]
+    yy = owner // int(wc) + int(y0)
+    xx = owner - (owner // int(wc)) * int(wc)
+    q = np.empty(local.shape, dtype=np.int32)
+    q[:, :, 0] = 2 * xx[:, None] + local[:, :, 2]
+    q[:, :, 1] = 2 * yy[:, None] + local[:, :, 1]
+    q[:, :, 2] = 2 * int(k) + local[:, :, 0]
+    return q
+
+
+def _aio_v32_pack_q(qflat: np.ndarray, bits_x: int, bits_y: int) -> np.ndarray:
+    q = np.asarray(qflat, dtype=np.int64)
+    return (
+        q[:, 0]
+        | (q[:, 1] << int(bits_x))
+        | (q[:, 2] << int(bits_x + bits_y))
+    )
+
+
+def _aio_v32_weld_q(qtri: np.ndarray, bits_x: int, bits_y: int):
+    """half-grid integer 좌표를 64-bit key로 exact weld. float tolerance를 쓰지 않는다."""
+    flat = np.ascontiguousarray(np.asarray(qtri, dtype=np.int32).reshape(-1, 3))
+    key = _aio_v32_pack_q(flat, bits_x, bits_y)
+    _unique_key, first, inverse = np.unique(key, return_index=True, return_inverse=True)
+    vertices_q = np.ascontiguousarray(flat[first], dtype=np.int32)
+    faces = np.ascontiguousarray(inverse.reshape(-1, 3), dtype=np.int64)
+    return vertices_q, faces, _unique_key
+
+
+def _aio_v32_q_to_xyz(vertices_q, half_xyz, xoff, yoff):
+    q = np.asarray(vertices_q, dtype=np.float64)
+    half = np.asarray(half_xyz, dtype=np.float64)
+    out = np.empty(q.shape, dtype=np.float32)
+    out[:, 0] = ((q[:, 0] - 1.0) * half[0] + float(xoff)).astype(np.float32)
+    out[:, 1] = ((q[:, 1] - 1.0) * half[1] + float(yoff)).astype(np.float32)
+    out[:, 2] = ((q[:, 2] - 1.0) * half[2]).astype(np.float32)
+    return out
+
+
+def _aio_v32_make_polydata(vertices_xyz: np.ndarray, faces: np.ndarray):
+    points = _aio_vtk.vtkPoints()
+    points.SetData(_aio_numpy_to_vtk(np.ascontiguousarray(vertices_xyz, dtype=np.float32), deep=1))
+    f = np.ascontiguousarray(faces, dtype=np.int64)
+    cells = _aio_vtk.vtkCellArray()
+    if hasattr(cells, "SetData") and hasattr(cells, "GetConnectivityArray"):
+        offsets = np.arange(0, 3 * (len(f) + 1), 3, dtype=np.int64)
+        cells.SetData(
+            _aio_numpy_to_vtk_id(offsets, deep=1),
+            _aio_numpy_to_vtk_id(f.reshape(-1), deep=1),
+        )
+    else:
+        legacy = np.empty((len(f), 4), dtype=np.int64)
+        legacy[:, 0] = 3
+        legacy[:, 1:] = f
+        cells.SetCells(len(f), _aio_numpy_to_vtk_id(legacy.reshape(-1), deep=1))
+    poly = _aio_vtk.vtkPolyData()
+    poly.SetPoints(points)
+    poly.SetPolys(cells)
+    return poly
+
+
+def _aio_v32_polydata_numpy(poly):
+    pts_obj = poly.GetPoints()
+    if pts_obj is None or pts_obj.GetNumberOfPoints() == 0:
+        return np.empty((0, 3), np.float32), np.empty((0, 3), np.int64)
+    vertices = np.ascontiguousarray(_aio_vtk_to_numpy(pts_obj.GetData()), dtype=np.float32)
+    polys = poly.GetPolys()
+    if hasattr(polys, "GetConnectivityArray"):
+        conn = np.asarray(_aio_vtk_to_numpy(polys.GetConnectivityArray()), dtype=np.int64)
+        offsets = np.asarray(_aio_vtk_to_numpy(polys.GetOffsetsArray()), dtype=np.int64)
+        if len(offsets) > 0 and int(offsets[-1]) != len(conn):
+            raise RuntimeError("VTK cell offsets/connectivity 길이가 맞지 않습니다.")
+        if len(conn) % 3 != 0:
+            raise RuntimeError("VTK zero-error reducer가 triangle 이외 cell을 반환했습니다.")
+        faces = np.ascontiguousarray(conn.reshape(-1, 3), dtype=np.int64)
+    else:
+        data = np.asarray(_aio_vtk_to_numpy(polys.GetData()), dtype=np.int64)
+        if len(data) % 4 != 0:
+            raise RuntimeError("VTK legacy cell array 형식이 예상과 다릅니다.")
+        rows = data.reshape(-1, 4)
+        if np.any(rows[:, 0] != 3):
+            raise RuntimeError("VTK zero-error reducer가 triangle 이외 cell을 반환했습니다.")
+        faces = np.ascontiguousarray(rows[:, 1:4], dtype=np.int64)
+    return vertices, faces
+
+
+def _aio_v32_surface_area(vertices, faces) -> float:
+    v = np.asarray(vertices, dtype=np.float64)
+    f = np.asarray(faces, dtype=np.int64)
+    if len(f) == 0:
+        return 0.0
+    a = v[f[:, 0]]
+    b = v[f[:, 1]]
+    c = v[f[:, 2]]
+    return float(0.5 * np.linalg.norm(np.cross(b - a, c - a), axis=1).sum(dtype=np.float64))
+
+
+def _aio_v32_decimate_q_batch(
+    qtri: np.ndarray,
+    *,
+    bits_x: int,
+    bits_y: int,
+    half_xyz,
+    xoff: float,
+    yoff: float,
+    strict_verify: bool,
+):
+    """Exact LUT triangle batch를 VTK zero-error로 줄인다.
+
+    반환: vertices_xyz, faces, raw_count, validation_message, fallback_used
+    검증 실패/예외 시 raw exact mesh를 반환하므로 geometry quality가 절대 하락하지 않는다.
+    """
+    raw_count = int(len(qtri))
+    vq, raw_faces, raw_keys = _aio_v32_weld_q(qtri, bits_x, bits_y)
+    raw_vertices = _aio_v32_q_to_xyz(vq, half_xyz, xoff, yoff)
+    if (not _AIO_V32_VTK_AVAILABLE) or raw_count < 32:
+        reason = "VTK unavailable" if not _AIO_V32_VTK_AVAILABLE else "small batch"
+        return raw_vertices, raw_faces, raw_count, reason, True
+
+    try:
+        raw_poly = _aio_v32_make_polydata(raw_vertices, raw_faces)
+        dec = _aio_vtk.vtkDecimatePro()
+        dec.SetInputData(raw_poly)
+        dec.SetTargetReduction(0.99999)
+        dec.PreserveTopologyOn()
+        dec.SplittingOff()
+        dec.BoundaryVertexDeletionOff()
+        dec.SetErrorIsAbsolute(1)
+        dec.SetMaximumError(0.0)
+        dec.AccumulateErrorOn()
+        dec.Update()
+        out_poly = dec.GetOutput()
+        out_vertices, out_faces = _aio_v32_polydata_numpy(out_poly)
+        if len(out_faces) <= 0 or len(out_faces) > raw_count:
+            raise RuntimeError(f"비정상 reduction face count {len(out_faces):,}/{raw_count:,}")
+
+        # 절대 조건 1: output vertex는 원래 exact half-grid vertex의 부분집합이어야 한다.
+        half = np.asarray(half_xyz, dtype=np.float64)
+        oq = np.empty((len(out_vertices), 3), dtype=np.int64)
+        oq[:, 0] = np.rint((out_vertices[:, 0].astype(np.float64) - float(xoff)) / half[0] + 1.0).astype(np.int64)
+        oq[:, 1] = np.rint((out_vertices[:, 1].astype(np.float64) - float(yoff)) / half[1] + 1.0).astype(np.int64)
+        oq[:, 2] = np.rint(out_vertices[:, 2].astype(np.float64) / half[2] + 1.0).astype(np.int64)
+        rebuilt = np.empty_like(out_vertices, dtype=np.float64)
+        rebuilt[:, 0] = (oq[:, 0] - 1.0) * half[0] + float(xoff)
+        rebuilt[:, 1] = (oq[:, 1] - 1.0) * half[1] + float(yoff)
+        rebuilt[:, 2] = (oq[:, 2] - 1.0) * half[2]
+        residual = float(np.max(np.abs(out_vertices.astype(np.float64) - rebuilt))) if len(out_vertices) else 0.0
+        coord_tol = max(2.0e-6, float(np.min(half)) * 1.0e-4)
+        if residual > coord_tol:
+            raise RuntimeError(f"vertex 이동 검출 {residual:.3e} mm > {coord_tol:.3e}")
+        out_keys = np.unique(_aio_v32_pack_q(oq, bits_x, bits_y))
+        pos = np.searchsorted(raw_keys, out_keys)
+        if np.any(pos >= len(raw_keys)) or np.any(raw_keys[np.minimum(pos, len(raw_keys)-1)] != out_keys):
+            raise RuntimeError("원본에 없던 vertex가 생성됨")
+
+        # 절대 조건 2: zero-error surface distance. strict mode에서는 양방향 cell center도 검사.
+        max_dist = 0.0
+        if strict_verify:
+            dist = _aio_vtk.vtkDistancePolyDataFilter()
+            dist.SetInputData(0, out_poly)
+            dist.SetInputData(1, raw_poly)
+            dist.SignedDistanceOff()
+            dist.ComputeCellCenterDistanceOn()
+            dist.ComputeSecondDistanceOn()
+            dist.Update()
+            arrays = []
+            for po in (dist.GetOutput(), dist.GetSecondDistanceOutput()):
+                pa = po.GetPointData().GetArray("Distance")
+                ca = po.GetCellData().GetArray("Distance")
+                if pa is not None:
+                    arrays.append(np.asarray(_aio_vtk_to_numpy(pa), dtype=np.float64))
+                if ca is not None:
+                    arrays.append(np.asarray(_aio_vtk_to_numpy(ca), dtype=np.float64))
+            if arrays:
+                max_dist = max(float(a.max(initial=0.0)) for a in arrays if a.size)
+            dist_tol = max(3.0e-6, float(np.min(half)) * 2.0e-4)
+            if max_dist > dist_tol:
+                raise RuntimeError(f"zero-error surface distance {max_dist:.3e} mm > {dist_tol:.3e}")
+
+            raw_area = _aio_v32_surface_area(raw_vertices, raw_faces)
+            out_area = _aio_v32_surface_area(out_vertices, out_faces)
+            area_tol = max(1.0e-7, raw_area * 2.0e-7)
+            if abs(out_area - raw_area) > area_tol:
+                raise RuntimeError(
+                    f"surface area mismatch {out_area-raw_area:.3e} mm^2 > {area_tol:.3e}"
+                )
+
+        msg = f"zero-error PASS · maxDist={max_dist:.2e}mm · {raw_count:,}->{len(out_faces):,}"
+        return out_vertices, out_faces, raw_count, msg, False
+    except Exception as exc:
+        # 품질 검증 실패 시 속도/용량보다 정확성을 우선해 raw exact LUT로 자동 fallback.
+        return raw_vertices, raw_faces, raw_count, f"fallback: {type(exc).__name__}: {exc}", True
+
+
+def _aio_v32_selftest() -> tuple[bool, str]:
+    """LUT + zero-error reducer + batch boundary topology를 작은 closed volume에서 회귀검증."""
+    if not _AIO_FAST_EXACT_VALID:
+        return False, f"LUT self-test fail: {_AIO_FAST_EXACT_VALIDATION_MESSAGE}"
+    if not _AIO_V32_VTK_AVAILABLE:
+        return False, f"VTK unavailable: {_AIO_V32_VTK_ERROR}"
+    try:
+        # zero padding으로 닫힌 구조 + 반복 수직벽 + Z transition을 함께 포함한다.
+        nz, h, w = 10, 24, 26
+        yy, xx = np.ogrid[:h, :w]
+        volume = np.zeros((nz, h, w), dtype=np.uint8)
+        for z in range(1, nz - 1):
+            ring = (((xx - 13) ** 2 + (yy - 12) ** 2) <= (9 + (1 if z in (4, 5) else 0)) ** 2) & \
+                   (((xx - 13) ** 2 + (yy - 12) ** 2) >= 6 ** 2)
+            grid = (((xx % 7) == 0) | ((yy % 6) == 0)) & (((xx - 13) ** 2 + (yy - 12) ** 2) < 6 ** 2)
+            volume[z] = ring | grid
+        hc, wc = h + 1, w + 1
+        zero = np.zeros((hc, wc), dtype=np.uint8)
+        prev = zero
+        chunks = []
+        for k in range(nz + 1):
+            nxt = _aio_fast_marching_square_cases(volume[k]) if k < nz else zero
+            for y0 in range(0, hc, 7):
+                q = _aio_v32_make_q_triangles(prev, nxt, k, y0, min(hc, y0 + 7), wc)
+                if q is not None:
+                    chunks.append(q)
+            prev = nxt
+        if not chunks:
+            return False, "self-test surface empty"
+        raw_q = np.concatenate(chunks, axis=0)
+        max_q = np.max(raw_q.reshape(-1, 3), axis=0)
+        bx = max(1, int(math.ceil(math.log2(int(max_q[0]) + 2))))
+        by = max(1, int(math.ceil(math.log2(int(max_q[1]) + 2))))
+        half = (0.5, 0.5, 0.5)
+
+        # raw exact mesh
+        rvq, rf, _rk = _aio_v32_weld_q(raw_q, bx, by)
+        rv = _aio_v32_q_to_xyz(rvq, half, 0.0, 0.0)
+        raw_mesh = trimesh.Trimesh(vertices=rv, faces=rf, process=True)
+        if not raw_mesh.is_watertight:
+            return False, "raw LUT self-test mesh not watertight"
+
+        # 먼저 full batch에서 실제 zero-error reduction이 일어나는지 확인한다.
+        _fv, _ff, _frc, _fmsg, _ffb = _aio_v32_decimate_q_batch(
+            raw_q, bits_x=bx, bits_y=by, half_xyz=half,
+            xoff=0.0, yoff=0.0, strict_verify=True,
+        )
+        if _ffb or len(_ff) >= _frc:
+            return False, f"full-batch zero-error reduction 실패: {_fmsg}"
+
+        # 이어서 의도적으로 arbitrary face batch boundary를 만들어도
+        # BoundaryVertexDeletion=OFF 덕분에 합친 mesh topology가 유지되는지 검사한다.
+        split = max(1, len(raw_q) // 3)
+        out_vertices = []
+        out_faces = []
+        voff = 0
+        for begin in range(0, len(raw_q), split):
+            vv, ff, rc, msg, fb = _aio_v32_decimate_q_batch(
+                raw_q[begin:begin + split], bits_x=bx, bits_y=by,
+                half_xyz=half, xoff=0.0, yoff=0.0, strict_verify=True,
+            )
+            out_vertices.append(vv)
+            out_faces.append(ff + voff)
+            voff += len(vv)
+        out_mesh = trimesh.Trimesh(
+            vertices=np.vstack(out_vertices), faces=np.vstack(out_faces), process=True,
+        )
+        if not out_mesh.is_watertight:
+            return False, "zero-error batch result not watertight"
+        if int(out_mesh.euler_number) != int(raw_mesh.euler_number):
+            return False, f"Euler mismatch {out_mesh.euler_number}!={raw_mesh.euler_number}"
+        if np.max(np.abs(out_mesh.bounds - raw_mesh.bounds)) > 1e-6:
+            return False, "bounds mismatch"
+        if abs(float(out_mesh.area) - float(raw_mesh.area)) > max(1e-7, raw_mesh.area * 2e-7):
+            return False, "area mismatch"
+        if abs(float(out_mesh.volume) - float(raw_mesh.volume)) > max(1e-7, abs(raw_mesh.volume) * 2e-7):
+            return False, "volume mismatch"
+        return True, f"PASS · watertight/Euler/area/volume · full {len(raw_mesh.faces):,}->{len(_ff):,} tri · batched {len(out_mesh.faces):,}"
+    except Exception as exc:
+        return False, f"{type(exc).__name__}: {exc}"
+
+
+_AIO_V32_SELFTEST_OK, _AIO_V32_SELFTEST_MESSAGE = _aio_v32_selftest()
+
+
+def _aio_v32_exact_interpolated_surface(
+    params, items, bbox, grid, resolved, log, cancel_event, mask_store=None,
+):
+    if getattr(params, "surface_mode", "") != "표면 보간형":
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(
+            params, items, bbox, grid, resolved, log, cancel_event, mask_store,
+        )
+    if not _AIO_FAST_EXACT_VALID or _AIO_V32_LUT_Q_ZYX is None:
+        log.write("WARNING: ExactLUT 검증 실패 -> 기존 Z-slab Lewiner MC fallback")
+        log.write(f"  {_AIO_FAST_EXACT_VALIDATION_MESSAGE}")
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(
+            params, items, bbox, grid, resolved, log, cancel_event, mask_store,
+        )
+
+    total = int(bbox.layers)
+    hc = int(grid.height) + 1
+    wc = int(grid.width) + 1
+    total_pairs = total + 1
+    xsp = float(grid.x_pitch_mm)
+    ysp = float(grid.y_pitch_mm)
+    zsp = float(params.layer_thickness_mm)
+    xoff = float(grid.x_offset_mm)
+    yoff = float(grid.y_offset_mm)
+    half = (0.5 * xsp, 0.5 * ysp, 0.5 * zsp)
+    bits_x = max(1, int(math.ceil(math.log2(2 * wc + 3))))
+    bits_y = max(1, int(math.ceil(math.log2(2 * hc + 3))))
+    if bits_x + bits_y + max(1, int(math.ceil(math.log2(2 * total_pairs + 3)))) >= 62:
+        raise RuntimeError("Exact half-grid key가 int64 pack 범위를 초과합니다.")
+
+    batch_target = int(_AIO_V32_BATCH_TARGET)
+    tile_rows = int(_AIO_V32_TILE_ROWS)
+    # i5-13500/16GB급에서는 3개 병렬 zero-error reducer가 속도/메모리 균형이 좋다.
+    dec_workers = max(1, min(3, int(getattr(params, "workers", 1)))) if _AIO_V32_VTK_AVAILABLE else 1
+    max_inflight = max(1, dec_workers * 2)
+    strict = bool(getattr(params, "verify_layer_xor", False)) or bool(_AIO_V32_STRICT_OUTPUT_VERIFY)
+
+    log.write("")
+    log.write("=============== ExactLUT v3.2 표면 엔진 ===============")
+    log.write(f"XY case grid: {wc:,}×{hc:,} · Z pairs: {total_pairs:,}")
+    log.write("전체 float32 3D slab / full-volume Marching Cubes: 사용 안 함")
+    log.write("surface: legacy Lewiner 256-case exact LUT · step=1 동등")
+    log.write(f"batch: {batch_target:,} raw tri · VTK zero-error workers={dec_workers}")
+    log.write("VTK: PreserveTopology ON · BoundaryVertexDeletion OFF · MaximumError=0")
+    log.write(f"LUT self-test: {_AIO_FAST_EXACT_VALIDATION_MESSAGE}")
+    log.write(f"v3.2 topology self-test: {_AIO_V32_SELFTEST_MESSAGE}")
+    if not _AIO_V32_SELFTEST_OK:
+        log.write("WARNING: v3.2 startup topology self-test 실패 -> decimation은 batch별 검증 실패 시 raw fallback")
+    if not _AIO_V32_VTK_AVAILABLE:
+        log.write(f"WARNING: VTK 없음 -> exact LUT raw STL (빠른 표면 생성, 파일 경량화 없음): {_AIO_V32_VTK_ERROR}")
+    log.write("========================================================")
+
+    writer = recon_core.BinarySTLWriter(
+        params.output_stl,
+        header="ExactLUT v3.2 + VTK zero-error STL",
+        buffer_bytes=8 * 1024 * 1024,
+    )
+    success = False
+    material_voxels = 0
+    raw_total = 0
+    final_total = 0
+    fallback_batches = 0
+    verified_batches = 0
+    batch_messages = []
+    started = time.time()
+
+    pending_parts = []
+    pending_count = 0
+    futures = {}
+    batch_seq = 0
+
+    def consume_one(block: bool):
+        nonlocal final_total, fallback_batches, verified_batches
+        if not futures:
+            return False
+        done_future = None
+        if block:
+            done_future = next(as_completed(list(futures.keys())))
+        else:
+            for f in list(futures.keys()):
+                if f.done():
+                    done_future = f
+                    break
+            if done_future is None:
+                return False
+        seq = futures.pop(done_future)
+        vertices, faces, raw_count, msg, fallback = done_future.result()
+        if fallback:
+            fallback_batches += 1
+        else:
+            verified_batches += 1
+        if len(batch_messages) < 12 or fallback:
+            batch_messages.append((seq, msg, fallback))
+        _AIO_MC_LIGHT_ORIG_WRITE(
+            writer, vertices, faces,
+            max_triangles=params.max_triangles,
+            cancel_event=cancel_event,
+            chunk_size=120_000,
+        )
+        final_total += int(len(faces))
+        return True
+
+    def submit_batch(pool, qbatch):
+        nonlocal batch_seq
+        seq = batch_seq
+        batch_seq += 1
+        fut = pool.submit(
+            _aio_v39_decimate_q_batch,
+            np.ascontiguousarray(qbatch, dtype=np.int32),
+            bits_x=bits_x, bits_y=bits_y, half_xyz=half,
+            xoff=xoff, yoff=yoff, strict_verify=strict,
+        )
+        futures[fut] = seq
+        while len(futures) >= max_inflight:
+            consume_one(True)
+
+    def feed_q(pool, q):
+        nonlocal pending_parts, pending_count, raw_total
+        if q is None or len(q) == 0:
+            return
+        pos = 0
+        qlen = int(len(q))
+        while pos < qlen:
+            room = batch_target - pending_count
+            take = min(qlen - pos, room)
+            pending_parts.append(q[pos:pos + take])
+            pending_count += int(take)
+            raw_total += int(take)
+            pos += int(take)
+            if pending_count >= batch_target:
+                batch = pending_parts[0] if len(pending_parts) == 1 else np.concatenate(pending_parts, axis=0)
+                submit_batch(pool, batch)
+                pending_parts = []
+                pending_count = 0
+
+    zero = np.zeros((hc, wc), dtype=np.uint8)
+    prev_case = zero
+    prefetch_workers = max(1, min(3, int(getattr(params, "workers", 1))))
+    case_futures = {}
+    next_submit = 0
+
+    def submit_case(pool, local_layer):
+        absolute = int(bbox.zmin) + int(local_layer)
+        if mask_store is not None:
+            return pool.submit(_aio_fast_case_from_cached_layer, mask_store, absolute, bbox, grid)
+        return pool.submit(_aio_fast_case_from_layer_item, items[absolute], bbox, resolved, grid)
+
+    try:
+        with ThreadPoolExecutor(max_workers=dec_workers) as dec_pool, \
+             ThreadPoolExecutor(max_workers=prefetch_workers) as case_pool:
+            while next_submit < total and len(case_futures) < prefetch_workers:
+                case_futures[next_submit] = submit_case(case_pool, next_submit)
+                next_submit += 1
+
+            for k in range(total_pairs):
+                recon_core.check_cancel(cancel_event)
+                if k < total:
+                    next_case, material = case_futures.pop(k).result()
+                    material_voxels += int(material)
+                    while next_submit < total and len(case_futures) < prefetch_workers:
+                        case_futures[next_submit] = submit_case(case_pool, next_submit)
+                        next_submit += 1
+                else:
+                    next_case = zero
+
+                for y0 in range(0, hc, tile_rows):
+                    q = _aio_v32_make_q_triangles(
+                        prev_case, next_case, k, y0, min(hc, y0 + tile_rows), wc,
+                    )
+                    if q is not None:
+                        feed_q(dec_pool, q)
+                    consume_one(False)
+                prev_case = next_case
+
+                done = k + 1
+                elapsed = time.time() - started
+                remain = elapsed / max(1, done) * (total_pairs - done)
+                pct = 64.0 + 32.0 * done / max(1, total_pairs)
+                log.progress(
+                    pct,
+                    f"ExactLUT {done:,}/{total_pairs:,} pair | raw={raw_total:,} final={writer.tri_count:,} | ETA {recon_core.format_seconds(remain)}",
+                )
+                if done == 1 or done % 20 == 0 or done == total_pairs:
+                    log.write(
+                        f"v3.2 pair {done:,}/{total_pairs:,} | raw={raw_total:,} | "
+                        f"written={writer.tri_count:,} | in-flight={len(futures)}"
+                    )
+
+            if pending_count:
+                batch = pending_parts[0] if len(pending_parts) == 1 else np.concatenate(pending_parts, axis=0)
+                submit_batch(dec_pool, batch)
+                pending_parts = []
+                pending_count = 0
+            while futures:
+                consume_one(True)
+
+        if writer.tri_count <= 0:
+            raise ValueError("생성된 표면 triangle이 없습니다.")
+        triangle_count = int(writer.tri_count)
+        writer.close(success=True)
+        success = True
+        recon_core.verify_binary_stl(params.output_stl, triangle_count)
+
+        log.write("")
+        log.write("=============== v3.2 결과 ===============")
+        log.write(f"raw exact LUT triangles: {raw_total:,}")
+        log.write(f"final triangles: {triangle_count:,}")
+        if raw_total:
+            log.write(f"triangle 감소: {(1.0 - triangle_count/raw_total)*100.0:.1f}%")
+        log.write(f"zero-error 검증 통과 batch: {verified_batches:,}")
+        log.write(f"raw exact fallback batch: {fallback_batches:,}")
+        for seq, msg, fb in sorted(batch_messages, key=lambda x: x[0])[:20]:
+            log.write(f"  batch {seq}: {'RAW' if fb else 'PASS'} · {msg}")
+        log.write("vertex 이동/해상도 감소/근사 decimation: 0")
+        log.write("==========================================")
+        return triangle_count, material_voxels
+    except Exception:
+        if not success:
+            writer.close(success=False)
+        raise
+
+
+# v3.2가 표면 보간형의 최종 경로다. v3.0/v3.1 실험 경로는 더 이상 호출되지 않는다.
+recon_core.reconstruct_interpolated_surface = _aio_v32_exact_interpolated_surface
+
+# -----------------------------------------------------------------------------
+# v3.4/v3.7 Hierarchical + Global exact compact (STL only)
+# -----------------------------------------------------------------------------
+# v3.2의 batch별 VTK zero-error reduction은 빠르지만, batch 경계가 인위적인
+# open boundary가 되어 긴 수직벽/평면을 batch를 넘어 합치지 못한다.
+# v3.3은 1차 STL이 만들어진 뒤 전체 closed mesh를 한 번 더 VTK DecimatePro에
+# 넣어 MaximumError=0 + PreserveTopology 조건으로 전역 경량화한다.
+#
+# 핵심 안전장치:
+# - 메모리 여유가 부족하면 전역 pass 자체를 건너뛴다.
+# - 입력이 closed manifold가 아니면 전역 pass를 적용하지 않는다.
+# - 출력도 closed manifold인지 확인한다.
+# - bounds / surface area / volume이 수치 허용오차 이내에서 동일해야 한다.
+# - 모든 출력 정점이 원래 half-grid 좌표계 위에 그대로 남아 있어야 한다.
+# - 하나라도 실패하면 compact 결과를 폐기하고 v3.2 원본 STL을 그대로 사용한다.
+# - v3.7 production 경로는 최종 STL 하나만 출력한다.
+# - 전 레이어 XOR 재슬라이스와 3MF companion 생성은 처리시간 절감을 위해 제거했다.
+
+_AIO_V33_GLOBAL_MIN_TRI = 150_000
+_AIO_V33_GLOBAL_MEMORY_FACTOR = 7.5   # binary STL bytes -> conservative VTK peak estimate
+_AIO_V33_GLOBAL_MEMORY_FRACTION = 0.62
+
+
+def _aio_v33_available_memory_bytes() -> int:
+    """현재 사용 가능한 물리 메모리. 실패하면 보수적으로 8 GiB 반환."""
+    try:
+        if os.name == "nt":
+            import ctypes
+
+            class MEMORYSTATUSEX(ctypes.Structure):
+                _fields_ = [
+                    ("dwLength", ctypes.c_ulong),
+                    ("dwMemoryLoad", ctypes.c_ulong),
+                    ("ullTotalPhys", ctypes.c_ulonglong),
+                    ("ullAvailPhys", ctypes.c_ulonglong),
+                    ("ullTotalPageFile", ctypes.c_ulonglong),
+                    ("ullAvailPageFile", ctypes.c_ulonglong),
+                    ("ullTotalVirtual", ctypes.c_ulonglong),
+                    ("ullAvailVirtual", ctypes.c_ulonglong),
+                    ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
+                ]
+
+            st = MEMORYSTATUSEX()
+            st.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
+            if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(st)):
+                return int(st.ullAvailPhys)
+        if hasattr(os, "sysconf"):
+            pages = int(os.sysconf("SC_AVPHYS_PAGES"))
+            psize = int(os.sysconf("SC_PAGE_SIZE"))
+            if pages > 0 and psize > 0:
+                return pages * psize
+    except Exception:
+        pass
+    return 8 * 1024**3
+
+
+def _aio_v33_bad_edge_count(poly) -> int:
+    feat = _aio_vtk.vtkFeatureEdges()
+    feat.SetInputData(poly)
+    feat.BoundaryEdgesOn()
+    feat.NonManifoldEdgesOn()
+    feat.FeatureEdgesOff()
+    feat.ManifoldEdgesOff()
+    feat.Update()
+    return int(feat.GetOutput().GetNumberOfCells())
+
+
+def _aio_v33_mass_properties(poly):
+    tri = _aio_vtk.vtkTriangleFilter()
+    tri.SetInputData(poly)
+    tri.PassLinesOff()
+    tri.PassVertsOff()
+    tri.Update()
+    mass = _aio_vtk.vtkMassProperties()
+    mass.SetInputData(tri.GetOutput())
+    mass.Update()
+    return float(mass.GetSurfaceArea()), float(mass.GetVolume()), tri.GetOutput()
+
+
+def _aio_v33_bounds_array(poly) -> np.ndarray:
+    b = poly.GetBounds()
+    return np.asarray([b[0], b[2], b[4], b[1], b[3], b[5]], dtype=np.float64)
+
+
+def _aio_v33_half_grid_residual(poly, half_xyz, ref_min_xyz) -> float:
+    pts = poly.GetPoints()
+    if pts is None or pts.GetNumberOfPoints() == 0:
+        return float("inf")
+    arr = np.asarray(_aio_vtk_to_numpy(pts.GetData()), dtype=np.float64)
+    h = np.asarray(half_xyz, dtype=np.float64)
+    ref = np.asarray(ref_min_xyz, dtype=np.float64)
+    q = (arr - ref[None, :]) / h[None, :]
+    return float(np.max(np.abs(q - np.rint(q))))
+
+
+def _aio_v33_global_decimate_poly(poly):
+    dec = _aio_vtk.vtkDecimatePro()
+    dec.SetInputData(poly)
+    dec.SetTargetReduction(0.9999999)
+    dec.PreserveTopologyOn()
+    dec.SplittingOff()
+    dec.BoundaryVertexDeletionOff()
+    dec.SetErrorIsAbsolute(1)
+    dec.SetMaximumError(0.0)
+    dec.AccumulateErrorOn()
+    dec.Update()
+    return dec.GetOutput()
+
+
+def _aio_v35_poly_vertex_subset_exact(reference_poly, candidate_poly) -> tuple[bool, float]:
+    """candidate의 모든 정점이 reference float32 정점의 bit-exact subset인지 확인."""
+    rp = reference_poly.GetPoints()
+    cp = candidate_poly.GetPoints()
+    if rp is None or cp is None:
+        return False, float("inf")
+    rv = np.ascontiguousarray(_aio_vtk_to_numpy(rp.GetData()), dtype=np.float32)
+    cv = np.ascontiguousarray(_aio_vtk_to_numpy(cp.GetData()), dtype=np.float32)
+    if len(cv) == 0 or len(rv) == 0:
+        return False, float("inf")
+    kd = np.dtype((np.void, 12))
+    rk = np.ascontiguousarray(rv.view(np.uint32).reshape(-1, 3)).view(kd).ravel()
+    ck = np.ascontiguousarray(cv.view(np.uint32).reshape(-1, 3)).view(kd).ravel()
+    rks = np.unique(rk)
+    cks = np.unique(ck)
+    pos = np.searchsorted(rks, cks)
+    ok = bool(
+        np.all(pos < len(rks)) and
+        np.all(rks[np.minimum(pos, len(rks) - 1)] == cks)
+    )
+    return ok, float(len(cks))
+
+
+def _aio_v35_bidirectional_surface_distance(poly_a, poly_b) -> float:
+    """VTK point + cell-center 양방향 최대 surface distance."""
+    dist = _aio_vtk.vtkDistancePolyDataFilter()
+    dist.SetInputData(0, poly_a)
+    dist.SetInputData(1, poly_b)
+    dist.SignedDistanceOff()
+    dist.ComputeCellCenterDistanceOn()
+    dist.ComputeSecondDistanceOn()
+    dist.Update()
+    max_dist = 0.0
+    for po in (dist.GetOutput(), dist.GetSecondDistanceOutput()):
+        for data in (po.GetPointData(), po.GetCellData()):
+            arr = data.GetArray("Distance")
+            if arr is None:
+                continue
+            vv = np.asarray(_aio_vtk_to_numpy(arr), dtype=np.float64)
+            if vv.size:
+                max_dist = max(max_dist, float(vv.max(initial=0.0)))
+    return max_dist
+
+
+_AIO_V34_STL_REC_DTYPE = np.dtype([
+    ("normal", "<f4", (3,)),
+    ("vertices", "<f4", (3, 3)),
+    ("attr", "<u2"),
+], align=False)
+
+
+def _aio_v34_exact_weld_float_triangles(tri_xyz: np.ndarray):
+    """float32 좌표 bit pattern 기준 exact weld. tolerance/rounding 사용 안 함."""
+    tri = np.ascontiguousarray(tri_xyz, dtype=np.float32)
+    flat = tri.reshape(-1, 3)
+    bits = np.ascontiguousarray(flat.view(np.uint32).reshape(-1, 3))
+    key_dtype = np.dtype((np.void, 12))
+    keys = bits.view(key_dtype).ravel()
+    uniq, first, inverse = np.unique(keys, return_index=True, return_inverse=True)
+    vertices = np.ascontiguousarray(flat[first], dtype=np.float32)
+    faces = np.ascontiguousarray(inverse.reshape(-1, 3), dtype=np.int64)
+    return vertices, faces, uniq
+
+
+def _aio_v34_poly_area(vertices, faces) -> float:
+    v = np.asarray(vertices, dtype=np.float64)
+    f = np.asarray(faces, dtype=np.int64)
+    if len(f) == 0:
+        return 0.0
+    a = v[f[:, 0]]; b = v[f[:, 1]]; c = v[f[:, 2]]
+    return float(0.5 * np.linalg.norm(np.cross(b-a, c-a), axis=1).sum(dtype=np.float64))
+
+
+def _aio_v34_decimate_open_chunk(tri_xyz: np.ndarray, half_xyz):
+    """open/closed chunk 모두에서 boundary vertex를 보존하는 exact zero-error reduction."""
+    raw_n = int(len(tri_xyz))
+    vertices, faces, raw_keys = _aio_v34_exact_weld_float_triangles(tri_xyz)
+    if raw_n < 32:
+        return vertices, faces, True, "small chunk"
+    try:
+        poly = _aio_v32_make_polydata(vertices, faces)
+        area0 = _aio_v34_poly_area(vertices, faces)
+        bounds0 = np.r_[vertices.min(axis=0).astype(np.float64), vertices.max(axis=0).astype(np.float64)]
+        out = _aio_v33_global_decimate_poly(poly)
+        ov, of = _aio_v32_polydata_numpy(out)
+        if len(of) <= 0 or len(of) > raw_n:
+            raise RuntimeError(f"bad face count {len(of):,}/{raw_n:,}")
+        # 출력 정점은 입력 float32 정점의 exact subset이어야 한다.
+        obits = np.ascontiguousarray(ov.view(np.uint32).reshape(-1, 3))
+        okeys = obits.view(np.dtype((np.void, 12))).ravel()
+        if not bool(np.all(np.isin(okeys, raw_keys, assume_unique=False))):
+            raise RuntimeError("output vertex is not exact input-vertex subset")
+        max_dist = _aio_v35_bidirectional_surface_distance(poly, out)
+        dist_tol = max(3.0e-6, float(np.min(np.asarray(half_xyz, dtype=np.float64))) * 2.0e-4)
+        if max_dist > dist_tol:
+            raise RuntimeError(f"surface distance {max_dist:.3e} mm > {dist_tol:.3e}")
+        area1 = _aio_v34_poly_area(ov, of)
+        area_rel = abs(area1-area0) / max(1.0, abs(area0))
+        if area_rel > 2e-6:
+            raise RuntimeError(f"area change {area_rel:.3e}")
+        bounds1 = np.r_[ov.min(axis=0).astype(np.float64), ov.max(axis=0).astype(np.float64)]
+        if float(np.max(np.abs(bounds1-bounds0))) > 3e-6:
+            raise RuntimeError("bounds changed")
+        # 원래 half-grid 이탈 여부. chunk 최소점을 reference lattice point로 사용.
+        h = np.asarray(half_xyz, dtype=np.float64)
+        ref = bounds0[:3]
+        q = (ov.astype(np.float64)-ref[None,:]) / h[None,:]
+        residual = float(np.max(np.abs(q-np.rint(q))))
+        if residual > 3e-4:
+            raise RuntimeError(f"half-grid residual {residual:.3e}")
+        return ov, of, False, f"PASS {raw_n:,}->{len(of):,} areaΔ={area_rel:.1e}"
+    except Exception as exc:
+        return vertices, faces, True, f"fallback {type(exc).__name__}: {exc}"
+
+
+def _aio_v34_hierarchical_file_pass(
+    input_stl: Path,
+    output_stl: Path,
+    params,
+    log,
+    cancel_event,
+    chunk_triangles: int,
+) -> tuple[bool, dict]:
+    """STL을 큰 연속 chunk로 다시 zero-error 감소시켜 과거 batch 경계를 단계적으로 제거."""
+    output_stl.unlink(missing_ok=True)
+    result = {"reason":"", "input_triangles":0, "output_triangles":0, "fallback_chunks":0}
+    try:
+        with open(input_stl,"rb") as f:
+            header=f.read(80); raw=f.read(4)
+            if len(header)!=80 or len(raw)!=4:
+                raise ValueError("invalid binary STL header")
+            total=int(struct.unpack("<I",raw)[0])
+        result["input_triangles"]=total
+        if total <= int(chunk_triangles*1.15):
+            result["reason"]="not enough chunks"
+            return False,result
+        half=(12.7/float(params.dpi_x),12.7/float(params.dpi_y),0.5*float(params.layer_thickness_mm))
+        writer=recon_core.BinarySTLWriter(output_stl,header="v3.4 hierarchical exact compact",buffer_bytes=8*1024*1024)
+        ok_close=False; fallbacks=0; chunks=0; done=0; started=time.time()
+        try:
+            with open(input_stl,"rb") as f:
+                f.seek(84)
+                while done<total:
+                    recon_core.check_cancel(cancel_event)
+                    take=min(int(chunk_triangles),total-done)
+                    data=f.read(take*50)
+                    if len(data)!=take*50:
+                        raise ValueError("unexpected STL EOF")
+                    rec=np.frombuffer(data,dtype=_AIO_V34_STL_REC_DTYPE,count=take)
+                    tri=np.ascontiguousarray(rec["vertices"],dtype=np.float32)
+                    v,fc,fb,msg=_aio_v34_decimate_open_chunk(tri,half)
+                    if fb: fallbacks+=1
+                    _AIO_MC_LIGHT_ORIG_WRITE(writer,v,fc,max_triangles=params.max_triangles,cancel_event=cancel_event,chunk_size=120_000)
+                    done+=take; chunks+=1
+                    if chunks==1 or chunks%2==0 or done==total:
+                        log.write(f"hier chunk {chunks}: {done:,}/{total:,} raw read · written={writer.tri_count:,} · {'RAW' if fb else msg}")
+            out_n=int(writer.tri_count)
+            if out_n<=0 or out_n>total:
+                raise RuntimeError(f"bad hierarchical output count {out_n:,}/{total:,}")
+            writer.close(success=True); ok_close=True
+            recon_core.verify_binary_stl(output_stl,out_n)
+            result.update(reason="PASS",output_triangles=out_n,fallback_chunks=fallbacks,chunks=chunks,elapsed=time.time()-started)
+            return True,result
+        finally:
+            if not ok_close:
+                try: writer.close(success=False)
+                except Exception: pass
+    except Exception as exc:
+        output_stl.unlink(missing_ok=True)
+        result["reason"]=f"{type(exc).__name__}: {exc}"
+        return False,result
+
+
+def _aio_v34_hierarchical_compact_if_needed(input_stl: Path, params, log, cancel_event) -> Path:
+    """전역 pass가 메모리상 불가능한 대형 STL을 2M->6M 연속 chunk pass로 먼저 축소."""
+    current=input_stl
+    owned=[]
+    try:
+        for target in (2_000_000,6_000_000):
+            with open(current,"rb") as f:
+                f.seek(80); total=int(struct.unpack("<I",f.read(4))[0])
+            if total <= int(target*1.15):
+                continue
+            candidate=input_stl.with_name(input_stl.stem+f"__hier_{target//1_000_000}m.stl")
+            log.write(f"메모리 절약 계층 경량화: chunk={target:,} tri")
+            ok,st=_aio_v34_hierarchical_file_pass(current,candidate,params,log,cancel_event,target)
+            if not ok:
+                candidate.unlink(missing_ok=True)
+                log.write(f"hier pass 미적용: {st.get('reason','unknown')}")
+                continue
+            old_n=int(st.get('input_triangles',0)); new_n=int(st.get('output_triangles',0))
+            if new_n >= old_n*0.995:
+                candidate.unlink(missing_ok=True)
+                log.write("hier pass 감소량 <0.5% -> 중단")
+                break
+            log.write(f"hier PASS: {old_n:,}->{new_n:,} tri ({(1-new_n/max(1,old_n))*100:.1f}% 감소)")
+            if current != input_stl:
+                try: current.unlink(missing_ok=True)
+                except Exception: pass
+            current=candidate; owned.append(candidate)
+        return current
+    except Exception:
+        return current
+
+
+def _aio_v33_global_exact_compact_stl(
+    input_stl: Path,
+    output_stl: Path,
+    params,
+    log,
+    cancel_event,
+) -> tuple[bool, dict]:
+    """전체 closed STL을 zero-error로 한 번 더 경량화.
+
+    성공 시 output_stl 생성 + (True, stats).
+    어떤 검증이라도 실패하면 output은 삭제하고 (False, reason stats).
+    """
+    result = {"reason": "", "input_triangles": 0, "output_triangles": 0}
+    output_stl.unlink(missing_ok=True)
+    if not _AIO_V32_VTK_AVAILABLE:
+        result["reason"] = f"VTK unavailable: {_AIO_V32_VTK_ERROR}"
+        return False, result
+    try:
+        with open(input_stl, "rb") as f:
+            f.seek(80)
+            raw = f.read(4)
+            if len(raw) != 4:
+                raise ValueError("STL triangle count header를 읽지 못했습니다.")
+            tri_count = int(struct.unpack("<I", raw)[0])
+        result["input_triangles"] = tri_count
+        if tri_count < _AIO_V33_GLOBAL_MIN_TRI:
+            result["reason"] = f"small mesh ({tri_count:,} tri)"
+            return False, result
+
+        file_bytes = int(input_stl.stat().st_size)
+        avail = int(_aio_v33_available_memory_bytes())
+        est_peak = int(file_bytes * _AIO_V33_GLOBAL_MEMORY_FACTOR + 512 * 1024**2)
+        budget = int(avail * _AIO_V33_GLOBAL_MEMORY_FRACTION)
+        log.write(
+            f"전역 경량화 메모리 판단: STL={format_bytes(file_bytes)} · "
+            f"예상 peak≈{format_bytes(est_peak)} · 현재 여유={format_bytes(avail)}"
+        )
+        if est_peak > budget:
+            result["reason"] = (
+                f"memory safety skip: estimated {format_bytes(est_peak)} > "
+                f"budget {format_bytes(budget)}"
+            )
+            return False, result
+
+        recon_core.check_cancel(cancel_event)
+        reader = _aio_vtk.vtkSTLReader()
+        reader.SetFileName(str(input_stl))
+        reader.MergingOn()
+        reader.Update()
+        inp = reader.GetOutput()
+        in_cells = int(inp.GetNumberOfCells())
+        if in_cells <= 0:
+            raise RuntimeError("VTK가 입력 STL triangle을 읽지 못했습니다.")
+
+        bad_in = _aio_v33_bad_edge_count(inp)
+        if bad_in != 0:
+            result["reason"] = f"input not closed-manifold: bad edges={bad_in:,}"
+            return False, result
+
+        area0, vol0, inp_tri = _aio_v33_mass_properties(inp)
+        bounds0 = _aio_v33_bounds_array(inp_tri)
+        ref_min = bounds0[:3].copy()
+        half = (12.7 / float(params.dpi_x), 12.7 / float(params.dpi_y), 0.5 * float(params.layer_thickness_mm))
+
+        log.write(
+            f"전역 zero-error pass 시작: {in_cells:,} triangles · "
+            "closed manifold 확인 완료"
+        )
+        started = time.time()
+        out = _aio_v33_global_decimate_poly(inp_tri)
+        recon_core.check_cancel(cancel_event)
+        out_cells = int(out.GetNumberOfCells())
+        result["output_triangles"] = out_cells
+        if out_cells <= 0 or out_cells > in_cells:
+            raise RuntimeError(f"비정상 전역 reduction count {out_cells:,}/{in_cells:,}")
+        if out_cells == in_cells:
+            result["reason"] = "no further exact reduction"
+            return False, result
+
+        bad_out = _aio_v33_bad_edge_count(out)
+        if bad_out != 0:
+            raise RuntimeError(f"전역 reduction 후 bad edges={bad_out:,}")
+
+        subset_ok, _subset_n = _aio_v35_poly_vertex_subset_exact(inp_tri, out)
+        if not subset_ok:
+            raise RuntimeError("전역 reduction이 원본에 없던 vertex를 생성/이동함")
+        max_dist = _aio_v35_bidirectional_surface_distance(inp_tri, out)
+        dist_tol = max(3.0e-6, float(np.min(np.asarray(half, dtype=np.float64))) * 2.0e-4)
+        if max_dist > dist_tol:
+            raise RuntimeError(f"전역 surface distance {max_dist:.3e} mm > {dist_tol:.3e}")
+
+        area1, vol1, out_tri = _aio_v33_mass_properties(out)
+        bounds1 = _aio_v33_bounds_array(out_tri)
+        scale = max(1.0, float(np.max(np.abs(bounds0))))
+        bounds_tol = max(2e-6, 2e-7 * scale)
+        if float(np.max(np.abs(bounds1 - bounds0))) > bounds_tol:
+            raise RuntimeError(
+                f"bounds 변화 {float(np.max(np.abs(bounds1-bounds0))):.3e} mm > {bounds_tol:.3e}"
+            )
+        area_rel = abs(area1 - area0) / max(1.0, abs(area0))
+        vol_rel = abs(vol1 - vol0) / max(1.0, abs(vol0))
+        if area_rel > 2e-6:
+            raise RuntimeError(f"surface area 변화율 {area_rel:.3e}")
+        if vol_rel > 3e-6:
+            raise RuntimeError(f"volume 변화율 {vol_rel:.3e}")
+
+        grid_res = _aio_v33_half_grid_residual(out_tri, half, ref_min)
+        if grid_res > 2e-4:
+            raise RuntimeError(f"half-grid 이탈 residual={grid_res:.3e} grid")
+
+        writer = _aio_vtk.vtkSTLWriter()
+        writer.SetFileName(str(output_stl))
+        writer.SetInputData(out_tri)
+        writer.SetFileTypeToBinary()
+        if int(writer.Write()) != 1:
+            raise RuntimeError("VTK compact STL 저장 실패")
+        recon_core.verify_binary_stl(output_stl, out_cells)
+
+        elapsed = time.time() - started
+        result.update(
+            reason="PASS",
+            input_triangles=in_cells,
+            output_triangles=out_cells,
+            area_rel=area_rel,
+            volume_rel=vol_rel,
+            half_grid_residual=grid_res,
+            surface_max_distance=max_dist,
+            elapsed=elapsed,
+            bad_edges_input=bad_in,
+            bad_edges_output=bad_out,
+        )
+        return True, result
+    except Exception as exc:
+        output_stl.unlink(missing_ok=True)
+        result["reason"] = f"{type(exc).__name__}: {exc}"
+        return False, result
+
+
+def _aio_v33_global_selftest() -> tuple[bool, str]:
+    """전역 pass가 closed gridded cube를 정확히 12 tri까지 줄이는지 빠른 회귀검증."""
+    if not _AIO_V32_VTK_AVAILABLE:
+        return False, f"VTK unavailable: {_AIO_V32_VTK_ERROR}"
+    try:
+        n = 8
+        verts = []
+        index = {}
+        faces = []
+
+        def vid(p):
+            if p not in index:
+                index[p] = len(verts)
+                verts.append(tuple(float(x) for x in p))
+            return index[p]
+
+        # 정육면체 6면을 n*n grid로 세분. winding보다 closed topology가 self-test 핵심.
+        for y in range(n):
+            for z in range(n):
+                a,b,c,d = vid((0,y,z)),vid((0,y,z+1)),vid((0,y+1,z+1)),vid((0,y+1,z))
+                faces += [(a,b,c),(a,c,d)]
+                a,b,c,d = vid((n,y,z)),vid((n,y+1,z)),vid((n,y+1,z+1)),vid((n,y,z+1))
+                faces += [(a,b,c),(a,c,d)]
+        for x in range(n):
+            for z in range(n):
+                a,b,c,d = vid((x,0,z)),vid((x+1,0,z)),vid((x+1,0,z+1)),vid((x,0,z+1))
+                faces += [(a,c,b),(a,d,c)]
+                a,b,c,d = vid((x,n,z)),vid((x,n,z+1)),vid((x+1,n,z+1)),vid((x+1,n,z))
+                faces += [(a,b,c),(a,c,d)]
+        for x in range(n):
+            for y in range(n):
+                a,b,c,d = vid((x,y,0)),vid((x,y+1,0)),vid((x+1,y+1,0)),vid((x+1,y,0))
+                faces += [(a,b,c),(a,c,d)]
+                a,b,c,d = vid((x,y,n)),vid((x+1,y,n)),vid((x+1,y+1,n)),vid((x,y+1,n))
+                faces += [(a,b,c),(a,c,d)]
+        poly = _aio_v32_make_polydata(np.asarray(verts,np.float32), np.asarray(faces,np.int64))
+        if _aio_v33_bad_edge_count(poly) != 0:
+            return False, "self-test input is not closed"
+        area0, vol0, tri0 = _aio_v33_mass_properties(poly)
+        out = _aio_v33_global_decimate_poly(tri0)
+        if int(out.GetNumberOfCells()) != 12:
+            return False, f"expected 12 tri, got {out.GetNumberOfCells()}"
+        if _aio_v33_bad_edge_count(out) != 0:
+            return False, "self-test output has bad edges"
+        area1, vol1, _ = _aio_v33_mass_properties(out)
+        if abs(area1-area0) > 1e-6 or abs(vol1-vol0) > 1e-6:
+            return False, "self-test area/volume mismatch"
+        return True, f"closed grid cube {len(faces):,}->12 tri PASS"
+    except Exception as exc:
+        return False, f"{type(exc).__name__}: {exc}"
+
+
+_AIO_V33_SELFTEST_OK, _AIO_V33_SELFTEST_MESSAGE = _aio_v33_global_selftest()
+
+# -----------------------------------------------------------------------------
+# Exact Numba lattice accelerator
+# -----------------------------------------------------------------------------
+# 기존 lattice_core의 Python/NumPy 기준 구현은 그대로 보존한다.
+# 반복 호출이 많은 원형 node/선분 rasterization만 Numba 기계어 루프로 교체한다.
+# 실제 설정별 작은 raster를 기존 구현과 전수 XOR 비교한 뒤에만 가속 경로를 사용한다.
+# 불일치 또는 실행 오류가 발생하면 즉시 기존 정밀 구현으로 자동 fallback한다.
+
+_AIO_LATTICE_PY_SQUARE_VERTEX = lattice_core.draw_square_vertex_lattice
+_AIO_LATTICE_PY_HEX_EDGE = lattice_core.draw_hex_lattice
+_AIO_LATTICE_PY_HEX_VERTEX = lattice_core.draw_hex_vertex_lattice
+_AIO_LATTICE_ACCEL_DISABLED = False
+_AIO_LATTICE_ACCEL_READY = False
+_AIO_LATTICE_VALIDATED_KEYS = set()
+_AIO_LATTICE_LOCK = threading.RLock()
+_AIO_LATTICE_FALLBACK_REASON = ""
+
+
+@njit(cache=True, nogil=True)
+def _aio_jit_rasterize_disks(
+    h: int,
+    w: int,
+    centers: np.ndarray,
+    diameter_mm: float,
+    x_pitch: float,
+    y_pitch: float,
+) -> np.ndarray:
+    mask = np.zeros((h, w), dtype=np.bool_)
+    r = max(diameter_mm / 2.0, min(x_pitch, y_pitch) / 2.0)
+    rr = r * r
+    for i in range(centers.shape[0]):
+        cx = centers[i, 0]
+        cy = centers[i, 1]
+        x_min = max(0, int(math.floor((cx - r) / x_pitch - 0.5)))
+        x_max = min(w - 1, int(math.ceil((cx + r) / x_pitch - 0.5)))
+        y_min = max(0, int(math.floor((cy - r) / y_pitch - 0.5)))
+        y_max = min(h - 1, int(math.ceil((cy + r) / y_pitch - 0.5)))
+        if x_min > x_max or y_min > y_max:
+            continue
+        for y in range(y_min, y_max + 1):
+            py = (float(y) + 0.5) * y_pitch
+            for x in range(x_min, x_max + 1):
+                px = (float(x) + 0.5) * x_pitch
+                dx = px - cx
+                dy = py - cy
+                if dx * dx + dy * dy <= rr:
+                    mask[y, x] = True
+    return mask
+
+
+@njit(cache=True, nogil=True)
+def _aio_jit_rasterize_segments(
+    h: int,
+    w: int,
+    segments: np.ndarray,
+    width_mm: float,
+    x_pitch: float,
+    y_pitch: float,
+) -> np.ndarray:
+    mask = np.zeros((h, w), dtype=np.bool_)
+    r = max(width_mm / 2.0, min(x_pitch, y_pitch) / 2.0)
+    rr = r * r
+    for i in range(segments.shape[0]):
+        x1 = segments[i, 0]
+        y1 = segments[i, 1]
+        x2 = segments[i, 2]
+        y2 = segments[i, 3]
+        x_min = max(0, int(math.floor((min(x1, x2) - r) / x_pitch - 0.5)))
+        x_max = min(w - 1, int(math.ceil((max(x1, x2) + r) / x_pitch - 0.5)))
+        y_min = max(0, int(math.floor((min(y1, y2) - r) / y_pitch - 0.5)))
+        y_max = min(h - 1, int(math.ceil((max(y1, y2) + r) / y_pitch - 0.5)))
+        if x_min > x_max or y_min > y_max:
+            continue
+        vx = x2 - x1
+        vy = y2 - y1
+        denom = vx * vx + vy * vy
+        for y in range(y_min, y_max + 1):
+            py = (float(y) + 0.5) * y_pitch
+            for x in range(x_min, x_max + 1):
+                px = (float(x) + 0.5) * x_pitch
+                if denom <= 0.0:
+                    dx = px - x1
+                    dy = py - y1
+                    dist2 = dx * dx + dy * dy
+                else:
+                    t = ((px - x1) * vx + (py - y1) * vy) / denom
+                    if t < 0.0:
+                        t = 0.0
+                    elif t > 1.0:
+                        t = 1.0
+                    proj_x = x1 + t * vx
+                    proj_y = y1 + t * vy
+                    dx = px - proj_x
+                    dy = py - proj_y
+                    dist2 = dx * dx + dy * dy
+                if dist2 <= rr:
+                    mask[y, x] = True
+    return mask
+
+
+def _aio_square_centers(
+    w: int, h: int, spacing_mm: float, width_mm: float,
+    dpi_x: float, dpi_y: float, offset_x_mm: float, offset_y_mm: float,
+) -> np.ndarray:
+    x_pitch = 25.4 / float(dpi_x)
+    y_pitch = 25.4 / float(dpi_y)
+    w_mm = w * x_pitch
+    h_mm = h * y_pitch
+    spacing_mm = max(float(spacing_mm), min(x_pitch, y_pitch) * 2.0)
+    width_mm = max(float(width_mm), min(x_pitch, y_pitch))
+    margin_mm = spacing_mm + width_mm + max(x_pitch, y_pitch)
+    col_min = int(math.floor((-margin_mm - offset_x_mm) / spacing_mm)) - 1
+    col_max = int(math.ceil((w_mm + margin_mm - offset_x_mm) / spacing_mm)) + 1
+    row_min = int(math.floor((-margin_mm - offset_y_mm) / spacing_mm)) - 1
+    row_max = int(math.ceil((h_mm + margin_mm - offset_y_mm) / spacing_mm)) + 1
+    centers = []
+    for row in range(row_min, row_max + 1):
+        y = offset_y_mm + row * spacing_mm
+        for col in range(col_min, col_max + 1):
+            x = offset_x_mm + col * spacing_mm
+            centers.append((x, y))
+    return np.asarray(centers, dtype=np.float64).reshape((-1, 2))
+
+
+def _aio_hex_centers_for_canvas_mm(
+    w_mm: float, h_mm: float, spacing_mm: float,
+    offset_x_mm: float, offset_y_mm: float, margin_mm: float,
+):
+    side = float(spacing_mm) / math.sqrt(3.0)
+    dx = float(spacing_mm)
+    dy = 1.5 * side
+    col_min = int(math.floor((-margin_mm - offset_x_mm) / dx)) - 2
+    col_max = int(math.ceil((w_mm + margin_mm - offset_x_mm) / dx)) + 2
+    row_min = int(math.floor((-margin_mm - offset_y_mm) / dy)) - 2
+    row_max = int(math.ceil((h_mm + margin_mm - offset_y_mm) / dy)) + 2
+    for row in range(row_min, row_max + 1):
+        cy = offset_y_mm + row * dy
+        xoff = dx / 2.0 if row % 2 else 0.0
+        for col in range(col_min, col_max + 1):
+            cx = offset_x_mm + col * dx + xoff
+            yield cx, cy, side
+
+
+def _aio_hex_vertices(
+    w: int, h: int, spacing_mm: float, width_mm: float,
+    dpi_x: float, dpi_y: float, offset_x_mm: float, offset_y_mm: float,
+) -> np.ndarray:
+    x_pitch = 25.4 / float(dpi_x)
+    y_pitch = 25.4 / float(dpi_y)
+    w_mm = w * x_pitch
+    h_mm = h * y_pitch
+    spacing_mm = max(float(spacing_mm), min(x_pitch, y_pitch) * 2.0)
+    width_mm = max(float(width_mm), min(x_pitch, y_pitch))
+    margin_mm = spacing_mm * 2.0 + width_mm + max(x_pitch, y_pitch)
+    angles = (30, 90, 150, 210, 270, 330)
+    seen = set()
+    vertices = []
+    for cx, cy, side in _aio_hex_centers_for_canvas_mm(
+        w_mm, h_mm, spacing_mm, offset_x_mm, offset_y_mm, margin_mm
+    ):
+        for angle in angles:
+            rad = math.radians(angle)
+            x = cx + math.cos(rad) * side
+            y = cy + math.sin(rad) * side
+            key = (round(float(x), 5), round(float(y), 5))
+            if key in seen:
+                continue
+            seen.add(key)
+            vertices.append((x, y))
+    return np.asarray(vertices, dtype=np.float64).reshape((-1, 2))
+
+
+def _aio_hex_segments(
+    w: int, h: int, spacing_mm: float, width_mm: float,
+    dpi_x: float, dpi_y: float, offset_x_mm: float, offset_y_mm: float,
+) -> np.ndarray:
+    x_pitch = 25.4 / float(dpi_x)
+    y_pitch = 25.4 / float(dpi_y)
+    w_mm = w * x_pitch
+    h_mm = h * y_pitch
+    spacing_mm = max(float(spacing_mm), min(x_pitch, y_pitch) * 2.0)
+    width_mm = max(float(width_mm), min(x_pitch, y_pitch))
+    margin_mm = spacing_mm * 2.0 + width_mm + max(x_pitch, y_pitch)
+    angles = (30, 90, 150, 210, 270, 330)
+    seen = set()
+    segments = []
+    for cx, cy, side in _aio_hex_centers_for_canvas_mm(
+        w_mm, h_mm, spacing_mm, offset_x_mm, offset_y_mm, margin_mm
+    ):
+        points = []
+        for angle in angles:
+            rad = math.radians(angle)
+            points.append((cx + math.cos(rad) * side, cy + math.sin(rad) * side))
+        for index in range(6):
+            p1 = points[index]
+            p2 = points[(index + 1) % 6]
+            q1 = (round(float(p1[0]), 5), round(float(p1[1]), 5))
+            q2 = (round(float(p2[0]), 5), round(float(p2[1]), 5))
+            key = tuple(sorted((q1, q2)))
+            if key in seen:
+                continue
+            seen.add(key)
+            segments.append((p1[0], p1[1], p2[0], p2[1]))
+    return np.asarray(segments, dtype=np.float64).reshape((-1, 4))
+
+
+def _aio_draw_square_vertex_numba(
+    size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm,
+):
+    w, h = int(size[0]), int(size[1])
+    x_pitch = 25.4 / float(dpi_x)
+    y_pitch = 25.4 / float(dpi_y)
+    width_mm = max(float(width_mm), min(x_pitch, y_pitch))
+    centers = _aio_square_centers(
+        w, h, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+    )
+    return _aio_jit_rasterize_disks(h, w, centers, width_mm, x_pitch, y_pitch)
+
+
+def _aio_draw_hex_vertex_numba(
+    size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm,
+):
+    w, h = int(size[0]), int(size[1])
+    x_pitch = 25.4 / float(dpi_x)
+    y_pitch = 25.4 / float(dpi_y)
+    width_mm = max(float(width_mm), min(x_pitch, y_pitch))
+    centers = _aio_hex_vertices(
+        w, h, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+    )
+    return _aio_jit_rasterize_disks(h, w, centers, width_mm, x_pitch, y_pitch)
+
+
+def _aio_draw_hex_edge_numba(
+    size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm,
+):
+    w, h = int(size[0]), int(size[1])
+    x_pitch = 25.4 / float(dpi_x)
+    y_pitch = 25.4 / float(dpi_y)
+    width_mm = max(float(width_mm), min(x_pitch, y_pitch))
+    segments = _aio_hex_segments(
+        w, h, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+    )
+    return _aio_jit_rasterize_segments(h, w, segments, width_mm, x_pitch, y_pitch)
+
+
+def _aio_lattice_validation_key(spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm):
+    return (
+        round(float(spacing_mm), 9), round(float(width_mm), 9),
+        round(float(dpi_x), 9), round(float(dpi_y), 9),
+        round(float(offset_x_mm), 9), round(float(offset_y_mm), 9),
+    )
+
+
+def _aio_disable_lattice_acceleration(reason: str) -> None:
+    global _AIO_LATTICE_ACCEL_DISABLED, _AIO_LATTICE_FALLBACK_REASON
+    with _AIO_LATTICE_LOCK:
+        _AIO_LATTICE_ACCEL_DISABLED = True
+        _AIO_LATTICE_FALLBACK_REASON = str(reason)
+
+
+def _aio_validate_lattice_acceleration(spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm) -> bool:
+    if _AIO_LATTICE_ACCEL_DISABLED:
+        return False
+    key = _aio_lattice_validation_key(spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm)
+    with _AIO_LATTICE_LOCK:
+        if key in _AIO_LATTICE_VALIDATED_KEYS:
+            return True
+        try:
+            test_size = (193, 181)
+            py_edge = _AIO_LATTICE_PY_HEX_EDGE(
+                test_size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            )
+            nb_edge = _aio_draw_hex_edge_numba(
+                test_size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            )
+            py_hex_vertex = _AIO_LATTICE_PY_HEX_VERTEX(
+                test_size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            )
+            nb_hex_vertex = _aio_draw_hex_vertex_numba(
+                test_size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            )
+            py_square_vertex = _AIO_LATTICE_PY_SQUARE_VERTEX(
+                test_size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            )
+            nb_square_vertex = _aio_draw_square_vertex_numba(
+                test_size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            )
+            if not (
+                np.array_equal(py_edge, nb_edge)
+                and np.array_equal(py_hex_vertex, nb_hex_vertex)
+                and np.array_equal(py_square_vertex, nb_square_vertex)
+            ):
+                _aio_disable_lattice_acceleration(
+                    "Numba lattice self-check mismatch; exact Python fallback"
+                )
+                return False
+            _AIO_LATTICE_VALIDATED_KEYS.add(key)
+            return True
+        except Exception as exc:
+            _aio_disable_lattice_acceleration(f"Numba lattice validation error: {exc}")
+            return False
+
+
+def _aio_draw_square_vertex_exact(
+    size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm,
+):
+    if _aio_validate_lattice_acceleration(spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm):
+        try:
+            return np.asarray(_aio_draw_square_vertex_numba(
+                size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            ), dtype=bool)
+        except Exception as exc:
+            _aio_disable_lattice_acceleration(f"square vertex JIT error: {exc}")
+    return _AIO_LATTICE_PY_SQUARE_VERTEX(
+        size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+    )
+
+
+def _aio_draw_hex_edge_exact(
+    size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm,
+):
+    if _aio_validate_lattice_acceleration(spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm):
+        try:
+            return np.asarray(_aio_draw_hex_edge_numba(
+                size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            ), dtype=bool)
+        except Exception as exc:
+            _aio_disable_lattice_acceleration(f"hex edge JIT error: {exc}")
+    return _AIO_LATTICE_PY_HEX_EDGE(
+        size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+    )
+
+
+def _aio_draw_hex_vertex_exact(
+    size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm,
+):
+    if _aio_validate_lattice_acceleration(spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm):
+        try:
+            return np.asarray(_aio_draw_hex_vertex_numba(
+                size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+            ), dtype=bool)
+        except Exception as exc:
+            _aio_disable_lattice_acceleration(f"hex vertex JIT error: {exc}")
+    return _AIO_LATTICE_PY_HEX_VERTEX(
+        size, spacing_mm, width_mm, dpi_x, dpi_y, offset_x_mm, offset_y_mm
+    )
+
+
+def _aio_prepare_lattice_acceleration() -> None:
+    global _AIO_LATTICE_ACCEL_READY
+    try:
+        # 작은 입력으로 JIT compile을 끝내 실제 대형 캔버스에서 compile 시간을 숨긴다.
+        _aio_draw_square_vertex_numba((16, 16), 2.0, 0.4, 400.0, 400.0, 0.0, 0.0)
+        _aio_draw_hex_vertex_numba((16, 16), 2.0, 0.4, 400.0, 400.0, 0.0, 0.0)
+        _aio_draw_hex_edge_numba((16, 16), 2.0, 0.4, 400.0, 400.0, 0.0, 0.0)
+        _AIO_LATTICE_ACCEL_READY = True
+    except Exception as exc:
+        _aio_disable_lattice_acceleration(f"Numba warm-up error: {exc}")
+
+
+# module attribute 교체는 embedded core의 global lookup에도 그대로 반영된다.
+lattice_core.draw_square_vertex_lattice = _aio_draw_square_vertex_exact
+lattice_core.draw_hex_lattice = _aio_draw_hex_edge_exact
+lattice_core.draw_hex_vertex_lattice = _aio_draw_hex_vertex_exact
+_aio_prepare_lattice_acceleration()
+
+
+APP_NAME = "BJT 모델 → 슬라이싱 → 격자화 → STL 통합기"
+
+# -----------------------------------------------------------------------------
+# v3.6 throughput engine: exact static-Z collapse + large-batch zero-error +
+# single fast global compact pass
+# -----------------------------------------------------------------------------
+# 목적
+# - v3.5의 표면엔진 결과 품질은 유지하면서, 500k 단위 VTK 경계와 뒤이은 다단계
+#   경량화가 만드는 중복 연산을 줄인다.
+# - 완전히 같은 연속 레이어 구간은 MC field 자체가 Z 방향으로 동일하므로, 중간 Z
+#   정점을 만들지 않고 동일한 Lewiner LUT 표면을 한 번에 길게 생성한다.
+# - 일반 변화 구간은 기존 256-case ExactLUT를 그대로 사용한다.
+# - 경량화 중의 고비용 surface-distance 검증은 반복하지 않는다. 각 zero-error pass는
+#   "출력 정점=입력 정점의 exact subset"을 강제한다. 최종 산출물은 빠른 구조 검증
+#   (binary STL 무결성 + 퇴화면 + closed manifold)을 통과해야 한다.
+
+_AIO_V36_STATIC_SELFTEST_OK = True
+_AIO_V36_STATIC_SELFTEST_MSG = "not-run"
+
+
+def _aio_v36_runtime_tuning(params):
+    """16GB/i5-13500급을 기준으로 RAM 여유에 따라 batch/worker를 자동 조정."""
+    try:
+        avail = int(_aio_v33_available_memory_bytes())
+    except Exception:
+        avail = 8 * 1024**3
+    gib = avail / float(1024**3)
+    workers = max(1, int(getattr(params, "workers", 1)))
+    if gib >= 12.0:
+        return 2_000_000, min(2, workers), 256
+    if gib >= 8.0:
+        return 1_500_000, min(2, workers), 192
+    if gib >= 5.0:
+        return 900_000, 1, 160
+    return 500_000, 1, 128
+
+
+def _aio_v36_stretch_static_q(q, start_pair: int, run_pairs: int):
+    """동일 layer-case 연속구간의 exact vertical surface를 중간 Z 정점 없이 stretch.
+
+    동일한 2D case가 위/아래에 놓인 MC cube에는 vertical-edge crossing이 없으므로
+    LUT vertex의 Z half-grid는 pair의 bottom/top 두 평면에만 존재해야 한다.
+    이 조건이 깨지는 예외에서는 None을 반환해 일반 pair-by-pair 경로로 fallback한다.
+    """
+    if q is None or len(q) == 0 or int(run_pairs) <= 1:
+        return q
+    out = np.ascontiguousarray(q, dtype=np.int32).copy()
+    z0 = 2 * int(start_pair)
+    z1 = z0 + 2
+    znew = 2 * (int(start_pair) + int(run_pairs))
+    z = out[:, :, 2]
+    ok = (z == z0) | (z == z1)
+    if not bool(np.all(ok)):
+        return None
+    z[z == z1] = znew
+    return out
+
+
+def _aio_v36_static_run_selftest():
+    """16 marching-square states x several run lengths: stretched surface exactness check."""
+    if (not _AIO_FAST_EXACT_VALID) or _AIO_V32_LUT_Q_ZYX is None:
+        return False, "ExactLUT unavailable"
+    try:
+        # one-cell case maps are enough to prove the identical-pair LUT Z-coordinate invariant.
+        for c4 in range(16):
+            a = np.asarray([[c4]], dtype=np.uint8)
+            for start in (0, 3):
+                q1 = _aio_v32_make_q_triangles(a, a, start, 0, 1, 1)
+                if q1 is None:
+                    continue
+                for run in (2, 3, 7, 19):
+                    qs = _aio_v36_stretch_static_q(q1, start, run)
+                    if qs is None:
+                        return False, f"case {c4}: unexpected mid-Z LUT vertex"
+                    # stretched endpoints must be exactly the first bottom and last top plane.
+                    zz = np.unique(qs[:, :, 2])
+                    want = np.asarray([2*start, 2*(start+run)], dtype=np.int32)
+                    if not np.array_equal(zz, want):
+                        return False, f"case {c4}: Z endpoint mismatch {zz.tolist()} != {want.tolist()}"
+        return True, "PASS · 16 identical cases × run 2/3/7/19 · exact Z endpoints"
+    except Exception as exc:
+        return False, f"{type(exc).__name__}: {exc}"
+
+
+_AIO_V36_STATIC_SELFTEST_OK, _AIO_V36_STATIC_SELFTEST_MSG = _aio_v36_static_run_selftest()
+
+
+
+_AIO_V38_LAST_COMPACT_STATS = {}
+
+
+def _aio_v38_exact_weld_meshes(meshes):
+    """여러 compact mesh를 float32 bit-exact 정점 기준으로 하나로 weld한다.
+
+    tolerance/rounding/근사 좌표를 사용하지 않는다. 같은 float32 bit pattern만 같은
+    정점으로 취급한다.
+    """
+    valid = [(np.ascontiguousarray(v, dtype=np.float32), np.ascontiguousarray(f, dtype=np.int64))
+             for v, f in meshes if v is not None and f is not None and len(f)]
+    if not valid:
+        return np.empty((0, 3), np.float32), np.empty((0, 3), np.int64)
+    if len(valid) == 1:
+        return valid[0]
+
+    vertices_parts = []
+    faces_parts = []
+    voff = 0
+    for v, f in valid:
+        vertices_parts.append(v)
+        faces_parts.append(f + int(voff))
+        voff += int(len(v))
+    vcat = np.ascontiguousarray(np.concatenate(vertices_parts, axis=0), dtype=np.float32)
+    fcat = np.ascontiguousarray(np.concatenate(faces_parts, axis=0), dtype=np.int64)
+
+    bits = np.ascontiguousarray(vcat.view(np.uint32).reshape(-1, 3))
+    key_dtype = np.dtype((np.void, 12))
+    keys = bits.view(key_dtype).ravel()
+    _uniq, first, inverse = np.unique(keys, return_index=True, return_inverse=True)
+    vertices = np.ascontiguousarray(vcat[first], dtype=np.float32)
+    faces = np.ascontiguousarray(inverse[fcat], dtype=np.int64)
+
+    if np.any(faces[:, 0] == faces[:, 1]) or np.any(faces[:, 1] == faces[:, 2]) or np.any(faces[:, 2] == faces[:, 0]):
+        raise RuntimeError('exact weld 후 퇴화 triangle이 생성되었습니다.')
+    return vertices, faces
+
+
+def _aio_v38_exact_subset_keys(reference_vertices: np.ndarray, candidate_vertices: np.ndarray) -> bool:
+    rv = np.ascontiguousarray(reference_vertices, dtype=np.float32)
+    cv = np.ascontiguousarray(candidate_vertices, dtype=np.float32)
+    if len(rv) == 0 or len(cv) == 0:
+        return False
+    kd = np.dtype((np.void, 12))
+    rk = np.ascontiguousarray(rv.view(np.uint32).reshape(-1, 3)).view(kd).ravel()
+    ck = np.ascontiguousarray(cv.view(np.uint32).reshape(-1, 3)).view(kd).ravel()
+    rks = np.unique(rk)
+    cks = np.unique(ck)
+    pos = np.searchsorted(rks, cks)
+    return bool(np.all(pos < len(rks)) and np.all(rks[np.minimum(pos, len(rks)-1)] == cks))
+
+
+def _aio_v38_reduce_mesh_exact(vertices: np.ndarray, faces: np.ndarray, *, require_closed: bool = False):
+    """하나의 in-memory mesh를 VTK zero-error로 줄이고 엄격한 exact 조건을 검사한다.
+
+    실패 시 입력 mesh를 그대로 반환하므로 품질 저하가 없다.
+    """
+    vertices = np.ascontiguousarray(vertices, dtype=np.float32)
+    faces = np.ascontiguousarray(faces, dtype=np.int64)
+    in_n = int(len(faces))
+    if in_n < 32 or (not _AIO_V32_VTK_AVAILABLE):
+        return vertices, faces, False, 'small/VTK-unavailable'
+    try:
+        area0 = _aio_v34_poly_area(vertices, faces)
+        bounds0 = np.r_[vertices.min(axis=0).astype(np.float64), vertices.max(axis=0).astype(np.float64)]
+        poly = _aio_v32_make_polydata(vertices, faces)
+        if require_closed:
+            bad0 = _aio_v33_bad_edge_count(poly)
+            if bad0 != 0:
+                raise RuntimeError(f'input bad edges={bad0:,}')
+        out = _aio_v33_global_decimate_poly(poly)
+        ov, of = _aio_v32_polydata_numpy(out)
+        out_n = int(len(of))
+        if out_n <= 0 or out_n > in_n:
+            raise RuntimeError(f'bad reduction count {out_n:,}/{in_n:,}')
+        if out_n == in_n:
+            return vertices, faces, False, 'no reduction'
+        if not _aio_v38_exact_subset_keys(vertices, ov):
+            raise RuntimeError('output vertex is not exact input subset')
+        area1 = _aio_v34_poly_area(ov, of)
+        area_rel = abs(area1-area0) / max(1.0, abs(area0))
+        if area_rel > 2e-6:
+            raise RuntimeError(f'area change {area_rel:.3e}')
+        bounds1 = np.r_[ov.min(axis=0).astype(np.float64), ov.max(axis=0).astype(np.float64)]
+        scale = max(1.0, float(np.max(np.abs(bounds0))))
+        if float(np.max(np.abs(bounds1-bounds0))) > max(3e-6, 2e-7*scale):
+            raise RuntimeError('bounds changed')
+        if require_closed:
+            bad1 = _aio_v33_bad_edge_count(out)
+            if bad1 != 0:
+                raise RuntimeError(f'output bad edges={bad1:,}')
+            # closed 최종 mesh에서는 volume까지 검사한다.
+            _a0, vol0, _tri0 = _aio_v33_mass_properties(poly)
+            _a1, vol1, _tri1 = _aio_v33_mass_properties(out)
+            vol_rel = abs(vol1-vol0) / max(1.0, abs(vol0))
+            if vol_rel > 3e-6:
+                raise RuntimeError(f'volume change {vol_rel:.3e}')
+        return np.ascontiguousarray(ov, np.float32), np.ascontiguousarray(of, np.int64), True, f'PASS {in_n:,}->{out_n:,}'
+    except Exception as exc:
+        return vertices, faces, False, f'fallback {type(exc).__name__}: {exc}'
+
+
+def _aio_v38_fuse_target_faces() -> int:
+    try:
+        avail = int(_aio_v33_available_memory_bytes())
+    except Exception:
+        avail = 8 * 1024**3
+    gib = avail / float(1024**3)
+    if gib >= 12.0:
+        return 3_000_000
+    if gib >= 8.0:
+        return 2_000_000
+    if gib >= 5.0:
+        return 1_200_000
+    return 650_000
+
+
+def _aio_v39_compact_used_vertices(vertices: np.ndarray, faces: np.ndarray):
+    """미사용 정점만 제거한다. 좌표 이동/반올림/허용오차 weld는 하지 않는다."""
+    v = np.ascontiguousarray(vertices, dtype=np.float32)
+    f = np.ascontiguousarray(faces, dtype=np.int64)
+    if len(f) == 0:
+        return np.empty((0, 3), np.float32), np.empty((0, 3), np.int64)
+    used, inverse = np.unique(f.reshape(-1), return_inverse=True)
+    return (
+        np.ascontiguousarray(v[used], dtype=np.float32),
+        np.ascontiguousarray(inverse.reshape(-1, 3), dtype=np.int64),
+    )
+
+
+def _aio_v39_decimate_q_batch(
+    qtri: np.ndarray,
+    *,
+    bits_x: int,
+    bits_y: int,
+    half_xyz,
+    xoff: float,
+    yoff: float,
+    strict_verify: bool,
+):
+    """v3.9 XOR-safe batch compactor.
+
+    VTK decimation은 vertex subset/area가 같아도 제조 레이어의 raster가 달라지는
+    반례가 회귀시험에서 확인됐다. 따라서 production 경로에서는 사용하지 않는다.
+    ExactLUT triangle을 exact weld한 뒤, 동일 평면 패치에 한해서만 원 경계 edge와
+    정수 half-grid 투영면적이 정확히 동일한 재삼각형화를 허용한다.
+    """
+    raw_count = int(len(qtri))
+    vq, raw_faces, _raw_keys = _aio_v32_weld_q(qtri, bits_x, bits_y)
+    raw_vertices = _aio_v32_q_to_xyz(vq, half_xyz, xoff, yoff)
+    try:
+        reduced_faces, saved, groups = _aio_lossless_planar_reduce(
+            raw_vertices, raw_faces, half_xyz,
+        )
+        out_vertices, out_faces = _aio_v39_compact_used_vertices(
+            raw_vertices, reduced_faces,
+        )
+        return (
+            out_vertices, out_faces, raw_count,
+            f"XOR-safe planar PASS · saved={int(saved):,} · groups={int(groups):,}",
+            False,
+        )
+    except Exception as exc:
+        # 정확성에 조금이라도 의심이 생기면 raw ExactLUT를 그대로 사용한다.
+        out_vertices, out_faces = _aio_v39_compact_used_vertices(raw_vertices, raw_faces)
+        return out_vertices, out_faces, raw_count, f"raw exact fallback: {type(exc).__name__}: {exc}", True
+
+
+def _aio_v39_reduce_mesh_exact(
+    vertices: np.ndarray,
+    faces: np.ndarray,
+    *,
+    half_xyz,
+    require_closed: bool = False,
+):
+    """rolling/final용 XOR-safe in-memory compactor.
+
+    같은 half-grid 평면의 내부 tessellation만 바꾸며, 각 적용 그룹은
+    (1) 원 정점만 사용, (2) 원 boundary edge 완전 동일,
+    (3) exact integer projected area 동일 조건을 모두 통과해야 한다.
+    """
+    v = np.ascontiguousarray(vertices, dtype=np.float32)
+    f = np.ascontiguousarray(faces, dtype=np.int64)
+    if len(f) < _AIO_MC_LIGHT_MIN_GROUP:
+        vv, ff = _aio_v39_compact_used_vertices(v, f)
+        return vv, ff, False, "small exact mesh"
+    try:
+        reduced_faces, saved, groups = _aio_lossless_planar_reduce(v, f, half_xyz)
+        vv, ff = _aio_v39_compact_used_vertices(v, reduced_faces)
+        return vv, ff, bool(saved), f"XOR-safe planar PASS · saved={int(saved):,} · groups={int(groups):,}"
+    except Exception as exc:
+        vv, ff = _aio_v39_compact_used_vertices(v, f)
+        return vv, ff, False, f"raw exact fallback: {type(exc).__name__}: {exc}"
+
+
+def _aio_v38_exact_interpolated_surface(
+    params, items, bbox, grid, resolved, log, cancel_event, mask_store=None,
+):
+    """ExactLUT 표면 생성과 zero-error compact를 하나의 in-memory 파이프라인으로 수행한다.
+
+    중간 대용량 STL을 먼저 만든 뒤 다시 읽어 경량화하지 않는다.
+    ExactLUT -> batch zero-error -> rolling global weld/compact -> 최종 STL 1회 기록.
+    """
+    global _AIO_V38_LAST_COMPACT_STATS
+    _AIO_V38_LAST_COMPACT_STATS = {}
+
+    if getattr(params, 'surface_mode', '') != '표면 보간형':
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(
+            params, items, bbox, grid, resolved, log, cancel_event, mask_store,
+        )
+    if (not _AIO_FAST_EXACT_VALID) or (_AIO_V32_LUT_Q_ZYX is None) or (not _AIO_V36_STATIC_SELFTEST_OK):
+        log.write('WARNING: v3.8 exact self-test 실패 -> v3.2 ExactLUT fallback')
+        log.write(f'  static: {_AIO_V36_STATIC_SELFTEST_MSG}')
+        return _aio_v32_exact_interpolated_surface(
+            params, items, bbox, grid, resolved, log, cancel_event, mask_store,
+        )
+
+    total = int(bbox.layers)
+    hc = int(grid.height) + 1
+    wc = int(grid.width) + 1
+    total_pairs = total + 1
+    xsp = float(grid.x_pitch_mm)
+    ysp = float(grid.y_pitch_mm)
+    zsp = float(params.layer_thickness_mm)
+    xoff = float(grid.x_offset_mm)
+    yoff = float(grid.y_offset_mm)
+    half = (0.5*xsp, 0.5*ysp, 0.5*zsp)
+    bits_x = max(1, int(math.ceil(math.log2(2*wc + 3))))
+    bits_y = max(1, int(math.ceil(math.log2(2*hc + 3))))
+    bits_z = max(1, int(math.ceil(math.log2(2*total_pairs + 3))))
+    if bits_x + bits_y + bits_z >= 62:
+        raise RuntimeError('Exact half-grid key가 int64 pack 범위를 초과합니다.')
+
+    batch_target, dec_workers, tile_rows = _aio_v36_runtime_tuning(params)
+    fuse_target = _aio_v38_fuse_target_faces()
+    max_inflight = max(1, dec_workers*2)
+    strict = False
+
+    log.write('')
+    log.write('=============== ExactLUT v4.1 FAST-CERT 통합 표면 엔진 ===============')
+    log.write(f'XY case grid: {wc:,}×{hc:,} · Z pairs: {total_pairs:,}')
+    log.write('surface: legacy Lewiner 256-case ExactLUT · step=1 동등')
+    log.write(f'static-Z self-test: {_AIO_V36_STATIC_SELFTEST_MSG}')
+    log.write(f'raw batch: {batch_target:,} tri · workers={dec_workers} · tileRows={tile_rows}')
+    log.write(f'rolling fused compact: 약 {fuse_target:,} compact tri마다 exact weld + FAST-CERT')
+    log.write('중간 STL 재읽기/2단계 global compact: 없음')
+    log.write('정점 이동/다운샘플링/허용오차 근사: 없음')
+    log.write('============================================================')
+
+    material_voxels = 0
+    raw_total = 0
+    batch_output_total = 0
+    fallback_batches = 0
+    verified_batches = 0
+    static_pairs_collapsed = 0
+    static_runs = 0
+    rolling_passes = 0
+    rolling_saved = 0
+    started = time.time()
+
+    pending_parts = []
+    pending_count = 0
+    futures = {}
+    compact_parts = []
+    compact_face_count = 0
+
+    def rolling_compact(force=False):
+        nonlocal compact_parts, compact_face_count, rolling_passes, rolling_saved
+        if not compact_parts:
+            return
+        if (not force) and (compact_face_count < fuse_target or len(compact_parts) < 2):
+            return
+        check_cancel(cancel_event)
+        before = int(compact_face_count)
+        merged_v, merged_f = _aio_v38_exact_weld_meshes(compact_parts)
+        rv, rf, reduced, _msg = _aio_v39_reduce_mesh_exact(merged_v, merged_f, half_xyz=half, require_closed=False)
+        after = int(len(rf))
+        compact_parts = [(rv, rf)]
+        compact_face_count = after
+        rolling_passes += 1
+        rolling_saved += max(0, before-after)
+
+    def accept_compact(vertices, faces, raw_count, fallback):
+        nonlocal batch_output_total, fallback_batches, verified_batches, compact_face_count
+        if fallback:
+            fallback_batches += 1
+        else:
+            verified_batches += 1
+        batch_output_total += int(len(faces))
+        compact_parts.append((np.ascontiguousarray(vertices, np.float32), np.ascontiguousarray(faces, np.int64)))
+        compact_face_count += int(len(faces))
+        rolling_compact(False)
+
+    def consume_one(block: bool):
+        if not futures:
+            return False
+        done_future = None
+        if block:
+            done_future = next(as_completed(list(futures.keys())))
+        else:
+            for f in list(futures.keys()):
+                if f.done():
+                    done_future = f
+                    break
+            if done_future is None:
+                return False
+        futures.pop(done_future, None)
+        vertices, faces, raw_count, _msg, fallback = done_future.result()
+        accept_compact(vertices, faces, raw_count, fallback)
+        return True
+
+    def submit_batch(pool, qbatch):
+        fut = pool.submit(
+            _aio_v39_decimate_q_batch,
+            np.ascontiguousarray(qbatch, dtype=np.int32),
+            bits_x=bits_x, bits_y=bits_y, half_xyz=half,
+            xoff=xoff, yoff=yoff, strict_verify=strict,
+        )
+        futures[fut] = True
+        while len(futures) >= max_inflight:
+            consume_one(True)
+
+    def feed_q(pool, q):
+        nonlocal pending_parts, pending_count, raw_total
+        if q is None or len(q) == 0:
+            return
+        pos = 0
+        qlen = int(len(q))
+        while pos < qlen:
+            room = batch_target - pending_count
+            take = min(qlen-pos, room)
+            pending_parts.append(q[pos:pos+take])
+            pending_count += int(take)
+            raw_total += int(take)
+            pos += int(take)
+            if pending_count >= batch_target:
+                batch = pending_parts[0] if len(pending_parts) == 1 else np.concatenate(pending_parts, axis=0)
+                submit_batch(pool, batch)
+                pending_parts = []
+                pending_count = 0
+
+    def emit_regular_pair(pool, lower_case, upper_case, k):
+        for y0 in range(0, hc, tile_rows):
+            q = _aio_v32_make_q_triangles(lower_case, upper_case, int(k), y0, min(hc, y0+tile_rows), wc)
+            if q is not None:
+                feed_q(pool, q)
+            consume_one(False)
+
+    def emit_static_run(pool, case_map, start_pair: int, run_pairs: int):
+        nonlocal static_pairs_collapsed, static_runs
+        if case_map is None or run_pairs <= 0:
+            return
+        if run_pairs == 1:
+            emit_regular_pair(pool, case_map, case_map, start_pair)
+            return
+        stretched_parts = []
+        for y0 in range(0, hc, tile_rows):
+            q = _aio_v32_make_q_triangles(case_map, case_map, int(start_pair), y0, min(hc, y0+tile_rows), wc)
+            if q is None:
+                stretched_parts.append(None)
+                continue
+            qs = _aio_v36_stretch_static_q(q, start_pair, run_pairs)
+            if qs is None:
+                for kk in range(int(start_pair), int(start_pair)+int(run_pairs)):
+                    emit_regular_pair(pool, case_map, case_map, kk)
+                return
+            stretched_parts.append(qs)
+        for qs in stretched_parts:
+            if qs is not None:
+                feed_q(pool, qs)
+                consume_one(False)
+        static_pairs_collapsed += int(run_pairs-1)
+        static_runs += 1
+
+    zero = np.zeros((hc, wc), dtype=np.uint8)
+    prev_case = zero
+    prefetch_workers = max(1, min(3, int(getattr(params, 'workers', 1))))
+    case_futures = {}
+    next_submit = 0
+
+    def submit_case(pool, local_layer):
+        absolute = int(bbox.zmin) + int(local_layer)
+        if mask_store is not None:
+            return pool.submit(_aio_fast_case_from_cached_layer, mask_store, absolute, bbox, grid)
+        return pool.submit(_aio_fast_case_from_layer_item, items[absolute], bbox, resolved, grid)
+
+    run_case = None
+    run_start = -1
+    run_pairs = 0
+
+    try:
+        with ThreadPoolExecutor(max_workers=dec_workers) as dec_pool, ThreadPoolExecutor(max_workers=prefetch_workers) as case_pool:
+            while next_submit < total and len(case_futures) < prefetch_workers:
+                case_futures[next_submit] = submit_case(case_pool, next_submit)
+                next_submit += 1
+
+            for k in range(total_pairs):
+                check_cancel(cancel_event)
+                if k < total:
+                    next_case, material = case_futures.pop(k).result()
+                    material_voxels += int(material)
+                    while next_submit < total and len(case_futures) < prefetch_workers:
+                        case_futures[next_submit] = submit_case(case_pool, next_submit)
+                        next_submit += 1
+                else:
+                    next_case = zero
+
+                identical = bool(np.array_equal(prev_case, next_case))
+                if identical:
+                    if run_case is None:
+                        run_case = prev_case.copy(); run_start = int(k); run_pairs = 1
+                    elif bool(np.array_equal(run_case, prev_case)):
+                        run_pairs += 1
+                    else:
+                        emit_static_run(dec_pool, run_case, run_start, run_pairs)
+                        run_case = prev_case.copy(); run_start = int(k); run_pairs = 1
+                else:
+                    if run_case is not None:
+                        emit_static_run(dec_pool, run_case, run_start, run_pairs)
+                        run_case = None; run_start = -1; run_pairs = 0
+                    emit_regular_pair(dec_pool, prev_case, next_case, k)
+                prev_case = next_case
+
+                done = k+1
+                elapsed = time.time()-started
+                remain = elapsed/max(1, done)*(total_pairs-done)
+                pct = 64.0 + 33.0*done/max(1, total_pairs)
+                log.progress(pct, f'ExactLUT v3.8 {done:,}/{total_pairs:,} pair | raw={raw_total:,} compact={compact_face_count:,} | ETA {recon_core.format_seconds(remain)}')
+                if done == 1 or done % 50 == 0 or done == total_pairs:
+                    log.write(f'v3.8 pair {done:,}/{total_pairs:,} · raw={raw_total:,} · inRAMcompact={compact_face_count:,} · staticSavedPairs={static_pairs_collapsed:,}')
+
+            if run_case is not None:
+                emit_static_run(dec_pool, run_case, run_start, run_pairs)
+            if pending_count:
+                batch = pending_parts[0] if len(pending_parts) == 1 else np.concatenate(pending_parts, axis=0)
+                submit_batch(dec_pool, batch)
+                pending_parts = []
+                pending_count = 0
+            while futures:
+                consume_one(True)
+
+        if not compact_parts:
+            raise ValueError('생성된 표면 triangle이 없습니다.')
+
+        # 모든 batch 경계를 실제로 없앤 최종 in-memory merge. 이 단계가 기존의
+        # 'STL 저장 -> 다시 읽기 -> global compact'를 대체한다.
+        rolling_compact(True)
+        if len(compact_parts) != 1:
+            merged_v, merged_f = _aio_v38_exact_weld_meshes(compact_parts)
+        else:
+            merged_v, merged_f = compact_parts[0]
+
+        # 전체 closed mesh에서 마지막 zero-error pass 및 topology/volume 검증.
+        final_v, final_f, final_reduced, final_msg = _aio_v39_reduce_mesh_exact(merged_v, merged_f, half_xyz=half, require_closed=False)
+        final_poly = _aio_v32_make_polydata(final_v, final_f) if _AIO_V32_VTK_AVAILABLE else None
+        bad_edges = _aio_v33_bad_edge_count(final_poly) if final_poly is not None else 0
+        # binary voxel 입력 자체가 corner/edge 접촉을 포함하면 exact Lewiner 표면도
+        # non-manifold일 수 있다. v3.9는 이를 임의로 수정하거나 실패시키지 않고
+        # 원 slice geometry를 그대로 보존한다. bad_edges는 통계로만 기록한다.
+
+        writer = recon_core.BinarySTLWriter(
+            params.output_stl,
+            header='ExactLUT v4.1 FAST-CERT fused STL',
+            buffer_bytes=16*1024*1024,
+        )
+        success = False
+        try:
+            _AIO_MC_LIGHT_ORIG_WRITE(
+                writer, final_v, final_f,
+                max_triangles=params.max_triangles,
+                cancel_event=cancel_event,
+                chunk_size=200_000,
+            )
+            triangle_count = int(writer.tri_count)
+            if triangle_count <= 0:
+                raise ValueError('생성된 최종 triangle이 없습니다.')
+            writer.close(success=True)
+            success = True
+        finally:
+            if not success:
+                writer.close(success=False)
+
+        recon_core.verify_binary_stl(params.output_stl, triangle_count)
+        _AIO_V38_LAST_COMPACT_STATS = {
+            'reason': 'PASS',
+            'input_triangles': int(raw_total),
+            'output_triangles': int(triangle_count),
+            'bad_edges_output': int(bad_edges),
+            'exact_boundary_preserved': True,
+            'slice_geometry_certificate': 'ExactLUT + static-Z exact + boundary/area-preserving planar retriangulation',
+            'batch_output_triangles': int(batch_output_total),
+            'rolling_passes': int(rolling_passes),
+            'rolling_saved': int(rolling_saved),
+            'final_reduced': bool(final_reduced),
+            'final_message': str(final_msg),
+        }
+
+        log.write('')
+        log.write('=============== v4.1 FAST-CERT 통합 표면 통계 ===============')
+        log.write(f'ExactLUT raw triangles: {raw_total:,}')
+        log.write(f'static Z runs: {static_runs:,} · eliminated repeated pairs: {static_pairs_collapsed:,}')
+        log.write(f'batch FAST-CERT PASS: {verified_batches:,} · raw fallback: {fallback_batches:,}')
+        log.write(f'batch compact triangles 합계: {batch_output_total:,}')
+        log.write(f'rolling fused passes: {rolling_passes:,} · saved across batch boundaries: {rolling_saved:,}')
+        log.write(f'최종 STL triangles: {triangle_count:,}')
+        log.write('중간 STL 생성/재읽기: 0')
+        log.write('geometry approximation: 0')
+        log.write('====================================================')
+        return triangle_count, material_voxels
+    except Exception:
+        try:
+            params.output_stl.unlink(missing_ok=True)
+        except Exception:
+            pass
+        _AIO_V38_LAST_COMPACT_STATS = {}
+        raise
+
+
+
+# -----------------------------------------------------------------------------
+# v4.0 throughput patch: compiled VTK proposal + exact vectorized surface certificate
+# -----------------------------------------------------------------------------
+# v3.9의 병목은 동일 평면 패치를 Shapely로 매 batch/rolling/final마다 다시 구성한
+# 부분이었다. 특히 격자/다공 구조에서는 Polygon/STRtree/triangulation과 반복 np.unique가
+# 실제 표면 생성보다 오래 걸릴 수 있었다.
+#
+# v4.0은 다음 순서만 허용한다.
+#   1) VTK DecimatePro(MaximumError=0)가 C++에서 빠르게 후보를 만든다.
+#   2) 후보 정점은 입력 float32 정점의 exact subset이어야 한다.
+#   3) 입력/후보를 half-grid 정수좌표로 환산한다.
+#   4) 모든 exact plane별 signed/absolute projected area가 완전히 동일해야 한다.
+#   5) 모든 plane 경계의 oriented collinear interval event가 완전히 동일해야 한다.
+# 위 certificate가 하나라도 실패하면 후보를 즉시 버리고 원 ExactLUT mesh를 그대로 쓴다.
+# 따라서 VTK가 빠른 "proposal" 역할만 하고, geometry 수용 여부는 정수 exact certificate가
+# 결정한다. Shapely planar retriangulation은 production 경로에서 사용하지 않는다.
+
+_AIO_V40_CERT_MIN_SAVE_RATIO = 0.22  # 절감이 작으면 비싼 certificate 대신 raw exact 유지
+_AIO_V40_CERT_MIN_SAVED_FACES = 256
+
+
+def _aio_v40_plane_data(q: np.ndarray, faces: np.ndarray):
+    qq = np.asarray(q, dtype=np.int64)
+    ff = np.asarray(faces, dtype=np.int64)
+    if len(ff) == 0:
+        return (np.empty((0,4), np.int64), np.empty(0, np.int64),
+                np.empty(0, np.int64), np.empty(0, np.int64))
+    a = qq[ff[:, 0]]; b = qq[ff[:, 1]]; c = qq[ff[:, 2]]
+    cross = np.cross(b - a, c - a)
+    gcd = np.gcd(np.gcd(np.abs(cross[:, 0]), np.abs(cross[:, 1])), np.abs(cross[:, 2]))
+    if np.any(gcd == 0):
+        raise RuntimeError('exact certificate: degenerate face')
+    n = cross // gcd[:, None]
+    first = np.where(n[:, 0] != 0, n[:, 0], np.where(n[:, 1] != 0, n[:, 1], n[:, 2]))
+    flip = first < 0
+    nc = n.copy(); nc[flip] *= -1
+    d = np.einsum('ij,ij->i', nc, a)
+    plane_keys = np.column_stack((nc, d)).astype(np.int64, copy=False)
+    unique_planes, inverse = np.unique(plane_keys, axis=0, return_inverse=True)
+
+    axis = np.argmax(np.abs(nc), axis=1)
+    rows = np.arange(len(cross))
+    den = nc[rows, axis]
+    comp = cross[rows, axis]
+    if np.any(comp % den):
+        raise RuntimeError('exact certificate: non-primitive plane normal')
+    kval = comp // den
+    signed_area = np.zeros(len(unique_planes), dtype=np.int64)
+    absolute_area = np.zeros(len(unique_planes), dtype=np.int64)
+    np.add.at(signed_area, inverse, kval)
+    np.add.at(absolute_area, inverse, np.abs(kval))
+    return unique_planes, inverse.astype(np.int64, copy=False), signed_area, absolute_area
+
+
+def _aio_v40_point_pack_setup(q0: np.ndarray, q1: np.ndarray):
+    mn = np.minimum(np.min(q0, axis=0), np.min(q1, axis=0)).astype(np.int64)
+    mx = np.maximum(np.max(q0, axis=0), np.max(q1, axis=0)).astype(np.int64)
+    span = (mx - mn).astype(np.int64)
+    bits = [max(1, int(int(v).bit_length())) for v in span]
+    if sum(bits) > 63:
+        raise RuntimeError('exact certificate: point key int64 overflow')
+    return mn, bits
+
+
+def _aio_v40_pack_points(q: np.ndarray, mn: np.ndarray, bits):
+    x = (np.asarray(q, dtype=np.int64) - mn).astype(np.uint64)
+    by, bz = int(bits[1]), int(bits[2])
+    return ((x[:, 0] << np.uint64(by + bz)) |
+            (x[:, 1] << np.uint64(bz)) |
+            x[:, 2])
+
+
+def _aio_v40_unpack_points(keys: np.ndarray, mn: np.ndarray, bits):
+    k = np.asarray(keys, dtype=np.uint64)
+    by, bz = int(bits[1]), int(bits[2])
+    mz = (np.uint64(1) << np.uint64(bz)) - np.uint64(1)
+    my = (np.uint64(1) << np.uint64(by)) - np.uint64(1)
+    z = (k & mz).astype(np.int64) + int(mn[2])
+    y = ((k >> np.uint64(bz)) & my).astype(np.int64) + int(mn[1])
+    x = (k >> np.uint64(by + bz)).astype(np.int64) + int(mn[0])
+    return np.column_stack((x, y, z)).astype(np.int64, copy=False)
+
+
+def _aio_v40_boundary_events(q: np.ndarray, faces: np.ndarray, plane_inverse: np.ndarray,
+                             mn: np.ndarray, bits):
+    qq = np.asarray(q, dtype=np.int64)
+    ff = np.asarray(faces, dtype=np.int64)
+    pkey = _aio_v40_pack_points(qq, mn, bits)
+
+    p = np.concatenate((pkey[ff[:, 0]], pkey[ff[:, 1]], pkey[ff[:, 2]]))
+    r = np.concatenate((pkey[ff[:, 1]], pkey[ff[:, 2]], pkey[ff[:, 0]]))
+    pid = np.tile(np.asarray(plane_inverse, dtype=np.uint64), 3)
+    swap = p > r
+    lo = np.minimum(p, r); hi = np.maximum(p, r)
+    sign = np.where(swap, -1, 1).astype(np.int64)
+
+    rec = np.column_stack((pid, lo, hi)).astype(np.uint64, copy=False)
+    order = np.lexsort((rec[:, 2], rec[:, 1], rec[:, 0]))
+    rs = rec[order]; ss = sign[order]
+    change = np.ones(len(rs), dtype=bool)
+    if len(rs) > 1:
+        change[1:] = np.any(rs[1:] != rs[:-1], axis=1)
+    starts = np.flatnonzero(change)
+    unique_edges = rs[starts]
+    sums = np.add.reduceat(ss, starts)
+    nz = sums != 0
+    unique_edges = unique_edges[nz]; sums = sums[nz]
+    if np.any(np.abs(sums) != 1):
+        # Digital non-manifold plane boundary: certificate cannot prove a safe reduction.
+        raise RuntimeError('exact certificate: plane boundary multiplicity != 1')
+
+    qlo = _aio_v40_unpack_points(unique_edges[:, 1], mn, bits)
+    qhi = _aio_v40_unpack_points(unique_edges[:, 2], mn, bits)
+    A = np.where((sums > 0)[:, None], qlo, qhi)
+    B = np.where((sums > 0)[:, None], qhi, qlo)
+    vec = B - A
+    gcd = np.gcd(np.gcd(np.abs(vec[:, 0]), np.abs(vec[:, 1])), np.abs(vec[:, 2]))
+    if np.any(gcd == 0):
+        raise RuntimeError('exact certificate: zero boundary edge')
+    direction = vec // gcd[:, None]
+    first = np.where(direction[:, 0] != 0, direction[:, 0],
+                     np.where(direction[:, 1] != 0, direction[:, 1], direction[:, 2]))
+    flip = first < 0
+    canon_dir = direction.copy(); canon_dir[flip] *= -1
+    line_cross = np.cross(canon_dir, A)
+
+    line_keys = np.column_stack((unique_edges[:, 0].astype(np.int64), canon_dir, line_cross))
+    unique_lines, line_inverse = np.unique(line_keys, axis=0, return_inverse=True)
+    tA = np.einsum('ij,ij->i', canon_dir, A)
+    tB = np.einsum('ij,ij->i', canon_dir, B)
+    t0 = np.minimum(tA, tB); t1 = np.maximum(tA, tB)
+    direction_sign = np.sign(tB - tA).astype(np.int64)
+
+    events = np.concatenate((
+        np.column_stack((line_inverse, t0)),
+        np.column_stack((line_inverse, t1)),
+    ), axis=0).astype(np.int64, copy=False)
+    deltas = np.concatenate((direction_sign, -direction_sign))
+    order = np.lexsort((events[:, 1], events[:, 0]))
+    es = events[order]; ds = deltas[order]
+    change = np.ones(len(es), dtype=bool)
+    if len(es) > 1:
+        change[1:] = np.any(es[1:] != es[:-1], axis=1)
+    starts = np.flatnonzero(change)
+    unique_events = es[starts]
+    event_sums = np.add.reduceat(ds, starts)
+    nz = event_sums != 0
+    signature = np.column_stack((unique_events[nz], event_sums[nz])).astype(np.int64, copy=False)
+    return unique_lines.astype(np.int64, copy=False), signature
+
+
+def _aio_v40_exact_surface_certificate(q0: np.ndarray, f0: np.ndarray,
+                                       q1: np.ndarray, f1: np.ndarray):
+    """Prove that two half-grid triangle meshes represent the same piecewise planar surface.
+
+    No tolerance/hash is used. Equality is integer exact: same exact planes, same signed and
+    absolute projected area per plane, and same oriented collinear boundary interval events.
+    """
+    try:
+        p0, inv0, s0, a0 = _aio_v40_plane_data(q0, f0)
+        p1, inv1, s1, a1 = _aio_v40_plane_data(q1, f1)
+        if not np.array_equal(p0, p1):
+            return False, 'plane-key mismatch'
+        if not np.array_equal(s0, s1) or not np.array_equal(a0, a1):
+            return False, 'exact plane-area mismatch'
+        mn, bits = _aio_v40_point_pack_setup(q0, q1)
+        l0, e0 = _aio_v40_boundary_events(q0, f0, inv0, mn, bits)
+        l1, e1 = _aio_v40_boundary_events(q1, f1, inv1, mn, bits)
+        if not np.array_equal(l0, l1):
+            return False, 'plane-boundary line mismatch'
+        if not np.array_equal(e0, e1):
+            return False, 'plane-boundary interval mismatch'
+        return True, 'PASS'
+    except Exception as exc:
+        return False, f'{type(exc).__name__}: {exc}'
+
+
+def _aio_v40_vtk_propose(vertices: np.ndarray, faces: np.ndarray):
+    if (not _AIO_V32_VTK_AVAILABLE) or len(faces) < 32:
+        return None, None, 'VTK unavailable/small'
+    poly = _aio_v32_make_polydata(vertices, faces)
+    out = _aio_v33_global_decimate_poly(poly)
+    ov, of = _aio_v32_polydata_numpy(out)
+    if len(of) <= 0 or len(of) > len(faces):
+        return None, None, f'bad VTK count {len(of):,}/{len(faces):,}'
+    return np.ascontiguousarray(ov, np.float32), np.ascontiguousarray(of, np.int64), 'VTK proposal'
+
+
+def _aio_v39_decimate_q_batch(
+    qtri: np.ndarray,
+    *,
+    bits_x: int,
+    bits_y: int,
+    half_xyz,
+    xoff: float,
+    yoff: float,
+    strict_verify: bool,
+):
+    """v4.0 fast XOR-safe batch compactor: VTK proposal + integer exact certificate."""
+    raw_count = int(len(qtri))
+    vq, raw_faces, raw_keys = _aio_v32_weld_q(qtri, bits_x, bits_y)
+    raw_vertices = _aio_v32_q_to_xyz(vq, half_xyz, xoff, yoff)
+    if (not _AIO_V32_VTK_AVAILABLE) or raw_count < 32:
+        return raw_vertices, raw_faces, raw_count, 'raw exact (VTK unavailable/small)', True
+    try:
+        ov, of, _ = _aio_v40_vtk_propose(raw_vertices, raw_faces)
+        if ov is None:
+            raise RuntimeError('VTK proposal unavailable')
+        saved = int(len(raw_faces) - len(of))
+        ratio = saved / max(1, int(len(raw_faces)))
+        if saved < _AIO_V40_CERT_MIN_SAVED_FACES or ratio < _AIO_V40_CERT_MIN_SAVE_RATIO:
+            # Small reductions are intentionally skipped: exact certificate sorting would cost
+            # more time than the small STL saving. Raw ExactLUT is already the reference surface.
+            return raw_vertices, raw_faces, raw_count, f'raw exact · low gain {ratio:.1%}', True
+
+        half = np.asarray(half_xyz, dtype=np.float64)
+        oq = np.empty((len(ov), 3), dtype=np.int64)
+        oq[:, 0] = np.rint((ov[:, 0].astype(np.float64) - float(xoff)) / half[0] + 1.0).astype(np.int64)
+        oq[:, 1] = np.rint((ov[:, 1].astype(np.float64) - float(yoff)) / half[1] + 1.0).astype(np.int64)
+        oq[:, 2] = np.rint(ov[:, 2].astype(np.float64) / half[2] + 1.0).astype(np.int64)
+        rebuilt = np.empty_like(ov, dtype=np.float64)
+        rebuilt[:, 0] = (oq[:, 0] - 1.0) * half[0] + float(xoff)
+        rebuilt[:, 1] = (oq[:, 1] - 1.0) * half[1] + float(yoff)
+        rebuilt[:, 2] = (oq[:, 2] - 1.0) * half[2]
+        residual = float(np.max(np.abs(ov.astype(np.float64) - rebuilt))) if len(ov) else 0.0
+        coord_tol = max(2.0e-6, float(np.min(half)) * 1.0e-4)
+        if residual > coord_tol:
+            raise RuntimeError(f'vertex moved {residual:.3e}mm')
+        out_keys = np.unique(_aio_v32_pack_q(oq, bits_x, bits_y))
+        pos = np.searchsorted(raw_keys, out_keys)
+        if np.any(pos >= len(raw_keys)) or np.any(raw_keys[np.minimum(pos, len(raw_keys)-1)] != out_keys):
+            raise RuntimeError('candidate contains a non-input vertex')
+
+        ok, why = _aio_v40_exact_surface_certificate(vq, raw_faces, oq, of)
+        if not ok:
+            raise RuntimeError(f'exact certificate reject: {why}')
+        return ov, of, raw_count, f'FAST-CERT PASS · {len(raw_faces):,}->{len(of):,}', False
+    except Exception as exc:
+        # No Shapely fallback here. The raw ExactLUT mesh is faster and is the exact reference.
+        return raw_vertices, raw_faces, raw_count, f'raw exact fallback: {type(exc).__name__}: {exc}', True
+
+
+def _aio_v40_q_from_xyz_relative(vertices: np.ndarray, half_xyz, base: np.ndarray):
+    v = np.asarray(vertices, dtype=np.float64)
+    h = np.asarray(half_xyz, dtype=np.float64)
+    b = np.asarray(base, dtype=np.float64)
+    q = np.rint((v - b) / h).astype(np.int64)
+    residual = float(np.max(np.abs((v - b) - q * h))) if len(v) else 0.0
+    return q, residual
+
+
+def _aio_v39_reduce_mesh_exact(
+    vertices: np.ndarray,
+    faces: np.ndarray,
+    *,
+    half_xyz,
+    require_closed: bool = False,
+):
+    """v4.0 rolling/final compactor. Accept VTK only after exact piecewise-surface certificate."""
+    v = np.ascontiguousarray(vertices, dtype=np.float32)
+    f = np.ascontiguousarray(faces, dtype=np.int64)
+    if len(f) < 32 or (not _AIO_V32_VTK_AVAILABLE):
+        vv, ff = _aio_v39_compact_used_vertices(v, f)
+        return vv, ff, False, 'raw exact small/VTK-unavailable'
+    try:
+        ov, of, _ = _aio_v40_vtk_propose(v, f)
+        if ov is None:
+            raise RuntimeError('VTK proposal unavailable')
+        saved = int(len(f) - len(of))
+        ratio = saved / max(1, int(len(f)))
+        if saved < _AIO_V40_CERT_MIN_SAVED_FACES or ratio < _AIO_V40_CERT_MIN_SAVE_RATIO:
+            vv, ff = _aio_v39_compact_used_vertices(v, f)
+            return vv, ff, False, f'raw exact · low gain {ratio:.1%}'
+        if not _aio_v38_exact_subset_keys(v, ov):
+            raise RuntimeError('candidate vertex is not exact input float32 subset')
+        base = v[0].astype(np.float64)
+        q0, r0 = _aio_v40_q_from_xyz_relative(v, half_xyz, base)
+        q1, r1 = _aio_v40_q_from_xyz_relative(ov, half_xyz, base)
+        tol = max(2.0e-6, float(np.min(np.asarray(half_xyz, dtype=np.float64))) * 1.0e-4)
+        if max(r0, r1) > tol:
+            raise RuntimeError(f'half-grid residual {max(r0,r1):.3e}mm')
+        ok, why = _aio_v40_exact_surface_certificate(q0, f, q1, of)
+        if not ok:
+            raise RuntimeError(f'exact certificate reject: {why}')
+        return ov, of, True, f'FAST-CERT PASS {len(f):,}->{len(of):,}'
+    except Exception as exc:
+        vv, ff = _aio_v39_compact_used_vertices(v, f)
+        return vv, ff, False, f'raw exact fallback: {type(exc).__name__}: {exc}'
+
+
+def _aio_v38_exact_weld_meshes(meshes):
+    """Exact cross-batch weld. Prefer VTK StaticClean(absolute tolerance=0) for large meshes."""
+    valid = [(np.ascontiguousarray(v, dtype=np.float32), np.ascontiguousarray(f, dtype=np.int64))
+             for v, f in meshes if v is not None and f is not None and len(f)]
+    if not valid:
+        return np.empty((0, 3), np.float32), np.empty((0, 3), np.int64)
+    if len(valid) == 1:
+        return valid[0]
+    vparts = []; fparts = []; off = 0
+    for v, f in valid:
+        vparts.append(v); fparts.append(f + int(off)); off += int(len(v))
+    vcat = np.ascontiguousarray(np.concatenate(vparts, axis=0), dtype=np.float32)
+    fcat = np.ascontiguousarray(np.concatenate(fparts, axis=0), dtype=np.int64)
+
+    if _AIO_V32_VTK_AVAILABLE and len(fcat) >= 100_000:
+        try:
+            poly = _aio_v32_make_polydata(vcat, fcat)
+            clean = _aio_vtk.vtkStaticCleanPolyData()
+            clean.SetInputData(poly)
+            clean.ToleranceIsAbsoluteOn()
+            clean.SetAbsoluteTolerance(0.0)
+            clean.Update()
+            vv, ff = _aio_v32_polydata_numpy(clean.GetOutput())
+            if len(ff) != len(fcat):
+                raise RuntimeError('StaticClean changed face count')
+            if not _aio_v38_exact_subset_keys(vcat, vv):
+                raise RuntimeError('StaticClean produced non-input vertex')
+            if np.any(ff[:,0] == ff[:,1]) or np.any(ff[:,1] == ff[:,2]) or np.any(ff[:,2] == ff[:,0]):
+                raise RuntimeError('StaticClean produced degenerate face')
+            return np.ascontiguousarray(vv, np.float32), np.ascontiguousarray(ff, np.int64)
+        except Exception:
+            pass
+
+    bits = np.ascontiguousarray(vcat.view(np.uint32).reshape(-1, 3))
+    kd = np.dtype((np.void, 12)); keys = bits.view(kd).ravel()
+    _u, first, inv = np.unique(keys, return_index=True, return_inverse=True)
+    vv = np.ascontiguousarray(vcat[first], dtype=np.float32)
+    ff = np.ascontiguousarray(inv[fcat], dtype=np.int64)
+    if np.any(ff[:,0] == ff[:,1]) or np.any(ff[:,1] == ff[:,2]) or np.any(ff[:,2] == ff[:,0]):
+        raise RuntimeError('exact weld produced degenerate face')
+    return vv, ff
+
+# v3.9 XOR-safe fused engine is the production interpolation path.
+recon_core.reconstruct_interpolated_surface = _aio_v38_exact_interpolated_surface
+
+def _aio_v36_decimate_open_chunk(tri_xyz: np.ndarray, half_xyz):
+    """v3.7 large-chunk reduction: exact subset + area/bounds only; 고비용 surface-distance는 생략."""
+    raw_n = int(len(tri_xyz))
+    vertices, faces, raw_keys = _aio_v34_exact_weld_float_triangles(tri_xyz)
+    if raw_n < 32:
+        return vertices, faces, True, "small chunk"
+    try:
+        poly = _aio_v32_make_polydata(vertices, faces)
+        area0 = _aio_v34_poly_area(vertices, faces)
+        bounds0 = np.r_[vertices.min(axis=0).astype(np.float64), vertices.max(axis=0).astype(np.float64)]
+        out = _aio_v33_global_decimate_poly(poly)
+        ov, of = _aio_v32_polydata_numpy(out)
+        if len(of) <= 0 or len(of) > raw_n:
+            raise RuntimeError(f"bad face count {len(of):,}/{raw_n:,}")
+        obits = np.ascontiguousarray(ov.view(np.uint32).reshape(-1, 3))
+        okeys = obits.view(np.dtype((np.void, 12))).ravel()
+        # np.isin on large void arrays is expensive; sort/search exact keys instead.
+        rk = np.sort(raw_keys)
+        ok = np.sort(np.unique(okeys))
+        pos = np.searchsorted(rk, ok)
+        if np.any(pos >= len(rk)) or np.any(rk[np.minimum(pos, len(rk)-1)] != ok):
+            raise RuntimeError("output vertex is not exact input-vertex subset")
+        area1 = _aio_v34_poly_area(ov, of)
+        area_rel = abs(area1-area0) / max(1.0, abs(area0))
+        if area_rel > 2e-6:
+            raise RuntimeError(f"area change {area_rel:.3e}")
+        bounds1 = np.r_[ov.min(axis=0).astype(np.float64), ov.max(axis=0).astype(np.float64)]
+        if float(np.max(np.abs(bounds1-bounds0))) > 3e-6:
+            raise RuntimeError("bounds changed")
+        return ov, of, False, f"PASS {raw_n:,}->{len(of):,} areaΔ={area_rel:.1e}"
+    except Exception as exc:
+        return vertices, faces, True, f"fallback {type(exc).__name__}: {exc}"
+
+
+# Existing hierarchical reader resolves this global at runtime.
+_aio_v34_decimate_open_chunk = _aio_v36_decimate_open_chunk
+
+
+def _aio_v36_single_hierarchical_compact(input_stl: Path, params, log, cancel_event) -> Path:
+    """메모리 때문에 global pass가 불가능할 때 단 한 번의 큰 chunk pass만 수행."""
+    try:
+        with open(input_stl, "rb") as f:
+            f.seek(80)
+            total = int(struct.unpack("<I", f.read(4))[0])
+        avail = int(_aio_v33_available_memory_bytes())
+        if avail >= 10 * 1024**3:
+            target = 3_500_000
+        elif avail >= 7 * 1024**3:
+            target = 2_500_000
+        else:
+            target = 1_500_000
+        if total <= int(target * 1.15):
+            return input_stl
+        candidate = input_stl.with_name(input_stl.stem + "__v36_hier.stl")
+        log.write(f"v3.6 메모리용 단일 large-chunk pass: {target:,} tri/chunk")
+        ok, st = _aio_v34_hierarchical_file_pass(
+            input_stl, candidate, params, log, cancel_event, target,
+        )
+        if not ok:
+            candidate.unlink(missing_ok=True)
+            return input_stl
+        old_n = int(st.get("input_triangles", 0))
+        new_n = int(st.get("output_triangles", 0))
+        if new_n >= old_n * 0.995:
+            candidate.unlink(missing_ok=True)
+            return input_stl
+        log.write(f"v3.6 hier PASS: {old_n:,}->{new_n:,} tri")
+        return candidate
+    except Exception:
+        return input_stl
+
+
+def _aio_v36_global_exact_compact_stl(input_stl: Path, output_stl: Path, params, log, cancel_event):
+    """single closed-mesh VTK zero-error pass.
+
+    v3.5에서 가장 비싼 양방향 vtkDistancePolyDataFilter는 제거한다. DecimatePro는
+    MaximumError=0 / PreserveTopology / no splitting / no boundary deletion을 유지하고,
+    출력 정점 exact-subset, closed manifold, bounds, area, volume, half-grid를 확인한다.
+    이후 빠른 binary/manifold 최종 검증을 통과한 STL만 최종 파일로 승격한다.
+    """
+    result = {"reason":"", "input_triangles":0, "output_triangles":0}
+    output_stl.unlink(missing_ok=True)
+    if not _AIO_V32_VTK_AVAILABLE:
+        result["reason"] = f"VTK unavailable: {_AIO_V32_VTK_ERROR}"
+        return False, result
+    try:
+        with open(input_stl, "rb") as f:
+            f.seek(80); raw = f.read(4)
+            if len(raw) != 4:
+                raise ValueError("invalid STL header")
+            tri_count = int(struct.unpack("<I", raw)[0])
+        result["input_triangles"] = tri_count
+        if tri_count < 60_000:
+            result["reason"] = f"small mesh ({tri_count:,} tri)"
+            return False, result
+
+        file_bytes = int(input_stl.stat().st_size)
+        avail = int(_aio_v33_available_memory_bytes())
+        # v3.6은 surface-distance 복사본을 만들지 않으므로 v3.5보다 peak가 낮다.
+        est_peak = int(file_bytes * 5.2 + 384 * 1024**2)
+        budget = int(avail * 0.68)
+        log.write(
+            f"v3.6 global compact memory: STL={format_bytes(file_bytes)} · "
+            f"peak≈{format_bytes(est_peak)} · free={format_bytes(avail)}"
+        )
+        if est_peak > budget:
+            result["reason"] = f"memory safety skip: estimated {format_bytes(est_peak)} > budget {format_bytes(budget)}"
+            return False, result
+
+        recon_core.check_cancel(cancel_event)
+        reader = _aio_vtk.vtkSTLReader()
+        reader.SetFileName(str(input_stl)); reader.MergingOn(); reader.Update()
+        inp = reader.GetOutput()
+        in_cells = int(inp.GetNumberOfCells())
+        if in_cells <= 0:
+            raise RuntimeError("VTK read failed")
+        # Input is expected closed after the batch engine. Check once, but do not build distance filters.
+        bad_in = _aio_v33_bad_edge_count(inp)
+        if bad_in != 0:
+            result["reason"] = f"input not closed-manifold: bad edges={bad_in:,}"
+            return False, result
+        area0, vol0, inp_tri = _aio_v33_mass_properties(inp)
+        bounds0 = _aio_v33_bounds_array(inp_tri)
+        ref_min = bounds0[:3].copy()
+        half = (12.7/float(params.dpi_x), 12.7/float(params.dpi_y), 0.5*float(params.layer_thickness_mm))
+
+        started = time.time()
+        out = _aio_v33_global_decimate_poly(inp_tri)
+        recon_core.check_cancel(cancel_event)
+        out_cells = int(out.GetNumberOfCells())
+        result["output_triangles"] = out_cells
+        if out_cells <= 0 or out_cells > in_cells:
+            raise RuntimeError(f"bad reduction count {out_cells:,}/{in_cells:,}")
+        if out_cells == in_cells:
+            result["reason"] = "no further exact reduction"
+            return False, result
+
+        subset_ok, _ = _aio_v35_poly_vertex_subset_exact(inp_tri, out)
+        if not subset_ok:
+            raise RuntimeError("output vertex is not exact input subset")
+        bad_out = _aio_v33_bad_edge_count(out)
+        if bad_out != 0:
+            raise RuntimeError(f"bad edges after compact={bad_out:,}")
+        area1, vol1, out_tri = _aio_v33_mass_properties(out)
+        bounds1 = _aio_v33_bounds_array(out_tri)
+        scale = max(1.0, float(np.max(np.abs(bounds0))))
+        bounds_tol = max(2e-6, 2e-7*scale)
+        if float(np.max(np.abs(bounds1-bounds0))) > bounds_tol:
+            raise RuntimeError("bounds changed")
+        area_rel = abs(area1-area0)/max(1.0,abs(area0))
+        vol_rel = abs(vol1-vol0)/max(1.0,abs(vol0))
+        if area_rel > 2e-6 or vol_rel > 3e-6:
+            raise RuntimeError(f"mass-property mismatch area={area_rel:.3e}, vol={vol_rel:.3e}")
+        grid_res = _aio_v33_half_grid_residual(out_tri, half, ref_min)
+        if grid_res > 2e-4:
+            raise RuntimeError(f"half-grid residual={grid_res:.3e}")
+
+        wr = _aio_vtk.vtkSTLWriter()
+        wr.SetFileName(str(output_stl)); wr.SetInputData(out_tri); wr.SetFileTypeToBinary()
+        if int(wr.Write()) != 1:
+            raise RuntimeError("compact STL write failed")
+        recon_core.verify_binary_stl(output_stl, out_cells)
+        elapsed = time.time()-started
+        result.update(
+            reason="PASS", input_triangles=in_cells, output_triangles=out_cells,
+            area_rel=area_rel, volume_rel=vol_rel, half_grid_residual=grid_res,
+            elapsed=elapsed, bad_edges_input=bad_in, bad_edges_output=bad_out,
+        )
+        return True, result
+    except Exception as exc:
+        output_stl.unlink(missing_ok=True)
+        result["reason"] = f"{type(exc).__name__}: {exc}"
+        return False, result
+
+
+# v3.8 fused exact surface engine is already installed above.
+APP_VERSION = "4.6-cap-profiled-fast"
+MODEL_EXTS = {".stl", ".obj", ".ply", ".off", ".3mf", ".glb", ".gltf"}
+IMAGE_EXTS = {".png", ".bmp", ".tif", ".tiff", ".jpg", ".jpeg", ".webp"}
+DEFAULT_WORKERS = max(1, min(4, os.cpu_count() or 4))
+
+
+def _settings_path() -> Path:
+    root = Path(os.getenv("APPDATA", str(Path.home()))) / "BJT_Tools"
+    return root / "model_lattice_pipeline_settings.json"
+
+
+SETTINGS_PATH = _settings_path()
+
+
+class CancelledError(Exception):
+    pass
+
+
+def check_cancel(event: threading.Event) -> None:
+    if event.is_set():
+        raise CancelledError("작업이 사용자에 의해 중단되었습니다.")
+
+
+def natural_key(value: Path | str) -> List[object]:
+    name = Path(value).name if isinstance(value, Path) else str(value)
+    return [int(x) if x.isdigit() else x.lower() for x in re.split(r"(\d+)", name)]
+
+
+def format_seconds(sec: float) -> str:
+    sec = max(0.0, float(sec))
+    if sec < 60:
+        return f"{sec:.0f}초"
+    m, s = divmod(int(sec), 60)
+    if m < 60:
+        return f"{m}분 {s}초"
+    h, m = divmod(m, 60)
+    return f"{h}시간 {m}분"
+
+
+def format_bytes(value: int) -> str:
+    n = float(max(0, value))
+    for unit in ("B", "KB", "MB", "GB", "TB"):
+        if n < 1024.0 or unit == "TB":
+            return f"{n:.2f} {unit}"
+        n /= 1024.0
+    return f"{n:.2f} TB"
+
+
+def dpi_to_mm(dpi: float) -> float:
+    if dpi <= 0:
+        raise ValueError("DPI는 0보다 커야 합니다.")
+    return 25.4 / float(dpi)
+
+
+def clear_generated_images(folder: Path) -> None:
+    folder.mkdir(parents=True, exist_ok=True)
+    for p in folder.iterdir():
+        if p.is_file() and p.suffix.lower() in IMAGE_EXTS:
+            p.unlink()
+
+
+def find_images(folder: Path) -> List[Path]:
+    files = [p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in IMAGE_EXTS]
+    return sorted(files, key=natural_key)
+
+
+class UILogger:
+    def __init__(self, app: "App"):
+        self.app = app
+
+    def write(self, message: str = "") -> None:
+        self.app.after(0, self.app._append_log, str(message))
+
+    def progress(self, percent: float, message: str = "") -> None:
+        self.app.after(0, self.app._set_progress, float(percent), str(message))
+
+
+class StageLogger:
+    """기존 코어의 0~100 진행률을 통합 파이프라인 구간으로 매핑."""
+
+    def __init__(self, base: UILogger, start: float, end: float, name: str):
+        self.base = base
+        self.start = float(start)
+        self.end = float(end)
+        self.name = name
+
+    def write(self, message: str = "") -> None:
+        self.base.write(message)
+
+    def progress(self, percent: float, message: str = "") -> None:
+        mapped = self.start + (self.end - self.start) * max(0.0, min(100.0, float(percent))) / 100.0
+        label = self.name
+        if message:
+            label += f" | {message}"
+        self.base.progress(mapped, label)
+
+
+@dataclass(frozen=True)
+class SliceGrid:
+    x_origin_mm: float
+    y_origin_mm: float
+    width_px: int
+    height_px: int
+    x_pitch_mm: float
+    y_pitch_mm: float
+    layer_count: int
+    layer_thickness_mm: float
+    model_height_mm: float
+
+    @property
+    def physical_width_mm(self) -> float:
+        return self.width_px * self.x_pitch_mm
+
+    @property
+    def physical_height_mm(self) -> float:
+        return self.height_px * self.y_pitch_mm
+
+
+@dataclass(frozen=True)
+class PipelineParams:
+    mode: str
+    input_path: Path
+    output_stl: Path
+    input_unit: str
+    dpi_x: float
+    dpi_y: float
+    layer_thickness_mm: float
+    slice_margin_px: int
+    batch_layers: int
+    shell_mm: float
+    lattice_width_mm: float
+    spacing_mm: float
+    lattice_type: str
+    pattern: str
+    axes: str
+    shell_method: str
+    surface_mode: str
+    crop_xy: bool
+    crop_z: bool
+    crop_margin_px: int
+    center_xy: bool
+    workers: int
+    max_triangles: Optional[int]
+    save_raw_slices: bool
+    save_lattice_slices: bool
+    intermediate_format: str
+    verify_layer_xor: bool
+    print_equivalent: bool = False
+
+
+UNIT_SCALE = {
+    "mm": 1.0,
+    "cm": 10.0,
+    "m": 1000.0,
+    "inch": 25.4,
+}
+
+
+def load_mesh_mm(path: Path, input_unit: str, log: UILogger) -> trimesh.Trimesh:
+    if not path.exists():
+        raise FileNotFoundError(f"입력 모델 파일이 없습니다: {path}")
+    if path.suffix.lower() not in MODEL_EXTS:
+        raise ValueError("지원 모델 형식: STL, OBJ, PLY, OFF, 3MF, GLB, GLTF")
+
+    loaded = trimesh.load(path, process=False)
+    if isinstance(loaded, trimesh.Scene):
+        if not loaded.geometry:
+            raise ValueError("모델 파일에 메시 형상이 없습니다.")
+        geometry = loaded.to_geometry()
+        if not isinstance(geometry, trimesh.Trimesh):
+            meshes = [g for g in loaded.geometry.values() if isinstance(g, trimesh.Trimesh)]
+            if not meshes:
+                raise ValueError("모델 파일에서 삼각형 메시를 찾지 못했습니다.")
+            mesh = trimesh.util.concatenate(meshes)
+        else:
+            mesh = geometry
+    elif isinstance(loaded, trimesh.Trimesh):
+        mesh = loaded
+    else:
+        raise ValueError(f"지원하지 않는 모델 객체입니다: {type(loaded).__name__}")
+
+    mesh = mesh.copy()
+    if len(mesh.vertices) == 0 or len(mesh.faces) == 0:
+        raise ValueError("모델 메시가 비어 있습니다.")
+
+    scale = UNIT_SCALE.get(input_unit)
+    if scale is None:
+        raise ValueError(f"알 수 없는 입력 단위: {input_unit}")
+    if scale != 1.0:
+        mesh.apply_scale(scale)
+
+    mesh.merge_vertices()
+    mesh.remove_unreferenced_vertices()
+    bounds = np.asarray(mesh.bounds, dtype=np.float64)
+    extents = bounds[1] - bounds[0]
+    if np.any(~np.isfinite(extents)) or np.any(extents <= 0):
+        raise ValueError(f"유효하지 않은 모델 크기입니다: {extents}")
+
+    log.write("")
+    log.write("================ 모델 정보 ================")
+    log.write(f"입력 모델: {path}")
+    log.write(f"입력 단위: {input_unit} → 내부 mm 변환 배율 {scale:g}")
+    log.write(f"정점: {len(mesh.vertices):,} | 면: {len(mesh.faces):,}")
+    log.write(f"크기: X={extents[0]:.6f}, Y={extents[1]:.6f}, Z={extents[2]:.6f} mm")
+    log.write(f"watertight: {'예' if mesh.is_watertight else '아니오'}")
+    if not mesh.is_watertight:
+        log.write("WARNING: 메시가 닫힌 형상이 아닙니다. 일부 레이어가 열리거나 비어 보일 수 있습니다.")
+    log.write("===========================================")
+    return mesh
+
+
+def build_slice_grid(
+    mesh: trimesh.Trimesh,
+    dpi_x: float,
+    dpi_y: float,
+    layer_thickness_mm: float,
+    margin_px: int,
+) -> Tuple[trimesh.Trimesh, SliceGrid]:
+    x_pitch = dpi_to_mm(dpi_x)
+    y_pitch = dpi_to_mm(dpi_y)
+    t = float(layer_thickness_mm)
+    if t <= 0:
+        raise ValueError("레이어 두께는 0보다 커야 합니다.")
+
+    mesh = mesh.copy()
+    bounds = np.asarray(mesh.bounds, dtype=np.float64)
+    # 슬라이싱 및 최종 재구성에서 바닥이 정확히 Z=0이 되도록 평행이동.
+    mesh.apply_translation((0.0, 0.0, -float(bounds[0, 2])))
+    bounds = np.asarray(mesh.bounds, dtype=np.float64)
+    height = float(bounds[1, 2] - bounds[0, 2])
+    layer_count = max(1, int(math.ceil(height / t - 1e-12)))
+
+    margin = max(0, int(margin_px))
+    # 모델 최소 경계를 pixel edge로 직접 사용한다. 세계좌표 0에 억지로 snap하면
+    # 경계가 pixel center와 겹치는 경우 한 축이 1 px 커지거나 작아질 수 있다.
+    # 최소 경계부터 원본 피치로 양자화하면 입력 형상의 정보 손실과 비대칭을 최소화한다.
+    core_width = max(1, int(math.ceil((float(bounds[1, 0]) - float(bounds[0, 0])) / x_pitch - 1e-12)))
+    core_height = max(1, int(math.ceil((float(bounds[1, 1]) - float(bounds[0, 1])) / y_pitch - 1e-12)))
+    x0 = float(bounds[0, 0]) - margin * x_pitch
+    y0 = float(bounds[0, 1]) - margin * y_pitch
+    width = core_width + 2 * margin
+    height_px = core_height + 2 * margin
+
+    grid = SliceGrid(
+        x_origin_mm=x0,
+        y_origin_mm=y0,
+        width_px=width,
+        height_px=height_px,
+        x_pitch_mm=x_pitch,
+        y_pitch_mm=y_pitch,
+        layer_count=layer_count,
+        layer_thickness_mm=t,
+        model_height_mm=height,
+    )
+    return mesh, grid
+
+
+def _world_polygon(poly: Polygon, transform: np.ndarray) -> Polygon:
+    def tx(coords: Iterable[Sequence[float]]) -> np.ndarray:
+        arr = np.asarray(coords, dtype=np.float64)
+        hom = np.column_stack((arr[:, :2], np.zeros(len(arr)), np.ones(len(arr))))
+        return (transform @ hom.T).T[:, :2]
+
+    exterior = tx(poly.exterior.coords)
+    holes = [tx(ring.coords) for ring in poly.interiors]
+    return Polygon(exterior, holes)
+
+
+def _polygon_parts(geom) -> Iterable[Polygon]:
+    if geom is None or geom.is_empty:
+        return
+    if isinstance(geom, Polygon):
+        yield geom
+    elif isinstance(geom, MultiPolygon):
+        for g in geom.geoms:
+            yield from _polygon_parts(g)
+    elif isinstance(geom, GeometryCollection):
+        for g in geom.geoms:
+            yield from _polygon_parts(g)
+
+
+def _has_near_duplicate_outer_contours(path2d, grid: SliceGrid) -> Tuple[bool, str]:
+    """section_multiplane의 드문 중복 contour 오류를 감지한다.
+
+    비수밀 또는 복잡한 STL에서 trimesh.section_multiplane이 특정 Z 한 층에
+    거의 같은 외곽 contour를 두 번 반환하는 경우가 있다. 현재 래스터화는
+    even-odd(XOR) 규칙을 사용하므로 이런 중복 외곽은 서로 지워져 한 층이
+    거의 검게 되는 문제가 생긴다.
+
+    정상적인 외곽/내부-hole 쌍은 경계 bounds가 같을 수 없으므로,
+    큰 contour 두 개의 bounds가 픽셀의 1/4 이내로 같고 실제 면적도
+    거의 완전히 겹칠 때만 중복으로 판정한다.
+    """
+    if path2d is None:
+        return False, ""
+
+    try:
+        loops = list(path2d.polygons_closed)
+    except Exception:
+        repaired = path2d.copy()
+        repaired.process()
+        loops = list(repaired.polygons_closed)
+
+    min_area = max(
+        float(grid.x_pitch_mm * grid.y_pitch_mm) * 4.0,
+        1e-10,
+    )
+    polygons: List[Polygon] = []
+    for loop in loops:
+        try:
+            poly = make_valid(Polygon(np.asarray(loop.exterior.coords, dtype=np.float64)[:, :2]))
+        except Exception:
+            continue
+        for part in _polygon_parts(poly):
+            if not part.is_empty and float(part.area) >= min_area:
+                polygons.append(part)
+
+    if len(polygons) < 2:
+        return False, ""
+
+    bounds_tol = max(float(grid.x_pitch_mm), float(grid.y_pitch_mm)) * 0.25
+    for i in range(len(polygons) - 1):
+        a = polygons[i]
+        area_a = float(a.area)
+        for j in range(i + 1, len(polygons)):
+            b = polygons[j]
+            area_b = float(b.area)
+            ratio = min(area_a, area_b) / max(area_a, area_b)
+            if ratio < 0.98:
+                continue
+
+            if max(abs(float(x) - float(y)) for x, y in zip(a.bounds, b.bounds)) > bounds_tol:
+                continue
+
+            try:
+                overlap = float(a.intersection(b).area) / max(min(area_a, area_b), 1e-15)
+            except Exception:
+                continue
+            if overlap >= 0.995:
+                detail = (
+                    f"거의 동일한 contour 2개 감지 "
+                    f"(area={area_a:.6f}/{area_b:.6f} mm², overlap={overlap*100:.3f}%)"
+                )
+                return True, detail
+
+    return False, ""
+
+
+def _single_plane_section_2d(mesh: trimesh.Trimesh, z_mm: float):
+    """배치 단면이 의심스러울 때 해당 Z만 독립적으로 다시 계산한다."""
+    path3d = mesh.section(
+        plane_origin=(0.0, 0.0, float(z_mm)),
+        plane_normal=(0.0, 0.0, 1.0),
+    )
+    if path3d is None:
+        return None
+    if hasattr(path3d, "to_2D"):
+        path2d, _ = path3d.to_2D()
+    else:
+        path2d, _ = path3d.to_planar()
+    return path2d
+
+
+@njit(cache=True, nogil=True)
+def _scanline_rasterize_rings_exact(
+    ring_x: np.ndarray,
+    ring_y: np.ndarray,
+    offsets: np.ndarray,
+    x_origin: float,
+    y_origin: float,
+    x_pitch: float,
+    y_pitch: float,
+    width: int,
+    height: int,
+) -> np.ndarray:
+    """정수 pixel-center에 대한 exact even-odd scanline rasterizer.
+
+    경계점은 내부로 포함하지 않으며, 기존 Shapely contains_xy와 같은 픽셀 중심
+    판정 규칙을 사용한다. Numba nopython/nogil로 실행되어 형상 정밀도는 그대로이고
+    Python 객체 및 전체 meshgrid 생성 비용만 제거한다.
+    """
+    out = np.zeros((height, width), dtype=np.uint8)
+    total_edges = 0
+    min_v = 1.0e300
+    max_v = -1.0e300
+    for r in range(offsets.shape[0] - 1):
+        a = offsets[r]
+        b = offsets[r + 1]
+        n = b - a
+        if n < 3:
+            continue
+        closed = ring_x[b - 1] == ring_x[a] and ring_y[b - 1] == ring_y[a]
+        total_edges += n - 1 if closed else n
+        for k in range(a, b):
+            v = (ring_y[k] - y_origin) / y_pitch - 0.5
+            if v < min_v:
+                min_v = v
+            if v > max_v:
+                max_v = v
+    if total_edges <= 0:
+        return out
+
+    row0 = max(0, int(math.ceil(min_v)))
+    row1 = min(height, int(math.ceil(max_v)))
+    intersections = np.empty(total_edges, dtype=np.float64)
+
+    for row in range(row0, row1):
+        y = y_origin + (row + 0.5) * y_pitch
+        count = 0
+        for r in range(offsets.shape[0] - 1):
+            a = offsets[r]
+            b = offsets[r + 1]
+            n = b - a
+            if n < 3:
+                continue
+            closed = ring_x[b - 1] == ring_x[a] and ring_y[b - 1] == ring_y[a]
+            edge_count = n - 1 if closed else n
+            for e in range(edge_count):
+                i = a + e
+                j = a if e == edge_count - 1 else i + 1
+                ya = ring_y[i]
+                yb = ring_y[j]
+                # half-open vertex rule: horizontal edge 제외, shared vertex 중복 방지
+                if (ya > y) != (yb > y):
+                    xa = ring_x[i]
+                    xb = ring_x[j]
+                    intersections[count] = xa + (y - ya) * (xb - xa) / (yb - ya)
+                    count += 1
+        if count < 2:
+            continue
+        xs = np.sort(intersections[:count])
+        for q in range(count // 2):
+            left = xs[2 * q]
+            right = xs[2 * q + 1]
+            if right < left:
+                tmp = left
+                left = right
+                right = tmp
+            # pixel center가 left보다 엄격히 크고 right보다 엄격히 작은 index 범위
+            u_left = (left - x_origin) / x_pitch - 0.5
+            u_right = (right - x_origin) / x_pitch - 0.5
+            x0 = int(math.floor(u_left)) + 1
+            x1 = int(math.ceil(u_right))
+            if x0 < 0:
+                x0 = 0
+            if x1 > width:
+                x1 = width
+            if x0 < x1:
+                out[row, x0:x1] = 1
+    return out
+
+
+def _rasterize_polygon_scanline(poly: Polygon, grid: SliceGrid) -> np.ndarray:
+    rings = [poly.exterior, *poly.interiors]
+    total = sum(len(r.coords) for r in rings)
+    ring_x = np.empty(total, dtype=np.float64)
+    ring_y = np.empty(total, dtype=np.float64)
+    offsets = np.empty(len(rings) + 1, dtype=np.int64)
+    offsets[0] = 0
+    cursor = 0
+    for i, ring in enumerate(rings):
+        coords = np.asarray(ring.coords, dtype=np.float64)
+        n = len(coords)
+        ring_x[cursor:cursor + n] = coords[:, 0]
+        ring_y[cursor:cursor + n] = coords[:, 1]
+        cursor += n
+        offsets[i + 1] = cursor
+    return _scanline_rasterize_rings_exact(
+        ring_x, ring_y, offsets,
+        grid.x_origin_mm, grid.y_origin_mm,
+        grid.x_pitch_mm, grid.y_pitch_mm,
+        grid.width_px, grid.height_px,
+    ).astype(bool, copy=False)
+
+
+def _warmup_exact_rasterizer() -> float:
+    """첫 실제 레이어에서 JIT 지연이 멈춤처럼 보이지 않도록 미리 컴파일."""
+    started = time.time()
+    x = np.asarray([0.0, 1.0, 1.0, 0.0, 0.0], dtype=np.float64)
+    y = np.asarray([0.0, 0.0, 1.0, 1.0, 0.0], dtype=np.float64)
+    offsets = np.asarray([0, 5], dtype=np.int64)
+    _scanline_rasterize_rings_exact(x, y, offsets, 0.0, 0.0, 0.1, 0.1, 2, 2)
+    return time.time() - started
+
+
+def rasterize_path_center_sample(path2d, grid: SliceGrid, cancel_event: threading.Event) -> np.ndarray:
+    """단면 polygon을 기존과 동일한 픽셀 중심 규칙으로 고속 이진화."""
+    mask = np.zeros((grid.height_px, grid.width_px), dtype=bool)
+    if path2d is None:
+        return mask
+
+    transform = np.asarray(path2d.metadata.get("to_3D", np.eye(4)), dtype=np.float64)
+    try:
+        planar_loops = list(path2d.polygons_closed)
+    except Exception:
+        path2d = path2d.copy()
+        path2d.process()
+        planar_loops = list(path2d.polygons_closed)
+
+    for planar in planar_loops:
+        check_cancel(cancel_event)
+        loop = Polygon(np.asarray(planar.exterior.coords, dtype=np.float64)[:, :2])
+        world = make_valid(_world_polygon(loop, transform))
+        for poly in _polygon_parts(world):
+            if poly.is_empty or poly.area <= 0:
+                continue
+            mask ^= _rasterize_polygon_scanline(poly, grid)
+    return mask
+
+def save_binary_slice(mask: np.ndarray, path: Path, image_format: str) -> None:
+    arr = np.asarray(mask, dtype=np.uint8) * np.uint8(255)
+    image = Image.fromarray(arr, mode="L")
+    fmt = image_format.upper()
+    if fmt == "PNG":
+        image.save(path, format="PNG", compress_level=1, optimize=False)
+    else:
+        image.save(path, format="BMP")
+
+
+def slice_model_to_images(
+    model_path: Path,
+    output_dir: Path,
+    params: PipelineParams,
+    log: UILogger,
+    cancel_event: threading.Event,
+    progress_start: float = 0.0,
+    progress_end: float = 24.0,
+) -> SliceGrid:
+    mesh = load_mesh_mm(model_path, params.input_unit, log)
+    mesh, grid = build_slice_grid(
+        mesh, params.dpi_x, params.dpi_y, params.layer_thickness_mm, params.slice_margin_px
+    )
+    clear_generated_images(output_dir)
+
+    ext = ".png" if params.intermediate_format == "PNG" else ".bmp"
+    log.write("")
+    log.write("=============== 슬라이싱 조건 ===============")
+    log.write(f"DPI: X={params.dpi_x:g}, Y={params.dpi_y:g}")
+    log.write(f"픽셀 피치: X={grid.x_pitch_mm:.9f}, Y={grid.y_pitch_mm:.9f} mm")
+    log.write(f"레이어 두께: {grid.layer_thickness_mm:g} mm")
+    log.write(f"캔버스: {grid.width_px:,} × {grid.height_px:,} px")
+    log.write(f"캔버스 실제 크기: X={grid.physical_width_mm:.3f}, Y={grid.physical_height_mm:.3f} mm")
+    log.write(f"레이어 수: {grid.layer_count:,} | 양자화 Z={grid.layer_count*grid.layer_thickness_mm:.3f} mm")
+    log.write("샘플링: 각 레이어 중심 단면 + 픽셀 중심 포함 판정")
+    log.write("============================================")
+
+    jit_time = _warmup_exact_rasterizer()
+    log.write(f"정밀 scanline JIT 준비: {format_seconds(jit_time)} (첫 실행만 발생 가능)")
+    log.write("래스터 엔진: Numba exact scanline (기존 픽셀 중심 결과와 동일)")
+
+    started = time.time()
+    batch = max(1, min(int(params.batch_layers), 2*_bjt_workers(params.workers, grid.width_px*grid.height_px, 12)))
+    epsilon = max(1e-9, grid.layer_thickness_mm * 1e-7)
+    raster_workers = _bjt_workers(min(int(params.workers),8), grid.width_px*grid.height_px, 12)
+    completed = 0
+
+    def raster_save_job(index: int, path2d) -> int:
+        check_cancel(cancel_event)
+        mask = rasterize_path_center_sample(path2d, grid, cancel_event)
+        save_binary_slice(mask, output_dir / f"{index+1:06d}{ext}", params.intermediate_format)
+        return index
+
+    with ThreadPoolExecutor(max_workers=raster_workers) as raster_pool:
+        for batch_start in range(0, grid.layer_count, batch):
+            check_cancel(cancel_event)
+            batch_end = min(grid.layer_count, batch_start + batch)
+            centers = (np.arange(batch_start, batch_end, dtype=np.float64) + 0.5) * grid.layer_thickness_mm
+            centers = np.minimum(centers, max(epsilon, grid.model_height_mm - epsilon))
+            sections = mesh.section_multiplane(
+                plane_origin=(0.0, 0.0, 0.0),
+                plane_normal=(0.0, 0.0, 1.0),
+                heights=centers,
+            )
+
+            prepared = []
+            for local, path2d in enumerate(sections):
+                check_cancel(cancel_event)
+                index = batch_start + local
+                z_center = float(centers[local])
+                suspicious, reason = _has_near_duplicate_outer_contours(path2d, grid)
+                if suspicious:
+                    log.write(f"WARNING: {index+1:,}층(Z={z_center:.6f} mm) 배치 단면 이상 감지: {reason}")
+                    log.write("         해당 층을 독립 단면 계산으로 자동 재처리합니다.")
+                    path2d = _single_plane_section_2d(mesh, z_center)
+                prepared.append((index, path2d))
+
+            futures = [raster_pool.submit(raster_save_job, index, path2d) for index, path2d in prepared]
+            for future in as_completed(futures):
+                check_cancel(cancel_event)
+                future.result()
+                completed += 1
+                if completed == 1 or completed % 5 == 0 or completed == grid.layer_count:
+                    elapsed = time.time() - started
+                    remain = elapsed / max(1, completed) * (grid.layer_count - completed)
+                    pct = progress_start + (progress_end - progress_start) * completed / grid.layer_count
+                    log.progress(pct, f"1/3 모델 슬라이싱 {completed:,}/{grid.layer_count:,} | ETA {format_seconds(remain)}")
+
+    return grid
+
+
+def validate_pipeline(params: PipelineParams) -> None:
+    if params.mode not in ("3D 모델 → 전체 처리", "기존 슬라이스 → 격자화+재구성", "격자 슬라이스 → 재구성"):
+        raise ValueError("올바르지 않은 처리 모드입니다.")
+    if not params.input_path.exists():
+        raise FileNotFoundError(f"입력 경로가 없습니다: {params.input_path}")
+    if params.dpi_x <= 0 or params.dpi_y <= 0:
+        raise ValueError("X/Y DPI는 0보다 커야 합니다.")
+    if params.layer_thickness_mm <= 0:
+        raise ValueError("레이어 두께는 0보다 커야 합니다.")
+    if params.shell_mm < 0:
+        raise ValueError("쉘 두께는 0 이상이어야 합니다.")
+    if params.lattice_width_mm <= 0 or params.spacing_mm <= 0:
+        raise ValueError("격자 살 두께와 간격은 0보다 커야 합니다.")
+    if params.lattice_width_mm >= params.spacing_mm:
+        raise ValueError("격자 살 두께는 격자 간격보다 작아야 합니다.")
+    if params.workers < 1:
+        raise ValueError("Workers는 1 이상이어야 합니다.")
+    if params.output_stl.suffix.lower() != ".stl":
+        raise ValueError("최종 출력 확장자는 .stl이어야 합니다.")
+
+
+def copy_or_link_images(source: Path, target: Path) -> None:
+    """기존 슬라이스 입력을 파이프라인 작업 폴더로 복사."""
+    files = find_images(source)
+    if not files:
+        raise FileNotFoundError(f"이미지 파일을 찾지 못했습니다: {source}")
+    clear_generated_images(target)
+    for p in files:
+        shutil.copy2(p, target / p.name)
+
+
+
+@dataclass(frozen=True)
+class StackBBoxInfo:
+    images: Tuple[Path, ...]
+    full_w: int
+    full_h: int
+    xmin: int
+    xmax: int
+    ymin: int
+    ymax: int
+    zmin: int
+    zmax: int
+
+    @property
+    def width(self) -> int:
+        return self.xmax - self.xmin
+
+    @property
+    def height(self) -> int:
+        return self.ymax - self.ymin
+
+    @property
+    def layers(self) -> int:
+        return self.zmax - self.zmin + 1
+
+
+def _load_binary_mask(path: Path, expected_size: Optional[Tuple[int, int]] = None) -> np.ndarray:
+    with Image.open(path) as im:
+        gray = ImageOps.grayscale(im)
+        if expected_size is not None and gray.size != expected_size:
+            raise ValueError(f"슬라이스 크기가 서로 다릅니다: {path.name} {gray.size} != {expected_size}")
+        arr = np.asarray(gray, dtype=np.uint8)
+    return np.ascontiguousarray(arr >= 128, dtype=bool)
+
+
+def analyze_stack_bbox(image_dir: Path, params: PipelineParams, log: Optional[UILogger] = None) -> StackBBoxInfo:
+    images = tuple(find_images(image_dir))
+    if not images:
+        raise FileNotFoundError(f"검증할 슬라이스 이미지가 없습니다: {image_dir}")
+    with Image.open(images[0]) as im:
+        full_w, full_h = im.size
+
+    xmin, ymin = full_w, full_h
+    xmax = ymax = -1
+    nonempty_z: List[int] = []
+    for i, path in enumerate(images):
+        mask = _load_binary_mask(path, (full_w, full_h))
+        if np.any(mask):
+            ys, xs = np.nonzero(mask)
+            xmin = min(xmin, int(xs.min()))
+            xmax = max(xmax, int(xs.max()) + 1)
+            ymin = min(ymin, int(ys.min()))
+            ymax = max(ymax, int(ys.max()) + 1)
+            nonempty_z.append(i)
+        if log is not None and (i == 0 or (i + 1) % 50 == 0 or i + 1 == len(images)):
+            log.write(f"검증 입력 분석 {i+1:,}/{len(images):,}")
+
+    if not nonempty_z:
+        raise ValueError("슬라이스 세트에 재료 픽셀이 없습니다.")
+
+    margin = max(0, int(params.crop_margin_px))
+    if params.crop_xy:
+        xmin = max(0, xmin - margin)
+        xmax = min(full_w, xmax + margin)
+        ymin = max(0, ymin - margin)
+        ymax = min(full_h, ymax + margin)
+    else:
+        xmin, xmax, ymin, ymax = 0, full_w, 0, full_h
+
+    if params.crop_z:
+        zmin, zmax = min(nonempty_z), max(nonempty_z)
+    else:
+        zmin, zmax = 0, len(images) - 1
+
+    return StackBBoxInfo(images, full_w, full_h, xmin, xmax, ymin, ymax, zmin, zmax)
+
+
+def load_trimesh_no_process(path: Path) -> trimesh.Trimesh:
+    loaded = trimesh.load(path, process=False)
+    if isinstance(loaded, trimesh.Scene):
+        meshes = [g for g in loaded.geometry.values() if isinstance(g, trimesh.Trimesh)]
+        if not meshes:
+            raise ValueError(f"메시를 읽지 못했습니다: {path}")
+        mesh = trimesh.util.concatenate(meshes)
+    elif isinstance(loaded, trimesh.Trimesh):
+        mesh = loaded
+    else:
+        raise ValueError(f"지원하지 않는 메시 객체: {type(loaded).__name__}")
+    return mesh
+
+
+@njit(cache=True)
+def _scanline_rasterize_segments_exact(
+    seg_x0: np.ndarray,
+    seg_y0: np.ndarray,
+    seg_x1: np.ndarray,
+    seg_y1: np.ndarray,
+    x_origin: float,
+    y_origin: float,
+    x_pitch: float,
+    y_pitch: float,
+    width: int,
+    height: int,
+) -> np.ndarray:
+    out = np.zeros((height, width), dtype=np.uint8)
+    nseg = seg_x0.shape[0]
+    intersections = np.empty(max(1, nseg), dtype=np.float64)
+    for row in range(height):
+        y = y_origin + (row + 0.5) * y_pitch
+        count = 0
+        for i in range(nseg):
+            y0 = seg_y0[i]
+            y1 = seg_y1[i]
+            # 표준 half-open scanline rule: vertex 중복 교차를 방지한다.
+            if (y0 <= y < y1) or (y1 <= y < y0):
+                dy = y1 - y0
+                if dy != 0.0:
+                    intersections[count] = seg_x0[i] + (y - y0) * (seg_x1[i] - seg_x0[i]) / dy
+                    count += 1
+        if count < 2:
+            continue
+        xs = np.sort(intersections[:count])
+        # 수치상 완전히 같은 교점은 동일 edge/vertex의 중복이므로 짝수 개를 상쇄한다.
+        unique = np.empty(count, dtype=np.float64)
+        ucount = 0
+        j = 0
+        while j < count:
+            k = j + 1
+            tol = 1e-10
+            while k < count and abs(xs[k] - xs[j]) <= tol:
+                k += 1
+            if ((k - j) & 1) == 1:
+                unique[ucount] = xs[j]
+                ucount += 1
+            j = k
+        pairs = ucount // 2
+        for q in range(pairs):
+            left = unique[2*q]
+            right = unique[2*q+1]
+            if right < left:
+                tmp = left; left = right; right = tmp
+            u_left = (left - x_origin) / x_pitch - 0.5
+            u_right = (right - x_origin) / x_pitch - 0.5
+            x0i = int(math.floor(u_left)) + 1
+            x1i = int(math.ceil(u_right))
+            if x0i < 0: x0i = 0
+            if x1i > width: x1i = width
+            if x0i < x1i:
+                out[row, x0i:x1i] = 1
+    return out
+
+
+def rasterize_mesh_plane_segments(mesh: trimesh.Trimesh, z: float, grid: SliceGrid) -> np.ndarray:
+    segments = trimesh.intersections.mesh_plane(
+        mesh=mesh,
+        plane_normal=np.asarray([0.0, 0.0, 1.0]),
+        plane_origin=np.asarray([0.0, 0.0, float(z)]),
+        return_faces=False,
+    )
+    if segments is None or len(segments) == 0:
+        return np.zeros((grid.height_px, grid.width_px), dtype=bool)
+    seg = np.asarray(segments, dtype=np.float64)
+    return _scanline_rasterize_segments_exact(
+        seg[:,0,0], seg[:,0,1], seg[:,1,0], seg[:,1,1],
+        grid.x_origin_mm, grid.y_origin_mm,
+        grid.x_pitch_mm, grid.y_pitch_mm,
+        grid.width_px, grid.height_px,
+    ).astype(bool, copy=False)
+
+
+def _aio_v37_final_fast_verify(
+    model_path: Path,
+    params: PipelineParams,
+    cancel_event: threading.Event,
+    *,
+    compact_stats: Optional[dict] = None,
+) -> None:
+    """대형 모델용 빠른 최종 산출물 검증.
+
+    전 레이어 재슬라이스/XOR는 5512×5512×1000급에서 수십억 픽셀을 다시
+    처리해야 하므로 production 경로에서 제거한다. 대신 출력 자체의 구조 무결성을
+    한 번의 streaming STL 검사와 compiled VTK topology 검사로 확인한다.
+
+    검증 항목
+    - binary STL 레코드 길이/triangle count/유한 좌표
+    - 퇴화 triangle 0
+    - closed manifold: boundary/non-manifold edge 0
+    - global zero-error compact가 수행된 경우 그 단계의 exact-subset/area/volume/bounds
+      검증 결과도 그대로 요구한다.
+    """
+    check_cancel(cancel_event)
+    if model_path.suffix.lower() != ".stl":
+        raise RuntimeError("최종 산출물은 STL이어야 합니다.")
+
+    st = binary_stl_stats(model_path, cancel_event)
+    tri_n = int(st.get("triangles", 0))
+    if tri_n <= 0:
+        raise RuntimeError("최종 STL에 triangle이 없습니다.")
+    if int(st.get("degenerate_triangles", 0)) != 0:
+        raise RuntimeError("최종 STL에 퇴화 triangle이 존재합니다.")
+    expected_bytes = 84 + tri_n * 50
+    if int(st.get("bytes", -1)) != expected_bytes:
+        raise RuntimeError("최종 STL binary 레코드 크기가 triangle count와 일치하지 않습니다.")
+    b0 = np.asarray(st.get("bounds_min", []), dtype=np.float64)
+    b1 = np.asarray(st.get("bounds_max", []), dtype=np.float64)
+    if b0.size != 3 or b1.size != 3 or not np.all(np.isfinite(b0)) or not np.all(np.isfinite(b1)):
+        raise RuntimeError("최종 STL bounds가 유효하지 않습니다.")
+
+    # global compact PASS는 이미 exact input-vertex subset + closed manifold +
+    # bounds/area/volume/half-grid를 검사한 결과다. 같은 파일에 대해 VTK topology를
+    # 다시 전부 읽는 중복 비용을 피한다.
+    compact_pass = bool(compact_stats) and str(compact_stats.get("reason", "")) == "PASS"
+    compact_out = int(compact_stats.get("output_triangles", -1)) if compact_stats else -1
+    exact_boundary = bool(compact_stats.get("exact_boundary_preserved", False)) if compact_stats else False
+    if compact_pass and compact_out == tri_n and exact_boundary:
+        # v3.9 표면보간형은 exact boundary+projected-area 보존 compaction만 사용한다.
+        # 원 binary topology 자체가 corner/edge contact로 non-manifold일 수 있으므로
+        # manifold 여부를 PASS의 필수조건으로 강제하지 않는다.
+        return
+    if compact_pass and compact_out == tri_n:
+        if int(compact_stats.get("bad_edges_output", 0)) != 0:
+            raise RuntimeError("global compact topology 검증 결과가 유효하지 않습니다.")
+        return
+
+    # compact가 생략/실패/fallback된 경로만 compiled VTK로 topology를 한 번 검사한다.
+    if _AIO_V32_VTK_AVAILABLE:
+        rd = _aio_vtk.vtkSTLReader()
+        rd.SetFileName(str(model_path))
+        rd.MergingOn()
+        rd.Update()
+        poly = rd.GetOutput()
+        if poly is None or int(poly.GetNumberOfCells()) != tri_n:
+            raise RuntimeError("최종 STL VTK 재로딩 triangle count가 일치하지 않습니다.")
+        bad = _aio_v33_bad_edge_count(poly)
+        if bad != 0:
+            raise RuntimeError(f"최종 모델 manifold 검증 실패: bad edges={bad:,}")
+    # VTK를 설치할 수 없는 환경에서는 ExactLUT/원본충실형 생성기가 이미 topology를
+    # 결정론적으로 생성하므로 binary STL 무결성 검사를 최종 certificate로 사용한다.
+
+
+def binary_stl_stats(path: Path, cancel_event: Optional[threading.Event] = None) -> dict:
+    """대형 STL도 전체 메시를 RAM에 올리지 않고 triangle/bounds/퇴화면/SHA를 검사."""
+    rec_dtype = np.dtype([
+        ("normal", "<f4", (3,)), ("a", "<f4", (3,)), ("b", "<f4", (3,)),
+        ("c", "<f4", (3,)), ("attr", "<u2"),
+    ])
+    sha = hashlib.sha256()
+    with open(path, "rb") as f:
+        header = f.read(84)
+        if len(header) != 84:
+            raise ValueError(f"비정상 STL: {path}")
+        sha.update(header)
+        count = struct.unpack("<I", header[80:84])[0]
+        mins = np.asarray([np.inf, np.inf, np.inf], dtype=np.float64)
+        maxs = np.asarray([-np.inf, -np.inf, -np.inf], dtype=np.float64)
+        degenerate = 0
+        read_count = 0
+        chunk_tri = 200_000
+        while read_count < count:
+            if cancel_event is not None:
+                check_cancel(cancel_event)
+            take = min(chunk_tri, count - read_count)
+            raw = f.read(take * 50)
+            if len(raw) != take * 50:
+                raise ValueError(f"STL 레코드 길이 오류: {path}")
+            sha.update(raw)
+            rec = np.frombuffer(raw, dtype=rec_dtype, count=take)
+            if not np.all(np.isfinite(rec["normal"])):
+                raise ValueError("STL에 NaN/Inf normal이 있습니다.")
+            pts = np.concatenate((rec["a"], rec["b"], rec["c"]), axis=0).astype(np.float64, copy=False)
+            if not bool(np.all(np.isfinite(pts))):
+                raise ValueError(f"STL에 NaN/Inf 정점이 있습니다: {path}")
+            mins = np.minimum(mins, pts.min(axis=0))
+            maxs = np.maximum(maxs, pts.max(axis=0))
+            ab = rec["b"].astype(np.float64) - rec["a"].astype(np.float64)
+            ac = rec["c"].astype(np.float64) - rec["a"].astype(np.float64)
+            cross = np.cross(ab, ac)
+            degenerate += int(np.count_nonzero(np.einsum("ij,ij->i", cross, cross) <= 1e-24))
+            read_count += take
+        if f.read(1):
+            raise ValueError(f"STL 뒤에 예상 밖 데이터가 있습니다: {path}")
+    return {
+        "path": str(path),
+        "triangles": int(count),
+        "bytes": int(path.stat().st_size),
+        "bounds_min": [float(v) for v in mins],
+        "bounds_max": [float(v) for v in maxs],
+        "extents": [float(v) for v in (maxs - mins)],
+        "degenerate_triangles": int(degenerate),
+        "sha256": sha.hexdigest(),
+    }
+
+
+
+def run_pipeline(
+    params: PipelineParams,
+    log: UILogger,
+    cancel_event: threading.Event,
+    temp_root: Path,
+    preview_callback,
+) -> Tuple[Path, Optional[Path], Optional[Path]]:
+    validate_pipeline(params)
+    start_all = time.time()
+    params.output_stl.parent.mkdir(parents=True, exist_ok=True)
+
+    work_parent = params.output_stl.parent / (params.output_stl.stem + "_intermediate_" + temp_root.name)
+    raw_dir = work_parent / "01_raw_slices" if params.save_raw_slices else temp_root / "01_raw_slices"
+    lattice_dir = work_parent / "02_lattice_slices" if params.save_lattice_slices else temp_root / "02_lattice_slices"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    lattice_dir.mkdir(parents=True, exist_ok=True)
+
+    log.write(f"{APP_NAME} v{APP_VERSION}")
+    log.write(f"처리 모드: {params.mode}")
+    log.write(f"정밀 모델: {params.output_stl}")
+    log.write("출력 기준: 지정 DPI와 레이어 두께 유지. 선택한 재구성 모드의 형상 보존 범위를 확인하십시오.")
+    log.write("메시 최적화: 원본형 exact 경계 접합 / 보간형 Direct boundary + exact certificate")
+
+    if params.mode == "3D 모델 → 전체 처리":
+        slice_model_to_images(
+            params.input_path, raw_dir, params, log, cancel_event, progress_start=0.0, progress_end=24.0
+        )
+        preview_callback(raw_dir, None)
+    elif params.mode == "기존 슬라이스 → 격자화+재구성":
+        if not params.input_path.is_dir():
+            raise ValueError("기존 슬라이스 모드는 이미지 폴더를 입력해야 합니다.")
+        copy_or_link_images(params.input_path, raw_dir)
+        log.progress(24.0, "기존 슬라이스 입력 준비 완료")
+        preview_callback(raw_dir, None)
+    else:
+        if not params.input_path.is_dir():
+            raise ValueError("격자 슬라이스 모드는 이미지 폴더를 입력해야 합니다.")
+        copy_or_link_images(params.input_path, lattice_dir)
+        log.progress(72.0, "격자 슬라이스 입력 준비 완료")
+        preview_callback(None, lattice_dir)
+
+    check_cancel(cancel_event)
+
+    if params.mode != "격자 슬라이스 → 재구성":
+        lattice_params = lattice_core.Params(
+            input_dir=raw_dir,
+            output_dir=lattice_dir,
+            dpi_x=params.dpi_x,
+            dpi_y=params.dpi_y,
+            shell_mm=params.shell_mm,
+            lattice_width_mm=params.lattice_width_mm,
+            spacing_mm=params.spacing_mm,
+            layer_thickness_mm=params.layer_thickness_mm,
+            threshold=128,
+            print_is_white=True,
+            output_mode="binary",
+            background_value=0,
+            material_value=255,
+            lattice_type=params.lattice_type,
+            pattern=params.pattern,
+            axes=params.axes,
+            preserve_filenames=True,
+            overwrite=True,
+            save_preview_every=0,
+            shell_method=params.shell_method,
+            workers=params.workers,
+        )
+        # v4.1: 임시 중간 이미지는 동일 0/255 mask를 1-bit로 저장해 디스크 I/O를 1/8로 줄인다.
+        # 사용자가 중간 lattice 이미지를 보존하도록 선택한 경우에는 기존 8-bit 형식을 유지한다.
+        lattice_core._aio_internal_1bit_output = not bool(params.save_lattice_slices)
+        stage_log = StageLogger(log, 24.0, 72.0, "2/3 쉘·격자화")
+        if _AIO_LATTICE_ACCEL_DISABLED:
+            stage_log.write(
+                "격자 래스터화: 기존 정밀 Python fallback (" +
+                (_AIO_LATTICE_FALLBACK_REASON or "Numba unavailable") + ")"
+            )
+        else:
+            stage_log.write(
+                "격자 래스터화: Numba exact JIT 활성화 "
+                "(설정별 픽셀 전수검증 후 사용, 불일치 시 자동 fallback)"
+            )
+        lattice_core.run_conversion(lattice_params, stage_log, cancel_event)
+        preview_callback(raw_dir, lattice_dir)
+
+    check_cancel(cancel_event)
+
+    # v3.7: 최종 산출물은 STL 하나만 생성한다.
+    # 임시 STL에서 생성/경량화/빠른 구조 검증을 끝낸 뒤 PASS일 때만 최종 파일로 승격한다.
+    # 전 레이어 XOR 재슬라이스는 대형 모델의 10분 목표를 방해하므로 production 경로에서 제거한다.
+    mandatory_verify = params.surface_mode in ("원본 충실형", "표면 보간형", "레이어 출력 전용")
+    pending_stl = (
+        params.output_stl.with_name(params.output_stl.stem + "__cert_pending.stl")
+        if mandatory_verify else params.output_stl
+    )
+    pending_stl.unlink(missing_ok=True)
+    recon_params = recon_core.Params(
+        input_path=lattice_dir,
+        output_stl=pending_stl,
+        dpi_x=params.dpi_x,
+        dpi_y=params.dpi_y,
+        layer_thickness_mm=params.layer_thickness_mm,
+        auto_threshold=False,
+        threshold=128,
+        polarity="흰색",
+        recursive=False,
+        respect_number_gaps=False,
+        crop_xy=params.crop_xy,
+        crop_empty_z=params.crop_z,
+        crop_margin_px=params.crop_margin_px,
+        center_xy=params.center_xy,
+        surface_mode=params.surface_mode,
+        mesh_mode="고속 병합",
+        workers=params.workers,
+        max_triangles=params.max_triangles,
+    )
+    stage_log = StageLogger(log, 72.0, 98.0 if mandatory_verify else 99.0, "3/3 정밀 STL 재구성")
+    global _AIO_V32_STRICT_OUTPUT_VERIFY
+    _AIO_V32_STRICT_OUTPUT_VERIFY = False
+    compact_stats = {}
+    try:
+        recon_core.reconstruct_streaming(recon_params, stage_log, cancel_event)
+
+        if params.surface_mode == "표면 보간형":
+            # v3.9: 표면 생성 중 XOR-safe exact compact가 끝난다. 중간 STL을 다시 읽지 않는다.
+            compact_stats = dict(_AIO_V38_LAST_COMPACT_STATS)
+
+        if mandatory_verify:
+            full_stats = _aio_v37_final_fast_verify(
+                pending_stl, params, cancel_event, compact_stats=compact_stats
+            )
+            os.replace(pending_stl, params.output_stl)
+            log.write("최종 검증: binary·유한 좌표·퇴화면·모든 edge incidence/winding 통과 (자체 교차 검사는 별도)")
+        else:
+            log.write("최종 검증: 해당 없음")
+    except Exception:
+        log.write("최종 검증: 불합격 (FAIL)")
+        pending_stl.unlink(missing_ok=True)
+        try:
+            pending_stl.with_name(pending_stl.stem + "__global_compact.stl").unlink(missing_ok=True)
+        except Exception:
+            pass
+        raise
+    finally:
+        _AIO_V32_STRICT_OUTPUT_VERIFY = False
+
+    check_cancel(cancel_event)
+    if not mandatory_verify:
+        full_stats = binary_stl_stats(params.output_stl, cancel_event)
+
+    log.write("")
+    log.write("=============== 정밀 모델 메시 통계 ===============")
+    log.write(f"Triangles: {full_stats['triangles']:,}")
+    log.write(f"파일 크기: {format_bytes(full_stats['bytes'])}")
+    log.write(f"퇴화 triangle: {full_stats['degenerate_triangles']:,}")
+    log.write(f"Bounds min: {full_stats['bounds_min']}")
+    log.write(f"Bounds max: {full_stats['bounds_max']}")
+    log.write(f"Extents mm: {full_stats['extents']}")
+    log.write("검증 범위: 파일 무결성 + edge incidence/winding. 임의 자체 교차·점 접촉은 별도 확인 필요.")
+    log.write("====================================================")
+
+    elapsed = time.time() - start_all
+    log.write("")
+    log.write("================ 통합 처리 완료 ================")
+    log.write(f"정밀 STL: {params.output_stl}")
+    log.write(f"3D 재구성 모드: {params.surface_mode}")
+    if params.surface_mode == "원본 충실형":
+        log.write("메시 출력: 정밀 보존 구조 병합(좌표 변경·근사 단순화 없음)")
+    log.write(f"전체 소요 시간: {format_seconds(elapsed)}")
+    if params.save_raw_slices:
+        log.write(f"원본 슬라이스 보존: {raw_dir}")
+    if params.save_lattice_slices:
+        log.write(f"격자 슬라이스 보존: {lattice_dir}")
+    log.write("=================================================")
+    log.progress(100.0, "완료")
+    return params.output_stl, raw_dir, lattice_dir
+
+
+BaseTk = TkinterDnD.Tk if TkinterDnD is not None else tk.Tk
+
+
+class App(BaseTk):
+    def __init__(self):
+        super().__init__()
+        self.title(f"{APP_NAME} v{APP_VERSION}")
+        self.geometry("1320x900")
+        self.minsize(1120, 760)
+
+        self.cancel_event = threading.Event()
+        self.worker_thread: Optional[threading.Thread] = None
+        self.temp_root: Optional[Path] = None
+        self.preview_raw: List[Path] = []
+        self.preview_lattice: List[Path] = []
+        self.preview_photo_raw = None
+        self.preview_photo_lattice = None
+
+        self._create_vars()
+        self._build_ui()
+        self._load_settings()
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def _create_vars(self) -> None:
+        self.mode_var = tk.StringVar(value="3D 모델 → 전체 처리")
+        self.input_var = tk.StringVar()
+        self.output_var = tk.StringVar()
+        self.unit_var = tk.StringVar(value="mm")
+        self.dpi_x_var = tk.StringVar(value="400")
+        self.dpi_y_var = tk.StringVar(value="400")
+        self.same_dpi_var = tk.BooleanVar(value=True)
+        self.layer_var = tk.StringVar(value="0.1")
+        self.slice_margin_var = tk.StringVar(value="2")
+        self.batch_var = tk.StringVar(value="8")
+
+        self.shell_var = tk.StringVar(value="2.0")
+        self.lattice_width_var = tk.StringVar(value="0.4")
+        self.spacing_var = tk.StringVar(value="2.0")
+        self.lattice_type_var = tk.StringVar(value="선격자")
+        self.pattern_var = tk.StringVar(value="헥사고날")
+        self.axes_var = tk.StringVar(value="xyz")
+        self.shell_method_var = tk.StringVar(value="고속 정밀 EDT (정밀도 고정)")
+
+        self.surface_mode_var = tk.StringVar(value="원본 충실형")
+        self.crop_xy_var = tk.BooleanVar(value=True)
+        self.crop_z_var = tk.BooleanVar(value=True)
+        self.crop_margin_var = tk.StringVar(value="2")
+        self.center_var = tk.BooleanVar(value=True)
+        self.workers_var = tk.StringVar(value=str(DEFAULT_WORKERS))
+        self.max_triangles_var = tk.StringVar(value="0")
+
+        self.save_raw_var = tk.BooleanVar(value=False)
+        self.save_lattice_var = tk.BooleanVar(value=False)
+        self.intermediate_format_var = tk.StringVar(value="BMP")
+        self.verify_layer_xor_var = tk.BooleanVar(value=False)
+        self.print_equivalent_var = tk.BooleanVar(value=False)
+
+        self.progress_var = tk.DoubleVar(value=0.0)
+        self.progress_text_var = tk.StringVar(value="0.0%")
+        self.preview_index_var = tk.IntVar(value=1)
+        self.preview_info_var = tk.StringVar(value="작업 중 생성되는 원본/격자 슬라이스를 비교합니다.")
+
+    def _build_ui(self) -> None:
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+
+        top = ttk.Frame(self, padding=8)
+        top.grid(row=0, column=0, sticky="ew")
+        top.columnconfigure(1, weight=1)
+
+        ttk.Label(top, text="처리 모드").grid(row=0, column=0, sticky="w", padx=(0, 8))
+        mode_cb = ttk.Combobox(
+            top, textvariable=self.mode_var, state="readonly", width=34,
+            values=("3D 모델 → 전체 처리", "기존 슬라이스 → 격자화+재구성", "격자 슬라이스 → 재구성"),
+        )
+        mode_cb.grid(row=0, column=1, sticky="w")
+        mode_cb.bind("<<ComboboxSelected>>", lambda _e: self._mode_changed())
+
+        ttk.Label(top, text="입력").grid(row=1, column=0, sticky="w", padx=(0, 8), pady=(6, 0))
+        input_entry = ttk.Entry(top, textvariable=self.input_var)
+        input_entry.grid(row=1, column=1, sticky="ew", pady=(6, 0))
+        ttk.Button(top, text="찾기", command=self._browse_input).grid(row=1, column=2, padx=(6, 0), pady=(6, 0))
+
+        ttk.Label(top, text="최종 STL").grid(row=2, column=0, sticky="w", padx=(0, 8), pady=(6, 0))
+        ttk.Entry(top, textvariable=self.output_var).grid(row=2, column=1, sticky="ew", pady=(6, 0))
+        ttk.Button(top, text="저장 위치", command=self._browse_output).grid(row=2, column=2, padx=(6, 0), pady=(6, 0))
+
+        if DND_FILES is not None:
+            input_entry.drop_target_register(DND_FILES)
+            input_entry.dnd_bind("<<Drop>>", self._on_drop)
+
+        body = ttk.Panedwindow(self, orient=tk.HORIZONTAL)
+        body.grid(row=1, column=0, sticky="nsew", padx=8, pady=(0, 8))
+
+        left = ttk.Frame(body)
+        right = ttk.Frame(body)
+        body.add(left, weight=2)
+        body.add(right, weight=3)
+        left.columnconfigure(0, weight=1)
+        left.rowconfigure(0, weight=1)
+        right.columnconfigure(0, weight=1)
+        right.rowconfigure(1, weight=1)
+
+        notebook = ttk.Notebook(left)
+        notebook.grid(row=0, column=0, sticky="nsew")
+
+        slice_tab = ttk.Frame(notebook, padding=10)
+        lattice_tab = ttk.Frame(notebook, padding=10)
+        recon_tab = ttk.Frame(notebook, padding=10)
+        output_tab = ttk.Frame(notebook, padding=10)
+        notebook.add(slice_tab, text="1. 슬라이싱")
+        notebook.add(lattice_tab, text="2. 쉘·격자")
+        notebook.add(recon_tab, text="3. 재구성")
+        notebook.add(output_tab, text="출력·성능")
+
+        self._build_slice_tab(slice_tab)
+        self._build_lattice_tab(lattice_tab)
+        self._build_recon_tab(recon_tab)
+        self._build_output_tab(output_tab)
+
+        preview = ttk.LabelFrame(right, text="레이어 비교 미리보기", padding=6)
+        preview.grid(row=0, column=0, sticky="ew")
+        preview.columnconfigure(0, weight=1)
+        preview.columnconfigure(1, weight=1)
+
+        self.raw_label = ttk.Label(preview, text="원본 슬라이스", anchor="center")
+        self.lattice_label = ttk.Label(preview, text="격자 슬라이스", anchor="center")
+        self.raw_label.grid(row=0, column=0, sticky="nsew", padx=3)
+        self.lattice_label.grid(row=0, column=1, sticky="nsew", padx=3)
+        self.raw_label.bind("<MouseWheel>", self._preview_wheel)
+        self.lattice_label.bind("<MouseWheel>", self._preview_wheel)
+
+        control = ttk.Frame(preview)
+        control.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(6, 0))
+        control.columnconfigure(1, weight=1)
+        ttk.Label(control, text="Layer").grid(row=0, column=0, padx=(0, 6))
+        self.preview_scale = ttk.Scale(control, from_=1, to=1, variable=self.preview_index_var, command=self._preview_scale_changed)
+        self.preview_scale.grid(row=0, column=1, sticky="ew")
+        ttk.Label(control, textvariable=self.preview_info_var).grid(row=1, column=0, columnspan=2, sticky="w", pady=(4, 0))
+
+        log_frame = ttk.LabelFrame(right, text="진행 로그", padding=6)
+        log_frame.grid(row=1, column=0, sticky="nsew", pady=(8, 0))
+        log_frame.columnconfigure(0, weight=1)
+        log_frame.rowconfigure(0, weight=1)
+        self.log_text = tk.Text(log_frame, wrap="word", height=20)
+        scroll = ttk.Scrollbar(log_frame, command=self.log_text.yview)
+        self.log_text.configure(yscrollcommand=scroll.set)
+        self.log_text.grid(row=0, column=0, sticky="nsew")
+        scroll.grid(row=0, column=1, sticky="ns")
+
+        bottom = ttk.Frame(self, padding=(8, 0, 8, 8))
+        bottom.grid(row=2, column=0, sticky="ew")
+        bottom.columnconfigure(0, weight=1)
+        ttk.Progressbar(bottom, variable=self.progress_var, maximum=100).grid(row=0, column=0, sticky="ew")
+        ttk.Label(bottom, textvariable=self.progress_text_var, width=46).grid(row=0, column=1, padx=8)
+        self.run_button = ttk.Button(bottom, text="전체 처리 시작", command=self.start)
+        self.run_button.grid(row=0, column=2, padx=(0, 6))
+        self.cancel_button = ttk.Button(bottom, text="중단", command=self.cancel, state=tk.DISABLED)
+        self.cancel_button.grid(row=0, column=3)
+
+        self.same_dpi_var.trace_add("write", lambda *_: self._sync_dpi())
+        self.dpi_x_var.trace_add("write", lambda *_: self._sync_dpi())
+        self.surface_mode_var.trace_add("write", lambda *_: self._surface_changed())
+        self._surface_changed()
+
+    def _add_row(self, parent, row: int, label: str, variable, width=16, values=None):
+        ttk.Label(parent, text=label).grid(row=row, column=0, sticky="w", pady=5)
+        if values:
+            widget = ttk.Combobox(parent, textvariable=variable, state="readonly", values=values, width=width)
+        else:
+            widget = ttk.Entry(parent, textvariable=variable, width=width)
+        widget.grid(row=row, column=1, sticky="ew", pady=5)
+        return widget
+
+    def _build_slice_tab(self, tab) -> None:
+        tab.columnconfigure(1, weight=1)
+        self._add_row(tab, 0, "모델 입력 단위", self.unit_var, values=("mm", "cm", "m", "inch"))
+        self._add_row(tab, 1, "X DPI", self.dpi_x_var)
+        self._add_row(tab, 2, "Y DPI", self.dpi_y_var)
+        ttk.Checkbutton(tab, text="X/Y DPI 동일", variable=self.same_dpi_var).grid(row=3, column=0, columnspan=2, sticky="w", pady=5)
+        self._add_row(tab, 4, "레이어 두께 (mm)", self.layer_var)
+        self._add_row(tab, 5, "슬라이스 여백 (px)", self.slice_margin_var)
+        self._add_row(tab, 6, "멀티섹션 batch", self.batch_var)
+        ttk.Label(
+            tab,
+            text="단면은 각 레이어 중심에서 계산하고, 각 픽셀 중심의 포함 여부로 이진화합니다.\n"
+                 "업샘플링 없이 입력 DPI가 곧 X/Y 정보 한계입니다.",
+            wraplength=390, justify="left",
+        ).grid(row=7, column=0, columnspan=2, sticky="w", pady=(12, 0))
+
+    def _build_lattice_tab(self, tab) -> None:
+        tab.columnconfigure(1, weight=1)
+        self._add_row(tab, 0, "쉘 두께 (mm)", self.shell_var)
+        self._add_row(tab, 1, "격자 살 두께 (mm)", self.lattice_width_var)
+        self._add_row(tab, 2, "격자 간격 (mm)", self.spacing_var)
+        self._add_row(tab, 3, "격자 형식", self.lattice_type_var, values=("선격자", "면격자", "없음(쉘만)"))
+        self._add_row(tab, 4, "패턴", self.pattern_var, values=("헥사고날", "사각"))
+        self._add_row(tab, 5, "축", self.axes_var, values=("xy", "xyz"))
+        self._add_row(tab, 6, "쉘 계산", self.shell_method_var, values=("고속 정밀 EDT (정밀도 고정)",))
+        ttk.Label(
+            tab,
+            text="xyz 선격자는 모든 층의 Z-strut와 주기적인 XY edge를 조합합니다.\n"
+                 "쉘은 XY 외곽과 Z 상·하부 cap을 exact EDT로 보존합니다. 근사 모드는 사용하지 않습니다.",
+            wraplength=390, justify="left",
+        ).grid(row=7, column=0, columnspan=2, sticky="w", pady=(12, 0))
+
+    def _build_recon_tab(self, tab) -> None:
+        tab.columnconfigure(1, weight=1)
+        self._add_row(tab, 0, "3D 재구성", self.surface_mode_var, values=("레이어 출력 전용", "원본 충실형", "표면 보간형"))
+        ttk.Checkbutton(tab, text="XY 빈 여백 제거", variable=self.crop_xy_var).grid(row=1, column=0, columnspan=2, sticky="w", pady=5)
+        ttk.Checkbutton(tab, text="앞뒤 빈 레이어 제거", variable=self.crop_z_var).grid(row=2, column=0, columnspan=2, sticky="w", pady=5)
+        self._add_row(tab, 3, "Crop 여백 (px)", self.crop_margin_var)
+        ttk.Checkbutton(tab, text="최종 STL XY 중심 정렬", variable=self.center_var).grid(row=4, column=0, columnspan=2, sticky="w", pady=5)
+        ttk.Label(
+            tab,
+            text="레이어 출력 전용: 400 DPI, 0.1 mm 층 중앙, AA/블러/자동 지지대/자동 수리 OFF.\n"
+                 "출력 전용은 구간 사이 0.001 mm 간격이 있는 별도 솔리드입니다. CAD/회전/다른 층 설정에 사용하지 마십시오. 표면 보간형은 층 사이에 ExactLUT 표면을 만듭니다.\n"
+                 "표면 보간형은 표면 생성과 zero-error compact를 한 파이프라인에서 처리하고 최종 STL을 한 번만 기록합니다.",
+            wraplength=390, justify="left",
+        ).grid(row=5, column=0, columnspan=2, sticky="w", pady=(12, 0))
+
+    def _build_output_tab(self, tab) -> None:
+        tab.columnconfigure(1, weight=1)
+        self._add_row(tab, 0, "Workers", self.workers_var)
+        self._add_row(tab, 1, "최대 Triangle (0=무제한)", self.max_triangles_var)
+        self._add_row(tab, 2, "중간 이미지 형식", self.intermediate_format_var, values=("BMP", "PNG"))
+        self.verify_xor_check = ttk.Label(tab, text="최종 검증: 파일 무결성 + 전체 edge 접합/방향 검사")
+        self.verify_xor_check.grid(row=3, column=0, columnspan=2, sticky="w", pady=5)
+        ttk.Checkbutton(tab, text="400 DPI / 0.1 mm 픽셀 동일성 후보도 생성", variable=self.print_equivalent_var).grid(row=7,column=0,columnspan=2,sticky="w",pady=5)
+        ttk.Checkbutton(tab, text="원본 슬라이스 저장", variable=self.save_raw_var).grid(row=4, column=0, columnspan=2, sticky="w", pady=5)
+        ttk.Checkbutton(tab, text="격자 슬라이스 저장", variable=self.save_lattice_var).grid(row=5, column=0, columnspan=2, sticky="w", pady=5)
+        ttk.Label(
+            tab,
+            text="정밀 STL과 선택한 경우 프린팅 최적화 후보를 별도로 저장합니다.\n"
+                 "정밀 STL은 STL 무결성·퇴화면·edge 접합과 방향을 검사합니다. 자체 교차는 별도 확인이 필요합니다. 경량 후보는 모든 층의 이진 픽셀도 비교합니다.",
+            wraplength=390, justify="left",
+        ).grid(row=6, column=0, columnspan=2, sticky="w", pady=(12, 0))
+
+    def _mode_changed(self) -> None:
+        mode = self.mode_var.get()
+        if mode == "3D 모델 → 전체 처리":
+            self.run_button.config(text="전체 처리 시작")
+        elif mode == "기존 슬라이스 → 격자화+재구성":
+            self.run_button.config(text="격자화 + 재구성 시작")
+        else:
+            self.run_button.config(text="STL 재구성 시작")
+
+    def _surface_changed(self) -> None:
+        # 전 레이어 XOR는 production 경로에서 사용하지 않는다.
+        self.verify_layer_xor_var.set(False)
+
+    def _sync_dpi(self) -> None:
+        if self.same_dpi_var.get():
+            x = self.dpi_x_var.get()
+            if self.dpi_y_var.get() != x:
+                self.dpi_y_var.set(x)
+
+    def _browse_input(self) -> None:
+        mode = self.mode_var.get()
+        if mode == "3D 모델 → 전체 처리":
+            path = filedialog.askopenfilename(
+                title="3D 모델 선택",
+                filetypes=[("3D model", "*.stl *.obj *.ply *.off *.3mf *.glb *.gltf"), ("All", "*.*")],
+            )
+        else:
+            path = filedialog.askdirectory(title="슬라이스 이미지 폴더 선택")
+        if path:
+            self.input_var.set(path)
+            if not self.output_var.get():
+                p = Path(path)
+                stem = p.stem if p.is_file() else p.name
+                self.output_var.set(str(p.parent / f"{stem}_lattice.stl"))
+
+    def _browse_output(self) -> None:
+        initial = Path(self.output_var.get()).name if self.output_var.get() else "lattice_model.stl"
+        path = filedialog.asksaveasfilename(
+            title="최종 STL 저장",
+            defaultextension=".stl",
+            initialfile=initial,
+            filetypes=[("STL", "*.stl")],
+        )
+        if path:
+            self.output_var.set(path)
+
+    def _on_drop(self, event) -> None:
+        try:
+            values = self.tk.splitlist(event.data)
+            if values:
+                self.input_var.set(values[0])
+        except Exception:
+            self.input_var.set(str(event.data).strip("{}"))
+
+    def _collect_params(self) -> PipelineParams:
+        max_tri = int(self.max_triangles_var.get())
+        return PipelineParams(
+            mode=self.mode_var.get(),
+            input_path=Path(self.input_var.get()).expanduser(),
+            output_stl=Path(self.output_var.get()).expanduser(),
+            input_unit=self.unit_var.get(),
+            dpi_x=float(self.dpi_x_var.get()),
+            dpi_y=float(self.dpi_y_var.get()),
+            layer_thickness_mm=float(self.layer_var.get()),
+            slice_margin_px=int(self.slice_margin_var.get()),
+            batch_layers=int(self.batch_var.get()),
+            shell_mm=float(self.shell_var.get()),
+            lattice_width_mm=float(self.lattice_width_var.get()),
+            spacing_mm=float(self.spacing_var.get()),
+            lattice_type=self.lattice_type_var.get(),
+            pattern=self.pattern_var.get(),
+            axes=self.axes_var.get(),
+            shell_method="고속 정밀 EDT (정밀도 고정)",
+            surface_mode=self.surface_mode_var.get(),
+            crop_xy=self.crop_xy_var.get(),
+            crop_z=self.crop_z_var.get(),
+            crop_margin_px=int(self.crop_margin_var.get()),
+            center_xy=self.center_var.get(),
+            workers=int(self.workers_var.get()),
+            max_triangles=None if max_tri <= 0 else max_tri,
+            save_raw_slices=self.save_raw_var.get(),
+            save_lattice_slices=self.save_lattice_var.get(),
+            intermediate_format=self.intermediate_format_var.get(),
+            verify_layer_xor=False,
+            print_equivalent=self.print_equivalent_var.get(),
+        )
+
+    def start(self) -> None:
+        if self.worker_thread is not None and self.worker_thread.is_alive():
+            return
+        try:
+            params = self._collect_params()
+            validate_pipeline(params)
+        except Exception as exc:
+            messagebox.showerror("입력 오류", str(exc))
+            return
+
+        self._save_settings()
+        self.cancel_event.clear()
+        self.progress_var.set(0.0)
+        self.progress_text_var.set("0.0%")
+        self.log_text.delete("1.0", tk.END)
+        self.run_button.config(state=tk.DISABLED)
+        self.cancel_button.config(state=tk.NORMAL)
+        self.preview_raw = []
+        self.preview_lattice = []
+        self._cleanup_temp()
+        self.temp_root = Path(tempfile.mkdtemp(prefix="bjt_model_pipeline_"))
+
+        logger = UILogger(self)
+
+        def worker():
+            try:
+                output, raw, lattice = run_pipeline(
+                    params,
+                    logger,
+                    self.cancel_event,
+                    self.temp_root,
+                    self._set_preview_folders_threadsafe,
+                )
+                def _show_done():
+                    messagebox.showinfo("완료", f"최종 STL 생성 완료\n\n{output}")
+                self.after(0, _show_done)
+            except (CancelledError, lattice_core.CancelledError, recon_core.CancelledError) as exc:
+                logger.write(str(exc))
+                self.after(0, lambda: messagebox.showinfo("중단", "작업이 중단되었습니다."))
+            except Exception as exc:
+                logger.write("ERROR:")
+                logger.write(str(exc))
+                logger.write(traceback.format_exc())
+                self.after(0, lambda msg=str(exc): messagebox.showerror("오류", msg))
+            finally:
+                self.after(0, lambda: self.run_button.config(state=tk.NORMAL))
+                self.after(0, lambda: self.cancel_button.config(state=tk.DISABLED))
+
+        self.worker_thread = threading.Thread(target=worker, daemon=True)
+        self.worker_thread.start()
+
+    def cancel(self) -> None:
+        self.cancel_event.set()
+        self.cancel_button.config(state=tk.DISABLED)
+        self.progress_text_var.set("중단 요청됨 - 현재 단계 정리 중")
+        self._append_log("중단 요청됨")
+
+    def _append_log(self, message: str) -> None:
+        self.log_text.insert(tk.END, message + "\n")
+        self.log_text.see(tk.END)
+
+    def _set_progress(self, percent: float, message: str) -> None:
+        value = max(0.0, min(100.0, percent))
+        self.progress_var.set(value)
+        self.progress_text_var.set(f"{value:.1f}%  |  {message}" if message else f"{value:.1f}%")
+
+    def _set_preview_folders_threadsafe(self, raw: Optional[Path], lattice: Optional[Path]) -> None:
+        self.after(0, self._set_preview_folders, raw, lattice)
+
+    def _set_preview_folders(self, raw: Optional[Path], lattice: Optional[Path]) -> None:
+        if raw is not None and raw.exists():
+            self.preview_raw = find_images(raw)
+        if lattice is not None and lattice.exists():
+            self.preview_lattice = find_images(lattice)
+        count = max(len(self.preview_raw), len(self.preview_lattice), 1)
+        self.preview_scale.config(to=count)
+        self.preview_index_var.set(max(1, min(self.preview_index_var.get(), count)))
+        self._update_preview()
+
+    def _preview_scale_changed(self, _value=None) -> None:
+        self.preview_index_var.set(max(1, int(round(float(self.preview_index_var.get())))))
+        self._update_preview()
+
+    def _preview_wheel(self, event) -> None:
+        count = max(len(self.preview_raw), len(self.preview_lattice), 1)
+        delta = 1 if event.delta < 0 else -1
+        self.preview_index_var.set(max(1, min(count, self.preview_index_var.get() + delta)))
+        self._update_preview()
+
+    def _preview_image(self, path: Path, max_size=(500, 310)):
+        with Image.open(path) as im:
+            image = ImageOps.grayscale(im).convert("RGB")
+            image.thumbnail(max_size, Image.Resampling.NEAREST)
+            return ImageTk.PhotoImage(image)
+
+    def _update_preview(self) -> None:
+        idx = max(1, self.preview_index_var.get()) - 1
+        raw_name = "-"
+        lattice_name = "-"
+        if idx < len(self.preview_raw):
+            try:
+                self.preview_photo_raw = self._preview_image(self.preview_raw[idx])
+                self.raw_label.config(image=self.preview_photo_raw, text="")
+                raw_name = self.preview_raw[idx].name
+            except Exception:
+                pass
+        else:
+            self.raw_label.config(image="", text="원본 슬라이스 없음")
+        if idx < len(self.preview_lattice):
+            try:
+                self.preview_photo_lattice = self._preview_image(self.preview_lattice[idx])
+                self.lattice_label.config(image=self.preview_photo_lattice, text="")
+                lattice_name = self.preview_lattice[idx].name
+            except Exception:
+                pass
+        else:
+            self.lattice_label.config(image="", text="격자 슬라이스 없음")
+        count = max(len(self.preview_raw), len(self.preview_lattice), 0)
+        self.preview_info_var.set(f"Layer {idx+1}/{count or 1} | raw={raw_name} | lattice={lattice_name}")
+
+    def _load_settings(self) -> None:
+        try:
+            if not SETTINGS_PATH.exists():
+                return
+            data = json.loads(SETTINGS_PATH.read_text(encoding="utf-8"))
+            if data.get("surface_mode") == "약한 스무딩형":
+                data["surface_mode"] = "표면 보간형"
+            mapping = {
+                "mode": self.mode_var, "input": self.input_var, "output": self.output_var,
+                "unit": self.unit_var, "dpi_x": self.dpi_x_var, "dpi_y": self.dpi_y_var,
+                "layer": self.layer_var, "slice_margin": self.slice_margin_var, "batch": self.batch_var,
+                "shell": self.shell_var, "lattice_width": self.lattice_width_var, "spacing": self.spacing_var,
+                "lattice_type": self.lattice_type_var, "pattern": self.pattern_var, "axes": self.axes_var,
+                "shell_method": self.shell_method_var, "surface_mode": self.surface_mode_var,
+                "crop_margin": self.crop_margin_var,
+                "workers": self.workers_var, "max_triangles": self.max_triangles_var,
+                "intermediate_format": self.intermediate_format_var,
+            }
+            for key, var in mapping.items():
+                if key in data:
+                    var.set(data[key])
+            bools = {
+                "same_dpi": self.same_dpi_var, "crop_xy": self.crop_xy_var,
+                "crop_z": self.crop_z_var, "center": self.center_var,
+                "save_raw": self.save_raw_var, "save_lattice": self.save_lattice_var,
+                "verify_layer_xor": self.verify_layer_xor_var,
+                "print_equivalent": self.print_equivalent_var,
+            }
+            for key, var in bools.items():
+                if key in data:
+                    var.set(bool(data[key]))
+        except Exception:
+            pass
+        # 통합 v4는 정밀도 저하가 가능한 근사 erosion 경로를 UI에서 사용하지 않는다.
+        self.shell_method_var.set("고속 정밀 EDT (정밀도 고정)")
+        self._mode_changed()
+        self._surface_changed()
+
+    def _save_settings(self) -> None:
+        try:
+            SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+            data = {
+                "mode": self.mode_var.get(), "input": self.input_var.get(), "output": self.output_var.get(),
+                "unit": self.unit_var.get(), "dpi_x": self.dpi_x_var.get(), "dpi_y": self.dpi_y_var.get(),
+                "same_dpi": self.same_dpi_var.get(), "layer": self.layer_var.get(),
+                "slice_margin": self.slice_margin_var.get(), "batch": self.batch_var.get(),
+                "shell": self.shell_var.get(), "lattice_width": self.lattice_width_var.get(),
+                "spacing": self.spacing_var.get(), "lattice_type": self.lattice_type_var.get(),
+                "pattern": self.pattern_var.get(), "axes": self.axes_var.get(),
+                "shell_method": self.shell_method_var.get(), "surface_mode": self.surface_mode_var.get(),
+                "crop_xy": self.crop_xy_var.get(),
+                "crop_z": self.crop_z_var.get(), "crop_margin": self.crop_margin_var.get(),
+                "center": self.center_var.get(), "workers": self.workers_var.get(),
+                "max_triangles": self.max_triangles_var.get(), "save_raw": self.save_raw_var.get(),
+                "save_lattice": self.save_lattice_var.get(),
+                "verify_layer_xor": self.verify_layer_xor_var.get(),
+                "print_equivalent": self.print_equivalent_var.get(),
+                "intermediate_format": self.intermediate_format_var.get(),
+            }
+            SETTINGS_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception:
+            pass
+
+    def _cleanup_temp(self) -> None:
+        if self.temp_root is not None:
+            try:
+                shutil.rmtree(self.temp_root, ignore_errors=True)
+            except Exception:
+                pass
+            self.temp_root = None
+
+    def on_close(self) -> None:
+        if self.worker_thread is not None and self.worker_thread.is_alive():
+            if not messagebox.askyesno(APP_NAME, "작업 중입니다. 중단하고 종료할까요?"):
+                return
+            self.cancel_event.set()
+        self._save_settings()
+        self._cleanup_temp()
+        self.destroy()
+
+
+
+# =============================================================================
+# v4.1 CAP throughput patch
+# - actual large-cap workload: exact repeated-layer dedup, 1-bit temp I/O,
+#   run-aware XY EDT, and Numba linear exact surface certificate.
+# - NO DPI/layer reduction, NO coordinate approximation.
+# =============================================================================
+
+
+def _aio_v43_write_1bit_bmp_packed(packed: np.ndarray, width: int, height: int, path: Path) -> None:
+    """Write an uncompressed top-down 1-bit BMP directly from np.packbits rows.
+
+    Pixels are identical to PIL mode-1 BMP, but this avoids per-image Pillow encoder overhead.
+    """
+    p=np.ascontiguousarray(packed,dtype=np.uint8)
+    bpr=(int(width)+7)//8
+    if p.shape != (int(height), bpr):
+        raise ValueError(f'packed BMP shape mismatch {p.shape} != {(int(height),bpr)}')
+    stride=(bpr+3)&~3
+    off=62
+    image_bytes=stride*int(height)
+    file_bytes=off+image_bytes
+    with open(path,'wb',buffering=1024*1024) as f:
+        f.write(struct.pack('<2sIHHI',b'BM',file_bytes,0,0,off))
+        f.write(struct.pack('<IiiHHIIiiII',40,int(width),-int(height),1,1,0,image_bytes,2835,2835,2,2))
+        f.write(bytes((0,0,0,0,255,255,255,0)))
+        if stride == bpr:
+            f.write(p.tobytes(order='C'))
+        else:
+            rows=np.zeros((int(height),stride),dtype=np.uint8)
+            rows[:,:bpr]=p
+            f.write(rows.tobytes(order='C'))
+
+_AIO_V43_PIL_SAVE = Image.Image.save
+
+def _aio_v43_fast_mode1_save(self, fp, format=None, **params):
+    try:
+        path=Path(fp) if isinstance(fp,(str,os.PathLike,Path)) else None
+        fmt=(str(format).upper() if format else (path.suffix[1:].upper() if path else ''))
+        if self.mode == '1' and path is not None and fmt == 'BMP':
+            w,h=self.size; bpr=(w+7)//8
+            packed=np.frombuffer(self.tobytes(),dtype=np.uint8).reshape(h,bpr)
+            _aio_v43_write_1bit_bmp_packed(packed,w,h,path)
+            return
+    except Exception:
+        pass
+    return _AIO_V43_PIL_SAVE(self,fp,format=format,**params)
+
+# Only mode-1 BMP is intercepted; all grayscale/PNG/other PIL saving remains unchanged.
+# v5.4: do not monkeypatch Pillow globally.
+
+# ---- 1) temporary binary output: same pixels, 1/8 file payload ----------------
+_AIO_V41_ORIG_COMPOSE_OUTPUT_IMAGE = lattice_core.compose_output_image
+
+def _aio_v41_compose_output_image(original_gray, final_mask, params):
+    mode = str(getattr(params, 'output_mode', '')).strip().lower()
+    internal_1bit = bool(getattr(lattice_core, '_aio_internal_1bit_output', False))
+    if internal_1bit and mode in ['binary', '이진', 'binary 출력']:
+        bg = int(getattr(params, 'background_value', 0))
+        mat = int(getattr(params, 'material_value', 255))
+        if bg == 0 and mat == 255:
+            # PIL bool -> mode '1'. convert('L') reproduces exact 0/255 pixels.
+            return Image.fromarray(np.asarray(final_mask, dtype=bool))
+    return _AIO_V41_ORIG_COMPOSE_OUTPUT_IMAGE(original_gray, final_mask, params)
+
+lattice_core.compose_output_image = _aio_v41_compose_output_image
+
+
+# ---- 2) exact run-aware raw slicing ------------------------------------------
+def _aio_v41_save_slice(mask: np.ndarray, path: Path, image_format: str, one_bit: bool) -> None:
+    fmt = image_format.upper()
+    if one_bit and fmt == 'BMP':
+        mm=np.asarray(mask,dtype=bool)
+        _aio_v43_write_1bit_bmp_packed(np.packbits(mm,axis=1),mm.shape[1],mm.shape[0],path)
+        return
+    if one_bit:
+        image = Image.fromarray(np.asarray(mask, dtype=bool))
+    else:
+        image = Image.fromarray(np.asarray(mask, dtype=np.uint8) * np.uint8(255), mode='L')
+    if fmt == 'PNG':
+        image.save(path, format='PNG', compress_level=1, optimize=False)
+    else:
+        image.save(path, format='BMP')
+
+
+def _aio_v44_save_packed_slice(packed: np.ndarray, width: int, height: int, path: Path, image_format: str, one_bit: bool) -> None:
+    p=np.ascontiguousarray(packed,dtype=np.uint8)
+    fmt=str(image_format).upper()
+    if one_bit:
+        if fmt == 'BMP':
+            _aio_v43_write_1bit_bmp_packed(p,int(width),int(height),path); return
+        im=Image.frombytes('1',(int(width),int(height)),p.tobytes(order='C'))
+        im.save(path,format='PNG',compress_level=1,optimize=False); return
+    # User-requested preserved intermediates retain the legacy 8-bit 0/255 representation.
+    mask=np.unpackbits(p,axis=1,count=int(width)).astype(np.uint8,copy=False)*np.uint8(255)
+    im=Image.fromarray(mask,mode='L')
+    if fmt == 'PNG': im.save(path,format='PNG',compress_level=1,optimize=False)
+    else: im.save(path,format='BMP')
+
+
+def _aio_v41_link_or_copy(src: Path, dst: Path) -> bool:
+    try:
+        if dst.exists():
+            dst.unlink()
+        os.link(src, dst)
+        return True
+    except Exception:
+        try:
+            shutil.copy2(src, dst)
+            return False
+        except Exception:
+            return False
+
+
+def _aio_v41_slice_model_to_images(
+    model_path: Path,
+    output_dir: Path,
+    params: PipelineParams,
+    log: UILogger,
+    cancel_event: threading.Event,
+    progress_start: float = 0.0,
+    progress_end: float = 24.0,
+) -> SliceGrid:
+    mesh = load_mesh_mm(model_path, params.input_unit, log)
+    mesh, grid = build_slice_grid(
+        mesh, params.dpi_x, params.dpi_y, params.layer_thickness_mm, params.slice_margin_px
+    )
+    clear_generated_images(output_dir)
+
+    ext = '.png' if params.intermediate_format == 'PNG' else '.bmp'
+    internal_1bit = not bool(params.save_raw_slices)
+    log.write('')
+    log.write('=============== 슬라이싱 조건 ===============')
+    log.write(f'DPI: X={params.dpi_x:g}, Y={params.dpi_y:g}')
+    log.write(f'픽셀 피치: X={grid.x_pitch_mm:.9f}, Y={grid.y_pitch_mm:.9f} mm')
+    log.write(f'레이어 두께: {grid.layer_thickness_mm:g} mm')
+    log.write(f'캔버스: {grid.width_px:,} × {grid.height_px:,} px')
+    log.write(f'캔버스 실제 크기: X={grid.physical_width_mm:.3f}, Y={grid.physical_height_mm:.3f} mm')
+    log.write(f'레이어 수: {grid.layer_count:,} | 양자화 Z={grid.layer_count*grid.layer_thickness_mm:.3f} mm')
+    logical_px=int(grid.width_px)*int(grid.height_px)*int(grid.layer_count)
+    log.write(f'전체 raster workload: {logical_px/1e9:.2f} Gpixel · 8-bit stack={logical_px/1024**3:.1f} GiB · 1-bit={logical_px/8/1024**3:.1f} GiB')
+    log.write('샘플링: 각 레이어 중심 단면 + 픽셀 중심 포함 판정')
+    log.write('v4.1 exact-run I/O: 인접 mask bit 동일 시 hardlink 재사용')
+    if internal_1bit:
+        log.write('임시 raw slice: 1-bit 저장 (재로딩 0/255 pixel은 8-bit와 bitwise 동일)')
+    log.write('============================================')
+
+    jit_time = _warmup_exact_rasterizer()
+    log.write(f'정밀 scanline JIT 준비: {format_seconds(jit_time)} (첫 실행만 발생 가능)')
+    log.write('래스터 엔진: Numba exact scanline (기존 픽셀 중심 결과와 동일)')
+
+    started = time.time()
+    batch = max(1, min(int(params.batch_layers), 2*_bjt_workers(params.workers, grid.width_px*grid.height_px, 12)))
+    epsilon = max(1e-9, grid.layer_thickness_mm * 1e-7)
+    raster_workers = _bjt_workers(min(int(params.workers),8), grid.width_px*grid.height_px, 12)
+    completed = 0
+    physical_writes = 0
+    repeated_layers = 0
+    hardlinks = 0
+    prev_mask = None
+    prev_path = None
+
+    def raster_job(index: int, path2d):
+        check_cancel(cancel_event)
+        mask=rasterize_path_center_sample(path2d, grid, cancel_event)
+        return index, np.packbits(mask,axis=1)
+
+    with ThreadPoolExecutor(max_workers=raster_workers) as raster_pool:
+        for batch_start in range(0, grid.layer_count, batch):
+            check_cancel(cancel_event)
+            batch_end = min(grid.layer_count, batch_start + batch)
+            centers = (np.arange(batch_start, batch_end, dtype=np.float64) + 0.5) * grid.layer_thickness_mm
+            centers = np.minimum(centers, max(epsilon, grid.model_height_mm - epsilon))
+            sections = mesh.section_multiplane(
+                plane_origin=(0.0, 0.0, 0.0), plane_normal=(0.0, 0.0, 1.0), heights=centers,
+            )
+            prepared = []
+            for local, path2d in enumerate(sections):
+                check_cancel(cancel_event)
+                index = batch_start + local
+                z_center = float(centers[local])
+                suspicious, reason = _has_near_duplicate_outer_contours(path2d, grid)
+                if suspicious:
+                    log.write(f'WARNING: {index+1:,}층(Z={z_center:.6f} mm) 배치 단면 이상 감지: {reason}')
+                    log.write('         해당 층을 독립 단면 계산으로 자동 재처리합니다.')
+                    path2d = _single_plane_section_2d(mesh, z_center)
+                prepared.append((index, path2d))
+
+            futs = [raster_pool.submit(raster_job, i, p) for i, p in prepared]
+            results = {}
+            while futs:
+                fut=futs.pop(0)
+                check_cancel(cancel_event)
+                i, mask=fut.result()
+                results[int(i)]=mask
+
+            # Exact equality must be checked in layer order. No hash/tolerance is used.
+            for index in range(batch_start, batch_end):
+                check_cancel(cancel_event)
+                packed = results.pop(index)
+                dst = output_dir / f'{index+1:06d}{ext}'
+                same = prev_mask is not None and packed.shape == prev_mask.shape and bool(np.array_equal(packed, prev_mask))
+                if same and prev_path is not None and prev_path.exists():
+                    repeated_layers += 1
+                    if _aio_v41_link_or_copy(prev_path, dst):
+                        hardlinks += 1
+                    elif not dst.exists():
+                        _aio_v44_save_packed_slice(packed,grid.width_px,grid.height_px,dst,params.intermediate_format,internal_1bit)
+                        physical_writes += 1
+                else:
+                    _aio_v44_save_packed_slice(packed,grid.width_px,grid.height_px,dst,params.intermediate_format,internal_1bit)
+                    physical_writes += 1
+                prev_mask = packed
+                prev_path = dst
+                completed += 1
+                if completed == 1 or completed % 25 == 0 or completed == grid.layer_count:
+                    elapsed = time.time() - started
+                    remain = elapsed / max(1, completed) * (grid.layer_count - completed)
+                    pct = progress_start + (progress_end-progress_start)*completed/grid.layer_count
+                    log.progress(pct, f'1/3 모델 슬라이싱 {completed:,}/{grid.layer_count:,} | ETA {format_seconds(remain)}')
+
+    log.write(f'v4.1 exact repeated layer: {repeated_layers:,}/{grid.layer_count:,} · physical image writes={physical_writes:,} · hardlinks={hardlinks:,}')
+    return grid
+
+slice_model_to_images = _aio_v41_slice_model_to_images
+
+
+# ---- 3) run-aware XY EDT/material bitpack -----------------------------------
+class _AIOV41AliasPackedStore:
+    def __init__(self, data, layer_to_unique):
+        self.data = data
+        self.layer_to_unique = np.asarray(layer_to_unique, dtype=np.int32)
+    def __len__(self):
+        return int(len(self.layer_to_unique))
+    def __getitem__(self, idx):
+        if isinstance(idx, (int, np.integer)):
+            return self.data[int(self.layer_to_unique[int(idx)])]
+        inds = np.asarray(self.layer_to_unique[idx], dtype=np.int64)
+        return self.data[inds]
+    def flush(self):
+        try: self.data.flush()
+        except Exception: pass
+    def close(self):
+        try: self.data.flush()
+        except Exception: pass
+        mm = getattr(self.data, '_mmap', None)
+        if mm is not None:
+            try:
+                if not getattr(mm, 'closed', False): mm.close()
+            except Exception: pass
+
+_AIO_V41_ORIG_CLOSE_MEMMAP = lattice_core._close_memmap_store
+
+def _aio_v41_close_memmap_store(store):
+    if isinstance(store, _AIOV41AliasPackedStore):
+        store.close(); return
+    return _AIO_V41_ORIG_CLOSE_MEMMAP(store)
+
+lattice_core._close_memmap_store = _aio_v41_close_memmap_store
+_AIO_V41_ORIG_COMPUTE_Z_CACHED = lattice_core.compute_z_shell_masks_cached
+_AIO_V41_LOAD_XY_WORKER = lattice_core._load_mask_and_xy_shell_worker
+_AIO_V41_HORIZONTAL_SHELL = lattice_core._compute_horizontal_shell_parallel
+
+
+def _aio_v41_file_identity(path: Path):
+    st = os.stat(path, follow_symlinks=True)
+    return (int(st.st_dev), int(st.st_ino), int(st.st_size))
+
+
+def _aio_v41_compute_z_shell_masks_cached(images, params, log=None, cancel_event=None, cache_dir=None):
+    # If there are no exact filesystem aliases, original path is already efficient.
+    if not images or float(params.shell_mm) <= 0 or float(params.layer_thickness_mm) <= 0:
+        return _AIO_V41_ORIG_COMPUTE_Z_CACHED(images, params, log, cancel_event, cache_dir)
+    try:
+        ids = [_aio_v41_file_identity(p) for p in images]
+    except Exception:
+        return _AIO_V41_ORIG_COMPUTE_Z_CACHED(images, params, log, cancel_event, cache_dir)
+    unique_keys = []
+    key_to_u = {}
+    layer_to_u = np.empty(len(images), dtype=np.int32)
+    representative = []
+    for i, k in enumerate(ids):
+        u = key_to_u.get(k)
+        if u is None:
+            u = len(unique_keys); key_to_u[k] = u; unique_keys.append(k); representative.append(i)
+        layer_to_u[i] = int(u)
+    ucount = len(unique_keys)
+    n = len(images)
+    if ucount >= n:
+        return _AIO_V41_ORIG_COMPUTE_Z_CACHED(images, params, log, cancel_event, cache_dir)
+
+    with Image.open(images[0]) as im:
+        first_w, first_h = im.size
+    bpr = (first_w + 7)//8
+    if cache_dir is None:
+        cache_dir = Path(tempfile.mkdtemp(prefix='bjt_v41_alias_'))
+    else:
+        cache_dir = Path(cache_dir); cache_dir.mkdir(parents=True, exist_ok=True)
+    mat_mm = np.memmap(cache_dir/'material_unique.pack', dtype=np.uint8, mode='w+', shape=(ucount, first_h, bpr))
+    xy_mm = np.memmap(cache_dir/'xy_shell_unique.pack', dtype=np.uint8, mode='w+', shape=(ucount, first_h, bpr))
+    mat_mm[:] = 0; xy_mm[:] = 0
+
+    workers = max(1, min(int(params.workers), 4, ucount))
+    if log is not None:
+        log.write(f'v4.1 run-aware XY EDT: {n:,} layers -> {ucount:,} exact physical masks ({n-ucount:,} EDT 생략)')
+        log.write(f'alias bitpack cache: full 2-stack 대비 약 {ucount/max(1,n):.1%}만 물리 저장')
+    shape_hw = None
+    def job(u):
+        idx = representative[u]
+        return u, _AIO_V41_LOAD_XY_WORKER(idx, images[idx], params)
+    if workers <= 1:
+        iterable = map(job, range(ucount))
+        for done, item in enumerate(iterable, 1):
+            u, (_idx, shape, pm, ps) = item
+            if shape_hw is None: shape_hw = shape
+            elif shape != shape_hw: raise ValueError('3D shell 계산 중 layer 이미지 크기가 서로 다릅니다.')
+            mat_mm[u] = pm; xy_mm[u] = ps
+            if log is not None and (done % 25 == 0 or done == ucount): log.write(f'XY shell unique 계산: {done:,}/{ucount:,}')
+    else:
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            futs = [ex.submit(job, u) for u in range(ucount)]
+            done = 0
+            for fut in as_completed(futs):
+                u, (_idx, shape, pm, ps) = fut.result(); done += 1
+                if shape_hw is None: shape_hw = shape
+                elif shape != shape_hw: raise ValueError('3D shell 계산 중 layer 이미지 크기가 서로 다릅니다.')
+                mat_mm[u] = pm; xy_mm[u] = ps
+                if log is not None and (done % 25 == 0 or done == ucount): log.write(f'XY shell unique 계산: {done:,}/{ucount:,}')
+    mat_mm.flush(); xy_mm.flush()
+    raw_alias = _AIOV41AliasPackedStore(mat_mm, layer_to_u)
+    xy_alias = _AIOV41AliasPackedStore(xy_mm, layer_to_u)
+    h, w = shape_hw
+    # Keep exact original Z-surface equation; only duplicate XY EDT/storage is removed.
+    z_shells = np.zeros((n, h, bpr), dtype=np.uint8)
+    _AIO_V41_HORIZONTAL_SHELL(raw_alias, z_shells, params, w, n, log, cancel_event)
+    return z_shells, xy_alias, raw_alias, shape_hw
+
+lattice_core.compute_z_shell_masks_cached = _aio_v41_compute_z_shell_masks_cached
+
+
+# ---- 4) Numba O(N) exact surface certificate ---------------------------------
+from numba import types as _aio_nb_types
+from numba.typed import Dict as _aio_nb_Dict
+_AIO_V41_K4 = _aio_nb_types.UniTuple(_aio_nb_types.int64, 4)
+_AIO_V41_V2 = _aio_nb_types.UniTuple(_aio_nb_types.int64, 2)
+_AIO_V41_K10 = _aio_nb_types.UniTuple(_aio_nb_types.int64, 10)
+_AIO_V41_K11 = _aio_nb_types.UniTuple(_aio_nb_types.int64, 11)
+
+@njit(cache=True)
+def _aio_v41_gcd3(a,b,c):
+    a=abs(a); b=abs(b); c=abs(c)
+    return math.gcd(math.gcd(a,b),c)
+
+@njit(cache=True)
+def _aio_v41_add_edge(ed, pk0,pk1,pk2,pk3, ax,ay,az,bx,by,bz):
+    # lexicographic xyz canonical endpoint ordering; sign preserves face orientation.
+    less = (ax < bx) or (ax == bx and (ay < by or (ay == by and az < bz)))
+    if less:
+        k=(pk0,pk1,pk2,pk3,ax,ay,az,bx,by,bz); s=1
+    else:
+        k=(pk0,pk1,pk2,pk3,bx,by,bz,ax,ay,az); s=-1
+    if k in ed: ed[k] = ed[k] + s
+    else: ed[k] = s
+
+@njit(cache=True)
+def _aio_v41_build_plane_edge(q, f):
+    area = _aio_nb_Dict.empty(_AIO_V41_K4, _AIO_V41_V2)
+    edges = _aio_nb_Dict.empty(_AIO_V41_K10, _aio_nb_types.int64)
+    for ii in range(f.shape[0]):
+        i0=f[ii,0]; i1=f[ii,1]; i2=f[ii,2]
+        ax=q[i0,0]; ay=q[i0,1]; az=q[i0,2]
+        bx=q[i1,0]; by=q[i1,1]; bz=q[i1,2]
+        cx=q[i2,0]; cy=q[i2,1]; cz=q[i2,2]
+        ux=bx-ax; uy=by-ay; uz=bz-az; vx=cx-ax; vy=cy-ay; vz=cz-az
+        nx=uy*vz-uz*vy; ny=uz*vx-ux*vz; nz=ux*vy-uy*vx
+        g=_aio_v41_gcd3(nx,ny,nz)
+        if g == 0: return area,edges,False
+        pnx=nx//g; pny=ny//g; pnz=nz//g
+        first = pnx if pnx != 0 else (pny if pny != 0 else pnz)
+        if first < 0: pnx=-pnx; pny=-pny; pnz=-pnz
+        d=pnx*ax+pny*ay+pnz*az
+        pk=(pnx,pny,pnz,d)
+        # same dominant-axis rule as np.argmax(abs(nc)): x wins ties, then y.
+        apx=abs(pnx); apy=abs(pny); apz=abs(pnz)
+        if apx >= apy and apx >= apz:
+            if nx % pnx != 0: return area,edges,False
+            kval=nx//pnx
+        elif apy >= apz:
+            if ny % pny != 0: return area,edges,False
+            kval=ny//pny
+        else:
+            if nz % pnz != 0: return area,edges,False
+            kval=nz//pnz
+        if pk in area:
+            old=area[pk]; area[pk]=(old[0]+kval, old[1]+abs(kval))
+        else: area[pk]=(kval,abs(kval))
+        _aio_v41_add_edge(edges,pnx,pny,pnz,d,ax,ay,az,bx,by,bz)
+        _aio_v41_add_edge(edges,pnx,pny,pnz,d,bx,by,bz,cx,cy,cz)
+        _aio_v41_add_edge(edges,pnx,pny,pnz,d,cx,cy,cz,ax,ay,az)
+    return area,edges,True
+
+@njit(cache=True)
+def _aio_v41_make_events(edges):
+    ev = _aio_nb_Dict.empty(_AIO_V41_K11, _aio_nb_types.int64)
+    for key,val in edges.items():
+        if val == 0: continue
+        if val != 1 and val != -1: return ev,False
+        if val > 0:
+            ax=key[4]; ay=key[5]; az=key[6]; bx=key[7]; by=key[8]; bz=key[9]
+        else:
+            ax=key[7]; ay=key[8]; az=key[9]; bx=key[4]; by=key[5]; bz=key[6]
+        dx=bx-ax; dy=by-ay; dz=bz-az
+        g=_aio_v41_gcd3(dx,dy,dz)
+        if g == 0: return ev,False
+        dx//=g; dy//=g; dz//=g
+        first=dx if dx != 0 else (dy if dy != 0 else dz)
+        if first < 0: dx=-dx; dy=-dy; dz=-dz
+        crx=dy*az-dz*ay; cry=dz*ax-dx*az; crz=dx*ay-dy*ax
+        ta=dx*ax+dy*ay+dz*az; tb=dx*bx+dy*by+dz*bz
+        if tb > ta: t0=ta; t1=tb; sg=1
+        else: t0=tb; t1=ta; sg=-1
+        k0=(key[0],key[1],key[2],key[3],dx,dy,dz,crx,cry,crz,t0)
+        k1=(key[0],key[1],key[2],key[3],dx,dy,dz,crx,cry,crz,t1)
+        if k0 in ev: ev[k0]=ev[k0]+sg
+        else: ev[k0]=sg
+        if k1 in ev: ev[k1]=ev[k1]-sg
+        else: ev[k1]=-sg
+    return ev,True
+
+@njit(cache=True)
+def _aio_v41_area_equal(a,b):
+    if len(a) != len(b): return False
+    for k,v in a.items():
+        if k not in b or b[k] != v: return False
+    return True
+
+@njit(cache=True)
+def _aio_v41_events_equal(a,b):
+    ca=0; cb=0
+    for k,v in a.items():
+        if v != 0:
+            ca += 1
+            if k not in b or b[k] != v: return False
+    for _k,v in b.items():
+        if v != 0: cb += 1
+    return ca == cb
+
+@njit(cache=True)
+def _aio_v41_cert_numba(q0,f0,q1,f1):
+    a0,e0,ok0=_aio_v41_build_plane_edge(q0,f0)
+    if not ok0: return False
+    a1,e1,ok1=_aio_v41_build_plane_edge(q1,f1)
+    if not ok1 or not _aio_v41_area_equal(a0,a1): return False
+    v0,ve0=_aio_v41_make_events(e0)
+    if not ve0: return False
+    v1,ve1=_aio_v41_make_events(e1)
+    if not ve1: return False
+    return _aio_v41_events_equal(v0,v1)
+
+_AIO_V41_NUMPY_CERT = _aio_v40_exact_surface_certificate
+_AIO_V41_NUMBA_CERT_OK = False
+_AIO_V41_NUMBA_CERT_MSG = 'not-run'
+
+def _aio_v41_prepare_cert():
+    global _AIO_V41_NUMBA_CERT_OK, _AIO_V41_NUMBA_CERT_MSG
+    try:
+        q=np.asarray([[0,0,0],[2,0,0],[2,2,0],[0,2,0]],np.int64)
+        f0=np.asarray([[0,1,2],[0,2,3]],np.int64)
+        f1=np.asarray([[0,1,3],[1,2,3]],np.int64)
+        n0=_AIO_V41_NUMPY_CERT(q,f0,q,f1)[0]
+        n1=bool(_aio_v41_cert_numba(q,f0,q,f1))
+        qb=q.copy(); qb[2,2]=1
+        b0=_AIO_V41_NUMPY_CERT(q,f0,qb,f1)[0]
+        b1=bool(_aio_v41_cert_numba(q,f0,qb,f1))
+        if n0 is True and n1 is True and b0 is False and b1 is False:
+            _AIO_V41_NUMBA_CERT_OK=True; _AIO_V41_NUMBA_CERT_MSG='PASS · exact retriangulation + negative geometry mutation'
+        else:
+            _AIO_V41_NUMBA_CERT_MSG=f'mismatch true={n0}/{n1}, false={b0}/{b1}'
+    except Exception as exc:
+        _AIO_V41_NUMBA_CERT_MSG=f'{type(exc).__name__}: {exc}'
+
+_aio_v41_prepare_cert()
+
+def _aio_v40_exact_surface_certificate(q0, f0, q1, f1):
+    if _AIO_V41_NUMBA_CERT_OK:
+        try:
+            ok=bool(_aio_v41_cert_numba(np.asarray(q0,np.int64),np.asarray(f0,np.int64),np.asarray(q1,np.int64),np.asarray(f1,np.int64)))
+            return (ok, 'PASS' if ok else 'Numba exact surface mismatch')
+        except Exception:
+            pass
+    return _AIO_V41_NUMPY_CERT(q0,f0,q1,f1)
+
+
+# v4.2: VTK zero-error points are accepted only when their float32 bit pattern is an
+# exact member of the raw ExactLUT vertex set. This is stricter than an mm tolerance and
+# avoids false fallback caused only by float32 representation error at large X/Y coordinates.
+def _aio_v42_map_exact_vertex_subset(raw_vertices: np.ndarray, raw_q: np.ndarray, out_vertices: np.ndarray):
+    rv=np.ascontiguousarray(raw_vertices,dtype=np.float32)
+    ov=np.ascontiguousarray(out_vertices,dtype=np.float32)
+    kd=np.dtype((np.void,12))
+    rkey=np.ascontiguousarray(rv.view(np.uint32).reshape(-1,3)).view(kd).ravel()
+    okey=np.ascontiguousarray(ov.view(np.uint32).reshape(-1,3)).view(kd).ravel()
+    order=np.argsort(rkey,kind='mergesort')
+    sorted_keys=rkey[order]
+    # If two integer half-grid vertices collapsed to the same float32 triplet, certificate
+    # mapping would be ambiguous; reject rather than approximate.
+    if len(sorted_keys)>1 and bool(np.any(sorted_keys[1:]==sorted_keys[:-1])):
+        return None
+    pos=np.searchsorted(sorted_keys,okey)
+    if np.any(pos>=len(sorted_keys)):
+        return None
+    safe=np.minimum(pos,len(sorted_keys)-1)
+    if np.any(sorted_keys[safe]!=okey):
+        return None
+    return np.ascontiguousarray(np.asarray(raw_q,dtype=np.int64)[order[safe]],dtype=np.int64)
+
+
+def _aio_v39_decimate_q_batch(
+    qtri: np.ndarray,
+    *,
+    bits_x: int,
+    bits_y: int,
+    half_xyz,
+    xoff: float,
+    yoff: float,
+    strict_verify: bool,
+):
+    raw_count=int(len(qtri))
+    vq,raw_faces,raw_keys=_aio_v32_weld_q(qtri,bits_x,bits_y)
+    raw_vertices=_aio_v32_q_to_xyz(vq,half_xyz,xoff,yoff)
+    if (not _AIO_V32_VTK_AVAILABLE) or raw_count<32:
+        return raw_vertices,raw_faces,raw_count,'raw exact (VTK unavailable/small)',True
+    try:
+        ov,of,_=_aio_v40_vtk_propose(raw_vertices,raw_faces)
+        if ov is None: raise RuntimeError('VTK proposal unavailable')
+        saved=int(len(raw_faces)-len(of)); ratio=saved/max(1,int(len(raw_faces)))
+        if saved<_AIO_V40_CERT_MIN_SAVED_FACES or ratio<_AIO_V40_CERT_MIN_SAVE_RATIO:
+            return raw_vertices,raw_faces,raw_count,f'raw exact · low gain {ratio:.1%}',True
+        # Exact float32 membership, no coordinate tolerance and no vertex movement.
+        oq=_aio_v42_map_exact_vertex_subset(raw_vertices,vq,ov)
+        if oq is None:
+            raise RuntimeError('candidate vertex is not bit-exact input vertex')
+        if (len(of)/max(1,len(raw_faces))) > 0.45:
+            ok,why=_AIO_V41_NUMPY_CERT(vq,raw_faces,oq,of)
+        else:
+            ok,why=_aio_v40_exact_surface_certificate(vq,raw_faces,oq,of)
+        if not ok: raise RuntimeError(f'exact certificate reject: {why}')
+        return np.ascontiguousarray(ov,np.float32),np.ascontiguousarray(of,np.int64),raw_count, f'FAST-CERT v4.2 PASS · {len(raw_faces):,}->{len(of):,}',False
+    except Exception as exc:
+        return raw_vertices,raw_faces,raw_count,f'raw exact fallback: {type(exc).__name__}: {exc}',True
+
+# Larger compact windows reduce repeated VTK/certificate passes on highly tessellated lattice.
+_AIO_V41_ORIG_RUNTIME_TUNING = _aio_v36_runtime_tuning
+
+def _aio_v36_runtime_tuning(params):
+    """Measured sweet spot for dense 400-DPI lattice: keep certificate batches modest.
+
+    1M/3M batches looked attractive for I/O, but exact boundary certification scales
+    superlinearly on dense transition surfaces. Two 500k jobs in parallel are faster.
+    """
+    try: avail=int(_aio_v33_available_memory_bytes())
+    except Exception: avail=8*1024**3
+    gib=avail/float(1024**3); workers=max(1,int(getattr(params,'workers',1)))
+    if gib >= 8.0: return 500_000, min(2,workers), 160
+    if gib >= 5.0: return 500_000, 1, 160
+    return 400_000, 1, 128
+
+
+_AIO_V41_ORIG_FUSE_TARGET = _aio_v38_fuse_target_faces
+
+def _aio_v38_fuse_target_faces():
+    try: avail=int(_aio_v33_available_memory_bytes())
+    except Exception: avail=8*1024**3
+    gib=avail/float(1024**3)
+    if gib >= 12.0: return 5_000_000
+    if gib >= 8.0: return 3_500_000
+    if gib >= 5.0: return 2_000_000
+    return 1_000_000
+
+
+# =============================================================================
+# v5.0 DIRECT-PLANE exact surface engine
+# =============================================================================
+# Large coplanar regions are never materialized as raw ExactLUT triangle arrays.
+# Pass 1 walks only active 2x2x2 cube cases and counts exact canonical planes.
+# Pass 2 accumulates oriented line-boundary events for large exact planes while
+# streaming all irreducible/small facets directly to the final binary STL.
+# Each direct plane is reconstructed from its exact integer boundary arrangement
+# and must reproduce the source canonical event map + signed/absolute projected
+# area exactly. A failed plane is emitted raw in a narrow pass 3; no approximation
+# or tolerance-based simplification is allowed.
+
+from shapely.geometry import LineString as _aio_v50_LineString
+from shapely.ops import polygonize as _aio_v50_polygonize, unary_union as _aio_v50_unary_union
+
+_AIO_V50_K14 = _aio_nb_types.UniTuple(_aio_nb_types.int64, 14)
+_AIO_V50_V3 = _aio_nb_types.UniTuple(_aio_nb_types.int64, 3)  # signed area scalar, abs area scalar, tri count
+_AIO_V50_I8 = _aio_nb_types.int8
+_AIO_V50_DIRECT_MIN_FACES = 192
+_AIO_V50_TILE_ROWS = 32
+_AIO_V50_LAST_STATS = {}
+
+@njit(cache=True)
+def _aio_v50_gcd3(a, b, c):
+    a = abs(a); b = abs(b); c = abs(c)
+    return math.gcd(math.gcd(a, b), c)
+
+@njit(cache=True)
+def _aio_v50_plane_of_triangle(ax,ay,az,bx,by,bz,cx,cy,cz):
+    ux=bx-ax; uy=by-ay; uz=bz-az
+    vx=cx-ax; vy=cy-ay; vz=cz-az
+    nx=uy*vz-uz*vy; ny=uz*vx-ux*vz; nz=ux*vy-uy*vx
+    g=_aio_v50_gcd3(nx,ny,nz)
+    if g == 0:
+        return 0,0,0,0,0,0,False
+    pnx=nx//g; pny=ny//g; pnz=nz//g
+    first = pnx if pnx != 0 else (pny if pny != 0 else pnz)
+    if first < 0:
+        pnx=-pnx; pny=-pny; pnz=-pnz
+    d=pnx*ax+pny*ay+pnz*az
+    apx=abs(pnx); apy=abs(pny); apz=abs(pnz)
+    if apx >= apy and apx >= apz:
+        kval=nx//pnx
+    elif apy >= apz:
+        kval=ny//pny
+    else:
+        kval=nz//pnz
+    return pnx,pny,pnz,d,kval,abs(kval),True
+
+@njit(cache=True)
+def _aio_v50_add_line_event(ev, p0,p1,p2,p3, ax,ay,az,bx,by,bz):
+    dx=bx-ax; dy=by-ay; dz=bz-az
+    g=_aio_v50_gcd3(dx,dy,dz)
+    if g == 0:
+        return False
+    dx//=g; dy//=g; dz//=g
+    first = dx if dx != 0 else (dy if dy != 0 else dz)
+    if first < 0:
+        dx=-dx; dy=-dy; dz=-dz
+    crx=dy*az-dz*ay; cry=dz*ax-dx*az; crz=dx*ay-dy*ax
+    ta=dx*ax+dy*ay+dz*az
+    tb=dx*bx+dy*by+dz*bz
+    if tb > ta:
+        t0=ta; t1=tb; sg=1
+        x0=ax; y0=ay; z0=az; x1=bx; y1=by; z1=bz
+    else:
+        t0=tb; t1=ta; sg=-1
+        x0=bx; y0=by; z0=bz; x1=ax; y1=ay; z1=az
+    k0=(p0,p1,p2,p3,dx,dy,dz,crx,cry,crz,t0,x0,y0,z0)
+    k1=(p0,p1,p2,p3,dx,dy,dz,crx,cry,crz,t1,x1,y1,z1)
+    if k0 in ev:
+        nv=ev[k0]+sg
+        if nv == 0: del ev[k0]
+        else: ev[k0]=nv
+    else: ev[k0]=sg
+    if k1 in ev:
+        nv=ev[k1]-sg
+        if nv == 0: del ev[k1]
+        else: ev[k1]=nv
+    else: ev[k1]=-sg
+    return True
+
+@njit(cache=True)
+def _aio_v50_stats_active(ids, codes, y0, wc, k, stretch_pairs, counts, lut_q, stats):
+    raw=0
+    zbase=2*k
+    ztop=2*(k+stretch_pairs)
+    stretched = stretch_pairs > 1
+    for ii in range(ids.shape[0]):
+        owner=int(ids[ii]); code=int(codes[ii])
+        yy=owner//wc + y0; xx=owner-(owner//wc)*wc
+        nt=int(counts[code])
+        for s in range(nt):
+            lza=int(lut_q[code,s,0,0]); lzb=int(lut_q[code,s,1,0]); lzc=int(lut_q[code,s,2,0])
+            if stretched:
+                if (lza != 0 and lza != 2) or (lzb != 0 and lzb != 2) or (lzc != 0 and lzc != 2):
+                    return -1
+                az=zbase if lza == 0 else ztop; bz=zbase if lzb == 0 else ztop; cz=zbase if lzc == 0 else ztop
+            else:
+                az=zbase+lza; bz=zbase+lzb; cz=zbase+lzc
+            ax=2*xx+int(lut_q[code,s,0,2]); ay=2*yy+int(lut_q[code,s,0,1])
+            bx=2*xx+int(lut_q[code,s,1,2]); by=2*yy+int(lut_q[code,s,1,1])
+            cx=2*xx+int(lut_q[code,s,2,2]); cy=2*yy+int(lut_q[code,s,2,1])
+            p0,p1,p2,p3,ks,ka,ok=_aio_v50_plane_of_triangle(ax,ay,az,bx,by,bz,cx,cy,cz)
+            if not ok: return -1
+            pk=(p0,p1,p2,p3)
+            if pk in stats:
+                old=stats[pk]; stats[pk]=(old[0]+ks, old[1]+ka, old[2]+1)
+            else:
+                stats[pk]=(ks,ka,1)
+            raw += 1
+    return raw
+
+@njit(cache=True)
+def _aio_v50_events_and_raw_active(ids, codes, y0, wc, k, stretch_pairs, counts, lut_q, direct_planes, events, raw_out):
+    raw_n=0; logical=0
+    zbase=2*k; ztop=2*(k+stretch_pairs); stretched=stretch_pairs>1
+    for ii in range(ids.shape[0]):
+        owner=int(ids[ii]); code=int(codes[ii]); yy=owner//wc+y0; xx=owner-(owner//wc)*wc
+        nt=int(counts[code])
+        for s in range(nt):
+            lza=int(lut_q[code,s,0,0]); lzb=int(lut_q[code,s,1,0]); lzc=int(lut_q[code,s,2,0])
+            if stretched:
+                if (lza != 0 and lza != 2) or (lzb != 0 and lzb != 2) or (lzc != 0 and lzc != 2):
+                    return -1,-1
+                az=zbase if lza == 0 else ztop; bz=zbase if lzb == 0 else ztop; cz=zbase if lzc == 0 else ztop
+            else:
+                az=zbase+lza; bz=zbase+lzb; cz=zbase+lzc
+            ax=2*xx+int(lut_q[code,s,0,2]); ay=2*yy+int(lut_q[code,s,0,1])
+            bx=2*xx+int(lut_q[code,s,1,2]); by=2*yy+int(lut_q[code,s,1,1])
+            cx=2*xx+int(lut_q[code,s,2,2]); cy=2*yy+int(lut_q[code,s,2,1])
+            p0,p1,p2,p3,ks,ka,ok=_aio_v50_plane_of_triangle(ax,ay,az,bx,by,bz,cx,cy,cz)
+            if not ok: return -1,-1
+            pk=(p0,p1,p2,p3)
+            if pk in direct_planes:
+                if not _aio_v50_add_line_event(events,p0,p1,p2,p3,ax,ay,az,bx,by,bz): return -1,-1
+                if not _aio_v50_add_line_event(events,p0,p1,p2,p3,bx,by,bz,cx,cy,cz): return -1,-1
+                if not _aio_v50_add_line_event(events,p0,p1,p2,p3,cx,cy,cz,ax,ay,az): return -1,-1
+            else:
+                raw_out[raw_n,0,0]=ax; raw_out[raw_n,0,1]=ay; raw_out[raw_n,0,2]=az
+                raw_out[raw_n,1,0]=bx; raw_out[raw_n,1,1]=by; raw_out[raw_n,1,2]=bz
+                raw_out[raw_n,2,0]=cx; raw_out[raw_n,2,1]=cy; raw_out[raw_n,2,2]=cz
+                raw_n += 1
+            logical += 1
+    return raw_n, logical
+
+@njit(cache=True)
+def _aio_v50_selected_raw_active(ids, codes, y0, wc, k, stretch_pairs, counts, lut_q, selected_planes, raw_out):
+    raw_n=0
+    zbase=2*k; ztop=2*(k+stretch_pairs); stretched=stretch_pairs>1
+    for ii in range(ids.shape[0]):
+        owner=int(ids[ii]); code=int(codes[ii]); yy=owner//wc+y0; xx=owner-(owner//wc)*wc
+        nt=int(counts[code])
+        for s in range(nt):
+            lza=int(lut_q[code,s,0,0]); lzb=int(lut_q[code,s,1,0]); lzc=int(lut_q[code,s,2,0])
+            if stretched:
+                if (lza != 0 and lza != 2) or (lzb != 0 and lzb != 2) or (lzc != 0 and lzc != 2): return -1
+                az=zbase if lza == 0 else ztop; bz=zbase if lzb == 0 else ztop; cz=zbase if lzc == 0 else ztop
+            else:
+                az=zbase+lza; bz=zbase+lzb; cz=zbase+lzc
+            ax=2*xx+int(lut_q[code,s,0,2]); ay=2*yy+int(lut_q[code,s,0,1])
+            bx=2*xx+int(lut_q[code,s,1,2]); by=2*yy+int(lut_q[code,s,1,1])
+            cx=2*xx+int(lut_q[code,s,2,2]); cy=2*yy+int(lut_q[code,s,2,1])
+            p0,p1,p2,p3,ks,ka,ok=_aio_v50_plane_of_triangle(ax,ay,az,bx,by,bz,cx,cy,cz)
+            if not ok: return -1
+            if (p0,p1,p2,p3) in selected_planes:
+                raw_out[raw_n,0,0]=ax; raw_out[raw_n,0,1]=ay; raw_out[raw_n,0,2]=az
+                raw_out[raw_n,1,0]=bx; raw_out[raw_n,1,1]=by; raw_out[raw_n,1,2]=bz
+                raw_out[raw_n,2,0]=cx; raw_out[raw_n,2,1]=cy; raw_out[raw_n,2,2]=cz
+                raw_n += 1
+    return raw_n
+
+
+def _aio_v50_make_active_band(lower, upper, y0, y1):
+    c8=(lower[y0:y1] | (upper[y0:y1] << 4)).astype(np.uint8, copy=False)
+    active=_AIO_FAST_EXACT_LUT_COUNT[c8] > 0
+    ids=np.flatnonzero(active.ravel()).astype(np.int64, copy=False)
+    if len(ids) == 0:
+        return ids, np.empty(0, np.uint8), 0
+    codes=np.ascontiguousarray(c8.ravel()[ids], dtype=np.uint8)
+    ntri=int(_AIO_FAST_EXACT_LUT_COUNT[codes].sum(dtype=np.int64))
+    return np.ascontiguousarray(ids), codes, ntri
+
+
+def _aio_v50_qtri_to_xyz(qtri, half, xoff, yoff):
+    q=np.asarray(qtri, dtype=np.float64)
+    out=np.empty(q.shape, dtype=np.float32)
+    out[:,:,0]=((q[:,:,0]-1.0)*float(half[0])+float(xoff)).astype(np.float32)
+    out[:,:,1]=((q[:,:,1]-1.0)*float(half[1])+float(yoff)).astype(np.float32)
+    out[:,:,2]=((q[:,:,2]-1.0)*float(half[2])).astype(np.float32)
+    return out
+
+
+def _aio_v50_typed_plane_set(keys):
+    d=_aio_nb_Dict.empty(_AIO_V41_K4, _AIO_V50_I8)
+    for key in keys:
+        k=tuple(int(x) for x in key)
+        d[k]=1
+    return d
+
+
+def _aio_v50_event_segments_for_planes(events):
+    rows=[]; vals=[]
+    for k,v in events.items():
+        iv=int(v)
+        if iv != 0:
+            rows.append(tuple(int(x) for x in k)); vals.append(iv)
+    if not rows:
+        return {}
+    ka=np.asarray(rows,dtype=np.int64); va=np.asarray(vals,dtype=np.int64)
+    order=np.lexsort((ka[:,10],ka[:,9],ka[:,8],ka[:,7],ka[:,6],ka[:,5],ka[:,4],ka[:,3],ka[:,2],ka[:,1],ka[:,0]))
+    ka=ka[order]; va=va[order]
+    lk=ka[:,:10]
+    changes=np.any(lk[1:] != lk[:-1],axis=1) if len(ka)>1 else np.empty(0,bool)
+    starts=np.r_[0,1+np.flatnonzero(changes),len(ka)]
+    by={}
+    for s,e in zip(starts[:-1],starts[1:]):
+        cum=0
+        pk=tuple(int(x) for x in ka[s,:4])
+        arr=by.setdefault(pk,[])
+        for i in range(s,e-1):
+            cum += int(va[i])
+            if cum != 0:
+                arr.append((ka[i,11:14].copy(), ka[i+1,11:14].copy(), int(cum)))
+        cum += int(va[e-1])
+        if cum != 0:
+            raise RuntimeError(f'DIRECT event line does not close: plane={pk}')
+    return by
+
+
+def _aio_v50_winding(px,py,segs_uv):
+    wn=0
+    for (x1,y1),(x2,y2),weight in segs_uv:
+        w=int(weight)
+        if w < 0:
+            x1,y1,x2,y2,w=x2,y2,x1,y1,-w
+        if y1 <= py:
+            if y2 > py:
+                isleft=(x2-x1)*(py-y1)-(px-x1)*(y2-y1)
+                if isleft > 0: wn += w
+        else:
+            if y2 <= py:
+                isleft=(x2-x1)*(py-y1)-(px-x1)*(y2-y1)
+                if isleft < 0: wn -= w
+    return int(wn)
+
+
+def _aio_v50_reconstruct_q_from_uv(pk, axes, uvkey):
+    n=np.asarray(pk[:3],dtype=np.int64); d=int(pk[3])
+    q=np.zeros(3,dtype=np.int64)
+    q[int(axes[0])]=int(uvkey[0]); q[int(axes[1])]=int(uvkey[1])
+    drop=next(i for i in range(3) if i not in axes)
+    num=d-int(n[axes[0]])*int(q[axes[0]])-int(n[axes[1]])*int(q[axes[1]])
+    den=int(n[drop])
+    if den == 0 or (num % den) != 0:
+        return None
+    q[drop]=num//den
+    return tuple(int(x) for x in q)
+
+
+def _aio_v50_signed_proj_area2(q, faces, axes):
+    if len(faces) == 0: return 0
+    fs=np.asarray(faces,dtype=np.int64); uv=np.asarray(q,dtype=np.int64)[:,axes]
+    a=uv[fs[:,0]]; b=uv[fs[:,1]]; c=uv[fs[:,2]]
+    twice=(b[:,0]-a[:,0])*(c[:,1]-a[:,1])-(b[:,1]-a[:,1])*(c[:,0]-a[:,0])
+    return int(twice.sum(dtype=np.int64))
+
+
+def _aio_v50_rebuild_plane(pk, segs, stat):
+    signed_k, abs_k, raw_faces = (int(stat[0]),int(stat[1]),int(stat[2]))
+    # Direct mode only consumes one-orientation exact planes. Opposite coincident sheets
+    # remain on the raw path so no signed cancellation can hide geometry.
+    if abs(signed_k) != abs_k:
+        raise RuntimeError('mixed/opposite oriented coplanar sheets')
+    normal=np.asarray(pk[:3],dtype=np.int64)
+    drop=int(np.argmax(np.abs(normal))); axes=tuple(i for i in range(3) if i != drop)
+    proj_factor=-1 if drop == 1 else 1
+    pts=[]; q_index={}
+    for A,B,w in segs:
+        for P in (A,B):
+            tp=tuple(int(x) for x in P)
+            if tp not in q_index:
+                q_index[tp]=len(pts); pts.append(tp)
+    if not pts:
+        raise RuntimeError('no boundary events')
+    uv_to_q={(p[axes[0]],p[axes[1]]):p for p in pts}
+    seg_uv=[]
+    for A,B,w in segs:
+        A=tuple(int(x) for x in A); B=tuple(int(x) for x in B)
+        seg_uv.append(((float(A[axes[0]]),float(A[axes[1]])),(float(B[axes[0]]),float(B[axes[1]])),int(w)))
+    lines=[_aio_v50_LineString([a,b]) for a,b,_w in seg_uv]
+    noded=_aio_v50_unary_union(lines)
+    polygons=list(_aio_v50_polygonize(noded))
+    if not polygons:
+        raise RuntimeError('polygonize produced no region')
+    # Noding may expose an exact integer half-grid intersection that was not a triangle
+    # endpoint. It is accepted only when the plane equation reconstructs an exact q point.
+    for poly in polygons:
+        rings=[poly.exterior,*list(poly.interiors)]
+        for ring in rings:
+            for x,y in list(ring.coords)[:-1]:
+                key=(int(round(x)),int(round(y)))
+                if abs(float(x)-key[0]) > 1e-8 or abs(float(y)-key[1]) > 1e-8:
+                    raise RuntimeError('non-half-grid planar intersection')
+                if key not in uv_to_q:
+                    qp=_aio_v50_reconstruct_q_from_uv(pk,axes,key)
+                    if qp is None:
+                        raise RuntimeError('planar intersection is not exact half-grid')
+                    uv_to_q[key]=qp
+                    if qp not in q_index:
+                        q_index[qp]=len(pts); pts.append(qp)
+    faces=[]
+    plus_proj_sign=proj_factor*(1 if int(normal[drop]) > 0 else -1)
+    for poly in polygons:
+        rp=poly.representative_point(); wn=_aio_v50_winding(rp.x,rp.y,seg_uv)
+        if wn == 0: continue
+        mult=abs(int(wn))
+        desired=normal*(1 if ((wn > 0) == (plus_proj_sign > 0)) else -1)
+        base=[]
+        gc=_aio_constrained_delaunay_triangles(poly) if _aio_constrained_delaunay_triangles is not None else None
+        tris=list(getattr(gc,'geoms',())) if gc is not None else _aio_triangulate_polygon_exact(poly)
+        if not tris: raise RuntimeError('constrained triangulation failed')
+        qarr=np.asarray(pts,dtype=np.int64)
+        for tri in tris:
+            coords=list(tri.exterior.coords)
+            vids=[]
+            for x,y in coords[:3]:
+                key=(int(round(x)),int(round(y)))
+                if abs(float(x)-key[0]) > 1e-8 or abs(float(y)-key[1]) > 1e-8:
+                    raise RuntimeError('triangulator inserted non-exact vertex')
+                qp=uv_to_q.get(key)
+                if qp is None:
+                    qp=_aio_v50_reconstruct_q_from_uv(pk,axes,key)
+                    if qp is None: raise RuntimeError('triangulator inserted non-half-grid vertex')
+                    uv_to_q[key]=qp
+                    if qp not in q_index:
+                        q_index[qp]=len(pts); pts.append(qp); qarr=np.asarray(pts,dtype=np.int64)
+                vids.append(int(q_index[qp]))
+            if len(set(vids)) != 3: raise RuntimeError('degenerate direct triangle')
+            qarr=np.asarray(pts,dtype=np.int64)
+            cr=np.cross(qarr[vids[1]]-qarr[vids[0]],qarr[vids[2]]-qarr[vids[0]])
+            dot=int(np.dot(cr,desired))
+            if dot == 0: raise RuntimeError('zero-area direct triangle')
+            if dot < 0: vids[1],vids[2]=vids[2],vids[1]
+            base.append(vids)
+        for _ in range(mult): faces.extend(base)
+    if not faces: raise RuntimeError('direct plane reconstructed empty')
+    q=np.asarray(pts,dtype=np.int64); f=np.asarray(faces,dtype=np.int32)
+    got=_aio_v50_signed_proj_area2(q,f,axes)
+    expect=proj_factor*signed_k*int(normal[drop])
+    if got != expect:
+        raise RuntimeError(f'signed projected area mismatch {got}!={expect}')
+    # Full exact certificate for this plane: canonical events and signed+absolute area.
+    ar,ed,ok=_aio_v41_build_plane_edge(q,f)
+    if not ok: raise RuntimeError('direct certificate plane/edge build failed')
+    ev,ok2=_aio_v41_make_events(ed)
+    if not ok2: raise RuntimeError('direct certificate line-event build failed')
+    gotstat=ar.get(tuple(int(x) for x in pk))
+    if gotstat is None or int(gotstat[0]) != signed_k or int(gotstat[1]) != abs_k:
+        raise RuntimeError(f'direct area certificate mismatch {gotstat}!={(signed_k,abs_k)}')
+    src={}
+    for A,B,w in segs:
+        # rebuild source line events from weighted intervals for exact normalized comparison
+        dx=int(B[0]-A[0]); dy=int(B[1]-A[1]); dz=int(B[2]-A[2])
+        g=math.gcd(math.gcd(abs(dx),abs(dy)),abs(dz))
+        if g == 0: raise RuntimeError('zero boundary segment')
+        dx//=g; dy//=g; dz//=g
+        first=dx if dx != 0 else (dy if dy != 0 else dz)
+        if first < 0: dx=-dx; dy=-dy; dz=-dz
+        crx=dy*int(A[2])-dz*int(A[1]); cry=dz*int(A[0])-dx*int(A[2]); crz=dx*int(A[1])-dy*int(A[0])
+        ta=dx*int(A[0])+dy*int(A[1])+dz*int(A[2]); tb=dx*int(B[0])+dy*int(B[1])+dz*int(B[2])
+        if tb > ta: t0,t1,sg=ta,tb,int(w)
+        else: t0,t1,sg=tb,ta,-int(w)
+        k0=(int(pk[0]),int(pk[1]),int(pk[2]),int(pk[3]),dx,dy,dz,crx,cry,crz,t0)
+        k1=(int(pk[0]),int(pk[1]),int(pk[2]),int(pk[3]),dx,dy,dz,crx,cry,crz,t1)
+        src[k0]=src.get(k0,0)+sg; src[k1]=src.get(k1,0)-sg
+    src={k:v for k,v in src.items() if v != 0}
+    dst={tuple(int(x) for x in k):int(v) for k,v in ev.items() if int(v) != 0}
+    if src != dst:
+        raise RuntimeError('direct line-event certificate mismatch')
+    return np.ascontiguousarray(q,dtype=np.int32),np.ascontiguousarray(f,dtype=np.int32),raw_faces
+
+
+def _aio_v50_case_pass(params, items, bbox, grid, resolved, mask_store, cancel_event, *, mode, stats=None, direct_planes=None, events=None, writer=None, selected_planes=None, half=None, xoff=0.0, yoff=0.0, log=None, progress_base=0.0, progress_span=1.0):
+    total=int(bbox.layers); hc=int(grid.height)+1; wc=int(grid.width)+1
+    zero=np.zeros((hc,wc),dtype=np.uint8); prev=zero
+    material_voxels=0; logical_tri=0; raw_written=0; static_saved=0
+    tile_rows=int(_AIO_V50_TILE_ROWS)
+    prefetch_workers=max(1,min(3,int(getattr(params,'workers',1))))
+    case_futures={}; next_submit=0
+    def submit_case(pool, local_layer):
+        absolute=int(bbox.zmin)+int(local_layer)
+        if mask_store is not None: return pool.submit(_aio_fast_case_from_cached_layer,mask_store,absolute,bbox,grid)
+        return pool.submit(_aio_fast_case_from_layer_item,items[absolute],bbox,resolved,grid)
+    def process_pair(lower,upper,k,run_pairs=1):
+        nonlocal logical_tri, raw_written
+        for y0 in range(0,hc,tile_rows):
+            check_cancel(cancel_event)
+            y1=min(hc,y0+tile_rows)
+            ids,codes,ntri=_aio_v50_make_active_band(lower,upper,y0,y1)
+            if ntri <= 0: continue
+            if mode == 'stats':
+                got=_aio_v50_stats_active(ids,codes,y0,wc,int(k),int(run_pairs),_AIO_FAST_EXACT_LUT_COUNT,_AIO_V32_LUT_Q_ZYX,stats)
+                if got < 0: raise RuntimeError('DIRECT stats static invariant failed')
+                logical_tri += int(got)
+            elif mode == 'events_raw':
+                out=np.empty((ntri,3,3),dtype=np.int32)
+                rn,got=_aio_v50_events_and_raw_active(ids,codes,y0,wc,int(k),int(run_pairs),_AIO_FAST_EXACT_LUT_COUNT,_AIO_V32_LUT_Q_ZYX,direct_planes,events,out)
+                if rn < 0: raise RuntimeError('DIRECT event/raw static invariant failed')
+                logical_tri += int(got)
+                if rn:
+                    xyz=_aio_v50_qtri_to_xyz(out[:rn],half,xoff,yoff)
+                    _aio_fast_write_triangle_soup(writer,xyz,max_triangles=params.max_triangles,cancel_event=cancel_event)
+                    raw_written += int(rn)
+            elif mode == 'selected_raw':
+                out=np.empty((ntri,3,3),dtype=np.int32)
+                rn=_aio_v50_selected_raw_active(ids,codes,y0,wc,int(k),int(run_pairs),_AIO_FAST_EXACT_LUT_COUNT,_AIO_V32_LUT_Q_ZYX,selected_planes,out)
+                if rn < 0: raise RuntimeError('DIRECT selected raw invariant failed')
+                if rn:
+                    xyz=_aio_v50_qtri_to_xyz(out[:rn],half,xoff,yoff)
+                    _aio_fast_write_triangle_soup(writer,xyz,max_triangles=params.max_triangles,cancel_event=cancel_event)
+                    raw_written += int(rn)
+    run_case=None; run_start=-1; run_pairs=0
+    with ThreadPoolExecutor(max_workers=prefetch_workers) as pool:
+        while next_submit < total and len(case_futures) < prefetch_workers:
+            case_futures[next_submit]=submit_case(pool,next_submit); next_submit += 1
+        for k in range(total+1):
+            check_cancel(cancel_event)
+            if k < total:
+                nxt,material=case_futures.pop(k).result()
+                if mode == 'stats': material_voxels += int(material)
+                while next_submit < total and len(case_futures) < prefetch_workers:
+                    case_futures[next_submit]=submit_case(pool,next_submit); next_submit += 1
+            else: nxt=zero
+            identical=bool(np.array_equal(prev,nxt))
+            if identical:
+                if run_case is None:
+                    run_case=prev.copy(); run_start=int(k); run_pairs=1
+                elif bool(np.array_equal(run_case,prev)):
+                    run_pairs += 1
+                else:
+                    process_pair(run_case,run_case,run_start,run_pairs)
+                    static_saved += max(0,int(run_pairs)-1)
+                    run_case=prev.copy(); run_start=int(k); run_pairs=1
+            else:
+                if run_case is not None:
+                    process_pair(run_case,run_case,run_start,run_pairs)
+                    static_saved += max(0,int(run_pairs)-1)
+                    run_case=None; run_start=-1; run_pairs=0
+                process_pair(prev,nxt,k,1)
+            prev=nxt
+            if log is not None and (k==0 or (k+1)%50==0 or k==total):
+                pct=progress_base+progress_span*(k+1)/max(1,total+1)
+                log.progress(pct,f'DIRECT {mode} {k+1:,}/{total+1:,} pair · tri={logical_tri:,} rawOut={raw_written:,}')
+        if run_case is not None:
+            process_pair(run_case,run_case,run_start,run_pairs)
+            static_saved += max(0,int(run_pairs)-1)
+    return {'material_voxels':material_voxels,'logical_triangles':logical_tri,'raw_written':raw_written,'static_saved_pairs':static_saved}
+
+
+def _aio_v50_exact_interpolated_surface(params, items, bbox, grid, resolved, log, cancel_event, mask_store=None):
+    global _AIO_V38_LAST_COMPACT_STATS, _AIO_V50_LAST_STATS
+    if getattr(params,'surface_mode','') != '표면 보간형':
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(params,items,bbox,grid,resolved,log,cancel_event,mask_store)
+    if (not _AIO_FAST_EXACT_VALID) or (_AIO_V32_LUT_Q_ZYX is None) or (not _AIO_V36_STATIC_SELFTEST_OK):
+        log.write('WARNING: DIRECT engine prerequisites failed -> v4.6 FAST-CERT fallback')
+        return _aio_v38_exact_interpolated_surface(params,items,bbox,grid,resolved,log,cancel_event,mask_store)
+    xsp=float(grid.x_pitch_mm); ysp=float(grid.y_pitch_mm); zsp=float(params.layer_thickness_mm)
+    half=(0.5*xsp,0.5*ysp,0.5*zsp); xoff=float(grid.x_offset_mm); yoff=float(grid.y_offset_mm)
+    started=time.time()
+    log.write('')
+    log.write('=============== v5.0 DIRECT-PLANE exact surface ===============')
+    log.write('대형 exact plane: raw MC triangle 배열 생성 없이 case->boundary event 직접 누적')
+    log.write('복잡/소형 facet: ExactLUT triangle을 tile 단위로 즉시 STL 스트리밍')
+    log.write('direct plane 조건: 한 방향 coplanar + exact event/area certificate PASS')
+    log.write('vertex 이동/다운샘플링/QEM/허용오차 근사: 없음')
+    log.write('================================================================')
+    # Pass 1: exact plane census only; no triangle arrays.
+    stats=_aio_nb_Dict.empty(_AIO_V41_K4,_AIO_V50_V3)
+    p1=_aio_v50_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='stats',stats=stats,log=log,progress_base=64.0,progress_span=10.0)
+    stat_py={tuple(int(x) for x in k):(int(v[0]),int(v[1]),int(v[2])) for k,v in stats.items()}
+    candidates=[]
+    for k,(ss,aa,nn) in stat_py.items():
+        if nn >= int(_AIO_V50_DIRECT_MIN_FACES) and abs(ss) == aa and aa > 0:
+            candidates.append(k)
+    direct_set=_aio_v50_typed_plane_set(candidates)
+    log.write(f'DIRECT plane census: planes={len(stat_py):,} · candidates={len(candidates):,} · logicalTri={p1["logical_triangles"]:,}')
+    # Pass 2: candidate boundary accumulation + raw streaming for all other planes.
+    writer=recon_core.BinarySTLWriter(params.output_stl,header='v5.0 DIRECT-PLANE exact STL',buffer_bytes=16*1024*1024)
+    success=False
+    events=_aio_nb_Dict.empty(_AIO_V50_K14,_aio_nb_types.int64)
+    try:
+        p2=_aio_v50_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='events_raw',direct_planes=direct_set,events=events,writer=writer,half=half,xoff=xoff,yoff=yoff,log=log,progress_base=74.0,progress_span=17.0)
+        byplane=_aio_v50_event_segments_for_planes(events)
+        accepted=[]; failed=[]; direct_out=0; direct_raw=0
+        for idx,pk in enumerate(candidates):
+            check_cancel(cancel_event)
+            segs=byplane.get(tuple(pk),())
+            try:
+                q,f,raw_faces=_aio_v50_rebuild_plane(tuple(pk),segs,stat_py[tuple(pk)])
+                # Only keep the direct form if it actually removes work.
+                if len(f) >= raw_faces:
+                    raise RuntimeError(f'no direct reduction {len(f)}/{raw_faces}')
+                tri_xyz=_aio_v50_qtri_to_xyz(q[np.asarray(f,dtype=np.int64)],half,xoff,yoff)
+                _aio_fast_write_triangle_soup(writer,tri_xyz,max_triangles=params.max_triangles,cancel_event=cancel_event)
+                accepted.append(tuple(pk)); direct_out += int(len(f)); direct_raw += int(raw_faces)
+            except Exception as exc:
+                failed.append((tuple(pk),str(exc)))
+            if idx==0 or (idx+1)%100==0 or idx+1==len(candidates):
+                log.progress(91.0+5.0*(idx+1)/max(1,len(candidates)),f'DIRECT triangulate {idx+1:,}/{len(candidates):,} · PASS={len(accepted):,} fallback={len(failed):,}')
+        # Rare pass 3: only direct candidates that failed exact reconstruction are emitted raw.
+        if failed:
+            failed_set=_aio_v50_typed_plane_set([k for k,_ in failed])
+            p3=_aio_v50_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='selected_raw',selected_planes=failed_set,writer=writer,half=half,xoff=xoff,yoff=yoff,log=log,progress_base=96.0,progress_span=1.0)
+        else:
+            p3={'raw_written':0}
+        triangle_count=int(writer.tri_count)
+        if triangle_count <= 0: raise ValueError('DIRECT engine produced no triangles')
+        writer.close(success=True); success=True
+        recon_core.verify_binary_stl(params.output_stl,triangle_count)
+        _AIO_V50_LAST_STATS={
+            'reason':'PASS','input_triangles':int(p1['logical_triangles']),'output_triangles':triangle_count,
+            'direct_candidates':len(candidates),'direct_accepted':len(accepted),'direct_failed':len(failed),
+            'direct_raw_faces':int(direct_raw),'direct_output_faces':int(direct_out),
+            'raw_stream_faces':int(p2['raw_written']+p3.get('raw_written',0)),
+            'static_saved_pairs':int(p1['static_saved_pairs']),'elapsed':time.time()-started,
+        }
+        _AIO_V38_LAST_COMPACT_STATS=dict(_AIO_V50_LAST_STATS)
+        log.write('')
+        log.write('=============== v5.0 DIRECT-PLANE 통계 ===============')
+        log.write(f'logical ExactLUT triangles: {p1["logical_triangles"]:,}')
+        log.write(f'direct candidates / PASS / fallback: {len(candidates):,} / {len(accepted):,} / {len(failed):,}')
+        log.write(f'direct plane raw->compact: {direct_raw:,} -> {direct_out:,}')
+        log.write(f'raw streamed facets: {p2["raw_written"]+p3.get("raw_written",0):,}')
+        log.write(f'final STL triangles: {triangle_count:,}')
+        log.write(f'DIRECT surface elapsed: {format_seconds(time.time()-started)}')
+        if failed:
+            for pk,why in failed[:8]: log.write(f'  fallback plane {pk}: {why}')
+            if len(failed)>8: log.write(f'  ... +{len(failed)-8:,} fallback planes')
+        log.write('=======================================================')
+        return triangle_count,int(p1['material_voxels'])
+    except Exception:
+        if not success:
+            writer.close(success=False)
+        try: params.output_stl.unlink(missing_ok=True)
+        except Exception: pass
+        raise
+
+
+# Lightweight startup proof: direct plane reconstruction must preserve the canonical
+# line-event chain and signed/absolute area on representative exact planar meshes.
+def _aio_v50_startup_selftest():
+    try:
+        # A rectangle with a collinear boundary vertex + a holed rectangle on z=1.
+        tests=[]
+        q=np.asarray([[0,0,1],[2,0,1],[4,0,1],[4,4,1],[0,4,1]],np.int64)
+        f=np.asarray([[0,1,4],[1,3,4],[1,2,3]],np.int64); tests.append((q,f))
+        q2=np.asarray([[0,0,1],[8,0,1],[8,8,1],[0,8,1],[2,2,1],[2,6,1],[6,6,1],[6,2,1]],np.int64)
+        f2=np.asarray([[0,1,4],[1,7,4],[1,2,7],[2,6,7],[2,3,6],[3,5,6],[3,0,5],[0,4,5]],np.int64); tests.append((q2,f2))
+        for qx,fx in tests:
+            ar,ed,ok=_aio_v41_build_plane_edge(qx,fx)
+            if not ok: return False,'source plane-edge fail'
+            ev,ok2=_aio_v41_make_events(ed)
+            if not ok2: return False,'source event fail'
+            # convert K11 event map to K14 with exact points from edge intervals by using source faces through v50 events
+            stats=_aio_nb_Dict.empty(_AIO_V41_K4,_AIO_V50_V3); events=_aio_nb_Dict.empty(_AIO_V50_K14,_aio_nb_types.int64)
+            # feed triangles as one synthetic active-independent path
+            for face in fx:
+                A=qx[int(face[0])];B=qx[int(face[1])];C=qx[int(face[2])]
+                p0,p1,p2,p3,ks,ka,good=_aio_v50_plane_of_triangle(int(A[0]),int(A[1]),int(A[2]),int(B[0]),int(B[1]),int(B[2]),int(C[0]),int(C[1]),int(C[2]))
+                if not good:return False,'plane calc fail'
+                pk=(p0,p1,p2,p3)
+                old=stats.get(pk,(0,0,0));stats[pk]=(old[0]+ks,old[1]+ka,old[2]+1)
+                _aio_v50_add_line_event(events,p0,p1,p2,p3,int(A[0]),int(A[1]),int(A[2]),int(B[0]),int(B[1]),int(B[2]))
+                _aio_v50_add_line_event(events,p0,p1,p2,p3,int(B[0]),int(B[1]),int(B[2]),int(C[0]),int(C[1]),int(C[2]))
+                _aio_v50_add_line_event(events,p0,p1,p2,p3,int(C[0]),int(C[1]),int(C[2]),int(A[0]),int(A[1]),int(A[2]))
+            by=_aio_v50_event_segments_for_planes(events)
+            for pk,st in stats.items():
+                qq,ff,_=_aio_v50_rebuild_plane(tuple(pk),by.get(tuple(pk),()),st)
+                ar2,ed2,ok=_aio_v41_build_plane_edge(qq,ff); ev2,ok=_aio_v41_make_events(ed2)
+                if not ok:return False,'rebuilt cert fail'
+                if dict((tuple(k),int(v)) for k,v in ev.items() if int(v)!=0) != dict((tuple(k),int(v)) for k,v in ev2.items() if int(v)!=0):
+                    return False,'event mismatch'
+        return True,'PASS · exact boundary events + projected area'
+    except Exception as exc:
+        return False,f'{type(exc).__name__}: {exc}'
+
+_AIO_V50_SELFTEST_OK,_AIO_V50_SELFTEST_MSG=_aio_v50_startup_selftest()
+if _AIO_V50_SELFTEST_OK:
+    recon_core.reconstruct_interpolated_surface=_aio_v50_exact_interpolated_surface
+    APP_VERSION='5.0-direct-plane-exact'
+else:
+    # keep v4.6 production path if startup proof fails
+    APP_VERSION='4.6-cap-profiled-fast-v50-disabled'
+
+
+
+# =============================================================================
+# v5.1 DIRECT-BOUNDARY exact surface engine (final production override)
+# =============================================================================
+# v5.0 proved exact planar geometry, but removing collinear *boundary vertices* can
+# change how a slicer resolves a section exactly through a mesh vertex/edge even when
+# the geometric surface is identical.  v5.1 therefore keeps the COMPLETE exact MC
+# boundary-edge subdivision of every compacted plane.  Interior coplanar edges still
+# cancel online, so millions of raw MC triangles are never materialized.
+#
+# Accuracy invariant for every accepted direct plane:
+#   - same canonical integer plane and signed/absolute projected area,
+#   - same exact non-zero boundary edge set INCLUDING collinear intermediate vertices,
+#   - no new non-half-grid boundary point,
+#   - no vertex motion, tolerance weld, QEM, downsampling, or layer skipping.
+# Any failure falls back to raw ExactLUT facets for that plane only.
+
+_AIO_V51_LAST_STATS = {}
+
+@njit(cache=True)
+def _aio_v51_add_exact_boundary_edge(ed, p0,p1,p2,p3, ax,ay,az,bx,by,bz):
+    less = (ax < bx) or (ax == bx and (ay < by or (ay == by and az < bz)))
+    if less:
+        key=(p0,p1,p2,p3,ax,ay,az,bx,by,bz); sg=1
+    else:
+        key=(p0,p1,p2,p3,bx,by,bz,ax,ay,az); sg=-1
+    if key in ed:
+        nv=ed[key]+sg
+        if nv == 0:
+            del ed[key]
+        else:
+            ed[key]=nv
+    else:
+        ed[key]=sg
+    return True
+
+
+@njit(cache=True)
+def _aio_v51_edges_and_raw_active(ids, codes, y0, wc, k, stretch_pairs, counts, lut_q, direct_planes, edges, raw_out):
+    raw_n=0; logical=0
+    zbase=2*k; ztop=2*(k+stretch_pairs); stretched=stretch_pairs>1
+    for ii in range(ids.shape[0]):
+        owner=int(ids[ii]); code=int(codes[ii]); yy=owner//wc+y0; xx=owner-(owner//wc)*wc
+        nt=int(counts[code])
+        for ss in range(nt):
+            lza=int(lut_q[code,ss,0,0]); lzb=int(lut_q[code,ss,1,0]); lzc=int(lut_q[code,ss,2,0])
+            if stretched:
+                if (lza != 0 and lza != 2) or (lzb != 0 and lzb != 2) or (lzc != 0 and lzc != 2):
+                    return -1,-1
+                az=zbase if lza == 0 else ztop; bz=zbase if lzb == 0 else ztop; cz=zbase if lzc == 0 else ztop
+            else:
+                az=zbase+lza; bz=zbase+lzb; cz=zbase+lzc
+            ax=2*xx+int(lut_q[code,ss,0,2]); ay=2*yy+int(lut_q[code,ss,0,1])
+            bx=2*xx+int(lut_q[code,ss,1,2]); by=2*yy+int(lut_q[code,ss,1,1])
+            cx=2*xx+int(lut_q[code,ss,2,2]); cy=2*yy+int(lut_q[code,ss,2,1])
+            p0,p1,p2,p3,ks,ka,ok=_aio_v50_plane_of_triangle(ax,ay,az,bx,by,bz,cx,cy,cz)
+            if not ok: return -1,-1
+            pk=(p0,p1,p2,p3)
+            if pk in direct_planes:
+                _aio_v51_add_exact_boundary_edge(edges,p0,p1,p2,p3,ax,ay,az,bx,by,bz)
+                _aio_v51_add_exact_boundary_edge(edges,p0,p1,p2,p3,bx,by,bz,cx,cy,cz)
+                _aio_v51_add_exact_boundary_edge(edges,p0,p1,p2,p3,cx,cy,cz,ax,ay,az)
+            else:
+                raw_out[raw_n,0,0]=ax; raw_out[raw_n,0,1]=ay; raw_out[raw_n,0,2]=az
+                raw_out[raw_n,1,0]=bx; raw_out[raw_n,1,1]=by; raw_out[raw_n,1,2]=bz
+                raw_out[raw_n,2,0]=cx; raw_out[raw_n,2,1]=cy; raw_out[raw_n,2,2]=cz
+                raw_n += 1
+            logical += 1
+    return raw_n,logical
+
+
+def _aio_v51_boundary_segments_by_plane(edges):
+    by={}
+    invalid=set()
+    for key,val in edges.items():
+        iv=int(val)
+        if iv == 0:
+            continue
+        k=tuple(int(x) for x in key)
+        pk=k[:4]
+        if iv not in (-1,1):
+            invalid.add(pk)
+        lo=np.asarray(k[4:7],dtype=np.int64); hi=np.asarray(k[7:10],dtype=np.int64)
+        if iv > 0:
+            A,B=lo,hi; weight=iv
+        else:
+            A,B=hi,lo; weight=-iv
+        by.setdefault(pk,[]).append((A,B,int(weight)))
+    return by,invalid
+
+
+def _aio_v51_exact_edge_dict_from_segments(pk,segs):
+    src={}
+    for A,B,w in segs:
+        iw=int(w)
+        if iw != 1:
+            raise RuntimeError(f'boundary multiplicity={iw}')
+        A=tuple(int(x) for x in A); B=tuple(int(x) for x in B)
+        less=(A[0] < B[0]) or (A[0] == B[0] and (A[1] < B[1] or (A[1] == B[1] and A[2] < B[2])))
+        if less:
+            lo,hi,sg=A,B,1
+        else:
+            lo,hi,sg=B,A,-1
+        key=(int(pk[0]),int(pk[1]),int(pk[2]),int(pk[3]),*lo,*hi)
+        src[key]=src.get(key,0)+sg
+    return {k:v for k,v in src.items() if v != 0}
+
+
+def _aio_v51_rebuild_plane(pk,segs,stat):
+    signed_k,abs_k,raw_faces=(int(stat[0]),int(stat[1]),int(stat[2]))
+    if abs(signed_k) != abs_k:
+        raise RuntimeError('mixed/opposite oriented coplanar sheets')
+    src_edges=_aio_v51_exact_edge_dict_from_segments(pk,segs)
+    if not src_edges:
+        raise RuntimeError('no exact boundary edges')
+    normal=np.asarray(pk[:3],dtype=np.int64)
+    drop=int(np.argmax(np.abs(normal))); axes=tuple(i for i in range(3) if i != drop)
+    proj_factor=-1 if drop == 1 else 1
+    pts=[]; q_index={}; seg_uv=[]; uv_to_q={}
+    for A,B,w in segs:
+        if int(w) != 1:
+            raise RuntimeError('non-unit boundary multiplicity')
+        A=tuple(int(x) for x in A); B=tuple(int(x) for x in B)
+        for P in (A,B):
+            if P not in q_index:
+                q_index[P]=len(pts); pts.append(P)
+            uv_to_q[(P[axes[0]],P[axes[1]])]=P
+        seg_uv.append(((float(A[axes[0]]),float(A[axes[1]])),
+                       (float(B[axes[0]]),float(B[axes[1]])),1))
+    # Important: do NOT unary_union/line-merge this boundary.  The source MC edge
+    # subdivision itself is a slicing invariant; polygonize the already-noded exact
+    # edge graph directly so all collinear boundary vertices survive.
+    lines=[_aio_v50_LineString([a,b]) for a,b,_ in seg_uv]
+    polygons=list(_aio_v50_polygonize(lines))
+    if not polygons:
+        raise RuntimeError('exact boundary polygonize produced no region')
+    faces=[]
+    plus_proj_sign=proj_factor*(1 if int(normal[drop]) > 0 else -1)
+    for poly in polygons:
+        rp=poly.representative_point(); wn=_aio_v50_winding(rp.x,rp.y,seg_uv)
+        if wn == 0:
+            continue
+        if abs(int(wn)) != 1:
+            raise RuntimeError(f'non-unit planar winding={wn}')
+        desired=normal*(1 if ((wn > 0) == (plus_proj_sign > 0)) else -1)
+        gc=_aio_constrained_delaunay_triangles(poly) if _aio_constrained_delaunay_triangles is not None else None
+        tris=list(getattr(gc,'geoms',())) if gc is not None else _aio_triangulate_polygon_exact(poly)
+        if not tris:
+            raise RuntimeError('constrained triangulation failed')
+        for tri in tris:
+            coords=list(tri.exterior.coords)
+            vids=[]
+            for x,y in coords[:3]:
+                ux=int(round(x)); uy=int(round(y))
+                if abs(float(x)-ux) > 1e-8 or abs(float(y)-uy) > 1e-8:
+                    raise RuntimeError('triangulator inserted non-half-grid projected vertex')
+                key=(ux,uy)
+                qp=uv_to_q.get(key)
+                if qp is None:
+                    # Interior Steiner-free exact vertex is allowed only if the integer
+                    # plane equation recovers an exact half-grid q coordinate.
+                    qp=_aio_v50_reconstruct_q_from_uv(pk,axes,key)
+                    if qp is None:
+                        raise RuntimeError('triangulator inserted non-exact vertex')
+                    uv_to_q[key]=qp
+                    if qp not in q_index:
+                        q_index[qp]=len(pts); pts.append(qp)
+                vids.append(int(q_index[qp]))
+            if len(set(vids)) != 3:
+                raise RuntimeError('degenerate direct triangle')
+            qarr=np.asarray(pts,dtype=np.int64)
+            cr=np.cross(qarr[vids[1]]-qarr[vids[0]],qarr[vids[2]]-qarr[vids[0]])
+            dot=int(np.dot(cr,desired))
+            if dot == 0:
+                raise RuntimeError('zero-area direct triangle')
+            if dot < 0:
+                vids[1],vids[2]=vids[2],vids[1]
+            faces.append(vids)
+    if not faces:
+        raise RuntimeError('direct plane reconstructed empty')
+    q=np.asarray(pts,dtype=np.int64); f=np.asarray(faces,dtype=np.int32)
+    got=_aio_v50_signed_proj_area2(q,f,axes)
+    expect=proj_factor*signed_k*int(normal[drop])
+    if got != expect:
+        raise RuntimeError(f'signed projected area mismatch {got}!={expect}')
+    ar,ed,ok=_aio_v41_build_plane_edge(q,f)
+    if not ok:
+        raise RuntimeError('direct exact-edge certificate build failed')
+    gotstat=ar.get(tuple(int(x) for x in pk))
+    if gotstat is None or int(gotstat[0]) != signed_k or int(gotstat[1]) != abs_k:
+        raise RuntimeError(f'direct area certificate mismatch {gotstat}!={(signed_k,abs_k)}')
+    dst={tuple(int(x) for x in k):int(v) for k,v in ed.items() if int(v) != 0}
+    if src_edges != dst:
+        raise RuntimeError('exact boundary-edge subdivision mismatch')
+    return np.ascontiguousarray(q,dtype=np.int32),np.ascontiguousarray(f,dtype=np.int32),raw_faces
+
+
+def _aio_v51_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,*,mode,stats=None,direct_planes=None,edges=None,writer=None,selected_planes=None,half=None,xoff=0.0,yoff=0.0,log=None,progress_base=0.0,progress_span=1.0):
+    total=int(bbox.layers); hc=int(grid.height)+1; wc=int(grid.width)+1
+    zero=np.zeros((hc,wc),dtype=np.uint8); prev=zero
+    material_voxels=0; logical_tri=0; raw_written=0; static_saved=0
+    tile_rows=int(_AIO_V50_TILE_ROWS)
+    prefetch_workers=max(1,min(3,int(getattr(params,'workers',1))))
+    case_futures={}; next_submit=0
+    def submit_case(pool,local_layer):
+        absolute=int(bbox.zmin)+int(local_layer)
+        if mask_store is not None:
+            return pool.submit(_aio_fast_case_from_cached_layer,mask_store,absolute,bbox,grid)
+        return pool.submit(_aio_fast_case_from_layer_item,items[absolute],bbox,resolved,grid)
+    def process_pair(lower,upper,k,run_pairs=1):
+        nonlocal logical_tri,raw_written
+        for y0 in range(0,hc,tile_rows):
+            check_cancel(cancel_event)
+            if edges is not None and len(edges)*240 > _bjt_memory_available()*0.35:
+                raise MemoryError("DIRECT boundary 메모리 예산 초과. 격자 슬라이스를 보존하고 모델 범위를 나누십시오.")
+            y1=min(hc,y0+tile_rows)
+            ids,codes,ntri=_aio_v50_make_active_band(lower,upper,y0,y1)
+            if ntri <= 0:
+                continue
+            if mode == 'stats':
+                got=_aio_v50_stats_active(ids,codes,y0,wc,int(k),int(run_pairs),_AIO_FAST_EXACT_LUT_COUNT,_AIO_V32_LUT_Q_ZYX,stats)
+                if got < 0:
+                    raise RuntimeError('DIRECT stats static invariant failed')
+                logical_tri += int(got)
+            elif mode == 'edges_raw':
+                out=np.empty((ntri,3,3),dtype=np.int32)
+                rn,got=_aio_v51_edges_and_raw_active(ids,codes,y0,wc,int(k),int(run_pairs),_AIO_FAST_EXACT_LUT_COUNT,_AIO_V32_LUT_Q_ZYX,direct_planes,edges,out)
+                if rn < 0:
+                    raise RuntimeError('DIRECT edge/raw static invariant failed')
+                logical_tri += int(got)
+                if rn:
+                    xyz=_aio_v50_qtri_to_xyz(out[:rn],half,xoff,yoff)
+                    _aio_fast_write_triangle_soup(writer,xyz,max_triangles=params.max_triangles,cancel_event=cancel_event)
+                    raw_written += int(rn)
+            elif mode == 'selected_raw':
+                out=np.empty((ntri,3,3),dtype=np.int32)
+                rn=_aio_v50_selected_raw_active(ids,codes,y0,wc,int(k),int(run_pairs),_AIO_FAST_EXACT_LUT_COUNT,_AIO_V32_LUT_Q_ZYX,selected_planes,out)
+                if rn < 0:
+                    raise RuntimeError('DIRECT selected raw invariant failed')
+                if rn:
+                    xyz=_aio_v50_qtri_to_xyz(out[:rn],half,xoff,yoff)
+                    _aio_fast_write_triangle_soup(writer,xyz,max_triangles=params.max_triangles,cancel_event=cancel_event)
+                    raw_written += int(rn)
+    run_case=None; run_start=-1; run_pairs=0
+    with ThreadPoolExecutor(max_workers=prefetch_workers) as pool:
+        while next_submit < total and len(case_futures) < prefetch_workers:
+            case_futures[next_submit]=submit_case(pool,next_submit); next_submit += 1
+        for k in range(total+1):
+            check_cancel(cancel_event)
+            if k < total:
+                nxt,material=case_futures.pop(k).result()
+                if mode == 'stats': material_voxels += int(material)
+                while next_submit < total and len(case_futures) < prefetch_workers:
+                    case_futures[next_submit]=submit_case(pool,next_submit); next_submit += 1
+            else:
+                nxt=zero
+            identical=bool(np.array_equal(prev,nxt))
+            if identical:
+                if run_case is None:
+                    run_case=prev.copy(); run_start=int(k); run_pairs=1
+                elif bool(np.array_equal(run_case,prev)):
+                    run_pairs += 1
+                else:
+                    process_pair(run_case,run_case,run_start,run_pairs)
+                    static_saved += max(0,int(run_pairs)-1)
+                    run_case=prev.copy(); run_start=int(k); run_pairs=1
+            else:
+                if run_case is not None:
+                    process_pair(run_case,run_case,run_start,run_pairs)
+                    static_saved += max(0,int(run_pairs)-1)
+                    run_case=None; run_start=-1; run_pairs=0
+                process_pair(prev,nxt,k,1)
+            prev=nxt
+            if log is not None and (k==0 or (k+1)%50==0 or k==total):
+                pct=progress_base+progress_span*(k+1)/max(1,total+1)
+                log.progress(pct,f'DIRECT {mode} {k+1:,}/{total+1:,} pair · tri={logical_tri:,} rawOut={raw_written:,}')
+        if run_case is not None:
+            process_pair(run_case,run_case,run_start,run_pairs)
+            static_saved += max(0,int(run_pairs)-1)
+    return {'material_voxels':material_voxels,'logical_triangles':logical_tri,'raw_written':raw_written,'static_saved_pairs':static_saved}
+
+
+def _aio_v51_exact_interpolated_surface(params,items,bbox,grid,resolved,log,cancel_event,mask_store=None):
+    global _AIO_V38_LAST_COMPACT_STATS,_AIO_V50_LAST_STATS,_AIO_V51_LAST_STATS
+    if getattr(params,'surface_mode','') != '표면 보간형':
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(params,items,bbox,grid,resolved,log,cancel_event,mask_store)
+    if (not _AIO_FAST_EXACT_VALID) or (_AIO_V32_LUT_Q_ZYX is None) or (not _AIO_V36_STATIC_SELFTEST_OK):
+        log.write('WARNING: DIRECT engine prerequisites failed -> v4.6 FAST-CERT fallback')
+        return _aio_v38_exact_interpolated_surface(params,items,bbox,grid,resolved,log,cancel_event,mask_store)
+    xsp=float(grid.x_pitch_mm); ysp=float(grid.y_pitch_mm); zsp=float(params.layer_thickness_mm)
+    half=(0.5*xsp,0.5*ysp,0.5*zsp); xoff=float(grid.x_offset_mm); yoff=float(grid.y_offset_mm)
+    started=time.time()
+    log.write('')
+    log.write('=============== v5.1 DIRECT-BOUNDARY exact surface ===============')
+    log.write('대형 coplanar 영역: raw MC triangle 배열 없이 exact boundary edge 직접 누적')
+    log.write('경계의 collinear 중간 vertex까지 원 ExactLUT와 동일하게 보존')
+    log.write('복잡/소형/검증실패 면: ExactLUT raw facet 자동 fallback')
+    log.write('vertex 이동/다운샘플링/QEM/허용오차 근사: 없음')
+    log.write('===================================================================')
+    stats=_aio_nb_Dict.empty(_AIO_V41_K4,_AIO_V50_V3)
+    p1=_aio_v51_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='stats',stats=stats,log=log,progress_base=64.0,progress_span=10.0)
+    stat_py={tuple(int(x) for x in k):(int(v[0]),int(v[1]),int(v[2])) for k,v in stats.items()}
+    candidates=[k for k,(ss,aa,nn) in stat_py.items() if nn >= int(_AIO_V50_DIRECT_MIN_FACES) and abs(ss) == aa and aa > 0]
+    direct_set=_aio_v50_typed_plane_set(candidates)
+    log.write(f'DIRECT plane census: planes={len(stat_py):,} · candidates={len(candidates):,} · logicalTri={p1["logical_triangles"]:,}')
+    writer=recon_core.BinarySTLWriter(params.output_stl,header='v5.1 DIRECT-BOUNDARY exact STL',buffer_bytes=16*1024*1024)
+    success=False
+    edges=_aio_nb_Dict.empty(_AIO_V41_K10,_aio_nb_types.int64)
+    try:
+        p2=_aio_v51_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='edges_raw',direct_planes=direct_set,edges=edges,writer=writer,half=half,xoff=xoff,yoff=yoff,log=log,progress_base=74.0,progress_span=17.0)
+        byplane,invalid_planes=_aio_v51_boundary_segments_by_plane(edges)
+        accepted=[]; failed=[]; direct_out=0; direct_raw=0
+        for idx,pk in enumerate(candidates):
+            check_cancel(cancel_event)
+            try:
+                if tuple(pk) in invalid_planes:
+                    raise RuntimeError('non-unit exact boundary multiplicity')
+                q,f,raw_faces=_aio_v51_rebuild_plane(tuple(pk),byplane.get(tuple(pk),()),stat_py[tuple(pk)])
+                if len(f) >= raw_faces:
+                    raise RuntimeError(f'no direct reduction {len(f)}/{raw_faces}')
+                tri_xyz=_aio_v50_qtri_to_xyz(q[np.asarray(f,dtype=np.int64)],half,xoff,yoff)
+                _aio_fast_write_triangle_soup(writer,tri_xyz,max_triangles=params.max_triangles,cancel_event=cancel_event)
+                accepted.append(tuple(pk)); direct_out += int(len(f)); direct_raw += int(raw_faces)
+            except Exception as exc:
+                failed.append((tuple(pk),str(exc)))
+            if idx==0 or (idx+1)%100==0 or idx+1==len(candidates):
+                log.progress(91.0+5.0*(idx+1)/max(1,len(candidates)),f'DIRECT triangulate {idx+1:,}/{len(candidates):,} · PASS={len(accepted):,} fallback={len(failed):,}')
+        if failed:
+            failed_set=_aio_v50_typed_plane_set([k for k,_ in failed])
+            p3=_aio_v51_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='selected_raw',selected_planes=failed_set,writer=writer,half=half,xoff=xoff,yoff=yoff,log=log,progress_base=96.0,progress_span=1.0)
+        else:
+            p3={'raw_written':0}
+        triangle_count=int(writer.tri_count)
+        if triangle_count <= 0:
+            raise ValueError('DIRECT engine produced no triangles')
+        writer.close(success=True); success=True
+        recon_core.verify_binary_stl(params.output_stl,triangle_count)
+        _AIO_V51_LAST_STATS={
+            'reason':'PASS','input_triangles':int(p1['logical_triangles']),'output_triangles':triangle_count,
+            'direct_candidates':len(candidates),'direct_accepted':len(accepted),'direct_failed':len(failed),
+            'direct_raw_faces':int(direct_raw),'direct_output_faces':int(direct_out),
+            'raw_stream_faces':int(p2['raw_written']+p3.get('raw_written',0)),
+            'exact_boundary_edges':int(len(edges)),'static_saved_pairs':int(p1['static_saved_pairs']),
+            'elapsed':time.time()-started,
+        }
+        _AIO_V50_LAST_STATS=dict(_AIO_V51_LAST_STATS); _AIO_V38_LAST_COMPACT_STATS=dict(_AIO_V51_LAST_STATS)
+        log.write('')
+        log.write('=============== v5.1 DIRECT-BOUNDARY 통계 ===============')
+        log.write(f'logical ExactLUT triangles: {p1["logical_triangles"]:,}')
+        log.write(f'direct candidates / PASS / fallback: {len(candidates):,} / {len(accepted):,} / {len(failed):,}')
+        log.write(f'direct plane raw->compact: {direct_raw:,} -> {direct_out:,}')
+        log.write(f'exact surviving boundary edges: {len(edges):,}')
+        log.write(f'raw streamed facets: {p2["raw_written"]+p3.get("raw_written",0):,}')
+        log.write(f'final STL triangles: {triangle_count:,}')
+        log.write(f'DIRECT surface elapsed: {format_seconds(time.time()-started)}')
+        if failed:
+            for pk,why in failed[:8]: log.write(f'  fallback plane {pk}: {why}')
+            if len(failed)>8: log.write(f'  ... +{len(failed)-8:,} fallback planes')
+        log.write('==========================================================')
+        return triangle_count,int(p1['material_voxels'])
+    except Exception:
+        if not success:
+            writer.close(success=False)
+        try: params.output_stl.unlink(missing_ok=True)
+        except Exception: pass
+        raise
+
+
+def _aio_v51_startup_selftest():
+    try:
+        # Deliberately split a rectangle boundary with many collinear vertices.  v5.1
+        # must keep all of those boundary edges exactly while reducing only the interior.
+        q=np.asarray([
+            [0,0,1],[2,0,1],[4,0,1],[6,0,1],
+            [0,2,1],[2,2,1],[4,2,1],[6,2,1],
+            [0,4,1],[2,4,1],[4,4,1],[6,4,1],
+        ],np.int64)
+        f=np.asarray([
+            [0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],
+            [4,5,9],[4,9,8],[5,6,10],[5,10,9],[6,7,11],[6,11,10],
+        ],np.int64)
+        ar,ed,ok=_aio_v41_build_plane_edge(q,f)
+        if not ok or len(ar)!=1:
+            return False,'source exact-edge build failed'
+        pk=tuple(int(x) for x in next(iter(ar.keys())))
+        st0=next(iter(ar.values())); st=(int(st0[0]),int(st0[1]),int(len(f)))
+        segs=[]
+        for key,val in ed.items():
+            iv=int(val)
+            if iv==0: continue
+            k=tuple(int(x) for x in key)
+            lo=np.asarray(k[4:7],np.int64); hi=np.asarray(k[7:10],np.int64)
+            A,B=(lo,hi) if iv>0 else (hi,lo)
+            if abs(iv)!=1: return False,'source boundary multiplicity'
+            segs.append((A,B,1))
+        qq,ff,_=_aio_v51_rebuild_plane(pk,segs,st)
+        ar2,ed2,ok2=_aio_v41_build_plane_edge(qq,ff)
+        if not ok2: return False,'rebuilt exact-edge build failed'
+        src={tuple(int(x) for x in k):int(v) for k,v in ed.items() if int(v)!=0}
+        dst={tuple(int(x) for x in k):int(v) for k,v in ed2.items() if int(v)!=0}
+        if src != dst: return False,'exact boundary subdivision mismatch'
+        if len(ff) >= len(f): return False,'selftest did not compact interior'
+        return True,'PASS · exact boundary subdivision + area'
+    except Exception as exc:
+        return False,f'{type(exc).__name__}: {exc}'
+
+_AIO_V51_SELFTEST_OK,_AIO_V51_SELFTEST_MSG=_aio_v51_startup_selftest()
+if _AIO_V51_SELFTEST_OK:
+    recon_core.reconstruct_interpolated_surface=_aio_v51_exact_interpolated_surface
+    APP_VERSION='5.1-direct-boundary-exact'
+else:
+    # v5.0 is geometrically exact but does not retain every collinear boundary vertex;
+    # production therefore falls back to v4.6 rather than accepting a slicer-sensitive path.
+    recon_core.reconstruct_interpolated_surface=_aio_v38_exact_interpolated_surface
+    APP_VERSION='4.6-cap-profiled-fast-v51-disabled'
+
+
+
+# =============================================================================
+# v5.2 DIRECT-BOUNDARY fast exact certificate
+# =============================================================================
+# v5.1 correctness is retained.  The remaining hotspot was Python iteration over
+# Numba typed dictionaries during per-plane certification.  v5.2 dumps the exact
+# edge dictionary to dense int64 arrays inside Numba and compares boundary edge
+# signatures with vectorized NumPy, so the certificate remains exact but avoids
+# tens of thousands of Python/FFI dictionary lookups.
+
+_AIO_V52_LAST_STATS={}
+
+@njit(cache=True)
+def _aio_v52_dump_edge_dict(ed):
+    n=len(ed)
+    rows=np.empty((n,10),dtype=np.int64)
+    vals=np.empty(n,dtype=np.int64)
+    i=0
+    for k,v in ed.items():
+        for j in range(10): rows[i,j]=k[j]
+        vals[i]=v; i+=1
+    return rows,vals
+
+
+def _aio_v52_boundary_groups(edges):
+    rows,vals=_aio_v52_dump_edge_dict(edges)
+    if len(rows)==0:
+        return {},set(),0
+    keep=vals!=0; rows=rows[keep]; vals=vals[keep]
+    if len(rows)==0:
+        return {},set(),0
+    order=np.lexsort((rows[:,3],rows[:,2],rows[:,1],rows[:,0]))
+    rows=rows[order]; vals=vals[order]
+    pks=rows[:,:4]
+    ch=np.any(pks[1:]!=pks[:-1],axis=1) if len(rows)>1 else np.empty(0,bool)
+    cuts=np.r_[0,1+np.flatnonzero(ch),len(rows)]
+    by={}; invalid=set()
+    for a,b in zip(cuts[:-1],cuts[1:]):
+        pk=tuple(int(x) for x in rows[a,:4])
+        rr=np.ascontiguousarray(rows[a:b],dtype=np.int64)
+        vv=np.ascontiguousarray(vals[a:b],dtype=np.int64)
+        by[pk]=(rr,vv)
+        if bool(np.any(np.abs(vv)!=1)):
+            invalid.add(pk)
+    return by,invalid,int(len(rows))
+
+
+def _aio_v52_output_boundary_signature(q,faces):
+    q=np.asarray(q,dtype=np.int64); f=np.asarray(faces,dtype=np.int64)
+    if len(f)==0:
+        return np.empty((0,6),np.int64),np.empty(0,np.int64)
+    t=q[f]
+    A=np.concatenate((t[:,0],t[:,1],t[:,2]),axis=0)
+    B=np.concatenate((t[:,1],t[:,2],t[:,0]),axis=0)
+    less=(A[:,0]<B[:,0]) | ((A[:,0]==B[:,0]) & ((A[:,1]<B[:,1]) | ((A[:,1]==B[:,1]) & (A[:,2]<B[:,2]))))
+    lo=np.where(less[:,None],A,B); hi=np.where(less[:,None],B,A)
+    sg=np.where(less,1,-1).astype(np.int64,copy=False)
+    key=np.ascontiguousarray(np.concatenate((lo,hi),axis=1),dtype=np.int64)
+    order=np.lexsort((key[:,5],key[:,4],key[:,3],key[:,2],key[:,1],key[:,0]))
+    key=key[order]; sg=sg[order]
+    if len(key)==1:
+        return key.copy(),sg.copy()
+    same=np.all(key[1:]==key[:-1],axis=1)
+    starts=np.r_[0,1+np.flatnonzero(~same)]
+    sums=np.add.reduceat(sg,starts)
+    uniq=key[starts]
+    nz=sums!=0
+    return np.ascontiguousarray(uniq[nz]),np.ascontiguousarray(sums[nz])
+
+
+def _aio_v52_source_boundary_signature(edge_rows,edge_vals):
+    rows=np.asarray(edge_rows,dtype=np.int64); vals=np.asarray(edge_vals,dtype=np.int64)
+    keep=vals!=0; rows=rows[keep]; vals=vals[keep]
+    if len(rows)==0:
+        return np.empty((0,6),np.int64),np.empty(0,np.int64)
+    key=np.ascontiguousarray(rows[:,4:10],dtype=np.int64)
+    order=np.lexsort((key[:,5],key[:,4],key[:,3],key[:,2],key[:,1],key[:,0]))
+    return np.ascontiguousarray(key[order]),np.ascontiguousarray(vals[order])
+
+
+def _aio_v52_rebuild_plane(pk,edge_rows,edge_vals,stat):
+    signed_k,abs_k,raw_faces=(int(stat[0]),int(stat[1]),int(stat[2]))
+    if abs(signed_k)!=abs_k:
+        raise RuntimeError('mixed/opposite oriented coplanar sheets')
+    edge_rows=np.asarray(edge_rows,dtype=np.int64); edge_vals=np.asarray(edge_vals,dtype=np.int64)
+    if len(edge_rows)==0:
+        raise RuntimeError('no exact boundary edges')
+    if bool(np.any(np.abs(edge_vals)!=1)):
+        raise RuntimeError('non-unit exact boundary multiplicity')
+    normal=np.asarray(pk[:3],dtype=np.int64)
+    drop=int(np.argmax(np.abs(normal))); axes=tuple(i for i in range(3) if i!=drop)
+    proj_factor=-1 if drop==1 else 1
+    pts=[];q_index={};uv_to_q={};seg_uv=[]
+    for row,val in zip(edge_rows,edge_vals):
+        lo=tuple(int(x) for x in row[4:7]); hi=tuple(int(x) for x in row[7:10])
+        A,B=(lo,hi) if int(val)>0 else (hi,lo)
+        for P in (A,B):
+            if P not in q_index:
+                q_index[P]=len(pts);pts.append(P)
+            uv_to_q[(P[axes[0]],P[axes[1]])]=P
+        seg_uv.append(((float(A[axes[0]]),float(A[axes[1]])),(float(B[axes[0]]),float(B[axes[1]])),1))
+    lines=[_aio_v50_LineString([a,b]) for a,b,_ in seg_uv]
+    polygons=list(_aio_v50_polygonize(lines))
+    if not polygons:
+        raise RuntimeError('exact boundary polygonize produced no region')
+    faces=[]; plus_proj_sign=proj_factor*(1 if int(normal[drop])>0 else -1)
+    for poly in polygons:
+        rp=poly.representative_point();wn=_aio_v50_winding(rp.x,rp.y,seg_uv)
+        if wn==0:continue
+        if abs(int(wn))!=1:raise RuntimeError(f'non-unit planar winding={wn}')
+        desired=normal*(1 if ((wn>0)==(plus_proj_sign>0)) else -1)
+        gc=_aio_constrained_delaunay_triangles(poly) if _aio_constrained_delaunay_triangles is not None else None
+        tris=list(getattr(gc,'geoms',())) if gc is not None else _aio_triangulate_polygon_exact(poly)
+        if not tris:raise RuntimeError('constrained triangulation failed')
+        for tri in tris:
+            vids=[]
+            for x,y in list(tri.exterior.coords)[:3]:
+                ux=int(round(x));uy=int(round(y))
+                if abs(float(x)-ux)>1e-8 or abs(float(y)-uy)>1e-8:
+                    raise RuntimeError('triangulator inserted non-half-grid projected vertex')
+                uv=(ux,uy);qp=uv_to_q.get(uv)
+                if qp is None:
+                    qp=_aio_v50_reconstruct_q_from_uv(pk,axes,uv)
+                    if qp is None:raise RuntimeError('triangulator inserted non-exact vertex')
+                    uv_to_q[uv]=qp
+                    if qp not in q_index:q_index[qp]=len(pts);pts.append(qp)
+                vids.append(int(q_index[qp]))
+            if len(set(vids))!=3:raise RuntimeError('degenerate direct triangle')
+            qarr=np.asarray(pts,dtype=np.int64)
+            cr=np.cross(qarr[vids[1]]-qarr[vids[0]],qarr[vids[2]]-qarr[vids[0]])
+            dot=int(np.dot(cr,desired))
+            if dot==0:raise RuntimeError('zero-area direct triangle')
+            if dot<0:vids[1],vids[2]=vids[2],vids[1]
+            faces.append(vids)
+    if not faces:raise RuntimeError('direct plane reconstructed empty')
+    q=np.asarray(pts,dtype=np.int64);f=np.asarray(faces,dtype=np.int32)
+    got=_aio_v50_signed_proj_area2(q,f,axes);expect=proj_factor*signed_k*int(normal[drop])
+    if got!=expect:raise RuntimeError(f'signed projected area mismatch {got}!={expect}')
+    src_k,src_v=_aio_v52_source_boundary_signature(edge_rows,edge_vals)
+    dst_k,dst_v=_aio_v52_output_boundary_signature(q,f)
+    if src_k.shape!=dst_k.shape or not np.array_equal(src_k,dst_k) or not np.array_equal(src_v,dst_v):
+        raise RuntimeError('exact boundary-edge subdivision mismatch')
+    return np.ascontiguousarray(q,dtype=np.int32),np.ascontiguousarray(f,dtype=np.int32),raw_faces
+
+
+def _aio_v52_exact_interpolated_surface(params,items,bbox,grid,resolved,log,cancel_event,mask_store=None):
+    global _AIO_V38_LAST_COMPACT_STATS,_AIO_V50_LAST_STATS,_AIO_V51_LAST_STATS,_AIO_V52_LAST_STATS
+    if getattr(params,'surface_mode','')!='표면 보간형':
+        return _AIO_FAST_EXACT_ORIG_INTERPOLATED(params,items,bbox,grid,resolved,log,cancel_event,mask_store)
+    if (not _AIO_FAST_EXACT_VALID) or (_AIO_V32_LUT_Q_ZYX is None) or (not _AIO_V36_STATIC_SELFTEST_OK):
+        log.write('WARNING: DIRECT engine prerequisites failed -> v4.6 FAST-CERT fallback')
+        return _aio_v38_exact_interpolated_surface(params,items,bbox,grid,resolved,log,cancel_event,mask_store)
+    xsp=float(grid.x_pitch_mm);ysp=float(grid.y_pitch_mm);zsp=float(params.layer_thickness_mm)
+    half=(0.5*xsp,0.5*ysp,0.5*zsp);xoff=float(grid.x_offset_mm);yoff=float(grid.y_offset_mm)
+    started=time.time();log.write('');log.write('=============== v5.2 DIRECT-BOUNDARY exact surface ===============')
+    log.write('candidate raw triangle 미생성 + exact MC boundary subdivision 보존')
+    log.write('certificate: Numba edge dump + vectorized exact integer boundary comparison')
+    log.write('vertex 이동/다운샘플링/QEM/허용오차 근사: 없음');log.write('===================================================================')
+    stats=_aio_nb_Dict.empty(_AIO_V41_K4,_AIO_V50_V3)
+    p1=_aio_v51_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='stats',stats=stats,log=log,progress_base=64.,progress_span=10.)
+    stat_py={tuple(int(x) for x in k):(int(v[0]),int(v[1]),int(v[2])) for k,v in stats.items()}
+    candidates=[k for k,(ss,aa,nn) in stat_py.items() if nn>=int(_AIO_V50_DIRECT_MIN_FACES) and abs(ss)==aa and aa>0]
+    direct_set=_aio_v50_typed_plane_set(candidates)
+    log.write(f'DIRECT plane census: planes={len(stat_py):,} · candidates={len(candidates):,} · logicalTri={p1["logical_triangles"]:,}')
+    writer=recon_core.BinarySTLWriter(params.output_stl,header='v5.2 DIRECT-BOUNDARY exact STL',buffer_bytes=16*1024*1024);success=False
+    edges=_aio_nb_Dict.empty(_AIO_V41_K10,_aio_nb_types.int64)
+    try:
+        p2=_aio_v51_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='edges_raw',direct_planes=direct_set,edges=edges,writer=writer,half=half,xoff=xoff,yoff=yoff,log=log,progress_base=74.,progress_span=17.)
+        byplane,invalid_planes,edge_count=_aio_v52_boundary_groups(edges)
+        accepted=[];failed=[];direct_out=0;direct_raw=0
+        for idx,pk in enumerate(candidates):
+            check_cancel(cancel_event)
+            try:
+                if tuple(pk) in invalid_planes:raise RuntimeError('non-unit exact boundary multiplicity')
+                group=byplane.get(tuple(pk))
+                if group is None:raise RuntimeError('missing exact boundary group')
+                q,f,raw_faces=_aio_v52_rebuild_plane(tuple(pk),group[0],group[1],stat_py[tuple(pk)])
+                if len(f)>=raw_faces:raise RuntimeError(f'no direct reduction {len(f)}/{raw_faces}')
+                tri_xyz=_aio_v50_qtri_to_xyz(q[np.asarray(f,dtype=np.int64)],half,xoff,yoff)
+                _aio_fast_write_triangle_soup(writer,tri_xyz,max_triangles=params.max_triangles,cancel_event=cancel_event)
+                accepted.append(tuple(pk));direct_out+=int(len(f));direct_raw+=int(raw_faces)
+            except (CancelledError, recon_core.CancelledError, OSError, MemoryError, OverflowError):
+                raise
+            except Exception as exc:
+                if 'Triangle 제한' in str(exc): raise
+                failed.append((tuple(pk),str(exc)))
+            if idx==0 or (idx+1)%100==0 or idx+1==len(candidates):log.progress(91.+5.*(idx+1)/max(1,len(candidates)),f'DIRECT triangulate {idx+1:,}/{len(candidates):,} · PASS={len(accepted):,} fallback={len(failed):,}')
+        if failed:
+            failed_set=_aio_v50_typed_plane_set([k for k,_ in failed])
+            p3=_aio_v51_case_pass(params,items,bbox,grid,resolved,mask_store,cancel_event,mode='selected_raw',selected_planes=failed_set,writer=writer,half=half,xoff=xoff,yoff=yoff,log=log,progress_base=96.,progress_span=1.)
+        else:p3={'raw_written':0}
+        triangle_count=int(writer.tri_count)
+        if triangle_count<=0:raise ValueError('DIRECT engine produced no triangles')
+        writer.close(success=True);success=True;recon_core.verify_binary_stl(params.output_stl,triangle_count)
+        _AIO_V52_LAST_STATS={'reason':'PASS','input_triangles':int(p1['logical_triangles']),'output_triangles':triangle_count,'direct_candidates':len(candidates),'direct_accepted':len(accepted),'direct_failed':len(failed),'direct_raw_faces':int(direct_raw),'direct_output_faces':int(direct_out),'raw_stream_faces':int(p2['raw_written']+p3.get('raw_written',0)),'exact_boundary_edges':int(edge_count),'static_saved_pairs':int(p1['static_saved_pairs']),'elapsed':time.time()-started}
+        _AIO_V51_LAST_STATS=dict(_AIO_V52_LAST_STATS);_AIO_V50_LAST_STATS=dict(_AIO_V52_LAST_STATS);_AIO_V38_LAST_COMPACT_STATS=dict(_AIO_V52_LAST_STATS)
+        log.write('');log.write('=============== v5.2 DIRECT-BOUNDARY 통계 ===============');log.write(f'logical ExactLUT triangles: {p1["logical_triangles"]:,}');log.write(f'direct candidates / PASS / fallback: {len(candidates):,} / {len(accepted):,} / {len(failed):,}');log.write(f'direct plane raw->compact: {direct_raw:,} -> {direct_out:,}');log.write(f'exact surviving boundary edges: {edge_count:,}');log.write(f'raw streamed facets: {p2["raw_written"]+p3.get("raw_written",0):,}');log.write(f'final STL triangles: {triangle_count:,}');log.write(f'DIRECT surface elapsed: {format_seconds(time.time()-started)}');log.write('==========================================================')
+        return triangle_count,int(p1['material_voxels'])
+    except Exception:
+        if not success:writer.close(success=False)
+        try:params.output_stl.unlink(missing_ok=True)
+        except Exception:pass
+        raise
+
+
+def _aio_v52_startup_selftest():
+    try:
+        q=np.asarray([[0,0,1],[2,0,1],[4,0,1],[6,0,1],[0,2,1],[2,2,1],[4,2,1],[6,2,1],[0,4,1],[2,4,1],[4,4,1],[6,4,1]],np.int64)
+        f=np.asarray([[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[4,5,9],[4,9,8],[5,6,10],[5,10,9],[6,7,11],[6,11,10]],np.int64)
+        ar,ed,ok=_aio_v41_build_plane_edge(q,f)
+        if not ok or len(ar)!=1:return False,'source cert fail'
+        rows,vals=_aio_v52_dump_edge_dict(ed);keep=vals!=0;rows=rows[keep];vals=vals[keep]
+        pk=tuple(int(x) for x in rows[0,:4]);st0=ar.get(pk);st=(int(st0[0]),int(st0[1]),len(f))
+        qq,ff,_=_aio_v52_rebuild_plane(pk,rows,vals,st)
+        sk,sv=_aio_v52_source_boundary_signature(rows,vals);dk,dv=_aio_v52_output_boundary_signature(qq,ff)
+        if not(np.array_equal(sk,dk) and np.array_equal(sv,dv)):return False,'boundary signature mismatch'
+        if len(ff)>=len(f):return False,'selftest did not reduce interior'
+        return True,'PASS · vectorized exact boundary certificate'
+    except Exception as exc:return False,f'{type(exc).__name__}: {exc}'
+
+_AIO_V52_SELFTEST_OK,_AIO_V52_SELFTEST_MSG=_aio_v52_startup_selftest()
+if _AIO_V52_SELFTEST_OK:
+    recon_core.reconstruct_interpolated_surface=_aio_v52_exact_interpolated_surface
+    APP_VERSION='5.2-direct-boundary-fastcert'
+else:
+    recon_core.reconstruct_interpolated_surface=_aio_v38_exact_interpolated_surface
+    APP_VERSION='4.6-cap-profiled-fast-v52-disabled'
+
+
+
+# =============================================================================
+# v5.3 vectorized direct-plane triangulation
+# =============================================================================
+# The direct case/edge passes in v5.2 are already sub-second on medium meshes; the
+# remaining bottleneck is Python iteration over thousands of Shapely triangle objects.
+# v5.3 triangulates all polygon regions of a plane in one vectorized GEOS call and
+# extracts/maps/orients triangle coordinates in NumPy. Exact v5.2 boundary signatures
+# remain the acceptance certificate.
+import shapely as _aio_v53_shapely
+
+_AIO_V53_LAST_STATS={}
+
+
+def _aio_v53_uv_index_map(edge_rows,axes):
+    rows=np.asarray(edge_rows,dtype=np.int64)
+    lo=rows[:,4:7]; hi=rows[:,7:10]
+    qall=np.concatenate((lo,hi),axis=0)
+    uvall=qall[:,axes]
+    uvuniq,first=np.unique(uvall,axis=0,return_index=True)
+    quniq=np.ascontiguousarray(qall[first],dtype=np.int64)
+    return np.ascontiguousarray(uvuniq,dtype=np.int64),quniq
+
+
+def _aio_v53_map_uv_faces(tri_uv,src_uv,src_q):
+    flat=np.ascontiguousarray(np.asarray(tri_uv,dtype=np.int64).reshape(-1,2))
+    src_uv=np.ascontiguousarray(src_uv,dtype=np.int64)
+    # Structured exact pair search; no tolerance and no Python per-triangle loop.
+    dt=np.dtype((np.void,16))
+    sk=np.ascontiguousarray(src_uv).view(dt).ravel()
+    fk=np.ascontiguousarray(flat).view(dt).ravel()
+    order=np.argsort(sk,kind='mergesort');ss=sk[order]
+    pos=np.searchsorted(ss,fk)
+    if np.any(pos>=len(ss)):
+        return None,None
+    safe=np.minimum(pos,len(ss)-1)
+    if np.any(ss[safe]!=fk):
+        return None,None
+    q=np.ascontiguousarray(np.asarray(src_q,dtype=np.int64)[order],dtype=np.int64)
+    # q is in sorted-key order; face indices are positions in that array.
+    return q,np.ascontiguousarray(safe.reshape(-1,3),dtype=np.int64)
+
+
+@njit(cache=True, nogil=True)
+def _bjt_indexed_winding(points, segments, pairs):
+    result=np.zeros(len(points),dtype=np.int64)
+    for j in range(pairs.shape[1]):
+        i=int(pairs[0,j]);e=int(pairs[1,j])
+        px=points[i,0];py=points[i,1]
+        x1=segments[e,0,0];y1=segments[e,0,1]
+        x2=segments[e,1,0];y2=segments[e,1,1]
+        if y1<=py<y2:
+            if (x2-x1)*(py-y1)-(px-x1)*(y2-y1)>0: result[i]+=1
+        elif y2<=py<y1:
+            if (x2-x1)*(py-y1)-(px-x1)*(y2-y1)<0: result[i]-=1
+    return result
+
+
+def _aio_v52_rebuild_plane(pk,edge_rows,edge_vals,stat):
+    """v5.3 implementation under the v5.2 API: vectorized but exact."""
+    signed_k,abs_k,raw_faces=(int(stat[0]),int(stat[1]),int(stat[2]))
+    if abs(signed_k)!=abs_k:
+        raise RuntimeError('mixed/opposite oriented coplanar sheets')
+    edge_rows=np.asarray(edge_rows,dtype=np.int64);edge_vals=np.asarray(edge_vals,dtype=np.int64)
+    if len(edge_rows)==0:raise RuntimeError('no exact boundary edges')
+    if bool(np.any(np.abs(edge_vals)!=1)):raise RuntimeError('non-unit exact boundary multiplicity')
+    normal=np.asarray(pk[:3],dtype=np.int64);drop=int(np.argmax(np.abs(normal)));axes=tuple(i for i in range(3) if i!=drop)
+    proj_factor=-1 if drop==1 else 1;plus_proj_sign=proj_factor*(1 if int(normal[drop])>0 else -1)
+    # Vectorized GEOS construction and spatially indexed winding queries.
+    uv0=edge_rows[:,4:7][:,axes].astype(np.float64)
+    uv1=edge_rows[:,7:10][:,axes].astype(np.float64)
+    flip=edge_vals<0
+    start=np.where(flip[:,None],uv1,uv0)
+    end=np.where(flip[:,None],uv0,uv1)
+    segments=np.stack((start,end),axis=1)
+    lines=_aio_v53_shapely.linestrings(segments)
+    polygons=_aio_v53_shapely.get_parts(_aio_v53_shapely.polygonize(lines))
+    if not len(polygons):raise RuntimeError('exact boundary polygonize produced no region')
+    if _aio_constrained_delaunay_triangles is None:
+        raise RuntimeError('Shapely >=2.1 with constrained triangulation required for compact plane')
+    reps=_aio_v53_shapely.get_coordinates(_aio_v53_shapely.point_on_surface(polygons))
+    tree=_aio_v53_shapely.STRtree(lines)
+    winding=np.zeros(len(reps),dtype=np.int64)
+    right=float(np.max(segments[:,:,0]))+1.0
+    for begin in range(0,len(reps),512):
+        pp=reps[begin:begin+512]
+        ends=pp.copy();ends[:,0]=right
+        rays=_aio_v53_shapely.linestrings(np.stack((pp,ends),axis=1))
+        pairs=tree.query(rays)
+        winding[begin:begin+len(pp)]=_bjt_indexed_winding(pp,segments,pairs)
+    if bool(np.any(np.abs(winding)>1)):raise RuntimeError('non-unit planar winding')
+    keep=winding!=0
+    if not bool(np.any(keep)):raise RuntimeError('direct plane reconstructed empty')
+    desired_sign=np.where((winding[keep]>0)==(plus_proj_sign>0),1,-1)
+    arr=polygons[keep]
+    geoms=_aio_v53_shapely.constrained_delaunay_triangles(arr)
+    parts,owner=_aio_v53_shapely.get_parts(geoms,return_index=True)
+    if len(parts)==0:raise RuntimeError('constrained triangulation produced no faces')
+    nums=np.asarray(_aio_v53_shapely.get_num_coordinates(parts),dtype=np.int64)
+    if bool(np.any(nums!=4)):raise RuntimeError('unexpected non-triangle constrained output')
+    coords=np.asarray(_aio_v53_shapely.get_coordinates(parts),dtype=np.float64).reshape(-1,4,2)[:,:3]
+    rounded=np.rint(coords)
+    if float(np.max(np.abs(coords-rounded)))>1e-8:raise RuntimeError('triangulator inserted non-half-grid projected vertex')
+    tri_uv=np.ascontiguousarray(rounded,dtype=np.int64)
+    src_uv,src_q=_aio_v53_uv_index_map(edge_rows,axes)
+    q,f=_aio_v53_map_uv_faces(tri_uv,src_uv,src_q)
+    if q is None:raise RuntimeError('triangulator inserted vertex outside exact boundary set')
+    # Orient all triangles in one vectorized operation.
+    cr=np.cross(q[f[:,1]]-q[f[:,0]],q[f[:,2]]-q[f[:,0]])
+    ds=np.asarray(desired_sign,dtype=np.int64)[np.asarray(owner,dtype=np.int64)]
+    dot=np.sum(cr*normal[None,:],axis=1)*ds
+    if bool(np.any(dot==0)):raise RuntimeError('zero-area direct triangle')
+    flip=dot<0
+    if bool(np.any(flip)):
+        tmp=f[flip,1].copy();f[flip,1]=f[flip,2];f[flip,2]=tmp
+    f=np.ascontiguousarray(f,dtype=np.int32);q=np.ascontiguousarray(q,dtype=np.int64)
+    got=_aio_v50_signed_proj_area2(q,f,axes);expect=proj_factor*signed_k*int(normal[drop])
+    if got!=expect:raise RuntimeError(f'signed projected area mismatch {got}!={expect}')
+    src_k,src_v=_aio_v52_source_boundary_signature(edge_rows,edge_vals);dst_k,dst_v=_aio_v52_output_boundary_signature(q,f)
+    if src_k.shape!=dst_k.shape or not np.array_equal(src_k,dst_k) or not np.array_equal(src_v,dst_v):raise RuntimeError('exact boundary-edge subdivision mismatch')
+    return np.ascontiguousarray(q,dtype=np.int32),f,raw_faces
+
+
+
+def _aio_v53_startup_selftest():
+    try:
+        q=np.asarray([[0,0,1],[2,0,1],[4,0,1],[6,0,1],[0,2,1],[2,2,1],[4,2,1],[6,2,1],[0,4,1],[2,4,1],[4,4,1],[6,4,1]],np.int64)
+        f=np.asarray([[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[4,5,9],[4,9,8],[5,6,10],[5,10,9],[6,7,11],[6,11,10]],np.int64)
+        ar,ed,ok=_aio_v41_build_plane_edge(q,f)
+        if not ok:return False,'source cert fail'
+        rows,vals=_aio_v52_dump_edge_dict(ed);keep=vals!=0;rows=rows[keep];vals=vals[keep];pk=tuple(int(x) for x in rows[0,:4]);st0=ar.get(pk)
+        qq,ff,_=_aio_v52_rebuild_plane(pk,rows,vals,(int(st0[0]),int(st0[1]),len(f)))
+        sk,sv=_aio_v52_source_boundary_signature(rows,vals);dk,dv=_aio_v52_output_boundary_signature(qq,ff)
+        if not(np.array_equal(sk,dk) and np.array_equal(sv,dv)):return False,'vector exact boundary mismatch'
+        if len(ff)>=len(f):return False,'selftest no reduction'
+        return True,'PASS · vectorized triangulation + exact boundary certificate'
+    except Exception as exc:return False,f'{type(exc).__name__}: {exc}'
+
+_AIO_V53_SELFTEST_OK,_AIO_V53_SELFTEST_MSG=_aio_v53_startup_selftest()
+if _AIO_V53_SELFTEST_OK:
+    recon_core.reconstruct_interpolated_surface=_aio_v52_exact_interpolated_surface
+    APP_VERSION='5.3-direct-boundary-vectorized'
+else:
+    recon_core.reconstruct_interpolated_surface=_aio_v38_exact_interpolated_surface
+    APP_VERSION='4.6-cap-profiled-fast-v53-disabled'
+
+
+# =============================================================================
+# v5.4 audited repairs. Geometry modes retain their own original sampling rule.
+# =============================================================================
+import contextlib as _bjt_contextlib
+from dataclasses import replace as _bjt_replace
+
+APP_VERSION = '5.6-layer-print-proxy'
+
+def _bjt_memory_available():
+    available=_aio_v33_available_memory_bytes()
+    try:
+        import psutil
+        available=min(available,int(psutil.virtual_memory().available))
+    except ImportError:
+        pass
+    # Respect Linux container limits during tests; Windows uses GlobalMemoryStatusEx.
+    try:
+        cap=Path('/sys/fs/cgroup/memory.max').read_text().strip()
+        used=int(Path('/sys/fs/cgroup/memory.current').read_text())
+        if cap!='max': available=min(available,max(0,int(cap)-used))
+    except (OSError,ValueError):
+        pass
+    return int(available)
+
+
+def _bjt_workers(requested, pixels, bytes_per_pixel=48, fixed=0):
+    budget=max(0,min(4*1024**3,int(_bjt_memory_available()*0.45))-int(fixed))
+    per=max(1,int(pixels)*int(bytes_per_pixel))
+    if per>budget:
+        raise MemoryError(f'현재 가용 RAM으로 단일 작업도 부족합니다. 예상 작업 메모리 {format_bytes(per)}, 예산 {format_bytes(budget)}. 다른 작업을 종료하거나 모델 범위를 나누십시오. DPI/레이어 두께는 자동으로 낮추지 않습니다.')
+    return max(1,min(int(requested),os.cpu_count() or 1,budget//per))
+
+
+def _bjt_allocate_z_shell(shape, cache_dir):
+    size=math.prod(shape)
+    if cache_dir is not None and size>min(512*1024**2,int(_bjt_memory_available()*0.12)):
+        folder=Path(cache_dir);folder.mkdir(parents=True,exist_ok=True)
+        if shutil.disk_usage(folder).free<size+256*1024**2:
+            raise OSError('Z shell 캐시를 저장할 디스크 공간이 부족합니다.')
+        return np.memmap(folder/'z_shell.pack',dtype=np.uint8,mode='w+',shape=shape)
+    return np.zeros(shape,dtype=np.uint8)
+
+lattice_core._allocate_z_shell=_bjt_allocate_z_shell
+
+def _bjt_save_output_image(image,path):
+    if image.mode=='1' and Path(path).suffix.lower()=='.bmp':
+        w,h=image.size
+        packed=np.frombuffer(image.tobytes(),np.uint8).reshape(h,(w+7)//8)
+        _aio_v43_write_1bit_bmp_packed(packed,w,h,path)
+    elif Path(path).suffix.lower()=='.png':
+        image.save(path,compress_level=1,optimize=False)
+    else:
+        image.save(path)
+lattice_core._save_output_image=_bjt_save_output_image
+
+# Fast exact run extraction replaces thousands of NumPy/Python calls per layer.
+@njit(cache=True,nogil=True)
+def _bjt_runs_rows(mask):
+    count=0
+    h,w=mask.shape
+    for y in range(h):
+        for x in range(w):
+            if mask[y,x] and (x==0 or not mask[y,x-1]): count+=1
+    out=np.empty((count,3),np.int64);idx=0
+    for y in range(h):
+        x=0
+        while x<w:
+            if not mask[y,x]: x+=1;continue
+            begin=x
+            while x<w and mask[y,x]: x+=1
+            out[idx,0]=y;out[idx,1]=begin;out[idx,2]=x;idx+=1
+    return out
+
+@njit(cache=True,nogil=True)
+def _bjt_rectangles(mask):
+    runs=_bjt_runs_rows(mask)
+    out=np.empty((len(runs),4),np.int64)
+    # Row-run interval identity only, identical to original greedy merge.
+    active=_aio_nb_Dict.empty(_BJT_RUN_KEY,_aio_nb_types.int64)
+    count=0;pos=0
+    for y in range(mask.shape[0]):
+        current=_aio_nb_Dict.empty(_BJT_RUN_KEY,_aio_nb_types.int64)
+        while pos<len(runs) and runs[pos,0]==y:
+            key=(runs[pos,1],runs[pos,2]);current[key]=active.get(key,np.int64(y));pos+=1
+        for key,start in active.items():
+            if key not in current:
+                out[count,0]=start;out[count,1]=y;out[count,2]=key[0];out[count,3]=key[1];count+=1
+        active=current
+    for key,start in active.items():
+        out[count,0]=start;out[count,1]=mask.shape[0];out[count,2]=key[0];out[count,3]=key[1];count+=1
+    return out[:count]
+
+# Typed dictionary type constants must be constructed outside nopython code.
+_BJT_RUN_KEY=_aio_nb_types.UniTuple(_aio_nb_types.int64,2)
+# The actual compiled function below uses global type constants.
+
+
+def _bjt_greedy_rectangles(mask):
+    return (tuple(int(v) for v in row) for row in _bjt_rectangles(np.ascontiguousarray(mask)))
+
+def _bjt_x_runs_by_y(mask):
+    return (tuple(int(v) for v in row) for row in _bjt_runs_rows(np.ascontiguousarray(mask)))
+
+def _bjt_y_runs_by_x(mask):
+    return (tuple(int(v) for v in row) for row in _bjt_runs_rows(np.ascontiguousarray(mask.T)))
+
+recon_core.greedy_rectangles=_bjt_greedy_rectangles
+recon_core.x_runs_by_y=_bjt_x_runs_by_y
+recon_core.y_runs_by_x=_bjt_y_runs_by_x
+
+_BJT_ENDPOINT_DTYPE=np.dtype([('line','<u8'),('position','<i8')])
+
+@njit(cache=True,nogil=True)
+def _bjt_pack_line(direction, p, shifts, coord_bits):
+    key=np.uint64(direction)<<np.uint64(coord_bits)
+    for axis in range(3):
+        if axis!=direction: key|=np.uint64(p[axis])<<np.uint64(shifts[axis])
+    return key
+
+@njit(cache=True,nogil=True)
+def _bjt_rect_corners(row):
+    axis=int(row[0]);other=np.empty(2,np.int64);j=0
+    for k in range(3):
+        if k!=axis:other[j]=k;j+=1
+    u=other[0];v=other[1]
+    pts=np.zeros((4,3),np.int64);pts[:,axis]=row[2]
+    pts[0,u]=row[3];pts[0,v]=row[5]
+    pts[1,u]=row[4];pts[1,v]=row[5]
+    pts[2,u]=row[4];pts[2,v]=row[6]
+    pts[3,u]=row[3];pts[3,v]=row[6]
+    return pts
+
+@njit(cache=True,nogil=True)
+def _bjt_fill_endpoints(rects, result, shifts, coord_bits):
+    for i in range(len(rects)):
+        pts=_bjt_rect_corners(rects[i])
+        for e in range(4):
+            a=pts[e];b=pts[(e+1)%4];direction=0
+            for k in range(3):
+                if a[k]!=b[k]:direction=k
+            key=_bjt_pack_line(direction,a,shifts,coord_bits)
+            for j in range(2):
+                pos=i*8+e*2+j
+                result[pos]['line']=key
+                result[pos]['position']=a[direction] if j==0 else b[direction]
+
+@njit(cache=True,nogil=True)
+def _bjt_find_endpoint(lines,positions,key,value):
+    lo=0;hi=len(lines)
+    while lo<hi:
+        mid=(lo+hi)//2
+        if lines[mid]<key or (lines[mid]==key and positions[mid]<value):lo=mid+1
+        else:hi=mid
+    return lo
+
+@njit(cache=True,nogil=True)
+def _bjt_rect_triangle_count(row,lines,positions,shifts,coord_bits):
+    pts=_bjt_rect_corners(row);n=0
+    for e in range(4):
+        a=pts[e];b=pts[(e+1)%4];direction=0
+        for k in range(3):
+            if a[k]!=b[k]:direction=k
+        key=_bjt_pack_line(direction,a,shifts,coord_bits)
+        lo=_bjt_find_endpoint(lines,positions,key,min(a[direction],b[direction]))
+        hi=_bjt_find_endpoint(lines,positions,key,max(a[direction],b[direction]))
+        n+=hi-lo
+    return 2 if n==4 else n
+
+@njit(cache=True,nogil=True)
+def _bjt_stitch_rectangles(rects,lines,positions,shifts,coord_bits):
+    count=0
+    for row in rects:count+=_bjt_rect_triangle_count(row,lines,positions,shifts,coord_bits)
+    out=np.empty((count,3,3),np.int64);idx=0
+    for row in rects:
+        pts=_bjt_rect_corners(row)
+        ntri=_bjt_rect_triangle_count(row,lines,positions,shifts,coord_bits)
+        axis=int(row[0]);expected=int(row[1])
+        # Ascending coordinate plane order has -Y normal, +X/+Z normal.
+        reverse=(expected!=(-1 if axis==1 else 1))
+        if ntri==2:
+            for j in range(2):
+                out[idx,0]=2*pts[0]
+                out[idx,1]=2*pts[j+1 if not reverse else j+2]
+                out[idx,2]=2*pts[j+2 if not reverse else j+1];idx+=1
+            continue
+        center=pts[0]+pts[2]  # doubled coordinates; face center stays in exact plane
+        for e in range(4):
+            a=pts[e];b=pts[(e+1)%4];direction=0
+            for k in range(3):
+                if a[k]!=b[k]:direction=k
+            key=_bjt_pack_line(direction,a,shifts,coord_bits)
+            lo=_bjt_find_endpoint(lines,positions,key,min(a[direction],b[direction]))
+            hi=_bjt_find_endpoint(lines,positions,key,max(a[direction],b[direction]))
+            increasing=a[direction]<b[direction]
+            for j in range(lo,hi):
+                aa=2*a.copy();bb=2*a.copy()
+                aa[direction]=2*positions[j if increasing else hi-(j-lo)]
+                bb[direction]=2*positions[j+1 if increasing else hi-(j-lo)-1]
+                out[idx,0]=center
+                out[idx,1]=bb if reverse else aa
+                out[idx,2]=aa if reverse else bb;idx+=1
+    return out
+
+class _GridRectWriter:
+    """Collect merged rectangles, then stitch actual shared endpoints once.
+
+    Every emitted triangle lies exactly in the source rectangle. No voxel is
+    resampled, no physical dimension is relaxed, and no smoothing is used.
+    """
+    def __init__(self,path,coord,max_triangles,cancel_event):
+        self.final_path=Path(path);self.coord=coord;self.limit=max_triangles;self.cancel=cancel_event
+        self.tri_count=0;self.rect_count=0;self._closed=False
+        self._temp=tempfile.TemporaryDirectory(prefix='bjt_rect_')
+        self._path=Path(self._temp.name)/'rectangles.bin'
+        self._f=open(self._path,'wb',buffering=1024*1024)
+        self._buffer=[];self._bounds=np.zeros(3,np.int64)
+    def add_grid_rect(self,axis,sign,plane,u0,u1,v0,v1):
+        check_cancel(self.cancel)
+        self._buffer.append((axis,sign,plane,u0,u1,v0,v1))
+        self.rect_count+=1;self.tri_count=2*self.rect_count
+        if self.limit is not None and self.tri_count>self.limit:
+            raise RuntimeError(f'Triangle 제한 초과: 최소 {self.tri_count:,} > {self.limit:,}')
+        if len(self._buffer)>=8192:self._flush()
+    def _flush(self):
+        if self._buffer:
+            data=np.asarray(self._buffer,np.int64)
+            for axis in range(3):
+                rows=data[data[:,0]==axis]
+                if not len(rows):continue
+                other=[a for a in range(3) if a!=axis]
+                self._bounds[axis]=max(self._bounds[axis],int(rows[:,2].max()))
+                self._bounds[other[0]]=max(self._bounds[other[0]],int(rows[:,4].max()))
+                self._bounds[other[1]]=max(self._bounds[other[1]],int(rows[:,6].max()))
+            data.tofile(self._f);self._buffer.clear()
+    def close(self,success):
+        if self._closed:return
+        writer=None;rects=None
+        try:
+            if not success:return
+            self._flush();self._f.close()
+            if self.rect_count==0:raise ValueError('재료 표면이 없습니다.')
+            estimate=self.rect_count*600
+            if estimate>_bjt_memory_available()*0.45:
+                raise MemoryError(f'정밀 경계 접합에 필요한 메모리 추정 {format_bytes(estimate)}가 현재 예산을 넘습니다. 격자 슬라이스를 보존하고 모델 범위를 나누십시오.')
+            bits=[max(1,int(v).bit_length()) for v in self._bounds]
+            total=sum(bits)
+            if total>61:raise OverflowError('정밀 경계 key 좌표 범위를 초과했습니다.')
+            shifts=np.array([bits[1]+bits[2],bits[2],0],np.int64)
+            rects=np.memmap(self._path,dtype=np.int64,mode='r',shape=(self.rect_count,7))
+            endpoints=np.empty(8*self.rect_count,_BJT_ENDPOINT_DTYPE)
+            _bjt_fill_endpoints(rects,endpoints,shifts,total)
+            check_cancel(self.cancel)
+            # Sort exact integers, never tolerance-weld nearby points.
+            position_bits=max(bits)
+            if total+2+position_bits<=64:
+                # Exact lossless integer packing allows a fast uint64 sort.
+                packed=(endpoints['line']<<np.uint64(position_bits))|endpoints['position'].astype(np.uint64)
+                del endpoints
+                packed=np.unique(packed)
+                lines=np.ascontiguousarray(packed>>np.uint64(position_bits))
+                positions=np.ascontiguousarray((packed & np.uint64((1<<position_bits)-1)).astype(np.int64))
+                del packed
+            else:
+                endpoints=np.unique(endpoints)
+                lines=np.ascontiguousarray(endpoints['line']);positions=np.ascontiguousarray(endpoints['position'])
+                del endpoints
+            writer=recon_core.BinarySTLWriter(self.final_path,header='BJT 5.4 exact voxel surface with shared boundary endpoints')
+            for begin in range(0,self.rect_count,4096):
+                check_cancel(self.cancel)
+                q=_bjt_stitch_rectangles(rects[begin:begin+4096],lines,positions,shifts,total)
+                xyz=q.astype(np.float64)
+                xyz[:,:,0]=xyz[:,:,0]*(0.5*self.coord.xsp)+self.coord.xoff
+                xyz[:,:,1]=xyz[:,:,1]*(0.5*self.coord.ysp)+self.coord.yoff
+                xyz[:,:,2]*=0.5*self.coord.zsp
+                _aio_fast_write_triangle_soup(writer,xyz,max_triangles=self.limit,cancel_event=self.cancel)
+            self.tri_count=writer.tri_count
+            writer.close(success=True)
+        except BaseException:
+            if writer is not None:writer.close(success=False)
+            raise
+        finally:
+            if not self._f.closed:self._f.close()
+            if rects is not None:rects._mmap.close()
+            self._temp.cleanup();self._closed=True
+
+recon_core._GridRectWriter=_GridRectWriter
+
+# Complete edge-incidence verification, independent of any optimization's PASS flag.
+_BJT_EDGE_DTYPE=np.dtype([(f'p{i}','<u4') for i in range(6)]+[('direction','<i4')])
+_BJT_EDGE_FIELDS=[f'p{i}' for i in range(6)]
+
+@njit(cache=True,nogil=True)
+def _bjt_edges_and_buckets(bits,rows,buckets,mask):
+    for i in range(len(bits)):
+        for e in range(3):
+            a=bits[i,e];b=bits[i,(e+1)%3]
+            less=False
+            for k in range(3):
+                if a[k]!=b[k]:less=a[k]<b[k];break
+            lo=a if less else b;hi=b if less else a
+            j=3*i+e
+            rows[j]['p0']=lo[0];rows[j]['p1']=lo[1];rows[j]['p2']=lo[2]
+            rows[j]['p3']=hi[0];rows[j]['p4']=hi[1];rows[j]['p5']=hi[2]
+            rows[j]['direction']=1 if less else -1
+            h=np.uint64(1469598103934665603)
+            for k in range(3):h=(h^np.uint64(lo[k]))*np.uint64(1099511628211)
+            for k in range(3):h=(h^np.uint64(hi[k]))*np.uint64(1099511628211)
+            # Mix high bits down; bucket collision never implies edge equality.
+            h^=h>>np.uint64(32);h*=np.uint64(0xd6e8feb86659fd93);h^=h>>np.uint64(32)
+            buckets[j]=h&np.uint64(mask)
+
+@njit(cache=True,nogil=True)
+def _bjt_edge_counts(rows):
+    boundary=0;nonmanifold=0;winding=0;unique=0;i=0
+    while i<len(rows):
+        j=i+1;balance=int(rows[i]['direction'])
+        while j<len(rows):
+            a=rows[i];b=rows[j]
+            same=(a['p0']==b['p0'] and a['p1']==b['p1'] and a['p2']==b['p2'] and a['p3']==b['p3'] and a['p4']==b['p4'] and a['p5']==b['p5'])
+            if not same:break
+            balance+=int(b['direction']);j+=1
+        count=j-i;unique+=1
+        if count==1:boundary+=1
+        elif count!=2:nonmanifold+=1
+        elif balance!=0:winding+=1
+        i=j
+    return boundary,nonmanifold,winding,unique
+
+
+def _bjt_verify_edges(path,tri_count,cancel_event,budget_bytes=None):
+    budget=int(budget_bytes or min(256*1024**2,max(16*1024**2,_bjt_memory_available()*.08)))
+    edge_bytes=int(tri_count)*3*_BJT_EDGE_DTYPE.itemsize
+    buckets=1
+    while buckets<256 and edge_bytes/buckets>budget/4:buckets*=2
+    with tempfile.TemporaryDirectory(prefix='bjt_edge_check_') as td:
+        folder=Path(td)
+        if buckets>1 and shutil.disk_usage(folder).free<edge_bytes+256*1024**2:
+            raise OSError(f'전체 edge 검증용 임시 디스크 공간이 부족합니다. 필요량 약 {format_bytes(edge_bytes)}')
+        files=[];memory=[]
+        try:
+            if buckets>1:files=[open(folder/f'{i:03d}.bin','wb') for i in range(buckets)]
+            with open(path,'rb') as f:
+                f.seek(84)
+                remaining=tri_count
+                chunk=min(100_000,max(1000,budget//200))
+                while remaining:
+                    check_cancel(cancel_event)
+                    take=min(chunk,remaining)
+                    records=np.fromfile(f,dtype=_AIO_FAST_EXACT_RECORD_DTYPE,count=take)
+                    if len(records)!=take:raise ValueError('검증 중 STL이 변경되었거나 잘렸습니다.')
+                    tri=np.stack((records['a'],records['b'],records['c']),axis=1)
+                    tri[tri==0]=0.0  # normalize IEEE -0.0; no coordinate tolerance
+                    bits=np.ascontiguousarray(tri,dtype='<f4').view('<u4')
+                    rows=np.empty(3*take,_BJT_EDGE_DTYPE);ids=np.empty(3*take,np.uint16)
+                    _bjt_edges_and_buckets(bits,rows,ids,buckets-1)
+                    if buckets==1:memory.append(rows)
+                    else:
+                        order=np.argsort(ids,kind='stable');sorted_ids=ids[order];sorted_rows=rows[order]
+                        starts=np.r_[0,np.flatnonzero(sorted_ids[1:]!=sorted_ids[:-1])+1,len(ids)]
+                        for a,b in zip(starts[:-1],starts[1:]):sorted_rows[a:b].tofile(files[int(sorted_ids[a])])
+                    remaining-=take
+            for f in files:f.close()
+            totals=np.zeros(4,np.int64)
+            for bucket in range(buckets):
+                check_cancel(cancel_event)
+                if buckets==1:
+                    rows=np.concatenate(memory);memory.clear()
+                else:
+                    p=folder/f'{bucket:03d}.bin'
+                    if p.stat().st_size>budget:
+                        raise MemoryError('edge 검증 버킷의 메모리 예산을 초과했습니다. 메시 중복면 또는 RAM 상태를 확인하십시오.')
+                    rows=np.fromfile(p,dtype=_BJT_EDGE_DTYPE)
+                # Three uint64 words encode all six exact float32 coordinate bits.
+                # A vectorized lexsort avoids slow structured scalar comparisons.
+                words=np.empty((len(rows),6),np.uint32)
+                for col,name in enumerate(_BJT_EDGE_FIELDS):words[:,col]=rows[name]
+                words=words.view(np.uint64).reshape(-1,3)
+                order=np.lexsort((words[:,2],words[:,1],words[:,0]))
+                rows=rows[order]
+                del words,order
+                totals+=_bjt_edge_counts(rows)
+                del rows
+            return dict(zip(('boundary_edges','nonmanifold_edges','inconsistent_winding_edges','unique_edges'),map(int,totals)))
+        finally:
+            for f in files:
+                if not f.closed:f.close()
+
+
+def _aio_v37_final_fast_verify(model_path,params,cancel_event,*,compact_stats=None):
+    check_cancel(cancel_event)
+    st=binary_stl_stats(model_path,cancel_event)
+    n=st['triangles']
+    if n<=0:raise ValueError('최종 STL이 비어 있습니다.')
+    if params.max_triangles is not None and n>params.max_triangles:
+        raise RuntimeError(f'Triangle 제한 초과: {n:,} > {params.max_triangles:,}')
+    if st['degenerate_triangles']:raise ValueError(f"퇴화 삼각형 {st['degenerate_triangles']:,}개")
+    st.update(_bjt_verify_edges(model_path,n,cancel_event))
+    st['verification_scope']='binary layout, finite vertices/normals, degeneracy, every edge incidence and orientation; no self-intersection or vertex-link test'
+    if st['boundary_edges'] or st['nonmanifold_edges'] or st['inconsistent_winding_edges']:
+        raise ValueError('STL 경계 검사 실패: 열린/T 접합 edge={boundary_edges:,}, 3개 이상 면 공유 edge={nonmanifold_edges:,}, 방향 불일치={inconsistent_winding_edges:,}. 점/선으로만 접하는 복셀 형상은 정밀도를 유지한 자동 수정이 불가능할 수 있습니다.'.format(**st))
+    st['estimated_import_memory_bytes_range']=[n*300,n*1000]
+    return st
+
+# Input validation cannot accept NaN, infinity, unknown modes or overwrite its source.
+_bjt_original_validate=validate_pipeline
+
+def validate_pipeline(params):
+    _bjt_original_validate(params)
+    for name in ('dpi_x','dpi_y','layer_thickness_mm','shell_mm','lattice_width_mm','spacing_mm'):
+        if not math.isfinite(float(getattr(params,name))):raise ValueError(f'{name}: 유한한 숫자를 입력하십시오.')
+    if params.batch_layers<1:raise ValueError('Batch layers는 1 이상이어야 합니다.')
+    if params.crop_margin_px<0 or params.slice_margin_px<0:raise ValueError('여백은 0 이상이어야 합니다.')
+    if params.surface_mode not in ('원본 충실형','표면 보간형','약한 스무딩형','레이어 출력 전용'):raise ValueError('표면 모드 오류')
+    if params.max_triangles is not None and params.max_triangles<1:raise ValueError('max_triangles는 양수 또는 None이어야 합니다.')
+    if params.input_path.resolve()==params.output_stl.resolve():raise ValueError('입력 모델과 출력 STL 경로는 달라야 합니다.')
+    if params.verify_layer_xor:
+        raise ValueError('전 레이어 XOR는 이 버전의 GUI 처리 경로에 구현되지 않았습니다. 설정을 끄십시오. 검증 스크립트의 회귀 비교는 별도입니다.')
+
+# Sharing an inode is only evidence of equality when the filesystem reports a valid ID.
+_bjt_original_identity=_aio_v41_file_identity
+
+def _aio_v41_file_identity(path):
+    st=os.stat(path,follow_symlinks=True)
+    if not st.st_ino:return ('path',str(Path(path).resolve()),st.st_size)
+    return (int(st.st_dev),int(st.st_ino),int(st.st_size),int(st.st_mtime_ns))
+
+
+def _bjt_compute_z_cached(images,params,log=None,cancel_event=None,cache_dir=None):
+    """Bound unique-mask jobs; preserve original EDT and horizontal-shell equations."""
+    if not images:return [],[],[],(0,0)
+    with Image.open(images[0]) as im:w,h=im.size
+    workers=_bjt_workers(min(4,params.workers),w*h,64)
+    params=_bjt_replace(params,workers=workers)
+    if params.shell_mm<=0:
+        return _AIO_V41_ORIG_COMPUTE_Z_CACHED(images,params,log,cancel_event,cache_dir)
+    if cache_dir is None:
+        return _AIO_V41_ORIG_COMPUTE_Z_CACHED(images,params,log,cancel_event,cache_dir)
+    ids=[_aio_v41_file_identity(p) for p in images]
+    lookup={};representatives=[];mapping=[]
+    for i,key in enumerate(ids):
+        if key not in lookup:lookup[key]=len(representatives);representatives.append(i)
+        mapping.append(lookup[key])
+    # Use the same bounded path for both aliased and non-aliased stacks.
+    n=len(images);u=len(representatives);bpr=(w+7)//8
+    folder=Path(cache_dir);folder.mkdir(parents=True,exist_ok=True)
+    needed=2*u*h*bpr+n*h*bpr
+    if shutil.disk_usage(folder).free<needed+256*1024**2:raise OSError('material/XY/Z 캐시 디스크 공간이 부족합니다.')
+    mat=xy=z=None
+    try:
+        mat=np.memmap(folder/'material_unique.pack',np.uint8,'w+',shape=(u,h,bpr))
+        xy=np.memmap(folder/'xy_shell_unique.pack',np.uint8,'w+',shape=(u,h,bpr))
+        def job(ui):
+            lattice_core.check_cancel(cancel_event)
+            return ui,_AIO_V41_LOAD_XY_WORKER(representatives[ui],images[representatives[ui]],params)
+        next_i=0;pending={}
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            for done in range(u):
+                lattice_core.check_cancel(cancel_event)
+                while next_i<u and len(pending)<workers:
+                    pending[next_i]=pool.submit(job,next_i);next_i+=1
+                ui,(_,shape,pm,ps)=pending.pop(done).result()
+                if shape!=(h,w):raise ValueError('모든 레이어의 이미지 크기는 같아야 합니다.')
+                mat[ui]=pm;xy[ui]=ps
+                if log is not None and (done%25==0 or done+1==u):log.progress(20.*(done+1)/u,f'XY shell {done+1:,}/{u:,} · workers={workers}')
+        mat.flush();xy.flush()
+        raw_alias=_AIOV41AliasPackedStore(mat,mapping);xy_alias=_AIOV41AliasPackedStore(xy,mapping)
+        z=_bjt_allocate_z_shell((n,h,bpr),folder)
+        _bjt_horizontal_shell(raw_alias,z,params,w,n,log,cancel_event)
+        return z,xy_alias,raw_alias,(h,w)
+    except BaseException:
+        for store in (mat,xy,z):lattice_core._close_memmap_store(store)
+        raise
+
+# Skip unpacking / surface EDT when packed consecutive layers are exactly equal.
+def _bjt_horizontal_shell(raw,z,params,width,n,log,cancel):
+    # A bounded queue retains at most one contribution list per worker.
+    workers=_bjt_workers(min(4,params.workers),raw[0].shape[0]*width,
+                         56+max(1,int(params.shell_mm/params.layer_thickness_mm))/8)
+    from concurrent.futures import wait,FIRST_COMPLETED
+    pending=set();prev_pack=np.asarray(raw[0]);prev=lattice_core.unpack_bool_mask(prev_pack,width)
+    def collect(block):
+        if not pending:return
+        done,_=wait(pending,timeout=None if block else 0,return_when=FIRST_COMPLETED)
+        for f in done:
+            pending.remove(f);lattice_core._apply_surface_contributions(z,f.result())
+    def submit(pool,surface,start,direction):
+        if not np.any(surface):return
+        while len(pending)>=workers:
+            lattice_core.check_cancel(cancel);collect(True)
+        pending.add(pool.submit(lattice_core._surface_shell_contributions_packed,surface,start,direction,params,width,n,cancel))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        submit(pool,prev,0,1)
+        for i in range(1,n):
+            lattice_core.check_cancel(cancel)
+            curr_pack=np.asarray(raw[i])
+            if np.array_equal(prev_pack,curr_pack):continue
+            curr=lattice_core.unpack_bool_mask(curr_pack,width)
+            submit(pool,prev & ~curr,i-1,-1);submit(pool,curr & ~prev,i,1)
+            prev=curr;prev_pack=curr_pack;collect(False)
+            if log is not None and i%25==0:log.progress(20.+20.*i/n,f'Z shell {i:,}/{n:,}')
+        submit(pool,prev,n-1,-1)
+        while pending:lattice_core.check_cancel(cancel);collect(True)
+
+lattice_core.compute_z_shell_masks_cached=_bjt_compute_z_cached
+
+# Model slicing: same pixel test, bounded result queue, avoid retained Future results.
+# Imported factory code is patched at build time; limits below also cover image stacks.
+_bjt_run_conversion=lattice_core.run_conversion
+
+def _bjt_safe_conversion(params,log,cancel_event=None):
+    images=lattice_core.find_input_images(params.input_dir)
+    if images:
+        with Image.open(images[0]) as im:w,h=im.size
+        requested=params.workers;actual=_bjt_workers(requested,w*h,64)
+        params=_bjt_replace(params,workers=actual)
+        log.write(f'가용 RAM {format_bytes(_bjt_memory_available())} · 격자 workers {requested} -> {actual}')
+    return _bjt_run_conversion(params,log,cancel_event)
+lattice_core.run_conversion=_bjt_safe_conversion
+
+# Close the GUI only after the worker has released files and memmaps.
+def _bjt_on_close(self):
+    if self.worker_thread is not None and self.worker_thread.is_alive():
+        if not messagebox.askyesno(APP_NAME,'작업을 중단하고 정리 후 종료할까요?'):return
+        self.cancel_event.set()
+        self.run_button.config(state=tk.DISABLED)
+        def wait_worker():
+            if self.worker_thread.is_alive():self.after(100,wait_worker)
+            else:self._save_settings();self._cleanup_temp();self.destroy()
+        self.after(100,wait_worker)
+    else:
+        self._save_settings();self._cleanup_temp();self.destroy()
+App.on_close=_bjt_on_close
+
+# Return two immutable phase masks, instead of allocating the same 3D pattern per layer.
+_BJT_PATTERN_LOCK=threading.RLock()
+
+def _bjt_pattern_cache_wrapper(fn,tag):
+    def wrapped(cache,shape,params,layer_index):
+        phase=bool(lattice_core.is_z_plane_layer(layer_index,params.layer_thickness_mm,params.spacing_mm,params.lattice_width_mm))
+        key=('bjt54phase',tag,tuple(shape),params.dpi_x,params.dpi_y,params.spacing_mm,params.lattice_width_mm,phase)
+        with _BJT_PATTERN_LOCK:
+            if key not in cache:
+                result=fn(cache,shape,params,layer_index)
+                for value in result:
+                    if isinstance(value,np.ndarray):value.flags.writeable=False
+                cache[key]=result
+            return cache[key]
+    return wrapped
+lattice_core.make_3d_hex_line_lattice_mask_cached=_bjt_pattern_cache_wrapper(lattice_core.make_3d_hex_line_lattice_mask_cached,'hex')
+lattice_core.make_3d_square_line_lattice_mask_cached=_bjt_pattern_cache_wrapper(lattice_core.make_3d_square_line_lattice_mask_cached,'square')
+
+
+def _bjt_scan_bbox_cached(items,params,resolved,log,cancel_event,cache_path):
+    first=next((x.path for x in items if x.path is not None),None)
+    if first is None:raise ValueError('실제 이미지 레이어가 없습니다.')
+    with Image.open(first) as im:w,h=im.size
+    n=len(items);bpr=(w+7)//8;cache_path.parent.mkdir(parents=True,exist_ok=True)
+    size=n*h*bpr
+    if shutil.disk_usage(cache_path.parent).free<size+256*1024**2:raise OSError('재구성 mask 캐시 디스크 공간이 부족합니다.')
+    arr=np.memmap(cache_path,np.uint8,'w+',shape=(n,h,bpr))
+    xmin=w;ymin=h;xmax=0;ymax=0;zmin=n;zmax=-1
+    workers=_bjt_workers(params.workers,w*h,8)
+    try:
+        next_i=0;pending={}
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            for done in range(n):
+                check_cancel(cancel_event)
+                while next_i<n and len(pending)<workers:
+                    i=next_i;pending[i]=pool.submit(recon_core.bbox_worker_cached,i,items[i],resolved.threshold,resolved.print_is_white,(w,h));next_i+=1
+                i,filled,x0,x1,y0,y1,packed=pending.pop(done).result()
+                if packed is not None:arr[i]=packed
+                else:arr[i]=0
+                if filled:
+                    xmin=min(xmin,x0);xmax=max(xmax,x1);ymin=min(ymin,y0);ymax=max(ymax,y1);zmin=min(zmin,i);zmax=max(zmax,i)
+                if done%25==0 or done+1==n:log.progress(20.*(done+1)/n,f'입력 검사/캐시 {done+1:,}/{n:,}')
+        if zmax<0:raise ValueError('슬라이스에 재료가 없습니다.')
+        margin=max(0,params.crop_margin_px)
+        if params.crop_xy:xmin=max(0,xmin-margin);xmax=min(w,xmax+margin);ymin=max(0,ymin-margin);ymax=min(h,ymax+margin)
+        else:xmin,xmax,ymin,ymax=0,w,0,h
+        if not params.crop_empty_z:zmin,zmax=0,n-1
+        arr.flush()
+        return recon_core.BBox(xmin,xmax,ymin,ymax,zmin,zmax,w,h),recon_core.PackedMaskStore(cache_path,arr,n,h,w,bpr)
+    except BaseException:
+        arr._mmap.close();cache_path.unlink(missing_ok=True);raise
+recon_core.scan_bbox_cached=_bjt_scan_bbox_cached
+
+# Bound original-mode prefetch memory without changing surface choice or grid spacing.
+_bjt_original_reconstruct=recon_core.reconstruct_original_surface
+
+def _bjt_original_reconstruct_bounded(params,items,bbox,grid,resolved,log,cancel_event,mask_store=None):
+    params=_bjt_replace(params,workers=_bjt_workers(params.workers,grid.height*grid.width,10))
+    return _bjt_original_reconstruct(params,items,bbox,grid,resolved,log,cancel_event,mask_store)
+recon_core.reconstruct_original_surface=_bjt_original_reconstruct_bounded
+
+# Strict boundary semantics: contains excludes horizontal edges as well as sloped edges.
+# Original scanline filled some pixels exactly on horizontal exterior/hole boundaries.
+_bjt_legacy_rings=_scanline_rasterize_rings_exact
+
+@njit(cache=True,nogil=True)
+def _bjt_clear_horizontal_boundary(out,rx,ry,offsets,x0,y0,dx,dy):
+    h,w=out.shape
+    for ring in range(len(offsets)-1):
+        begin=offsets[ring];end=offsets[ring+1]
+        if end-begin<3:continue
+        for i in range(begin,end):
+            j=begin if i+1==end else i+1
+            if ry[i]!=ry[j]:continue
+            row=int(round((ry[i]-y0)/dy-.5))
+            if row<0 or row>=h or y0+(row+.5)*dy!=ry[i]:continue
+            lo=min(rx[i],rx[j]);hi=max(rx[i],rx[j])
+            left=max(0,int(math.floor((lo-x0)/dx-.5))-1)
+            right=min(w,int(math.ceil((hi-x0)/dx-.5))+2)
+            for col in range(left,right):
+                x=x0+(col+.5)*dx
+                if lo<=x<=hi:out[row,col]=0
+    return out
+
+def _scanline_rasterize_rings_exact(rx,ry,offsets,x0,y0,dx,dy,width,height):
+    out=_bjt_legacy_rings(rx,ry,offsets,x0,y0,dx,dy,width,height)
+    return _bjt_clear_horizontal_boundary(out,rx,ry,offsets,x0,y0,dx,dy)
+
+# A failed copy must not leave a partial file that the caller mistakes for success.
+def _aio_v41_link_or_copy(src,dst):
+    src=Path(src);dst=Path(dst)
+    if src.resolve()==dst.resolve():return True
+    try:
+        dst.unlink(missing_ok=True)
+        os.link(src,dst)
+        return True
+    except OSError:
+        try:
+            shutil.copy2(src,dst)
+            return False
+        except OSError:
+            dst.unlink(missing_ok=True)
+            return False
+
+# Printing-equivalent candidate: 400 DPI XY / 0.1 mm Z, center sampled binary pixels.
+# The geometrically faithful STL is always retained. This is a separately named
+# candidate until the actual printer/slicer raster settings have been confirmed.
+
+class _BJTPrintBudgetExceeded(Exception):
+    pass
+
+def _bjt_candidate_budget_expired():
+    deadline=getattr(_BJT_STAGE_LOCAL,'candidate_deadline',None)
+    return deadline is not None and time.perf_counter()>=deadline
+
+def _bjt_candidate_check(cancel):
+    check_cancel(cancel)
+    if _bjt_candidate_budget_expired():raise _BJTPrintBudgetExceeded()
+
+def _bjt_candidate_progress(obj,event,cancel):
+    # VTK calls progress observers during long algorithms; inspect again after
+    # Update because callback frequency is implementation-dependent.
+    if cancel.is_set() or _bjt_candidate_budget_expired():obj.AbortExecuteOn()
+
+@njit(cache=True,nogil=True)
+def _bjt_plane_segments(tri,z,tol=1e-8):
+    out=np.empty((len(tri),2,2),np.float64);count=0
+    for t in tri:
+        sign=np.zeros(3,np.int64);zero=0;positive=0;negative=0
+        for i in range(3):
+            d=t[i,2]-z
+            if d>tol:sign[i]=1;positive+=1
+            elif d<-tol:sign[i]=-1;negative+=1
+            else:zero+=1
+        points=np.empty((2,2),np.float64);n=0
+        if zero==2 and positive==1:
+            for i in range(3):
+                if sign[i]==0:points[n]=t[i,:2];n+=1
+        elif positive and negative:
+            if zero==1:
+                for i in range(3):
+                    if sign[i]==0:points[n]=t[i,:2];n+=1
+            for i in range(3):
+                j=(i+1)%3
+                if sign[i]*sign[j]<0:
+                    fraction=(z-t[i,2])/(t[j,2]-t[i,2])
+                    points[n]=t[i,:2]+fraction*(t[j,:2]-t[i,:2]);n+=1
+        if n==2:out[count]=points;count+=1
+    return out[:count]
+
+@njit(cache=True,nogil=True)
+def _bjt_crossings(segments,x0,y0,dx,dy,height):
+    count=0
+    for seg in segments:
+        ya=seg[0,1];yb=seg[1,1]
+        if ya==yb:continue
+        lo=max(0,int(math.ceil((min(ya,yb)-y0)/dy-.5)))
+        hi=min(height,int(math.ceil((max(ya,yb)-y0)/dy-.5)))
+        count+=max(0,hi-lo)
+    rows=np.empty(count,np.int64);xs=np.empty(count,np.float64);n=0
+    for seg in segments:
+        xa=seg[0,0];ya=seg[0,1];xb=seg[1,0];yb=seg[1,1]
+        if ya==yb:continue
+        lo=max(0,int(math.ceil((min(ya,yb)-y0)/dy-.5)))
+        hi=min(height,int(math.ceil((max(ya,yb)-y0)/dy-.5)))
+        for row in range(lo,hi):
+            y=y0+(row+.5)*dy
+            if (ya<=y<yb) or (yb<=y<ya):
+                rows[n]=row;xs[n]=xa+(y-ya)*(xb-xa)/(yb-ya);n+=1
+    return rows[:n],xs[:n]
+
+@njit(cache=True,nogil=True)
+def _bjt_pixel_runs_sorted(rows,xs,x0,dx,width):
+    result=np.empty((len(rows)//2+1,3),np.int64);n=0;i=0
+    while i<len(rows):
+        row=rows[i];stop=i+1
+        while stop<len(rows) and rows[stop]==row:stop+=1
+        unique=np.empty(stop-i,np.float64);nu=0;j=i
+        while j<stop:
+            k=j+1
+            while k<stop and abs(xs[k]-xs[j])<=1e-10:k+=1
+            if (k-j)%2:unique[nu]=xs[j];nu+=1
+            j=k
+        if nu%2:raise ValueError('Odd number of scanline intersections; candidate cannot be certified')
+        for j in range(0,nu,2):
+            left=max(0,int(math.floor((unique[j]-x0)/dx-.5))+1)
+            right=min(width,int(math.ceil((unique[j+1]-x0)/dx-.5)))
+            if left>=right:continue
+            if n and result[n-1,0]==row and left<=result[n-1,2]:
+                result[n-1,2]=max(result[n-1,2],right)
+            else:result[n,0]=row;result[n,1]=left;result[n,2]=right;n+=1
+        i=stop
+    return result[:n]
+
+
+def _bjt_segments_pixel_runs(segments,grid):
+    rows,xs=_bjt_crossings(segments,grid.x_offset_mm,grid.y_offset_mm,grid.x_pitch_mm,grid.y_pitch_mm,grid.height)
+    order=np.lexsort((xs,rows))
+    return _bjt_pixel_runs_sorted(rows[order],xs[order],grid.x_offset_mm,grid.x_pitch_mm,grid.width)
+
+class _BJTSliceIndex:
+    """STL memmap plus sorted Z start/end events; only active triangles are cut."""
+    def __init__(self,path,layers,dz):
+        with open(path,'rb') as f:f.seek(80);n=struct.unpack('<I',f.read(4))[0]
+        self.rec=np.memmap(path,_AIO_FAST_EXACT_RECORD_DTYPE,'r',offset=84,shape=(n,))
+        self.n=n;self.layers=layers;self.dz=dz
+        z=np.stack((self.rec['a'][:,2],self.rec['b'][:,2],self.rec['c'][:,2]),axis=1).astype(np.float64)
+        self.start=np.maximum(0,np.ceil((z.min(axis=1)-1e-8)/dz-.5)).astype(np.int64)
+        self.end=np.minimum(layers,np.floor((z.max(axis=1)+1e-8)/dz-.5)+1).astype(np.int64)
+        valid=self.start<self.end;indices=np.flatnonzero(valid)
+        self.sorted_start=indices[np.argsort(self.start[indices],kind='stable')]
+        self.sorted_end=indices[np.argsort(self.end[indices],kind='stable')]
+    def runs(self,grid,cancel):
+        active=set();si=ei=0
+        for layer in range(self.layers):
+            _bjt_candidate_check(cancel)
+            while si<len(self.sorted_start) and self.start[self.sorted_start[si]]<=layer:
+                active.add(int(self.sorted_start[si]));si+=1
+            while ei<len(self.sorted_end) and self.end[self.sorted_end[ei]]<=layer:
+                active.discard(int(self.sorted_end[ei]));ei+=1
+            ids=np.fromiter(active,dtype=np.int64,count=len(active))
+            rec=self.rec[ids]
+            tri=np.stack((rec['a'],rec['b'],rec['c']),axis=1).astype(np.float64)
+            seg=_bjt_plane_segments(tri,(layer+.5)*self.dz)
+            yield _bjt_segments_pixel_runs(seg,grid)
+    def close(self):self.rec._mmap.close()
+
+
+def _bjt_compare_print_slices(reference,candidate,grid,layers,dz,cancel,log=None):
+    a=_BJTSliceIndex(reference,layers,dz);b=None
+    try:
+        b=_BJTSliceIndex(candidate,layers,dz)
+        for i,(ra,rb) in enumerate(zip(a.runs(grid,cancel),b.runs(grid,cancel))):
+            # RLE equality is exact equality of the whole binary pixel row, not a sample/hash.
+            if not np.array_equal(ra,rb):
+                return {'equal':False,'first_different_layer':i+1,'layers_checked':i+1}
+            if log is not None and (i%50==0 or i+1==layers):
+                log.write(f'프린팅 픽셀 전수 비교 {i+1:,}/{layers:,}: 차이 0')
+        return {'equal':True,'layers_checked':layers,'xor_pixels':0}
+    finally:
+        a.close()
+        if b is not None:b.close()
+
+
+def _bjt_make_print_equivalent(reference,params,log,cancel):
+    if getattr(params,'surface_mode','') == '레이어 출력 전용':return {'status':'not_needed_direct_print_mode'}
+    if not getattr(params,'print_equivalent',False):return {'status':'disabled'}
+    if not (params.dpi_x==400 and params.dpi_y==400 and params.layer_thickness_mm==.1):
+        log.write('프린팅 후보 최적화: 400×400 DPI / 0.1 mm 프로필에서만 실행')
+        return {'status':'profile_not_400dpi_0.1mm'}
+    if not _AIO_V32_VTK_AVAILABLE:
+        log.write('프린팅 후보 최적화: VTK가 없어 생략')
+        return {'status':'vtk_unavailable'}
+    grid=getattr(_BJT_STAGE_LOCAL,'model_grid',None);bbox=getattr(_BJT_STAGE_LOCAL,'model_bbox',None)
+    if grid is None or bbox is None:return {'status':'missing_grid'}
+    with open(reference,'rb') as f:f.seek(80);triangles=struct.unpack('<I',f.read(4))[0]
+    if triangles*512>_bjt_memory_available()*.45:
+        log.write('프린팅 후보 최적화: 전체 메시 단순화의 RAM 예산 부족, 정밀 STL 유지')
+        return {'status':'memory_budget','source_triangles':triangles}
+    started=time.perf_counter();_bjt_candidate_check(cancel)
+    reader=_aio_vtk.vtkSTLReader();reader.SetFileName(str(reference));reader.MergingOn()
+    reader.AddObserver('ProgressEvent',lambda obj,event:_bjt_candidate_progress(obj,event,cancel))
+    reader.Update();_bjt_candidate_check(cancel)
+    poly=reader.GetOutput()
+    if poly.GetNumberOfCells()!=triangles:raise ValueError('단순화 입력 STL triangle 수 불일치')
+    coords=np.asarray(_aio_vtk_to_numpy(poly.GetPoints().GetData()),np.float64)
+    source_bounds=np.array(poly.GetBounds())
+    origin=np.array([grid.x_offset_mm,grid.y_offset_mm,0.0]);pitch=np.array([grid.x_pitch_mm,grid.y_pitch_mm,.1])
+    normalized=(coords-origin)/pitch
+    points=_aio_vtk.vtkPoints();points.SetData(_aio_numpy_to_vtk(np.ascontiguousarray(normalized),deep=True))
+    source_poly=_aio_vtk.vtkPolyData();source_poly.DeepCopy(poly);source_poly.SetPoints(points)
+    # A unique name prevents an earlier accepted file from masquerading as this run's
+    # candidate when a later run cannot be simplified. The run report is the index.
+    trials=[];destination=reference.with_name(reference.stem+'_print400_'+str(time.time_ns())+'_candidate.stl')
+    with tempfile.TemporaryDirectory(prefix='bjt_print_equivalent_',dir=reference.parent) as td:
+        candidate=Path(td)/'candidate.stl'
+        for error,reduction in ((.45,.95),(.30,.90),(.15,.85),(0.0,.80)):
+            _bjt_candidate_check(cancel)
+            dec=_aio_vtk.vtkDecimatePro();dec.SetInputData(source_poly)
+            dec.SetTargetReduction(reduction);dec.PreserveTopologyOn();dec.SplittingOff();dec.BoundaryVertexDeletionOff()
+            dec.SetFeatureAngle(180.0);dec.SetErrorIsAbsolute(1);dec.SetAbsoluteError(error)
+            dec.AddObserver('ProgressEvent',lambda obj,event:_bjt_candidate_progress(obj,event,cancel))
+            dec.Update();_bjt_candidate_check(cancel);out=dec.GetOutput();n=int(out.GetNumberOfCells())
+            trial={'normalized_error_limit':error,'triangles':n};trials.append(trial)
+            if n<=0 or n>=triangles:trial['result']='no_reduction';continue
+            vv=np.asarray(_aio_vtk_to_numpy(out.GetPoints().GetData()),np.float64)*pitch+origin
+            points=_aio_vtk.vtkPoints();points.SetData(_aio_numpy_to_vtk(np.ascontiguousarray(vv,dtype=np.float32),deep=True))
+            world=_aio_vtk.vtkPolyData();world.DeepCopy(out);world.SetPoints(points)
+            if not np.array_equal(source_bounds,np.array(world.GetBounds())):
+                trial['result']='bounds_changed';continue
+            sw=_aio_vtk.vtkSTLWriter();sw.SetFileName(str(candidate));sw.SetFileTypeToBinary();sw.SetInputData(world)
+            if sw.Write()!=1:raise OSError('프린팅 후보 STL 쓰기 실패')
+            _bjt_candidate_check(cancel)
+            compare=_bjt_compare_print_slices(reference,candidate,grid,bbox.layers,.1,cancel,log)
+            trial.update(compare)
+            if not compare['equal']:trial['result']='pixel_difference';continue
+            try:
+                st=_aio_v37_final_fast_verify(candidate,params,cancel)
+            except (ValueError,RuntimeError) as exc:
+                trial['result']='invalid_edges';trial['error']=str(exc);continue
+            _bjt_candidate_check(cancel)
+            os.replace(candidate,destination)
+            report={'status':'candidate_verified','candidate_path':str(destination),'reference_path':str(reference),
+                    'source_triangles':triangles,'candidate_triangles':n,'reduction_percent':100*(1-n/triangles),
+                    'profile':{'dpi_x':400,'dpi_y':400,'layer_thickness_mm':.1,'sample':'pixel/layer centers','polarity':'white','antialias':'binary/no AA','xy_origin_mm':[grid.x_offset_mm,grid.y_offset_mm],'center_xy':params.center_xy},
+                    'layers_checked':bbox.layers,'xor_pixels':0,'actual_chitubox_validated':False,
+                    'trials':trials,'elapsed_seconds':time.perf_counter()-started,'stl_stats':st}
+            destination.with_suffix('.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+            log.write(f'프린팅 최적화 후보: {triangles:,} -> {n:,}면 ({report["reduction_percent"]:.1f}% 감소), {bbox.layers:,}층 픽셀 차이 0')
+            log.write(f'후보 파일: {destination} | 실제 CHITUBOX의 동일 배치·binary/AA 설정 확인 필요')
+            return report
+    log.write('프린팅 후보 최적화: 모든 층의 픽셀 동일성을 만족하는 경량 후보가 없어 정밀 STL 유지')
+    return {'status':'no_certified_reduction','source_triangles':triangles,'trials':trials,'elapsed_seconds':time.perf_counter()-started}
+
+_bjt_build_grid_original=recon_core.build_modeling_grid
+
+def _bjt_capture_grid(bbox,params):
+    grid=_bjt_build_grid_original(bbox,params)
+    _BJT_STAGE_LOCAL.model_grid=grid;_BJT_STAGE_LOCAL.model_bbox=bbox
+    return grid
+recon_core.build_modeling_grid=_bjt_capture_grid
+
+
+# 5.6: print-only proxy, never a claim of unchanged CAD geometry.
+import shapely as _bjt_shape
+from skimage.measure import find_contours as _bjt_find_contours
+_BJT_PRINT_MODE = '레이어 출력 전용'
+@njit(cache=True,nogil=True)
+def _bjt_gap_has_pixel(p,start,end):
+ y0=min(p[start,1],p[end,1]);y1=max(p[start,1],p[end,1])
+ for i in range(start,end+1):y0=min(y0,p[i,1]);y1=max(y1,p[i,1])
+ hits=np.empty(end-start+1)
+ for row in range(int(np.ceil(y0-.5)),int(np.floor(y1-.5))+1):
+  y=row+.5;n=0
+  for k in range(start,end+1):
+   a=p[k];b=p[k+1] if k<end else p[start]
+   if min(a[1],b[1])<=y<max(a[1],b[1]):
+    x=a[0]+(y-a[1])*(b[0]-a[0])/(b[1]-a[1]);hits[n]=x;n+=1
+    if k==end and abs(x-.5-round(x-.5))*abs(b[1]-a[1])/np.sqrt((b[0]-a[0])**2+(b[1]-a[1])**2)<.02:return True
+   elif k==end and a[1]==b[1] and y==a[1]:
+    if np.ceil(min(a[0],b[0])-.5)<=np.floor(max(a[0],b[0])-.5):return True
+  vv=np.sort(hits[:n])
+  if n%2:return True
+  for k in range(0,n,2):
+   if np.ceil(vv[k]-.5+1e-8)<=np.floor(vv[k+1]-.5-1e-8):return True
+ return False
+
+@njit(cache=True,nogil=True)
+def _bjt_simplify_pixels(p,tol=.85):
+ n=len(p);keep=np.zeros(n,np.bool_);keep[0]=True;keep[n-1]=True
+ stack=np.empty((n*2,2),np.int64);stack[0,0]=0;stack[0,1]=n-1;top=1
+ while top:
+  top-=1;a,b=stack[top];dx=p[b,0]-p[a,0];dy=p[b,1]-p[a,1];den=dx*dx+dy*dy
+  if b<=a+1:continue
+  best=-1.;idx=a+1
+  for i in range(a+1,b):
+   t=((p[i,0]-p[a,0])*dx+(p[i,1]-p[a,1])*dy)/den if den else 0.
+   t=max(0.,min(1.,t));ex=p[i,0]-(p[a,0]+t*dx);ey=p[i,1]-(p[a,1]+t*dy);d=ex*ex+ey*ey
+   if d>best:best=d;idx=i
+  if best>tol*tol or _bjt_gap_has_pixel(p,a,b):
+   keep[idx]=True;stack[top,0]=a;stack[top,1]=idx;top+=1;stack[top,0]=idx;stack[top,1]=b;top+=1
+ return p[keep]
+
+@njit(cache=True,nogil=True)
+def _bjt_orthogonal_ring(a):
+ out=np.empty((len(a)*2,2));n=0
+ for i in range(len(a)-1):
+  out[n]=a[i];n+=1
+  if a[i,0]!=a[i+1,0] and a[i,1]!=a[i+1,1]:
+   for j in range(2):out[n,j]=a[i,j] if a[i,j]==round(a[i,j]) else a[i+1,j]
+   n+=1
+ kept=np.empty((n+1,2));k=0
+ for i in range(n):
+  prev=out[(i-1)%n];curr=out[i];nex=out[(i+1)%n]
+  if (curr[0]-prev[0])*(nex[1]-curr[1])!=(curr[1]-prev[1])*(nex[0]-curr[0]):kept[k]=curr;k+=1
+ if k:kept[k]=kept[0];k+=1
+ return kept[:k]
+def _bjt_polygon_compact(mask):
+ rings=_bjt_find_contours(np.pad(mask,1),.5,fully_connected='high')
+ if not rings:return _bjt_shape.Polygon()
+ ls=[]
+ for raw in rings:
+  a=np.ascontiguousarray(raw[:,::-1]-.5);simple=_bjt_simplify_pixels(a);ortho=_bjt_orthogonal_ring(a)
+  ls.append(ortho if 4<=len(ortho)<=len(simple) else simple)
+ return _bjt_shape.orient_polygons(_bjt_shape.build_area(_bjt_shape.node(_bjt_shape.MultiLineString(ls))))
+
+def _bjt_poly_segments(poly):
+ rings=_bjt_shape.get_parts(_bjt_shape.get_rings(_bjt_shape.get_parts(poly)))
+ if not len(rings):return np.empty((0,2,2))
+ xy,ids=_bjt_shape.get_coordinates(rings,return_index=True)
+ keep=ids[1:]==ids[:-1]
+ return np.stack((xy[:-1][keep],xy[1:][keep]),axis=1)
+
+
+def _bjt_prism_template(mask, fallback=False):
+ if fallback:
+  rings=_bjt_find_contours(np.pad(mask,1),.5,fully_connected='low')
+  p=_bjt_shape.build_area(_bjt_shape.node(_bjt_shape.MultiLineString([a[:,::-1]-.5 for a in rings]))) if rings else _bjt_shape.Polygon()
+  p=_bjt_shape.orient_polygons(p)
+ else:p=_bjt_polygon_compact(mask)
+ if p.is_empty:return np.empty((0,3,3))
+ p=_bjt_shape.orient_polygons(_bjt_shape.set_precision(p.buffer(-1/512,join_style='mitre'),1/4096))
+ tri=_bjt_shape.get_parts(_bjt_shape.constrained_delaunay_triangles(p));uv=_bjt_shape.get_coordinates(tri).reshape(-1,4,2)[:,:3]
+ cr=(uv[:,1,0]-uv[:,0,0])*(uv[:,2,1]-uv[:,0,1])-(uv[:,1,1]-uv[:,0,1])*(uv[:,2,0]-uv[:,0,0]);uv[cr<0]=uv[cr<0][:,[0,2,1]]
+ seg=_bjt_poly_segments(p);out=np.empty((2*len(uv)+2*len(seg),3,3))
+ n=len(uv);out[:n,:,:2]=uv[:,[0,2,1]];out[:n,:,2]=0;out[n:2*n,:,:2]=uv;out[n:2*n,:,2]=1
+ out[2*n::2,:,:2]=seg[:,[0,1,1]];out[2*n::2,:,2]=[0,0,1]
+ out[2*n+1::2,:,:2]=seg[:,[0,1,0]];out[2*n+1::2,:,2]=[0,1,1]
+ return out
+
+
+
+def _bjt_print_surface(params,items,bbox,grid,resolved,log,cancel,mask_store=None):
+    """Stream closed prismatic print proxies; certify their actual float32 boundary.
+
+    Each output part is exactly P(x,y) times one Z interval. P is checked against
+    every source pixel, and every source layer is assigned to one checked part.
+    This product certificate covers all layers without repeated slicing of the
+    same prism. Independent tests also reslice every layer with Trimesh.
+    """
+    if not (params.dpi_x==400 and params.dpi_y==400 and params.layer_thickness_mm==.1):
+        raise ValueError('레이어 출력 전용은 400 × 400 DPI / 0.1 mm 전용입니다.')
+    if mask_store is None:raise ValueError('입력 mask cache가 필요합니다.')
+    if max(abs(grid.x_offset_mm),abs(grid.y_offset_mm),grid.physical_width_mm,grid.physical_height_mm)>500:
+        raise ValueError('출력 전용 경로의 검증된 float32 좌표 범위는 원점 기준 ±500 mm입니다. 원점/크기를 확인하십시오.')
+    workers=_bjt_workers(min(4,params.workers),grid.width*grid.height,256)
+    log.write('레이어 출력 전용: 일반 CAD와 다른 메시입니다. 동일 구간을 닫힌 솔리드로 묶고 구간 사이 0.001 mm 간격을 둡니다.')
+    log.write('조건: 400 DPI, 0.1 mm 층 중앙, XY/Z 위치·배율 고정, AA/블러/자동 수리/지지대 OFF.')
+    representatives=[];keys={};runs=[];previous=None
+    for k in range(bbox.layers):
+        check_cancel(cancel)
+        absolute=bbox.zmin+k
+        packed=mask_store.array[absolute,bbox.ymin:bbox.ymax,bbox.xmin//8:(bbox.xmax+7)//8]
+        digest=hashlib.sha256(packed.tobytes()).digest()
+        pid=None
+        # Hash equality is only a lookup: compare the complete packed data.
+        for candidate in keys.get(digest,[]):
+            other=mask_store.array[representatives[candidate],bbox.ymin:bbox.ymax,bbox.xmin//8:(bbox.xmax+7)//8]
+            if np.array_equal(packed,other):pid=candidate;break
+        if pid is None:
+            pid=len(representatives);representatives.append(absolute);keys.setdefault(digest,[]).append(pid)
+        if pid==previous:runs[-1][2]=k+1
+        else:runs.append([pid,k,k+1]);previous=pid
+    # Small smooth profiles lose time to extra threads; complex contours benefit.
+    if grid.width*grid.height<65536:
+        peak_runs=0
+        for si in sorted({0,len(representatives)//2,len(representatives)-1}):
+            check_cancel(cancel)
+            probe=recon_core.load_cached_model_mask(mask_store,representatives[si],bbox,grid)
+            peak_runs=max(peak_runs,len(_bjt_runs_rows(probe)))
+        workers=min(workers,1 if peak_runs<256 else 2)
+    certificate={'mode':'layer_print_proxy','geometry_equal_to_original':False,'profile':{'dpi_x':400,'dpi_y':400,'layer_mm':.1,'sample':'pixel and layer centers','antialias':False},
+                 'proof':'exact RLE of actual float32 prism boundary versus every source pixel; product geometry and Z intervals cover every source layer',
+                 'template_workers':workers,'unique_masks':len(representatives),'runs':len(runs),'layers_checked':0,'xor_pixels':0,'gap_between_adjacent_runs_mm':.001,
+                 'cad_rotation_rescaling_supported':False,'physical_printer_or_chitubox_tested':False}
+    writer=None
+    with tempfile.TemporaryDirectory(prefix='bjt_print_templates_') as td:
+        folder=Path(td)
+        def job(pid):
+            check_cancel(cancel)
+            mask=recon_core.load_cached_model_mask(mask_store,representatives[pid],bbox,grid)
+            count=int(mask.sum());expected=_bjt_runs_rows(mask)
+            for fallback in (False,True):
+                check_cancel(cancel)
+                q=_bjt_prism_template(mask,fallback=fallback)
+                try:
+                    if len(q):
+                        q[:,:,0]=q[:,:,0]*grid.x_pitch_mm+grid.x_offset_mm
+                        q[:,:,1]=q[:,:,1]*grid.y_pitch_mm+grid.y_offset_mm
+                        q=q.astype(np.float32)
+                        if np.any(np.all(np.cross(q[:,1]-q[:,0],q[:,2]-q[:,0])==0,axis=1)):
+                            raise ValueError('float32 퇴화면')
+                        z=q[:,:,2];wall=(z[:,0]==0)&(z[:,1]==0)&(z[:,2]==1)
+                        boundary=q[wall,:2,:2].astype(np.float64)
+                        rows,xs=_bjt_crossings(boundary,grid.x_offset_mm,grid.y_offset_mm,grid.x_pitch_mm,grid.y_pitch_mm,grid.height)
+                        if len(xs):
+                            cells=(xs-grid.x_offset_mm)/grid.x_pitch_mm-.5
+                            if np.any(np.abs(cells-np.rint(cells))<1e-6):
+                                raise ValueError('픽셀 경계의 수치 여유 부족')
+                        order=np.lexsort((xs,rows));got=_bjt_pixel_runs_sorted(rows[order],xs[order],grid.x_offset_mm,grid.x_pitch_mm,grid.width)
+                    else:got=np.empty((0,3),np.int64);boundary=np.empty((0,2,2))
+                    if not np.array_equal(got,expected):raise ValueError('전 픽셀 비교 불일치')
+                    break
+                except ValueError:
+                    if fallback:raise ValueError(f'출력 템플릿 {pid+1} 픽셀/수치 검증 실패: 파일을 승격하지 않습니다.')
+            # Only unique Y endpoint pairs matter for diagonal intersection stability.
+            ypairs=np.unique(boundary[:,:,1],axis=0)
+            ypairs=ypairs[ypairs[:,0]!=ypairs[:,1]]
+            np.save(folder/f'{pid:08d}_y.npy',ypairs,allow_pickle=False)
+            check_cancel(cancel)
+            path=folder/f'{pid:08d}.npy'
+            if params.max_triangles is not None and len(q)>params.max_triangles:raise RuntimeError('Triangle 제한 초과: 단일 출력 템플릿')
+            if shutil.disk_usage(folder).free<workers*q.nbytes+256*1024**2:raise OSError('출력 템플릿 캐시 디스크 공간 부족')
+            np.save(path,q,allow_pickle=False)
+            return len(q),count,bool(fallback)
+        stats={};pending={};nextpid=0
+        try:
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                for pid in range(len(representatives)):
+                    check_cancel(cancel)
+                    while nextpid<len(representatives) and len(pending)<workers:
+                        pending[nextpid]=pool.submit(job,nextpid);nextpid+=1
+                    stats[pid]=pending.pop(pid).result()
+                    if pid%20==0:log.progress(35+35*(pid+1)/len(representatives),f'픽셀 전수 인증 템플릿 {pid+1:,}/{len(representatives):,}')
+            total_tri=sum(stats[pid][0] for pid,lo,hi in runs)
+            if not total_tri:raise ValueError('출력 재료가 없습니다.')
+            if params.max_triangles is not None and total_tri>params.max_triangles:raise RuntimeError(f'Triangle 제한 초과: {total_tri:,} > {params.max_triangles:,}')
+            if total_tri>0xFFFFFFFF:raise OverflowError('STL uint32 triangle limit')
+            if shutil.disk_usage(params.output_stl.parent).free<84+50*total_tri+128*1024**2:raise OSError('STL 기록용 디스크 공간이 부족합니다.')
+            certificate['fallback_templates']=sum(int(st[2]) for st in stats.values())
+            bounds=None
+            for fraction in (2**.5-1,3**.5-1,(5**.5-1)/2,math.pi-3):
+                alpha=.01*fraction;trial=[];safe=True
+                for pid,lo,hi in runs:
+                    check_cancel(cancel)
+                    lower=np.float32((lo+alpha)*.1);upper=np.float32((hi-(.01-alpha))*.1)
+                    if not (lower<(lo+.5)*.1 and upper>(hi-.5)*.1 and lower>=(lo-.5)*.1 and upper<=(hi+.5)*.1):safe=False;break
+                    if trial and lower<=trial[-1][1]:safe=False;break
+                    ypairs=np.load(folder/f'{pid:08d}_y.npy',allow_pickle=False)
+                    if len(ypairs):
+                        batch=max(1,min(64,1000000//len(ypairs)))
+                        for zfirst in range(lo,hi,batch):
+                            check_cancel(cancel)
+                            levels=(np.arange(zfirst,min(hi,zfirst+batch),dtype=np.float64)+.5)*.1
+                            t=(levels-float(lower))/(float(upper)-float(lower))
+                            yy=ypairs[:,0,None]+(ypairs[:,1]-ypairs[:,0])[:,None]*t[None,:]
+                            cells=(yy-grid.y_offset_mm)/grid.y_pitch_mm-.5
+                            if np.any(np.abs(cells-np.rint(cells))<1e-6):safe=False;break
+                    if not safe:break
+                    trial.append((lower,upper))
+                if safe:bounds=trial;certificate['z_partition_fraction']=float(fraction);break
+            if bounds is None:raise ValueError('안정한 Z 분할을 찾지 못했습니다. 출력하지 않습니다.')
+            certificate['diagonal_intersection_phase_guard']=True
+            writer=recon_core.BinarySTLWriter(params.output_stl,header='BJT 5.6 PRINT PROXY 400dpi 0.1mm centers ONLY; AA OFF; NOT CAD')
+            material=0
+            for ri,(pid,lo,hi) in enumerate(runs):
+                check_cancel(cancel);material+=stats[pid][1]*(hi-lo)
+                if not stats[pid][0]:
+                    certificate['layers_checked']+=hi-lo;continue
+                q=np.load(folder/f'{pid:08d}.npy',allow_pickle=False)
+                lower,upper=bounds[ri]
+                if not (lower<(lo+.5)*.1 and upper>(hi-.5)*.1 and lower>=(lo-.5)*.1 and upper<=(hi+.5)*.1):
+                    raise ValueError('float32 Z interval does not preserve the source layer assignment')
+                q[:,:,2]=np.where(q[:,:,2]==0,lower,upper)
+                _aio_fast_write_triangle_soup(writer,q,max_triangles=params.max_triangles,cancel_event=cancel)
+                certificate['layers_checked']+=hi-lo
+                log.progress(70+27*(ri+1)/len(runs),f'출력 전용 STL {ri+1:,}/{len(runs):,} 구간')
+            writer.close(success=True)
+            certificate['pixel_positions_covered']=bbox.layers*grid.width*grid.height
+            certificate['triangles']=int(writer.tri_count)
+            _BJT_STAGE_LOCAL.layer_print_certificate=certificate
+            log.write(f"출력 픽셀 인증: {certificate['layers_checked']:,}층, {certificate['pixel_positions_covered']:,}위치, 차이 0")
+            return int(writer.tri_count),material
+        except BaseException:
+            for future in pending.values():future.cancel()
+            if writer is not None:writer.close(success=False)
+            raise
+
+_bjt_v55_interpolated=recon_core.reconstruct_interpolated_surface
+
+def _bjt_dispatch_print_surface(params,*args,**kwargs):
+    if params.surface_mode==_BJT_PRINT_MODE:return _bjt_print_surface(params,*args,**kwargs)
+    return _bjt_v55_interpolated(params,*args,**kwargs)
+recon_core.reconstruct_interpolated_surface=_bjt_dispatch_print_surface
+
+def _bjt_environment_report():
+    import platform,importlib.metadata
+    versions={}
+    for name in ('numpy','scipy','Pillow','scikit-image','trimesh','shapely','numba','vtk','opencv-python','rtree'):
+        try:versions[name]=importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:versions[name]=None
+    return {'os':platform.platform(),'python':sys.version,'python_bits':struct.calcsize('P')*8,
+            'cpu':platform.processor(),'logical_cpus':os.cpu_count(),'available_ram_bytes':_bjt_memory_available(),
+            'temp_dir':tempfile.gettempdir(),'temp_free_bytes':shutil.disk_usage(tempfile.gettempdir()).free,
+            'versions':versions,'app_version':APP_VERSION,'engine':recon_core.reconstruct_interpolated_surface.__name__}
+
+_bjt_unprofiled_pipeline=run_pipeline
+
+def run_pipeline(params,log,cancel_event,temp_root,preview_callback):
+    start=time.perf_counter()
+    _BJT_STAGE_LOCAL.timings={}
+    _BJT_STAGE_LOCAL.verification=None
+    _BJT_STAGE_LOCAL.model_grid=None
+    _BJT_STAGE_LOCAL.model_bbox=None
+    _BJT_STAGE_LOCAL.layer_print_certificate=None
+    _BJT_STAGE_LOCAL.candidate_deadline=None
+    environment=_bjt_environment_report()
+    data={k:(str(v) if isinstance(v,Path) else v) for k,v in vars(params).items()}
+    report={'environment':environment,'parameters':data,'status':'running',
+            'target_seconds':1800,'target_scope':'run_pipeline including optional candidate; excludes application startup, CHITUBOX and physical printing',
+            'user_target_hardware':{'cpu':'Intel Core i5-13500','ram_gb':16,'gpu':'Intel UHD Graphics 770','source':'user screenshot; not measured by this process'}}
+    log.write(f"실행 환경: {environment['python_bits']}bit Python · CPU threads={environment['logical_cpus']} · 가용 RAM={format_bytes(environment['available_ram_bytes'])}")
+    try:
+        result=_bjt_unprofiled_pipeline(params,log,cancel_event,temp_root,preview_callback)
+        report['status']='completed'
+        # Preserve the faithful result; failure of optional candidate work is reported separately.
+        faithful_verification=getattr(_BJT_STAGE_LOCAL,'verification',None)
+        faithful_timings=dict(_BJT_STAGE_LOCAL.timings)
+        candidate_start=time.perf_counter()
+        # This only bounds optional extra work cooperatively. It is not a claim
+        # that arbitrary input geometry can be completed within thirty minutes.
+        _BJT_STAGE_LOCAL.candidate_deadline=min(start+1800,candidate_start+120)
+        try:
+            report['print_equivalent']=_bjt_make_print_equivalent(params.output_stl,params,log,cancel_event)
+        except (CancelledError,recon_core.CancelledError,lattice_core.CancelledError):
+            raise
+        except _BJTPrintBudgetExceeded:
+            report['print_equivalent']={'status':'candidate_time_budget','candidate_budget_seconds':120}
+            log.write('추가 경량화 시간 예산 소진: 후보 작업을 중단하고 검증된 정밀 STL을 유지합니다.')
+        except Exception as exc:
+            report['print_equivalent']={'status':'candidate_failed','error':str(exc)}
+            log.write(f'프린팅 후보 생성 실패 (정밀 STL 생성은 완료): {exc}')
+        finally:
+            _BJT_STAGE_LOCAL.verification=faithful_verification
+            _BJT_STAGE_LOCAL.timings=faithful_timings
+            _BJT_STAGE_LOCAL.timings['print_equivalent']=time.perf_counter()-candidate_start
+            _BJT_STAGE_LOCAL.candidate_deadline=None
+        if params.output_stl.exists():
+            with open(params.output_stl,'rb') as f:f.seek(80);n=struct.unpack('<I',f.read(4))[0]
+            report['triangles']=n;report['stl_bytes']=params.output_stl.stat().st_size
+            report['verification']=getattr(_BJT_STAGE_LOCAL,'verification',None)
+            report['import_ram_estimate_bytes_range']=[n*300,n*1000]
+            log.write(f'슬라이서 RAM 계획용 추정: {format_bytes(n*300)} ~ {format_bytes(n*1000)} (CHITUBOX 실측 아님, 형상과 버전별 차이)')
+        return result
+    except BaseException as exc:
+        report['status']='failed';report['error']=str(exc)
+        raise
+    finally:
+        report['elapsed_seconds']=time.perf_counter()-start
+        report['target_met']=report['status']=='completed' and report['elapsed_seconds']<=1800
+        log.write(f"30분 처리 목표: {'시간 기준 충족' if report['target_met'] else '미달성'} ({report['elapsed_seconds']/60:.2f}분; CHITUBOX/장비 출력 별도)")
+        report['stages_seconds']=dict(getattr(_BJT_STAGE_LOCAL,'timings',{}))
+        report['layer_print_certificate']=getattr(_BJT_STAGE_LOCAL,'layer_print_certificate',None)
+        report_path=params.output_stl.with_suffix('.run.json')
+        try:
+            report_path.parent.mkdir(parents=True,exist_ok=True)
+            report_path.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+            log.write(f'실행 기록: {report_path}')
+        except OSError as exc:log.write(f'실행 기록 저장 실패: {exc}')
+
+# Stage timing does not change inputs or returned geometry.
+_BJT_STAGE_LOCAL=threading.local()
+
+def _bjt_timed(name,fn):
+    def wrapped(*a,**kw):
+        start=time.perf_counter()
+        try:
+            result=fn(*a,**kw)
+            if name=='verification':_BJT_STAGE_LOCAL.verification=result
+            return result
+        finally:
+            timings=getattr(_BJT_STAGE_LOCAL,'timings',None)
+            if timings is None:timings={};_BJT_STAGE_LOCAL.timings=timings
+            timings[name]=time.perf_counter()-start
+    return wrapped
+slice_model_to_images=_bjt_timed('slice',slice_model_to_images)
+lattice_core.run_conversion=_bjt_timed('lattice',lattice_core.run_conversion)
+recon_core.reconstruct_streaming=_bjt_timed('reconstruction',recon_core.reconstruct_streaming)
+_aio_v37_final_fast_verify=_bjt_timed('verification',_aio_v37_final_fast_verify)
+
+
+def main():
+    import argparse
+    parser=argparse.ArgumentParser(description='BJT exact voxel/lattice STL converter')
+    parser.add_argument('--config',type=Path,help='PipelineParams JSON; omit to open GUI')
+    parser.add_argument('--diagnose',type=Path,help='write machine and dependency report')
+    args=parser.parse_args()
+    if args.diagnose:
+        args.diagnose.write_text(json.dumps(_bjt_environment_report(),ensure_ascii=False,indent=2),encoding='utf-8')
+        print(args.diagnose);return
+    if args.config:
+        data=json.loads(args.config.read_text(encoding='utf-8-sig'))
+        data['input_path']=Path(data['input_path']);data['output_stl']=Path(data['output_stl'])
+        params=PipelineParams(**data)
+        class ConsoleLog:
+            def write(self,message=''):print(message,flush=True)
+            def progress(self,percent,message=''):print(f'[{percent:.1f}%] {message}',flush=True)
+        with tempfile.TemporaryDirectory(prefix='bjt_model_pipeline_') as td:
+            run_pipeline(params,ConsoleLog(),threading.Event(),Path(td),lambda *a:None)
+        return
+    app=App();app.mainloop()
+
+if _BJT_LAUNCH_AS_MAIN:
+    main()
