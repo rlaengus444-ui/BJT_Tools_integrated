@@ -2,7 +2,7 @@
   "id": "bjt",
   "title": "모델·격자·STL 사용설명서",
   "subtitle": "3D 모델 슬라이싱, 쉘·격자 생성 및 원본 충실형 STL 재구성",
-  "document_version": "1.7.0",
+  "document_version": "1.7.1",
   "sections": [
     {
       "id": "overview",

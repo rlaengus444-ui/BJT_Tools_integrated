@@ -1,0 +1,867 @@
+{
+  "scope": "Independent current1.7.0 integratedGUI baseline onLinuxX87; smallsynthetic3Dresult, noprogramsourceedits. KoreanfontsmissingonLinux; geometryobservationsvalid,separatenativeWinecapturesneededforKoreanlegibility.",
+  "source_sha256_before": "0b079a821a8d7711cf1c70713396bbea7c964b06f0feacf03d14bd6600e99655",
+  "cases": [
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "tab": "field",
+      "controls": {
+        "prev_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        }
+      },
+      "controls_frame": {
+        "mapped": false,
+        "viewable": false,
+        "box": [
+          649,
+          201,
+          1,
+          1
+        ],
+        "tab_box": [
+          649,
+          201,
+          975,
+          610
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": null
+      },
+      "plot_canvas": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          653,
+          205,
+          967,
+          602
+        ],
+        "tab_box": [
+          649,
+          201,
+          975,
+          610
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": "normal"
+      },
+      "screenshot": "field-1660x860.png"
+    },
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "tab": "o2_field",
+      "controls": {
+        "prev_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            649,
+            201,
+            1,
+            1
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        }
+      },
+      "controls_frame": {
+        "mapped": false,
+        "viewable": false,
+        "box": [
+          649,
+          201,
+          1,
+          1
+        ],
+        "tab_box": [
+          649,
+          201,
+          975,
+          610
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": null
+      },
+      "plot_canvas": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          653,
+          205,
+          967,
+          602
+        ],
+        "tab_box": [
+          649,
+          201,
+          975,
+          610
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": "normal"
+      },
+      "screenshot": "o2_field-1660x860.png"
+    },
+    {
+      "window": [
+        1740,
+        960
+      ],
+      "tab": "field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            859,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            707,
+            859,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            777,
+            859,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            835,
+            864,
+            514,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1361,
+            864,
+            335,
+            17
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        }
+      },
+      "controls_frame": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          653,
+          859,
+          1047,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          1055,
+          710
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": null
+      },
+      "plot_canvas": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          653,
+          205,
+          1047,
+          648
+        ],
+        "tab_box": [
+          649,
+          201,
+          1055,
+          710
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": "normal"
+      },
+      "screenshot": "field-1740x960.png"
+    },
+    {
+      "window": [
+        1740,
+        960
+      ],
+      "tab": "o2_field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            859,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            707,
+            859,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            777,
+            859,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            835,
+            864,
+            514,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1361,
+            864,
+            335,
+            17
+          ],
+          "tab_box": [
+            649,
+            201,
+            1055,
+            710
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "state": "normal"
+        }
+      },
+      "controls_frame": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          653,
+          859,
+          1047,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          1055,
+          710
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": null
+      },
+      "plot_canvas": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          653,
+          205,
+          1047,
+          648
+        ],
+        "tab_box": [
+          649,
+          201,
+          1055,
+          710
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": "normal"
+      },
+      "screenshot": "o2_field-1740x960.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "tab": "field",
+      "controls": {
+        "prev_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            655,
+            859,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            707,
+            859,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            777,
+            859,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            835,
+            864,
+            514,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            1361,
+            864,
+            335,
+            17
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        }
+      },
+      "controls_frame": {
+        "mapped": false,
+        "viewable": false,
+        "box": [
+          653,
+          859,
+          1047,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": false,
+        "within_root": false,
+        "state": null
+      },
+      "plot_canvas": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          653,
+          205,
+          427,
+          522
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": "normal"
+      },
+      "screenshot": "field-1120x780.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "tab": "o2_field",
+      "controls": {
+        "prev_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            655,
+            859,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            707,
+            859,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            777,
+            859,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            835,
+            864,
+            514,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": false,
+          "viewable": false,
+          "box": [
+            1361,
+            864,
+            335,
+            17
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": false,
+          "within_root": false,
+          "state": "normal"
+        }
+      },
+      "controls_frame": {
+        "mapped": false,
+        "viewable": false,
+        "box": [
+          653,
+          859,
+          1047,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": false,
+        "within_root": false,
+        "state": null
+      },
+      "plot_canvas": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          653,
+          205,
+          427,
+          522
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "state": "normal"
+      },
+      "screenshot": "o2_field-1120x780.png"
+    }
+  ],
+  "frames": 7,
+  "source_sha256_after": "0b079a821a8d7711cf1c70713396bbea7c964b06f0feacf03d14bd6600e99655",
+  "close_errors": []
+}

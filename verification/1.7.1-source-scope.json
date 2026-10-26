@@ -1,0 +1,8 @@
+{
+  "version": "1.7.1",
+  "baseline_commit": "fe8d9ea21770edd54174d7a37213af355d3e65ec",
+  "numerical_prefix_byte_identical": true,
+  "numerical_prefix_sha256": "fe15aa96cfb697fb5e96cda80d9d40261d8975b9814bbd52ea1c93c153f87460",
+  "thermal_source_sha256": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece",
+  "helper_sha256": "6c8a09b8f52d6e186da7b011f9b55e28011aeb76eeb87507e50c88dd20626879"
+}

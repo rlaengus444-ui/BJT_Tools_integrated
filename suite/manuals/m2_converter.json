@@ -2,7 +2,7 @@
   "id": "m2_converter",
   "title": "이미지 변환",
   "subtitle": "출력 픽셀 크기와 DPI를 지정해 4비트 반전 팔레트 TIFF로 변환",
-  "document_version": "1.7.0",
+  "document_version": "1.7.1",
   "document_date": "2026-10-26",
   "sections": [
     {

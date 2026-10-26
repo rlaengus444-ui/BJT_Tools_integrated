@@ -2,7 +2,7 @@
   "id": "arrange",
   "title": "슬라이싱 이미지 배치·합성 사용설명서",
   "subtitle": "이미지 세트와 STL을 하나의 캔버스에 배치하고 전체 레이어를 출력하는 작업 안내",
-  "document_version": "1.7.0",
+  "document_version": "1.7.1",
   "sections": [
     {
       "id": "overview",

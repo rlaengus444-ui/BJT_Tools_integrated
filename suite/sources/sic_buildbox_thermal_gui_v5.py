@@ -2141,49 +2141,71 @@ class ThermalGUI(tk.Tk):
         self.field_fig = Figure(figsize=(8.2, 6.2), dpi=100)
         self.field_ax = self.field_fig.add_subplot(111, projection="3d")
         self.field_canvas = FigureCanvasTkAgg(self.field_fig, master=field_tab)
-        self.field_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
+        # Reserve playback controls before giving the remaining space to the
+        # canvas. Packing a 620px canvas first hid these controls in the suite.
         field_controls = ttk.Frame(field_tab)
-        field_controls.pack(fill=tk.X, pady=(6, 2))
+        field_controls.pack(side=tk.TOP, fill=tk.X, pady=(2, 4))
+        field_controls.columnconfigure(1, weight=1)
+        self.field_controls = field_controls
 
         self.field_prev_btn = self._widgets.Button(
             field_controls, text="◀", width=4,
             command=lambda: self._step_3d_frame(-1), state=tk.DISABLED
         )
-        self.field_prev_btn.pack(side=tk.LEFT, padx=2)
+        self.field_prev_btn.grid(row=1, column=0, padx=2, pady=(4, 0))
 
         self.field_play_btn = self._widgets.Button(
             field_controls, text="Play", width=7,
-            command=self._toggle_3d_play, state=tk.DISABLED
+            command=self._play_3d_animation, state=tk.DISABLED
         )
-        self.field_play_btn.pack(side=tk.LEFT, padx=2)
+        self.field_play_btn.grid(row=0, column=0, padx=2)
+
+        self.field_pause_btn = self._widgets.Button(
+            field_controls, text="Pause", width=9,
+            command=self._stop_3d_play, state=tk.DISABLED
+        )
+        self.field_pause_btn.grid(row=0, column=1, padx=2)
+
+        self.field_stop_btn = self._widgets.Button(
+            field_controls, text="Stop playback", width=11,
+            command=self._reset_3d_playback, state=tk.DISABLED
+        )
+        self.field_stop_btn.grid(row=0, column=2, padx=2)
 
         self.field_next_btn = self._widgets.Button(
             field_controls, text="▶", width=4,
             command=lambda: self._step_3d_frame(1), state=tk.DISABLED
         )
-        self.field_next_btn.pack(side=tk.LEFT, padx=2)
+        self.field_next_btn.grid(row=1, column=2, padx=2, pady=(4, 0))
 
         self.field_slider_var = tk.DoubleVar(value=0)
         self.field_slider = ttk.Scale(
-            field_controls, from_=0, to=0, orient=tk.HORIZONTAL,
-            variable=self.field_slider_var, command=self._on_3d_slider
+            field_controls, from_=0, to=0, orient=tk.HORIZONTAL, length=80,
+            variable=self.field_slider_var, command=self._on_3d_slider, state=tk.DISABLED,
         )
-        self.field_slider.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=8)
+        self.field_slider.grid(row=1, column=1, sticky="ew", padx=8, pady=(4, 0))
 
         self.field_time_label = self._widgets.Label(
-            field_controls, text="Run a simulation to view the 3D field."
+            field_controls, text="Run a simulation to view the 3D field.",
+            anchor="w", justify=tk.LEFT, wraplength=420,
         )
-        self.field_time_label.pack(side=tk.RIGHT, padx=4)
+        self.field_time_label.grid(row=2, column=0, columnspan=3, sticky="ew", padx=4, pady=(4, 0))
+        field_controls.bind("<Configure>", lambda event: self.field_time_label.configure(
+            wraplength=max(160, event.width - 12)), add="+")
 
-        self._widgets.Label(
+        self.field_hint = self._widgets.Label(
             field_tab,
             text=(
                 "Drag the plot with the mouse to rotate it. Large grids are decimated only for "
                 "3D display speed; the thermal calculation keeps the full requested grid."
             ),
-            foreground="#555"
-        ).pack(fill=tk.X, pady=(2, 0))
+            foreground="#555", wraplength=420, justify=tk.LEFT,
+        )
+        self.field_hint.pack(side=tk.BOTTOM, fill=tk.X, pady=(2, 0))
+        field_tab.bind("<Configure>", lambda event: self.field_hint.configure(
+            wraplength=max(160, event.width - 12)), add="+")
+        self.field_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         # O2 time-history graph
         self.o2_fig = Figure(figsize=(8.2, 5.5), dpi=100)
@@ -2222,59 +2244,75 @@ class ThermalGUI(tk.Tk):
         self.o2_field_canvas = FigureCanvasTkAgg(
             self.o2_field_fig, master=o2_field_tab
         )
-        self.o2_field_canvas.get_tk_widget().pack(
-            fill=tk.BOTH, expand=True
-        )
 
         o2_controls = ttk.Frame(o2_field_tab)
-        o2_controls.pack(fill=tk.X, pady=(6, 2))
+        o2_controls.pack(side=tk.TOP, fill=tk.X, pady=(2, 4))
+        o2_controls.columnconfigure(1, weight=1)
+        self.o2_field_controls = o2_controls
 
         self.o2_field_prev_btn = self._widgets.Button(
             o2_controls, text="◀", width=4,
             command=lambda: self._step_o2_3d_frame(-1),
             state=tk.DISABLED
         )
-        self.o2_field_prev_btn.pack(side=tk.LEFT, padx=2)
+        self.o2_field_prev_btn.grid(row=1, column=0, padx=2, pady=(4, 0))
 
         self.o2_field_play_btn = self._widgets.Button(
             o2_controls, text="Play", width=7,
-            command=self._toggle_o2_3d_play,
+            command=self._play_o2_3d_animation,
             state=tk.DISABLED
         )
-        self.o2_field_play_btn.pack(side=tk.LEFT, padx=2)
+        self.o2_field_play_btn.grid(row=0, column=0, padx=2)
+
+        self.o2_field_pause_btn = self._widgets.Button(
+            o2_controls, text="Pause", width=9,
+            command=self._stop_o2_3d_play, state=tk.DISABLED
+        )
+        self.o2_field_pause_btn.grid(row=0, column=1, padx=2)
+
+        self.o2_field_stop_btn = self._widgets.Button(
+            o2_controls, text="Stop playback", width=11,
+            command=self._reset_o2_3d_playback, state=tk.DISABLED
+        )
+        self.o2_field_stop_btn.grid(row=0, column=2, padx=2)
 
         self.o2_field_next_btn = self._widgets.Button(
             o2_controls, text="▶", width=4,
             command=lambda: self._step_o2_3d_frame(1),
             state=tk.DISABLED
         )
-        self.o2_field_next_btn.pack(side=tk.LEFT, padx=2)
+        self.o2_field_next_btn.grid(row=1, column=2, padx=2, pady=(4, 0))
 
         self.o2_field_slider_var = tk.DoubleVar(value=0)
         self.o2_field_slider = ttk.Scale(
-            o2_controls, from_=0, to=0,
+            o2_controls, from_=0, to=0, length=80,
             orient=tk.HORIZONTAL,
             variable=self.o2_field_slider_var,
-            command=self._on_o2_3d_slider
+            command=self._on_o2_3d_slider, state=tk.DISABLED,
         )
-        self.o2_field_slider.pack(
-            side=tk.LEFT, fill=tk.X, expand=True, padx=8
-        )
+        self.o2_field_slider.grid(row=1, column=1, sticky="ew", padx=8, pady=(4, 0))
 
         self.o2_field_time_label = self._widgets.Label(
             o2_controls,
-            text="Run an O₂-enabled simulation to view the field."
+            text="Run an O₂-enabled simulation to view the field.",
+            anchor="w", justify=tk.LEFT, wraplength=420,
         )
-        self.o2_field_time_label.pack(side=tk.RIGHT, padx=4)
+        self.o2_field_time_label.grid(row=2, column=0, columnspan=3, sticky="ew", padx=4, pady=(4, 0))
+        o2_controls.bind("<Configure>", lambda event: self.o2_field_time_label.configure(
+            wraplength=max(160, event.width - 12)), add="+")
 
-        self._widgets.Label(
+        self.o2_field_hint = self._widgets.Label(
             o2_field_tab,
             text=(
                 "O₂ is shown as actual gas-phase-equivalent vol%. "
                 "This mode includes diffusion only; no binder reaction or O₂ consumption."
             ),
-            foreground="#555"
-        ).pack(fill=tk.X, pady=(2, 0))
+            foreground="#555", wraplength=420, justify=tk.LEFT,
+        )
+        self.o2_field_hint.pack(side=tk.BOTTOM, fill=tk.X, pady=(2, 0))
+        o2_field_tab.bind("<Configure>", lambda event: self.o2_field_hint.configure(
+            wraplength=max(160, event.width - 12)), add="+")
+        self.o2_field_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     def _set_main_sash_position(self, px=600):
         """Set a comfortable initial parameter-panel width."""
@@ -3961,17 +3999,22 @@ CSV Export
             )
             self.o2_field_prev_btn.configure(state=tk.DISABLED)
             self.o2_field_play_btn.configure(state=tk.DISABLED)
+            self.o2_field_pause_btn.configure(state=tk.DISABLED)
+            self.o2_field_stop_btn.configure(state=tk.DISABLED)
             self.o2_field_next_btn.configure(state=tk.DISABLED)
+            self.o2_field_slider.configure(state=tk.DISABLED)
             return
 
         self.o2_field_slider.configure(
-            from_=0, to=max(nframes - 1, 0)
+            from_=0, to=max(nframes - 1, 0), state=tk.NORMAL,
         )
         self.o2_field_slider_var.set(0)
 
         state = tk.NORMAL if nframes > 1 else tk.DISABLED
         self.o2_field_prev_btn.configure(state=state)
         self.o2_field_play_btn.configure(state=state)
+        self.o2_field_pause_btn.configure(state=tk.DISABLED)
+        self.o2_field_stop_btn.configure(state=tk.NORMAL)
         self.o2_field_next_btn.configure(state=state)
 
         try:
@@ -4072,24 +4115,31 @@ CSV Export
         self._draw_o2_3d_frame(idx)
 
     def _toggle_o2_3d_play(self):
+        """Retain the original toggle API for external callers."""
         if self.o2_field_playing:
             self._stop_o2_3d_play()
-            return
+        else:
+            self._play_o2_3d_animation()
 
+    def _play_o2_3d_animation(self):
         if (
-            self.result is None
+            self.o2_field_playing
+            or self.result is None
             or len(self.result.o2_snapshots_percent) < 2
         ):
             return
 
         self.o2_field_playing = True
-        self.o2_field_play_btn.configure(text="Pause")
+        self.o2_field_play_btn.configure(state=tk.DISABLED)
+        self.o2_field_pause_btn.configure(state=tk.NORMAL)
         self._advance_o2_3d_animation()
 
     def _stop_o2_3d_play(self):
         self.o2_field_playing = False
         try:
-            self.o2_field_play_btn.configure(text="Play")
+            playable = self.result is not None and len(self.result.o2_snapshots_percent) > 1
+            self.o2_field_play_btn.configure(text="Play", state=tk.NORMAL if playable else tk.DISABLED)
+            self.o2_field_pause_btn.configure(state=tk.DISABLED)
         except Exception:
             pass
 
@@ -4099,6 +4149,13 @@ CSV Export
             except Exception:
                 pass
             self.o2_field_after_id = None
+
+    def _reset_o2_3d_playback(self):
+        """Stop saved-result playback and show the first frame; keep the solver alone."""
+        self._stop_o2_3d_play()
+        if self.result is not None and len(self.result.o2_snapshots_percent):
+            self.o2_field_slider_var.set(0)
+            self._draw_o2_3d_frame(0)
 
     def _advance_o2_3d_animation(self):
         if (
@@ -4247,15 +4304,20 @@ CSV Export
             self.field_time_label.config(text="No 3D snapshots available.")
             self.field_prev_btn.configure(state=tk.DISABLED)
             self.field_play_btn.configure(state=tk.DISABLED)
+            self.field_pause_btn.configure(state=tk.DISABLED)
+            self.field_stop_btn.configure(state=tk.DISABLED)
             self.field_next_btn.configure(state=tk.DISABLED)
+            self.field_slider.configure(state=tk.DISABLED)
             return
 
-        self.field_slider.configure(from_=0, to=max(nframes - 1, 0))
+        self.field_slider.configure(from_=0, to=max(nframes - 1, 0), state=tk.NORMAL)
         self.field_slider_var.set(0)
 
         state = tk.NORMAL if nframes > 1 else tk.DISABLED
         self.field_prev_btn.configure(state=state)
         self.field_play_btn.configure(state=state)
+        self.field_pause_btn.configure(state=tk.DISABLED)
+        self.field_stop_btn.configure(state=tk.NORMAL)
         self.field_next_btn.configure(state=state)
 
         # One fixed scale for the complete run, so the same color means the
@@ -4311,21 +4373,27 @@ CSV Export
         self._draw_3d_frame(idx)
 
     def _toggle_3d_play(self):
+        """Retain the original toggle API for external callers."""
         if self.field_playing:
             self._stop_3d_play()
-            return
+        else:
+            self._play_3d_animation()
 
-        if self.result is None or len(self.result.snapshot_time_min) < 2:
+    def _play_3d_animation(self):
+        if self.field_playing or self.result is None or len(self.result.snapshot_time_min) < 2:
             return
 
         self.field_playing = True
-        self.field_play_btn.configure(text="Pause")
+        self.field_play_btn.configure(state=tk.DISABLED)
+        self.field_pause_btn.configure(state=tk.NORMAL)
         self._advance_3d_animation()
 
     def _stop_3d_play(self):
         self.field_playing = False
         try:
-            self.field_play_btn.configure(text="Play")
+            playable = self.result is not None and len(self.result.snapshot_time_min) > 1
+            self.field_play_btn.configure(text="Play", state=tk.NORMAL if playable else tk.DISABLED)
+            self.field_pause_btn.configure(state=tk.DISABLED)
         except Exception:
             pass
 
@@ -4335,6 +4403,13 @@ CSV Export
             except Exception:
                 pass
             self.field_after_id = None
+
+    def _reset_3d_playback(self):
+        """Stop saved-result playback and show the first frame; keep the solver alone."""
+        self._stop_3d_play()
+        if self.result is not None and len(self.result.snapshot_time_min):
+            self.field_slider_var.set(0)
+            self._draw_3d_frame(0)
 
     def _advance_3d_animation(self):
         if not self.field_playing or self.result is None:

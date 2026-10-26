@@ -240,6 +240,18 @@ def tool_dispatch(arguments):
 def main():
     _patch_runtime()
     arguments = sys.argv[1:]
+    if arguments[:1] == ['--frozen-oven-playback']:
+        path = arguments[1] if len(arguments) > 1 else str(STATE / 'oven-playback.json')
+        try:
+            embedded_runtime_check()
+            from frozen_oven_playback import run as run_oven_playback
+            report = run_oven_playback(path)
+            _write(path, report)
+            return 0 if report['passed'] else 2
+        except Exception:
+            _write(path, {'passed': False, 'frozen': bool(getattr(sys, 'frozen', False)),
+                          'traceback': traceback.format_exc()})
+            return 2
     if arguments[:1] == ['--frozen-suite-features']:
         path = arguments[3] if len(arguments) > 3 else str(STATE / 'suite-features.json')
         try:

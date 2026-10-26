@@ -32,7 +32,7 @@ def main():
     archive_path = output_root / (NAME + '.zip')
     checksums_path = output_root / (NAME + '_SHA256SUMS.txt')
     required = ('diagnose-exe', 'smoke-exe', 'smoke-gui-exe',
-                'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'cli-exe')
+                'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'cli-exe')
     reports = {}
     for name in required:
         report = json.loads((HERE / (name + '.json')).read_text(encoding='utf-8'))

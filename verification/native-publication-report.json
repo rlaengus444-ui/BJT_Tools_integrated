@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "version": "1.7.0",
+  "verified_commit": "fe8d9ea21770edd54174d7a37213af355d3e65ec",
+  "verified_run": 40330519907,
+  "artifact_ids": [
+    12654878218,
+    12655093162
+  ],
+  "original_assets": {
+    "BJT_통합프로그램.pyw": {
+      "bytes": 2537262,
+      "sha256": "70fa4fd7499b8a73992bded9abb464554f2f82670f6b5dcc7422bfda3ac232e1"
+    },
+    "BJT_통합프로그램_1.7.0_EXE.zip": {
+      "bytes": 309325775,
+      "sha256": "f66736807208c49c9cefefb3b64152d722d5ab659782e40c6f7519d238b5a196"
+    },
+    "BJT_통합프로그램_1.7.0_사용설명서.zip": {
+      "bytes": 229677,
+      "sha256": "5268f2c972e8b037124560ec91fcad414d086c57adad2b4b958c6fb1c51ad659"
+    },
+    "BJT_통합프로그램_1.7.0_전체소스.zip": {
+      "bytes": 4037439,
+      "sha256": "698f2315898b3d696440592e9913e07e08d5073a9647b066a3d395b57f254b96"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 427,
+      "sha256": "0767c6475da5b3453b629f5b8679b41d76db128d9e7c87fff9cfd4ec4b41b6f9"
+    }
+  },
+  "ascii_assets": {
+    "BJT_1.7.0_standalone.pyw": {
+      "bytes": 2537262,
+      "sha256": "70fa4fd7499b8a73992bded9abb464554f2f82670f6b5dcc7422bfda3ac232e1"
+    },
+    "BJT_1.7.0_Windows_x64.zip": {
+      "bytes": 309325775,
+      "sha256": "f66736807208c49c9cefefb3b64152d722d5ab659782e40c6f7519d238b5a196"
+    },
+    "BJT_1.7.0_manual.zip": {
+      "bytes": 229677,
+      "sha256": "5268f2c972e8b037124560ec91fcad414d086c57adad2b4b958c6fb1c51ad659"
+    },
+    "BJT_1.7.0_source.zip": {
+      "bytes": 4037439,
+      "sha256": "698f2315898b3d696440592e9913e07e08d5073a9647b066a3d395b57f254b96"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 357,
+      "sha256": "68959b2fc510ae1ab13aaa7c40065a403cace3945695013e73dc8479dc07411e"
+    }
+  },
+  "program_bytes_changed": false,
+  "rebuilt": false,
+  "uploaded": true,
+  "server_digest_readback_passed": true,
+  "release_remains_draft": true,
+  "release_id": 424290858,
+  "release_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/untagged-cc27199423e5f8cc892d"
+}

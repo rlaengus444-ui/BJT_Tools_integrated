@@ -2,7 +2,7 @@
   "id": "sequence_z",
   "title": "시퀀스별 Z값",
   "subtitle": "M1 원본 수식으로 레이어별 프린팅·이동/피딩·리코팅 Z값을 계산하는 작업 가이드",
-  "document_version": "1.7.0",
+  "document_version": "1.7.1",
   "document_date": "2026-10-26",
   "sections": [
     {

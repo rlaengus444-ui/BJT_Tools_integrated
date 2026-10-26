@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "scope": "Independent post-job release metadata readback; release still draft at this observation",
+  "run_id": 40333786591,
+  "release": {
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/untagged-cc27199423e5f8cc892d/BJT_1.7.0_Windows_x64.zip",
+        "digest": "sha256:f66736807208c49c9cefefb3b64152d722d5ab659782e40c6f7519d238b5a196",
+        "id": 678309862,
+        "name": "BJT_1.7.0_Windows_x64.zip",
+        "size": 309325775,
+        "state": "uploaded"
+      },
+      {
+        "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/untagged-cc27199423e5f8cc892d/BJT_1.7.0_manual.zip",
+        "digest": "sha256:5268f2c972e8b037124560ec91fcad414d086c57adad2b4b958c6fb1c51ad659",
+        "id": 678310458,
+        "name": "BJT_1.7.0_manual.zip",
+        "size": 229677,
+        "state": "uploaded"
+      },
+      {
+        "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/untagged-cc27199423e5f8cc892d/BJT_1.7.0_source.zip",
+        "digest": "sha256:698f2315898b3d696440592e9913e07e08d5073a9647b066a3d395b57f254b96",
+        "id": 678310524,
+        "name": "BJT_1.7.0_source.zip",
+        "size": 4037439,
+        "state": "uploaded"
+      },
+      {
+        "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/untagged-cc27199423e5f8cc892d/BJT_1.7.0_standalone.pyw",
+        "digest": "sha256:70fa4fd7499b8a73992bded9abb464554f2f82670f6b5dcc7422bfda3ac232e1",
+        "id": 678310591,
+        "name": "BJT_1.7.0_standalone.pyw",
+        "size": 2537262,
+        "state": "uploaded"
+      },
+      {
+        "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/untagged-cc27199423e5f8cc892d/SHA256SUMS.txt",
+        "digest": "sha256:68959b2fc510ae1ab13aaa7c40065a403cace3945695013e73dc8479dc07411e",
+        "id": 678310665,
+        "name": "SHA256SUMS.txt",
+        "size": 357,
+        "state": "uploaded"
+      }
+    ],
+    "draft": true,
+    "html_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/untagged-cc27199423e5f8cc892d",
+    "id": 424290858,
+    "tag_name": "v1.7.0",
+    "target_commitish": "fe8d9ea21770edd54174d7a37213af355d3e65ec"
+  }
+}

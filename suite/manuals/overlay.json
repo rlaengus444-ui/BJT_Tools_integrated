@@ -2,7 +2,7 @@
   "id": "overlay",
   "title": "슬라이싱 폴더 겹치기 사용설명서",
   "subtitle": "여러 폴더의 대응 레이어를 매칭하여 그레이스케일 또는 이진 합성 세트를 생성하는 방법",
-  "document_version": "1.7.0",
+  "document_version": "1.7.1",
   "sections": [
     {
       "id": "overview",

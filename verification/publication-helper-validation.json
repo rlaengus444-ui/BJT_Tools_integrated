@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "scope": "Publication-only helper contract tests and actionlint; no rebuild/runtime changes",
+  "tests": 6,
+  "runtime_modified": false,
+  "files": {
+    "release_tools/publish_verified_suite.py": "76850f35e48dea2e216cda8a0ad867b16cefc3b26927159c075f3cd77338182a",
+    "release_tools/test_publish_verified_suite.py": "156423945bdecfd2fabc21955a6374a99c441443fa59b5bfa4c00a2c4ba094a4",
+    ".github/workflows/publish-verified-suite.yml": "a2ac03cd482964aceef922ac0e36cc855ccbcf8a4f4a04f062ec02d340f76529"
+  }
+}

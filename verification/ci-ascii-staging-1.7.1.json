@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "scope": "Future-version ASCII asset staging and draft publication; no runtime changes or external writes",
+  "contract_tests": 4,
+  "actionlint": "passed",
+  "files": {
+    "suite/\ubc30\ud3ec_\ube4c\ub4dc/ci_windows_release.py": "2082e14abc854308dcae3773eebfcf645dfc80c912a1af9247cd8588ee92ccba",
+    ".github/workflows/suite-release.yml": "fb2e845b60e9889875d0d22384724e40760dcf20780ef571f9bb5f3fb5108259",
+    "release_tools/test_ci_asset_staging.py": "75f75b2377f64496123b359d1545e2bf21edd754ae2322ce2b4ef5dd685e714c"
+  }
+}

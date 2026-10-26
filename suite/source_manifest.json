@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.7.0",
+  "suite_version": "1.7.1",
   "tools": [
     {
       "id": "bjt",
@@ -64,8 +64,8 @@
       "description": "오븐 온도 이력에 따른 3D 열전달·산소 확산과 실측 보정",
       "source": "sources/sic_buildbox_thermal_gui_v5.py",
       "original_path": "C:\\Users\\Kain\\PycharmProjects\\build oven profile\\sic_buildbox_thermal_gui_v5.py",
-      "sha256": "0b079a821a8d7711cf1c70713396bbea7c964b06f0feacf03d14bd6600e99655",
-      "bytes": 169148,
+      "sha256": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece",
+      "bytes": 173719,
       "controller": "ThermalGUI",
       "embedded_base": true
     },
@@ -216,7 +216,7 @@
     {
       "path": "oven_i18n.py",
       "purpose": "오븐 시뮬레이터 한국어·영어 표시 전환",
-      "sha256": "34ba43c9230ec2142110c9f5fa982ba89c07d734fa32a4cbef0c2d1c15690639"
+      "sha256": "6c8a09b8f52d6e186da7b011f9b55e28011aeb76eeb87507e50c88dd20626879"
     }
   ]
 }

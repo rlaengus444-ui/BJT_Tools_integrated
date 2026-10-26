@@ -102,7 +102,7 @@ def run(base, *, input_zip_only=False):
                 checks[name] = {'passed': False, 'traceback': traceback.format_exc()}
         for name in ('test_slice_compare', 'test_replace_validation', 'test_number_tools',
                      'test_sequence_z', 'test_m2_image_engine', 'test_image_conversion_settings',
-                     'test_suite_state', 'test_oven_i18n'):
+                     'test_suite_state', 'test_oven_i18n', 'test_oven_playback_controls'):
             source = fixture_dir / (name + '.py')
             if not source.is_file():
                 checks[name] = {'passed': False, 'error': 'Required validation fixture is absent'}

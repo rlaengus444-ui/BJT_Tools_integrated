@@ -2,7 +2,7 @@
   "id": "compare",
   "title": "슬라이싱 일치성 검사",
   "subtitle": "두 이미지 묶음의 픽셀·해상도·비트 수·파일 내용을 확인하는 작업 가이드",
-  "document_version": "1.7.0",
+  "document_version": "1.7.1",
   "document_date": "2026-10-26",
   "sections": [
     {

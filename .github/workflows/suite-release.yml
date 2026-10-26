@@ -4,6 +4,7 @@ name: Integrated suite Windows verification and draft release
   push:
     branches:
       - codex/integrated-suite-1.7.0
+      - codex/integrated-suite-1.7.1
   workflow_dispatch:
 
 permissions:

@@ -122,7 +122,7 @@ class ChituIntegrationTests(unittest.TestCase):
     def test_manifest_keeps_ten_existing_tool_sources_valid(self):
         from suite_loader import read_manifest, verify_sources
         manifest = read_manifest()
-        self.assertEqual(manifest['suite_version'], '1.7.0')
+        self.assertEqual(manifest['suite_version'], '1.7.1')
         self.assertEqual(len(manifest['tools']), 11)
         spec = next(tool for tool in manifest['tools'] if tool['id'] == 'chitu_checker')
         self.assertFalse(spec['embedded_base'])

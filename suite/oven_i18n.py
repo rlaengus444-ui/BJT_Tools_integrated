@@ -55,6 +55,8 @@ TEXT_KO = {
     "pore gas k": "기공 가스 열전도율", "solid-k temperature exponent": "고체 열전도율의 온도 지수",
     "contact blend": "입자 접촉 혼합계수", "calibration k scale": "보정한 열전도율 배율",
     "calibrated h": "보정한 대류계수 h", "initial temperature": "초기 온도",
+    "emissivity": "방사율", "floor emissivity": "오븐 바닥 방사율",
+    "bottom view factor": "오븐 바닥과의 형상계수",
     "ambient O2": "외부 산소 농도", "initial pore O2": "기공 내 초기 산소 농도",
     "O2 diffusivity": "산소 확산계수", "O2 temperature exponent": "산소 확산계수의 온도 지수",
     "O2 tortuosity": "산소 확산 굴곡도", "nx": "X 방향 격자 수 nx",
@@ -139,6 +141,7 @@ TEXT_KO = {
     "O₂ history": "산소 농도 변화", "3D O₂ field": "3차원 산소 농도 분포",
     "Elapsed time [h]": "경과 시간 [h]", "Temperature [°C]": "온도 [°C]",
     "O₂ [vol%]": "산소 농도 [vol%]", "Play": "재생", "Pause": "일시정지",
+    "Stop playback": "정지",
     "Run a simulation to view the 3D field.": "시뮬레이션을 실행하면 3차원 온도 분포가 표시됩니다.",
     "Run an O₂-enabled simulation to view the field.": "산소 확산 계산을 사용해 실행하면 농도 분포가 표시됩니다.",
     "Drag the plot with the mouse to rotate it. Large grids are decimated only for 3D display speed; the thermal calculation keeps the full requested grid.":

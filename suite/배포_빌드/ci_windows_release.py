@@ -45,33 +45,86 @@ def current_commit():
                                    text=True).strip()
 
 
+def stage_ascii_assets(raw, output, version):
+    """Keep verified archive bytes; give each published asset a unique name."""
+    names = {
+        'BJT_통합프로그램.pyw': f'BJT_{version}_standalone.pyw',
+        f'BJT_통합프로그램_{version}_EXE.zip': f'BJT_{version}_Windows_x64.zip',
+        f'BJT_통합프로그램_{version}_전체소스.zip': f'BJT_{version}_source.zip',
+        f'BJT_통합프로그램_{version}_사용설명서.zip': f'BJT_{version}_manual.zip',
+    }
+    if {path.name for path in raw.iterdir()} != set(names):
+        raise RuntimeError('Expected exactly the four verified build archives/launcher')
+    if output.exists():
+        raise FileExistsError('Use a fresh publication asset directory')
+    output.mkdir()
+    checksums = {}
+    for original, renamed in names.items():
+        renamed.encode('ascii')
+        before = digest(raw / original)
+        target = output / renamed
+        shutil.copyfile(raw / original, target)
+        if digest(target) != before:
+            raise RuntimeError('Renaming changed verified bytes: ' + original)
+        checksums[renamed] = {'bytes': target.stat().st_size, 'sha256': before}
+    (output / 'SHA256SUMS.txt').write_text(''.join(
+        f'{checksums[name]["sha256"]}  {name}\n' for name in sorted(checksums)),
+        encoding='utf-8', newline='\n')
+    return names
+
+
 def publish_draft(output):
     summary = json.loads((output / 'reports/native-summary.json').read_text(encoding='utf-8'))
     if not summary.get('passed') or summary['commit'] != current_commit():
         raise RuntimeError('Successful verification of this exact commit is required')
     assets = output / 'release-assets'
+    if {path.name for path in assets.iterdir()} != set(summary['assets']):
+        raise RuntimeError('Unverified files cannot join the publication')
     for name, expected in summary['assets'].items():
-        if digest(assets / name) != expected['sha256']:
+        if (not name.isascii() or (assets / name).stat().st_size != expected['bytes']
+                or digest(assets / name) != expected['sha256']):
             raise RuntimeError('Verified asset changed: ' + name)
     repository = os.environ.get('GITHUB_REPOSITORY')
     if not repository or not os.environ.get('GH_TOKEN'):
         raise RuntimeError('GitHub Actions repository and job token are required')
+    repository_info = json.loads(subprocess.check_output(
+        ['gh', 'api', f'repos/{repository}'], text=True, encoding='utf-8'))
+    if repository_info.get('private') is not True:
+        raise RuntimeError('This release must retain the private repository audience')
     tag = 'v' + summary['version']
     query = subprocess.run(['gh', 'release', 'view', tag, '--repo', repository,
-        '--json', 'isDraft,targetCommitish'], capture_output=True, text=True)
+        '--json', 'isDraft,targetCommitish,apiUrl'], capture_output=True, text=True, encoding='utf-8')
     if query.returncode:
         subprocess.run(['gh', 'release', 'create', tag, '--repo', repository,
             '--draft', '--target', summary['commit'], '--title', 'BJT 통합프로그램 ' + summary['version'],
             '--notes', 'Windows 64비트용입니다. 전체 ZIP을 압축 해제한 뒤 BJT_통합프로그램.exe를 실행하세요.'],
             check=True)
-    else:
-        release = json.loads(query.stdout)
-        if not release.get('isDraft') or release.get('targetCommitish') != summary['commit']:
-            raise RuntimeError('Refusing to replace a published release or a draft for another commit')
-    subprocess.run(['gh', 'release', 'upload', tag, '--repo', repository,
-                    '--clobber', *map(str, sorted(assets.iterdir()))], check=True)
+        query = subprocess.run(['gh', 'release', 'view', tag, '--repo', repository,
+            '--json', 'isDraft,targetCommitish,apiUrl'], check=True,
+            capture_output=True, text=True, encoding='utf-8')
+    release = json.loads(query.stdout)
+    if not release.get('isDraft') or release.get('targetCommitish') != summary['commit']:
+        raise RuntimeError('Refusing to replace a published release or a draft for another commit')
+    api_url = release['apiUrl']
+    if not api_url.startswith(f'https://api.github.com/repos/{repository}/releases/'):
+        raise RuntimeError('Unexpected release readback endpoint')
+    for path in sorted(assets.iterdir()):
+        subprocess.run(['gh', 'release', 'upload', tag, '--repo', repository,
+                        '--clobber', str(path)], check=True)
+    readback = json.loads(subprocess.check_output(['gh', 'api', api_url],
+                                                text=True, encoding='utf-8'))
+    if (readback.get('draft') is not True or readback.get('tag_name') != tag
+            or readback.get('target_commitish') != summary['commit']):
+        raise RuntimeError('Release changed during draft publication')
+    by_name = {item['name']: item for item in readback.get('assets', [])}
+    for name, expected in summary['assets'].items():
+        item = by_name.get(name, {})
+        if (item.get('state') != 'uploaded' or item.get('size') != expected['bytes']
+                or item.get('digest') != 'sha256:' + expected['sha256']):
+            raise RuntimeError('GitHub server digest readback failed: ' + name)
     write(output / 'reports/draft-upload.json', {'passed': True, 'tag': tag,
-        'commit': summary['commit'], 'draft': True, 'assets': summary['assets']})
+        'commit': summary['commit'], 'draft': True, 'server_digests_verified': True,
+        'assets': summary['assets']})
 
 
 def main():
@@ -112,7 +165,8 @@ def main():
     environment.update({'BJT_SOURCE_DIR': str(SOURCE), 'BJT_BUILD_PYTHON': sys.executable,
         'PYTHONUTF8': '1', 'PYTHONDONTWRITEBYTECODE': '1',
         'BJT_STATE_TEST_REPORT': str(reports / 'all11-input-inventory.json'),
-        'NUMBA_CACHE_DIR': str(output / 'n170-src'), 'MPLCONFIGDIR': str(output / 'matplotlib-src')})
+        'NUMBA_CACHE_DIR': str(output / ('n' + version.replace('.', '') + '-src')),
+        'MPLCONFIGDIR': str(output / 'matplotlib-src')})
     environment['PATH'] = str(build / 'vendor-runtime') + os.pathsep + environment.get('PATH', '')
     try:
         run([sys.executable, '-m', 'pytest', 'tests', 'chitu_tests', '-p', 'no:cacheprovider',
@@ -126,7 +180,7 @@ def main():
         summary['checks']['full_source_suite'] = {'passed': True, 'skips': skips}
         run([sys.executable, build / 'prepare_build.py'], build, environment, reports / 'prepare.log')
         for action in ('build', 'diagnose-exe', 'smoke-exe', 'smoke-gui-exe',
-                       'fixtures-exe', 'fixtures-gui-exe', 'features-exe'):
+                       'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe'):
             run([sys.executable, build / 'run_build.py', action], build, environment,
                 reports / (action + '-runner.log'))
             if action != 'build':
@@ -169,23 +223,21 @@ def main():
         summary['checks']['source_data_and_native_closure'] = {'passed': True,
             'matching_files': len(parity), 'excluded_os_dlls': bad_dlls, 'executables': metadata}
         write(reports / 'frozen-source-parity.json', {'passed': True, 'matching_paths': parity})
-        assets = output / 'release-assets'
-        assets.mkdir()
+        raw_assets = output / 'raw-release-assets'
+        raw_assets.mkdir()
         run([sys.executable, build / 'release_exe.py', '--source', SOURCE,
             '--output-root', output / 'packaged-exe'], build, environment, reports / 'package-exe.log')
         packaged = json.loads((build / 'release_result.json').read_text(encoding='utf-8'))
-        shutil.copy2(packaged['zip'], assets / Path(packaged['zip']).name)
+        shutil.copy2(packaged['zip'], raw_assets / Path(packaged['zip']).name)
         release_date = (datetime.now(timezone.utc) + timedelta(hours=9)).date().isoformat()
         run([sys.executable, REPOSITORY / 'release_tools/build_source_release.py', '--app', SOURCE,
-            '--output', assets, '--release-date', release_date,
+            '--output', raw_assets, '--release-date', release_date,
             '--launcher-template', REPOSITORY / 'versions/suite-v1.6.2/BJT_통합프로그램.pyw',
-            '--launcher-output', assets / 'BJT_통합프로그램.pyw'], REPOSITORY, environment,
+            '--launcher-output', raw_assets / 'BJT_통합프로그램.pyw'], REPOSITORY, environment,
             reports / 'package-source.log')
-        shutil.move(assets / 'source-release-verification.json', reports / 'source-release-verification.json')
-        checksums = {path.name: {'bytes': path.stat().st_size, 'sha256': digest(path)}
-                     for path in sorted(assets.iterdir()) if path.is_file()}
-        (assets / 'SHA256SUMS.txt').write_text(''.join(
-            f'{value["sha256"]}  {name}\n' for name, value in checksums.items()), encoding='utf-8')
+        shutil.move(raw_assets / 'source-release-verification.json', reports / 'source-release-verification.json')
+        assets = output / 'release-assets'
+        summary['asset_name_mapping'] = stage_ascii_assets(raw_assets, assets, version)
         summary['assets'] = {path.name: {'bytes': path.stat().st_size, 'sha256': digest(path)}
                              for path in sorted(assets.iterdir()) if path.is_file()}
         summary['passed'] = True

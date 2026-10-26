@@ -2,7 +2,7 @@
   "id": "alignment",
   "title": "슬라이싱 위치 검사 사용설명서",
   "subtitle": "치환 경계와 전체 인접층의 이동 신호를 확인하는 작업 가이드",
-  "document_version": "1.7.0",
+  "document_version": "1.7.1",
   "sections": [
     {
       "id": "overview",

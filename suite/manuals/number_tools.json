@@ -2,7 +2,7 @@
   "id": "number_tools",
   "title": "번호 복제·누락 검사",
   "subtitle": "같은 파일을 번호별로 복제하고 폴더의 누락 번호를 확인하는 작업 가이드",
-  "document_version": "1.7.0",
+  "document_version": "1.7.1",
   "document_date": "2026-10-26",
   "sections": [
     {

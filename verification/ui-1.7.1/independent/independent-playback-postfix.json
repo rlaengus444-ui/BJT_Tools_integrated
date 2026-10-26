@@ -1,0 +1,1493 @@
+{
+  "passed": true,
+  "scope": "Independent sourceGUI recheck onLinuxX87, realsmallsynthetic3x3x3 savedframes. Actualsource_manifest validatedwithoutoverrides. No application edits, nofrozenEXEclaim. Windowscaptionreadabilityauditedseparatelyfrom8nativePNGviews.",
+  "source_sha256_before": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece",
+  "cases": [
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "language": "ko",
+      "tab": "field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            664,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            207,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "pause_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1085,
+            207,
+            78,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "disabled"
+        },
+        "stop_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1528,
+            207,
+            90,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1549,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            731,
+            243,
+            787,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            657,
+            269,
+            959,
+            17
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        }
+      },
+      "screenshot": "independent-field-1660x860-ko.png"
+    },
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "language": "ko",
+      "tab": "o2_field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            664,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            207,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "pause_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1085,
+            207,
+            78,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "disabled"
+        },
+        "stop_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1528,
+            207,
+            90,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1549,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            731,
+            243,
+            787,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            657,
+            269,
+            959,
+            17
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        }
+      },
+      "screenshot": "independent-o2_field-1660x860-ko.png"
+    },
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "language": "en",
+      "tab": "field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            664,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            207,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "pause_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1085,
+            207,
+            78,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "disabled"
+        },
+        "stop_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1528,
+            207,
+            90,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1549,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            731,
+            243,
+            787,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            657,
+            269,
+            959,
+            17
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        }
+      },
+      "screenshot": "independent-field-1660x860-en.png"
+    },
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "language": "en",
+      "tab": "o2_field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            664,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            207,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "pause_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1085,
+            207,
+            78,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "disabled"
+        },
+        "stop_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1528,
+            207,
+            90,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1549,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            731,
+            243,
+            787,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            657,
+            269,
+            959,
+            17
+          ],
+          "tab_box": [
+            649,
+            201,
+            975,
+            610
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        }
+      },
+      "screenshot": "independent-o2_field-1660x860-en.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "language": "ko",
+      "tab": "field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            664,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            207,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "pause_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            815,
+            207,
+            78,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "disabled"
+        },
+        "stop_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            988,
+            207,
+            90,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1009,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            731,
+            243,
+            247,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            657,
+            269,
+            419,
+            30
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        }
+      },
+      "screenshot": "independent-field-1120x780-ko.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "language": "ko",
+      "tab": "o2_field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            664,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            207,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "pause_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            815,
+            207,
+            78,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "disabled"
+        },
+        "stop_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            988,
+            207,
+            90,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1009,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            731,
+            243,
+            247,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            657,
+            269,
+            419,
+            30
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        }
+      },
+      "screenshot": "independent-o2_field-1120x780-ko.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "language": "en",
+      "tab": "field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            664,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            207,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "pause_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            815,
+            207,
+            78,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "disabled"
+        },
+        "stop_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            988,
+            207,
+            90,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1009,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            731,
+            243,
+            247,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            657,
+            269,
+            419,
+            30
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        }
+      },
+      "screenshot": "independent-field-1120x780-en.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "language": "en",
+      "tab": "o2_field",
+      "controls": {
+        "prev_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            664,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "play_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            655,
+            207,
+            66,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "pause_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            815,
+            207,
+            78,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "disabled"
+        },
+        "stop_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            988,
+            207,
+            90,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "next_btn": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            1009,
+            238,
+            48,
+            27
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "slider": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            731,
+            243,
+            247,
+            16
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        },
+        "time_label": {
+          "mapped": true,
+          "viewable": true,
+          "box": [
+            657,
+            269,
+            419,
+            30
+          ],
+          "tab_box": [
+            649,
+            201,
+            435,
+            530
+          ],
+          "within_tab": true,
+          "within_root": true,
+          "fully_visible": true,
+          "state": "normal"
+        }
+      },
+      "screenshot": "independent-o2_field-1120x780-en.png"
+    }
+  ],
+  "behavior": [
+    {
+      "tab": "field",
+      "previous_next": true,
+      "play_advances": {
+        "first": 1.0,
+        "after_timer": 2.0
+      },
+      "pause_holds_frame": 2.0,
+      "stop_resets_first_frame": true
+    },
+    {
+      "tab": "o2_field",
+      "previous_next": true,
+      "play_advances": {
+        "first": 1.0,
+        "after_timer": 2.0
+      },
+      "pause_holds_frame": 2.0,
+      "stop_resets_first_frame": true
+    }
+  ],
+  "manifest_valid_count": 26,
+  "frames": 7,
+  "solver_worker_unchanged": true,
+  "solver_stop_event_unchanged_before_close": true,
+  "result_object_preserved": true,
+  "numeric_result_fingerprint_before": "1a6064ace69d5a76a6c2b6781c763bbed6f1a2658a32d93fb802cc2a1076c947",
+  "numeric_result_fingerprint_after": "1a6064ace69d5a76a6c2b6781c763bbed6f1a2658a32d93fb802cc2a1076c947",
+  "no_result_states": {
+    "field": {
+      "prev_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          664,
+          238,
+          48,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "play_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          655,
+          207,
+          66,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "pause_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          815,
+          207,
+          78,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "stop_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          988,
+          207,
+          90,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "next_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          1009,
+          238,
+          48,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "slider": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          731,
+          243,
+          247,
+          16
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      }
+    },
+    "o2_field": {
+      "prev_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          664,
+          238,
+          48,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "play_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          655,
+          207,
+          66,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "pause_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          815,
+          207,
+          78,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "stop_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          988,
+          207,
+          90,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "next_btn": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          1009,
+          238,
+          48,
+          27
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      },
+      "slider": {
+        "mapped": true,
+        "viewable": true,
+        "box": [
+          731,
+          243,
+          247,
+          16
+        ],
+        "tab_box": [
+          649,
+          201,
+          435,
+          530
+        ],
+        "within_tab": true,
+        "within_root": true,
+        "fully_visible": true,
+        "state": "disabled"
+      }
+    }
+  },
+  "close_errors": [],
+  "close_cancelled_animation_callbacks": true,
+  "source_sha256_after": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece"
+}

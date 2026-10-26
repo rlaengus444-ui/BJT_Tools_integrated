@@ -1,0 +1,95 @@
+{
+  "passed": true,
+  "scope": "Independent1.7.0->1.7.1sourceUIreproductionandhotfixverification. FrozenWindowsEXEtestsbelongtoseparatereleasegateandarenotclaimedhere.",
+  "source_sha256": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece",
+  "actual_source_manifest_valid_count": 26,
+  "windows_caption_views_opened_with_view_image": 8,
+  "windows_caption_views_hashes_verified": 8,
+  "baseline_pngs_opened_with_view_image": 6,
+  "independent_geometry_views": 8,
+  "geometry_controls_per_view": 7,
+  "before_after_comparisons": [
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "tab": "field",
+      "baseline_play_mapped": false,
+      "candidate_all_seven_controls_fully_visible": true,
+      "before_screenshot": "../../oven-3d-playback-baseline/field-1660x860.png",
+      "after_screenshot": "independent-field-1660x860-ko.png"
+    },
+    {
+      "window": [
+        1660,
+        860
+      ],
+      "tab": "o2_field",
+      "baseline_play_mapped": false,
+      "candidate_all_seven_controls_fully_visible": true,
+      "before_screenshot": "../../oven-3d-playback-baseline/o2_field-1660x860.png",
+      "after_screenshot": "independent-o2_field-1660x860-ko.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "tab": "field",
+      "baseline_play_mapped": false,
+      "candidate_all_seven_controls_fully_visible": true,
+      "before_screenshot": "../../oven-3d-playback-baseline/field-1120x780.png",
+      "after_screenshot": "independent-field-1120x780-ko.png"
+    },
+    {
+      "window": [
+        1120,
+        780
+      ],
+      "tab": "o2_field",
+      "baseline_play_mapped": false,
+      "candidate_all_seven_controls_fully_visible": true,
+      "before_screenshot": "../../oven-3d-playback-baseline/o2_field-1120x780.png",
+      "after_screenshot": "independent-o2_field-1120x780-ko.png"
+    }
+  ],
+  "small_native_slider_pixels": 211,
+  "native_visual_findings": "AllKO/ENPlay/Pause/Stopcaptionsfitatbothsizes,previous/next/slider/timeinformationremainvisibleaboveplot. Wrappedtimeinformationdoesnotoverlapplot. No blockinglayoutissue.",
+  "behavior": [
+    {
+      "tab": "field",
+      "previous_next": true,
+      "play_advances": {
+        "first": 1.0,
+        "after_timer": 2.0
+      },
+      "pause_holds_frame": 2.0,
+      "stop_resets_first_frame": true
+    },
+    {
+      "tab": "o2_field",
+      "previous_next": true,
+      "play_advances": {
+        "first": 1.0,
+        "after_timer": 2.0
+      },
+      "pause_holds_frame": 2.0,
+      "stop_resets_first_frame": true
+    }
+  ],
+  "no_result_controls_visible_and_disabled": true,
+  "numeric_result_data_unchanged": true,
+  "solver_worker_unchanged": true,
+  "solver_stop_event_unchanged_before_close": true,
+  "close_errors": [],
+  "close_cancelled_both_callbacks": true,
+  "numeric_core_prefix_byte_identical": {
+    "baseline_source_sha256": "0b079a821a8d7711cf1c70713396bbea7c964b06f0feacf03d14bd6600e99655",
+    "bytes": 59248,
+    "sha256": "fe15aa96cfb697fb5e96cda80d9d40261d8975b9814bbd52ea1c93c153f87460",
+    "match": true
+  },
+  "runtime_edits": false,
+  "linux_font_limit": "LinuxX87stilllacksKoreanfonts.NativeKOlegibilityandcaptionfitverifiedfromWindows/WinePNGssameproductionsourceSHA."
+}
