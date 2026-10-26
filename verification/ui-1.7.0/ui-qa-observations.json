@@ -577,6 +577,6 @@
     "geometry_observation": "All4pixel/DPIentries visible; fileinputdroparea visible; thermalformcanbescrolledfromgeometrytoprofile/actionbuttons. No newinputcontrolwasobservedoutsidewindowin1740x960or1120x780Linuxcaptures.",
     "korean_text_catalogue_review": "Natural consistent Korean labels reviewed from liveTk widgettexts, scientificsymbolsandunits retained; no untranslatedEnglishparagraph found.",
     "limitation": "LinuxX87fontenvironmenthasnoKoreanfont; KoreanTklabels renderblank/garbledandMatplotlibKoreanaxes rendertofu. These screenshots cannot certify KoreanvisualreadabilityorWindowsfontgeometry. Windows/Winecaptures requested frombuildagent.",
-    "target_windows_visual_review": "pending"
+    "target_windows_visual_review": "passed: all10Windows/Winesourcecapturesopenedwithview_image; Koreanfontsreadable,requiredcontrolsvisible"
   }
 }

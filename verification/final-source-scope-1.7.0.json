@@ -1,0 +1,61 @@
+{
+  "suite_version": "1.7.0",
+  "baseline": "authentic team Drive1.6.2",
+  "unchanged_tool_sources": [
+    "bjt",
+    "arrange",
+    "overlay",
+    "exchanger",
+    "alignment",
+    "compare",
+    "number_tools",
+    "sequence_z"
+  ],
+  "changed_tool_sources": [
+    "thermal",
+    "m2_converter",
+    "chitu_checker"
+  ],
+  "geometry_and_loader_unchanged": [
+    {
+      "path": "chitu_overlap/__init__.py",
+      "sha256": "51b552f2fd61b2d2223717feb394f5183ea71b0967a4f79621f8449e7a7c584f",
+      "unchanged": true
+    },
+    {
+      "path": "chitu_overlap/__main__.py",
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "unchanged": true
+    },
+    {
+      "path": "chitu_overlap/chitubox.py",
+      "sha256": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+      "unchanged": true
+    },
+    {
+      "path": "chitu_overlap/cli.py",
+      "sha256": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d",
+      "unchanged": true
+    },
+    {
+      "path": "chitu_overlap/geometry.py",
+      "sha256": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+      "unchanged": true
+    },
+    {
+      "path": "chitu_overlap/inputs.py",
+      "sha256": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c",
+      "unchanged": true
+    },
+    {
+      "path": "chitu_overlap/seams.py",
+      "sha256": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418",
+      "unchanged": true
+    },
+    {
+      "path": "chitu_overlap/viewer.py",
+      "sha256": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8",
+      "unchanged": true
+    }
+  ]
+}

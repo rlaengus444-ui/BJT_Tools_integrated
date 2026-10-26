@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "tool": "actionlint v1.7.7",
+  "workflow_sha256": "fbb1ff5685906ade56f3655f28ec7a00ec5d48ce9e8465b7c46ce23940d04f6b",
+  "correction": "runner.temp moved from unsupported job-level env context to supported step contexts",
+  "runtime_changed": false
+}

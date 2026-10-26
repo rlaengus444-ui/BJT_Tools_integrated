@@ -1,0 +1,61 @@
+name: Publish verified native suite 1.7.0 assets
+
+'on':
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-verified-suite-1.7.0
+  cancel-in-progress: false
+
+jobs:
+  publish-verified:
+    runs-on: windows-2022
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+      - name: Download original verified native release artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: BJT-native-Windows-release-40330519907
+          run-id: 40330519907
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}\verified-suite\assets
+      - name: Download corresponding native verification evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: BJT-native-Windows-evidence-40330519907
+          run-id: 40330519907
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}\verified-suite\evidence
+      - name: Verify bytes and upload distinct ASCII assets sequentially
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BJT_VERIFIED_ROOT: ${{ runner.temp }}\verified-suite
+        shell: pwsh
+        run: |
+          python release_tools/publish_verified_suite.py --evidence "$env:BJT_VERIFIED_ROOT\evidence" --assets "$env:BJT_VERIFIED_ROOT\assets" --output "$env:BJT_VERIFIED_ROOT\upload" --report "$env:BJT_VERIFIED_ROOT\publication-report.json" --upload
+      - name: Preserve publication digest readback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BJT-suite-1.7.0-publication-${{ github.run_id }}
+          path: ${{ runner.temp }}\verified-suite\publication-report.json
+          if-no-files-found: warn
+          retention-days: 7

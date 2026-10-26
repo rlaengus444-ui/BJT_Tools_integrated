@@ -1,0 +1,158 @@
+{
+  "passed": true,
+  "manuals": 11,
+  "chapters": 148,
+  "entries": [
+    {
+      "id": "bjt",
+      "chapters": 13,
+      "plain_text_chars": 12402,
+      "html_sha256": "88cbc96bda4b3141ff10356d0e025d2cbc333dc4f51951f43fa72fc9243d3be0"
+    },
+    {
+      "id": "arrange",
+      "chapters": 11,
+      "plain_text_chars": 8312,
+      "html_sha256": "e9a331ad587e7ad11c2cce231de15676fe1d03c7914170dd64a7e1e562e2a733"
+    },
+    {
+      "id": "overlay",
+      "chapters": 11,
+      "plain_text_chars": 8423,
+      "html_sha256": "e93def1ce66b598a0c29bd93975bc45378ad2bc6bb1a8219ca6b1c915e464d09"
+    },
+    {
+      "id": "exchanger",
+      "chapters": 11,
+      "plain_text_chars": 10764,
+      "html_sha256": "100a7bfd408e88c98b50f9279c4699e1f49dcc208b86dec6b83da4ba9c96a3a9"
+    },
+    {
+      "id": "alignment",
+      "chapters": 15,
+      "plain_text_chars": 10118,
+      "html_sha256": "8b600c7da546b1672b18e792b259cacdd4cb292e71eea68fd9d09e51526325dc"
+    },
+    {
+      "id": "thermal",
+      "chapters": 16,
+      "plain_text_chars": 21952,
+      "html_sha256": "7ec60254a142111a723c16f8ec0840f1309a99486c06529281a330ec7e9e0244"
+    },
+    {
+      "id": "compare",
+      "chapters": 19,
+      "plain_text_chars": 15127,
+      "html_sha256": "8377f24f4a3cf2726107bba0c6656c506f351a462d51cb97c0371bd5e0700c05"
+    },
+    {
+      "id": "number_tools",
+      "chapters": 13,
+      "plain_text_chars": 10347,
+      "html_sha256": "0bdfe5467fe42c9fb68ff9c5823c4ddcbed99f0a65c9884fb6061107276a4226"
+    },
+    {
+      "id": "sequence_z",
+      "chapters": 13,
+      "plain_text_chars": 7331,
+      "html_sha256": "3a76356f981166baf86c9bb223ba5174576ba12a990984f634af0fe6f1a15aff"
+    },
+    {
+      "id": "m2_converter",
+      "chapters": 15,
+      "plain_text_chars": 10547,
+      "html_sha256": "4be7e6f4c278040fe3bfd8bda0f2e41b49c4e1d696859808e0f462f0a9ff7826"
+    },
+    {
+      "id": "chitu_checker",
+      "chapters": 11,
+      "plain_text_chars": 10161,
+      "html_sha256": "1ce1ea706922022110fd8462907c1663ee9642c1fe612f4bcd84ba0280bf0232"
+    }
+  ],
+  "html_pages": 12,
+  "offline_only": true,
+  "browser_render": {
+    "passed": true,
+    "pages": [
+      {
+        "file": "alignment.html",
+        "title": "슬라이싱 위치 검사 사용설명서",
+        "horizontal_overflow": false,
+        "search_status": "1 / 2"
+      },
+      {
+        "file": "arrange.html",
+        "title": "슬라이싱 이미지 배치·합성 사용설명서",
+        "horizontal_overflow": false,
+        "search_status": "1 / 4"
+      },
+      {
+        "file": "bjt.html",
+        "title": "모델·격자·STL 사용설명서",
+        "horizontal_overflow": false,
+        "search_status": "1 / 3"
+      },
+      {
+        "file": "chitu_checker.html",
+        "title": "치투 오브젝트 검사",
+        "horizontal_overflow": false,
+        "search_status": "1 / 2"
+      },
+      {
+        "file": "compare.html",
+        "title": "슬라이싱 일치성 검사",
+        "horizontal_overflow": false,
+        "search_status": "1 / 2"
+      },
+      {
+        "file": "exchanger.html",
+        "title": "슬라이싱 이미지 범위 교체 사용설명서",
+        "horizontal_overflow": false,
+        "search_status": "1 / 3"
+      },
+      {
+        "file": "index.html",
+        "title": "도구별 사용설명서",
+        "horizontal_overflow": false
+      },
+      {
+        "file": "m2_converter.html",
+        "title": "이미지 변환",
+        "horizontal_overflow": false,
+        "search_status": "1 / 3"
+      },
+      {
+        "file": "number_tools.html",
+        "title": "번호 복제·누락 검사",
+        "horizontal_overflow": false,
+        "search_status": "1 / 2"
+      },
+      {
+        "file": "overlay.html",
+        "title": "슬라이싱 폴더 겹치기 사용설명서",
+        "horizontal_overflow": false,
+        "search_status": "1 / 2"
+      },
+      {
+        "file": "sequence_z.html",
+        "title": "시퀀스별 Z값",
+        "horizontal_overflow": false,
+        "search_status": "1 / 6"
+      },
+      {
+        "file": "thermal.html",
+        "title": "오븐 열확산 시뮬레이터 사용설명서",
+        "horizontal_overflow": false,
+        "search_status": "1 / 6"
+      }
+    ],
+    "javascript_errors": [],
+    "external_requests": [],
+    "harness": "Exported HTML plus exact manual.css inlined for offline set_content; fresh page per document; source files unchanged.",
+    "initial_harness_attempts": [
+      "Native file:// navigation blocked by Chromium ERR_BLOCKED_BY_ADMINISTRATOR; no product failure inferred.",
+      "Reusing set_content in one Window retained lexical bindings; harness changed to fresh page per document."
+    ]
+  }
+}
