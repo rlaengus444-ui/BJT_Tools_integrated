@@ -11,9 +11,14 @@ BJT 3D model → slicing → shell/lattice generation → STL integrated Python 
 ## Important limitations
 The 400-DPI, 0.1-mm layer-print proxy STL mode preserves layer masks, not necessarily continuous CAD geometry or topology. Independently validate with real slicing output before production.
 
-## Previous version inventory
-- **v5.5**: an original distribution archive `BJT_SG1024_400dpi_v5_5.zip` was found in the user's file library (2026-09-10). Its contents have not yet been imported into this GitHub repository.
-- Earlier algorithm sections mentioned inside the v5.6 file (e.g., v5.2/v5.3) are **not** separate, verified version snapshots.
-- Do not reconstruct or mislabel old releases from current source.
+## Verified historical sources
 
-Changes from this imported snapshot onward are traceable through Git commits.
+Authentic earlier code snapshots are stored under `versions/`:
+
+- v5.5 — `versions/v5.5-print400-verified-candidate/BJT_model_to_lattice_STL_all_in_one.py`
+- v4.6 — `versions/v4.6-cap-profiled-fast/BJT_model_to_lattice_STL_all_in_one.py`
+- v4.6 validation-only baseline — `versions/v4.6-cap-profiled-fast/comparison_baseline.py` (not a separate release)
+
+See [HISTORY.md](HISTORY.md) for origin archives, hashes, exclusions and validation limits. Do not reconstruct unknown releases from intermediate function names.
+
+Changes after these imported snapshots remain traceable through Git commits.
