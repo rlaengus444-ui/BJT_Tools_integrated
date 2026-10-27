@@ -1,7 +1,7 @@
 # Repository instructions — BJT_Tools_integrated
 
 ## Model routing
-- Default work is done by GPT-6.1 Terra XHigh. Handle routine GUI adjustments,
+- Default work is done by GPT-6.1 Terra Medium. Handle routine GUI adjustments,
   isolated functions, documentation, packaging and unit tests in the parent agent.
 - **Escalate to the custom `sol_reviewer` subagent (GPT-6.1 Sol Max)** when:
   1. numerical methods, 3D heat/oxygen diffusion, material properties, unit
