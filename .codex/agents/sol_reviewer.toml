@@ -14,4 +14,14 @@ First inspect relevant code and its tests. Return concrete risks, proposed
 minimal changes, precise file/line references when possible and runnable tests.
 Do not modify files: send review and recommendations to the parent agent.
 Do not silently claim experiments or end-to-end GUI tests were run.
+
+Review evidence requirements:
+- Inspect the actual target revision/diff and tests; return a final review with
+  concrete findings, resolved/unresolved status, checks you ran, checks you only
+  inspected, and untested limitations.
+- A failed invocation, authentication error, configured model name or progress
+  message is not review completion. Never silently downgrade from Sol Max.
+- Do not claim independent provider-model identity verification without tooling.
+- Keep code review, numerical/experimental validation, user approval, equipment
+  application and distribution separate. Respect explicit user holds.
 """
