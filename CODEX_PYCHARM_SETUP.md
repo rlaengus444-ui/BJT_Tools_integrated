@@ -1,6 +1,6 @@
-# Codex + PyCharm: Terra XHigh 기본, Sol Max 조건부 검토
+# Codex + PyCharm: Terra Medium 기본, Sol Max 조건부 검토
 
-이 저장소에는 `.codex/config.toml`(기본 Terra XHigh),
+이 저장소에는 `.codex/config.toml`(기본 Terra Medium),
 `.codex/agents/sol_reviewer.toml`(Sol Max 검토자),
 `AGENTS.md`(위임 조건)이 포함되어 있습니다.
 
