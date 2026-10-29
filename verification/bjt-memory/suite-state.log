@@ -1,0 +1,18 @@
+test_all_eleven_controllers_close_and_reopen_with_input_collections (test_suite_state.AllToolCloseReopenTests.test_all_eleven_controllers_close_and_reopen_with_input_collections) ... skipped 'real Tk display required for all-tool roundtrip'
+test_save_failure_is_recorded_and_does_not_prevent_orderly_close (test_suite_state.AllToolCloseReopenTests.test_save_failure_is_recorded_and_does_not_prevent_orderly_close) ... skipped 'real Tk display required for all-tool roundtrip'
+test_chitu_display_fields_are_excluded_and_paths_are_restored (test_suite_state.InputSnapshotTests.test_chitu_display_fields_are_excluded_and_paths_are_restored) ... ok
+test_invalid_numeric_tcl_value_is_saved_but_safe_default_restored (test_suite_state.InputSnapshotTests.test_invalid_numeric_tcl_value_is_saved_but_safe_default_restored) ... ok
+test_mode_preset_traces_cannot_overwrite_custom_fields (test_suite_state.InputSnapshotTests.test_mode_preset_traces_cannot_overwrite_custom_fields) ... ok
+test_raw_invalid_text_does_not_call_get_or_persist_progress (test_suite_state.InputSnapshotTests.test_raw_invalid_text_does_not_call_get_or_persist_progress) ... ok
+test_corrupt_file_defaults_and_preserves_recovery_copy (test_suite_state.StateStoreTests.test_corrupt_file_defaults_and_preserves_recovery_copy) ... ok
+test_existing_legacy_inputs_migrate_once_per_tool_without_legacy_writes (test_suite_state.StateStoreTests.test_existing_legacy_inputs_migrate_once_per_tool_without_legacy_writes) ... ok
+test_failed_atomic_replace_leaves_previous_file_and_removes_temp (test_suite_state.StateStoreTests.test_failed_atomic_replace_leaves_previous_file_and_removes_temp) ... ok
+test_memory_only_test_store_does_not_write (test_suite_state.StateStoreTests.test_memory_only_test_store_does_not_write) ... ok
+test_per_user_location_never_uses_exe_folder (test_suite_state.StateStoreTests.test_per_user_location_never_uses_exe_folder) ... ok
+test_unicode_and_unopened_tool_states_survive (test_suite_state.StateStoreTests.test_unicode_and_unopened_tool_states_survive) ... ok
+test_unknown_schema_and_non_object_tools_do_not_break_start (test_suite_state.StateStoreTests.test_unknown_schema_and_non_object_tools_do_not_break_start) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.025s
+
+OK (skipped=2)

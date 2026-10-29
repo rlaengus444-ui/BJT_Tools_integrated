@@ -18,3 +18,8 @@ venv/
 /suite/배포_빌드/app-source/
 /suite/배포_빌드/build/
 /suite/배포_빌드/dist/
+/suite/native/bjt_mesh_native/target/
+/suite/native/libbjt_mesh_native.so
+/suite/native/libbjt_mesh_native.dylib
+/suite/native/bjt_mesh_native.dll
+/suite/native/bjt_mesh_native.build.json

@@ -1,0 +1,350 @@
+{
+  "configuration": {
+    "baseline_source": "/workspace/scratch/bjt-rust-baseline/source.py",
+    "budget_bytes": 268435456,
+    "cubes": 2000,
+    "repeat": 1,
+    "source": "/workspace/BJT_Tools_integrated/suite/sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+    "triangles": 24000
+  },
+  "environment": {
+    "llvmlite": "0.50.0",
+    "numba": "0.68.1",
+    "numpy": "2.3.5",
+    "psutil": "7.2.2",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]"
+  },
+  "fixtures": {
+    "edge-touching": {
+      "bytes": 1200084,
+      "cubes": 2000,
+      "sha256": "037031ad55fc3bad4e1a7471d51a980641a5a9b1b78bcced0f0b0fff45782c37",
+      "triangles": 24000
+    },
+    "separated": {
+      "bytes": 1200084,
+      "cubes": 2000,
+      "sha256": "899d0fd89439903731cfaf822935e12fa479521bbddb3e8131fa691637bb99cc",
+      "triangles": 24000
+    }
+  },
+  "measurement": "Fresh sequential workers with alternating backend order. Fixtures built before launch, actual Numba kernels warmed outside timer. Lifetime RSS includes setup/JIT. Operation RSS is sampled every 2ms and may miss short spikes. Phase includes sort+count; full includes extraction/disk buckets/sort/count/cleanup. Neither measures GUI/whole application peak.",
+  "runs": [
+    {
+      "backend": "python",
+      "geometry": "separated",
+      "jit_warmup": "Both actual Numba edge kernels, matching record signatures, before operation timing/RSS sampling",
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 216657920,
+      "process_lifetime_peak_rss_bytes": 216768512,
+      "repetition": 1,
+      "rss_before_bytes": 214663168,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 6,
+      "scope": "phase",
+      "seconds": 0.012000364999039448,
+      "sequence": 1,
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 0,
+          "unique_edges": 36000,
+          "voxel_contact_edges": 0
+        },
+        "sorted_coordinate_keys_sha256": "cd3c65c19499ddfa704f231ff89b269fba949f7ca46c7dea8ad19f0bf8d70d11"
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "geometry": "separated",
+      "jit_warmup": "Both actual Numba edge kernels, matching record signatures, before operation timing/RSS sampling",
+      "native": {
+        "path": "/workspace/BJT_Tools_integrated/suite/native/libbjt_mesh_native.so",
+        "sha256": "126c7dbdc68f4baab8c90a6eafde3c2fd00d3f8e4aea2f0bca5dd0b4b8045c74"
+      },
+      "operation_sampled_peak_rss_bytes": 214396928,
+      "process_lifetime_peak_rss_bytes": 214114304,
+      "repetition": 1,
+      "rss_before_bytes": 214368256,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 2,
+      "scope": "phase",
+      "seconds": 0.003230946998883155,
+      "sequence": 2,
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 0,
+          "unique_edges": 36000,
+          "voxel_contact_edges": 0
+        },
+        "sorted_coordinate_keys_sha256": "cd3c65c19499ddfa704f231ff89b269fba949f7ca46c7dea8ad19f0bf8d70d11"
+      },
+      "source_sha256": "cd7fceb8e5a26c38f5b31cb9c5b24a76ada8fbf176702b28b1ab8857e63325ad"
+    },
+    {
+      "backend": "python",
+      "geometry": "separated",
+      "jit_warmup": "Both actual Numba edge kernels, matching record signatures, before operation timing/RSS sampling",
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 216969216,
+      "process_lifetime_peak_rss_bytes": 217014272,
+      "repetition": 1,
+      "rss_before_bytes": 211460096,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 15,
+      "scope": "full",
+      "seconds": 0.03083246399910422,
+      "sequence": 3,
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 0,
+          "unique_edges": 36000,
+          "voxel_contact_edges": 0
+        }
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "geometry": "separated",
+      "jit_warmup": "Both actual Numba edge kernels, matching record signatures, before operation timing/RSS sampling",
+      "native": {
+        "path": "/workspace/BJT_Tools_integrated/suite/native/libbjt_mesh_native.so",
+        "sha256": "126c7dbdc68f4baab8c90a6eafde3c2fd00d3f8e4aea2f0bca5dd0b4b8045c74"
+      },
+      "operation_sampled_peak_rss_bytes": 214421504,
+      "process_lifetime_peak_rss_bytes": 214179840,
+      "repetition": 1,
+      "rss_before_bytes": 210939904,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 11,
+      "scope": "full",
+      "seconds": 0.022492849000627757,
+      "sequence": 4,
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 0,
+          "unique_edges": 36000,
+          "voxel_contact_edges": 0
+        }
+      },
+      "source_sha256": "cd7fceb8e5a26c38f5b31cb9c5b24a76ada8fbf176702b28b1ab8857e63325ad"
+    },
+    {
+      "backend": "python",
+      "geometry": "edge-touching",
+      "jit_warmup": "Both actual Numba edge kernels, matching record signatures, before operation timing/RSS sampling",
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 216887296,
+      "process_lifetime_peak_rss_bytes": 216731648,
+      "repetition": 1,
+      "rss_before_bytes": 214695936,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 4,
+      "scope": "phase",
+      "seconds": 0.00733273200057738,
+      "sequence": 5,
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 1000,
+          "unique_edges": 35000,
+          "voxel_contact_edges": 1000
+        },
+        "sorted_coordinate_keys_sha256": "23b8df3376cdc55de2323ee3fe3890e126cc3685654ef24d24e9954dfc585b27"
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "geometry": "edge-touching",
+      "jit_warmup": "Both actual Numba edge kernels, matching record signatures, before operation timing/RSS sampling",
+      "native": {
+        "path": "/workspace/BJT_Tools_integrated/suite/native/libbjt_mesh_native.so",
+        "sha256": "126c7dbdc68f4baab8c90a6eafde3c2fd00d3f8e4aea2f0bca5dd0b4b8045c74"
+      },
+      "operation_sampled_peak_rss_bytes": 215003136,
+      "process_lifetime_peak_rss_bytes": 214773760,
+      "repetition": 1,
+      "rss_before_bytes": 214974464,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 2,
+      "scope": "phase",
+      "seconds": 0.0033564919995114906,
+      "sequence": 6,
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 1000,
+          "unique_edges": 35000,
+          "voxel_contact_edges": 1000
+        },
+        "sorted_coordinate_keys_sha256": "23b8df3376cdc55de2323ee3fe3890e126cc3685654ef24d24e9954dfc585b27"
+      },
+      "source_sha256": "cd7fceb8e5a26c38f5b31cb9c5b24a76ada8fbf176702b28b1ab8857e63325ad"
+    },
+    {
+      "backend": "python",
+      "geometry": "edge-touching",
+      "jit_warmup": "Both actual Numba edge kernels, matching record signatures, before operation timing/RSS sampling",
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 216322048,
+      "process_lifetime_peak_rss_bytes": 217026560,
+      "repetition": 1,
+      "rss_before_bytes": 211156992,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 13,
+      "scope": "full",
+      "seconds": 0.028001690001474344,
+      "sequence": 7,
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 1000,
+          "unique_edges": 35000,
+          "voxel_contact_edges": 1000
+        }
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "geometry": "edge-touching",
+      "jit_warmup": "Both actual Numba edge kernels, matching record signatures, before operation timing/RSS sampling",
+      "native": {
+        "path": "/workspace/BJT_Tools_integrated/suite/native/libbjt_mesh_native.so",
+        "sha256": "126c7dbdc68f4baab8c90a6eafde3c2fd00d3f8e4aea2f0bca5dd0b4b8045c74"
+      },
+      "operation_sampled_peak_rss_bytes": 214781952,
+      "process_lifetime_peak_rss_bytes": 214556672,
+      "repetition": 1,
+      "rss_before_bytes": 211300352,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 11,
+      "scope": "full",
+      "seconds": 0.0218784600001527,
+      "sequence": 8,
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 1000,
+          "unique_edges": 35000,
+          "voxel_contact_edges": 1000
+        }
+      },
+      "source_sha256": "cd7fceb8e5a26c38f5b31cb9c5b24a76ada8fbf176702b28b1ab8857e63325ad"
+    }
+  ],
+  "summary": {
+    "edge-touching/full": {
+      "parity_passed": true,
+      "python": {
+        "operation_sampled_peak_rss_bytes_median": 216322048,
+        "process_lifetime_peak_rss_bytes_median": 217026560,
+        "rss_before_bytes_median": 211156992,
+        "seconds_median": 0.028001690001474344
+      },
+      "rust": {
+        "operation_sampled_peak_rss_bytes_median": 214781952,
+        "process_lifetime_peak_rss_bytes_median": 214556672,
+        "rss_before_bytes_median": 211300352,
+        "seconds_median": 0.0218784600001527
+      },
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 1000,
+          "unique_edges": 35000,
+          "voxel_contact_edges": 1000
+        }
+      }
+    },
+    "edge-touching/phase": {
+      "parity_passed": true,
+      "python": {
+        "operation_sampled_peak_rss_bytes_median": 216887296,
+        "process_lifetime_peak_rss_bytes_median": 216731648,
+        "rss_before_bytes_median": 214695936,
+        "seconds_median": 0.00733273200057738
+      },
+      "rust": {
+        "operation_sampled_peak_rss_bytes_median": 215003136,
+        "process_lifetime_peak_rss_bytes_median": 214773760,
+        "rss_before_bytes_median": 214974464,
+        "seconds_median": 0.0033564919995114906
+      },
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 1000,
+          "unique_edges": 35000,
+          "voxel_contact_edges": 1000
+        },
+        "sorted_coordinate_keys_sha256": "23b8df3376cdc55de2323ee3fe3890e126cc3685654ef24d24e9954dfc585b27"
+      }
+    },
+    "separated/full": {
+      "parity_passed": true,
+      "python": {
+        "operation_sampled_peak_rss_bytes_median": 216969216,
+        "process_lifetime_peak_rss_bytes_median": 217014272,
+        "rss_before_bytes_median": 211460096,
+        "seconds_median": 0.03083246399910422
+      },
+      "rust": {
+        "operation_sampled_peak_rss_bytes_median": 214421504,
+        "process_lifetime_peak_rss_bytes_median": 214179840,
+        "rss_before_bytes_median": 210939904,
+        "seconds_median": 0.022492849000627757
+      },
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 0,
+          "unique_edges": 36000,
+          "voxel_contact_edges": 0
+        }
+      }
+    },
+    "separated/phase": {
+      "parity_passed": true,
+      "python": {
+        "operation_sampled_peak_rss_bytes_median": 216657920,
+        "process_lifetime_peak_rss_bytes_median": 216768512,
+        "rss_before_bytes_median": 214663168,
+        "seconds_median": 0.012000364999039448
+      },
+      "rust": {
+        "operation_sampled_peak_rss_bytes_median": 214396928,
+        "process_lifetime_peak_rss_bytes_median": 214114304,
+        "rss_before_bytes_median": 214368256,
+        "seconds_median": 0.003230946998883155
+      },
+      "signature": {
+        "metrics": {
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "nonmanifold_edges": 0,
+          "unique_edges": 36000,
+          "voxel_contact_edges": 0
+        },
+        "sorted_coordinate_keys_sha256": "cd3c65c19499ddfa704f231ff89b269fba949f7ca46c7dea8ad19f0bf8d70d11"
+      }
+    }
+  }
+}

@@ -7,7 +7,10 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 import zipfile
+
+from release_native import verify_chain, require_probe
 
 HERE = Path(__file__).resolve().parent
 
@@ -32,7 +35,7 @@ def main():
     archive_path = output_root / (NAME + '.zip')
     checksums_path = output_root / (NAME + '_SHA256SUMS.txt')
     required = ('diagnose-exe', 'smoke-exe', 'smoke-gui-exe',
-                'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'cli-exe')
+                'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe', 'cli-exe')
     reports = {}
     for name in required:
         report = json.loads((HERE / (name + '.json')).read_text(encoding='utf-8'))
@@ -57,6 +60,21 @@ def main():
     production_manifest = json.loads((source / 'source_manifest.json').read_text(encoding='utf-8'))
     if manifest != production_manifest:
         raise RuntimeError('Frozen manifest differs from the supplied production source')
+    commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=source.parent,
+                                     text=True).strip()
+    provenance = json.loads((HERE / 'build-provenance.json').read_text(encoding='utf-8'))
+    chain = verify_chain(source, HERE / 'app-source', build / '_internal')
+    if (provenance.get('commit') != commit or provenance.get('native') != chain['source']
+            or provenance.get('source_manifest_sha256') != digest(source / 'source_manifest.json')):
+        raise RuntimeError('Current commit, source manifest and source DLL build provenance are required')
+    require_probe(reports['rust-probe-exe'], chain['source'], commit=commit,
+        manifest_sha256=digest(source / 'source_manifest.json'),
+        executable_sha256=digest(build / 'BJT_명령줄.exe'))
+    rust_notice = source / 'native/licenses/COPYRIGHT-library.html'
+    for root in (HERE / 'app-source', build / '_internal'):
+        bundled_notice = root / 'licenses/BJT_Rust/COPYRIGHT-library.html'
+        if not bundled_notice.is_file() or digest(bundled_notice) != digest(rust_notice):
+            raise RuntimeError('Bundled Rust standard-library redistribution notices are required')
     core_hashes = []
     for item in [*(dict(path=tool['source'], sha256=tool['sha256']) for tool in manifest['tools']),
                  *manifest.get('dependencies', [])]:

@@ -1,0 +1,169 @@
+{
+  "all_valid": true,
+  "unchanged_other_tool_entries": true,
+  "unchanged_existing_dependencies": true,
+  "checks": [
+    {
+      "path": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "valid": true,
+      "bytes": 538331,
+      "sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    },
+    {
+      "path": "sources/slicing arrange.py",
+      "valid": true,
+      "bytes": 111281,
+      "sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d"
+    },
+    {
+      "path": "sources/slice_folder_overlay.py",
+      "valid": true,
+      "bytes": 25838,
+      "sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264"
+    },
+    {
+      "path": "sources/slice exchanger.py",
+      "valid": true,
+      "bytes": 18784,
+      "sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b"
+    },
+    {
+      "path": "sources/slice_alignment_checker.py",
+      "valid": true,
+      "bytes": 137262,
+      "sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648"
+    },
+    {
+      "path": "sources/sic_buildbox_thermal_gui_v5.py",
+      "valid": true,
+      "bytes": 173719,
+      "sha256": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece"
+    },
+    {
+      "path": "sources/slice_compare_app.py",
+      "valid": true,
+      "bytes": 37944,
+      "sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7"
+    },
+    {
+      "path": "sources/number_tools.py",
+      "valid": true,
+      "bytes": 35171,
+      "sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5"
+    },
+    {
+      "path": "sources/sequence_z.py",
+      "valid": true,
+      "bytes": 28062,
+      "sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8"
+    },
+    {
+      "path": "sources/m2_converter.py",
+      "valid": true,
+      "bytes": 31617,
+      "sha256": "856efcb9b94846719c7261991c3964c45418463c122999ed8398c13b41faf7da"
+    },
+    {
+      "path": "sources/chitu_checker.py",
+      "valid": true,
+      "bytes": 31244,
+      "sha256": "bb5c6845a4727ab49fc4dc8fc9c913bb0e16248aba896e849d0c76cc82088fe0"
+    },
+    {
+      "path": "slice_compare_engine.py",
+      "valid": true,
+      "bytes": 51024,
+      "sha256": "74ba7ebbe1acd0e5f18fb23c9e8d9db7969209bc4d5ed6dbd64c030bf81c71ca"
+    },
+    {
+      "path": "slice_replace_validation.py",
+      "valid": true,
+      "bytes": 6013,
+      "sha256": "70fac8ce7984f7eae0ff7ac4ec5d785ec956a1c2457a30eadb4f3794a345000c"
+    },
+    {
+      "path": "suite_theme.py",
+      "valid": true,
+      "bytes": 17555,
+      "sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e"
+    },
+    {
+      "path": "suite_layout.py",
+      "valid": true,
+      "bytes": 3713,
+      "sha256": "0b7a0026334c613069dceaceec67103d9cd6cd38e6db72c3e2b7cd7ada4344be"
+    },
+    {
+      "path": "m2_image_engine.py",
+      "valid": true,
+      "bytes": 18991,
+      "sha256": "8caeb3cece308d487f84f885e9bef4f7b211d3cacae5ab67b0e590b0a21044ab"
+    },
+    {
+      "path": "chitu_overlap/__init__.py",
+      "valid": true,
+      "bytes": 263,
+      "sha256": "51b552f2fd61b2d2223717feb394f5183ea71b0967a4f79621f8449e7a7c584f"
+    },
+    {
+      "path": "chitu_overlap/__main__.py",
+      "valid": true,
+      "bytes": 48,
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "path": "chitu_overlap/chitubox.py",
+      "valid": true,
+      "bytes": 17326,
+      "sha256": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355"
+    },
+    {
+      "path": "chitu_overlap/cli.py",
+      "valid": true,
+      "bytes": 6813,
+      "sha256": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d"
+    },
+    {
+      "path": "chitu_overlap/geometry.py",
+      "valid": true,
+      "bytes": 27116,
+      "sha256": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3"
+    },
+    {
+      "path": "chitu_overlap/inputs.py",
+      "valid": true,
+      "bytes": 2406,
+      "sha256": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c"
+    },
+    {
+      "path": "chitu_overlap/viewer.py",
+      "valid": true,
+      "bytes": 19989,
+      "sha256": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8"
+    },
+    {
+      "path": "chitu_overlap/seams.py",
+      "valid": true,
+      "bytes": 9892,
+      "sha256": "936a5cf1736310258b3c65950f0465a37848c2877ecacf142b48ad0408352418"
+    },
+    {
+      "path": "suite_state.py",
+      "valid": true,
+      "bytes": 17738,
+      "sha256": "a2452d072cc475c8bf14fe55a00d52ba9b7af1f064a1da5d8b3865d97788b97b"
+    },
+    {
+      "path": "oven_i18n.py",
+      "valid": true,
+      "bytes": 37295,
+      "sha256": "6c8a09b8f52d6e186da7b011f9b55e28011aeb76eeb87507e50c88dd20626879"
+    },
+    {
+      "path": "bjt_mesh_native.py",
+      "valid": true,
+      "bytes": 8387,
+      "sha256": "92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905"
+    }
+  ]
+}

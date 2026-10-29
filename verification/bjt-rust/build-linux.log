@@ -1,0 +1,15 @@
+   Compiling bjt_mesh_native v0.1.0 (/workspace/BJT_Tools_integrated/suite/native/bjt_mesh_native)
+    Finished `release` profile [optimized] target(s) in 2.36s
+{
+  "schema": 1,
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "target": "x86_64-unknown-linux-gnu",
+  "profile": "release",
+  "rustflags": "-C panic=unwind -C target-cpu=generic",
+  "crate_source_sha256": "8a5bd5e9600a34431c6664edc7ea280729aad5ab7ed63a088241838f2349c492",
+  "binary": "libbjt_mesh_native.so",
+  "binary_sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4",
+  "binary_bytes": 391032,
+  "source_digest_scheme": "sha256 of sorted Cargo.toml and src/**/*.rs, each prefixed by 8-byte little-endian name length and data length"
+}

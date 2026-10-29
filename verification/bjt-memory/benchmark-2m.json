@@ -1,0 +1,895 @@
+{
+  "configuration": {
+    "baseline_ref": "HEAD",
+    "baseline_source": null,
+    "candidate_source": "/workspace/BJT_Tools_integrated/suite/sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+    "chunk_size": 120000,
+    "repeat": 3,
+    "seed": 20261028,
+    "triangles": 2000000
+  },
+  "environment": {
+    "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "numpy": "2.3.5",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]"
+  },
+  "measurement": "Fresh sequential worker processes, alternating order per repetition. Timers exclude fixture construction and output verification. RSS is the process lifetime high-water mark, including setup, not scratch allocation or whole-app peak.",
+  "runs": [
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.6352957500000684,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 288604160,
+      "repetition": 1,
+      "rss_before_operation_bytes": 210657280,
+      "scenario": "writer-contiguous",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 1,
+      "setup_seconds": 1.1008187170000383,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "cb5195a561a048be497e58b3188014a0f1ff4ce19e057fe1d1736d34152d1e8a",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.5217517350000662,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 207724544,
+      "repetition": 1,
+      "rss_before_operation_bytes": 207810560,
+      "scenario": "writer-contiguous",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 2,
+      "setup_seconds": 1.191863699999999,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "cb5195a561a048be497e58b3188014a0f1ff4ce19e057fe1d1736d34152d1e8a",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.3604564240000627,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 207732736,
+      "repetition": 2,
+      "rss_before_operation_bytes": 207814656,
+      "scenario": "writer-contiguous",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 3,
+      "setup_seconds": 0.4923401369999283,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "cb5195a561a048be497e58b3188014a0f1ff4ce19e057fe1d1736d34152d1e8a",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.4497668579999754,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 288358400,
+      "repetition": 2,
+      "rss_before_operation_bytes": 210649088,
+      "scenario": "writer-contiguous",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 4,
+      "setup_seconds": 0.4923431930000106,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "cb5195a561a048be497e58b3188014a0f1ff4ce19e057fe1d1736d34152d1e8a",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.3207066989999703,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 288600064,
+      "repetition": 3,
+      "rss_before_operation_bytes": 210649088,
+      "scenario": "writer-contiguous",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 5,
+      "setup_seconds": 0.4386055459999625,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "cb5195a561a048be497e58b3188014a0f1ff4ce19e057fe1d1736d34152d1e8a",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.27343172599989884,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 207728640,
+      "repetition": 3,
+      "rss_before_operation_bytes": 207810560,
+      "scenario": "writer-contiguous",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 6,
+      "setup_seconds": 0.38255429799994545,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "cb5195a561a048be497e58b3188014a0f1ff4ce19e057fe1d1736d34152d1e8a",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          -24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.45386121000001367,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 288595968,
+      "repetition": 1,
+      "rss_before_operation_bytes": 210649088,
+      "scenario": "writer-strided",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 7,
+      "setup_seconds": 0.7194711050000251,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "a06357b57b846b8c7c462527ea7982934ecbe758471ac8b38ab53062716058d9",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          -24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.2626703029999362,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 207728640,
+      "repetition": 1,
+      "rss_before_operation_bytes": 207814656,
+      "scenario": "writer-strided",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 8,
+      "setup_seconds": 0.33688143899996703,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "a06357b57b846b8c7c462527ea7982934ecbe758471ac8b38ab53062716058d9",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          -24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.28898496300007537,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 207732736,
+      "repetition": 2,
+      "rss_before_operation_bytes": 207814656,
+      "scenario": "writer-strided",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 9,
+      "setup_seconds": 0.34478003699996407,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "a06357b57b846b8c7c462527ea7982934ecbe758471ac8b38ab53062716058d9",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          -24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.3260990190000257,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 288600064,
+      "repetition": 2,
+      "rss_before_operation_bytes": 210649088,
+      "scenario": "writer-strided",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 10,
+      "setup_seconds": 0.5592107789999545,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "a06357b57b846b8c7c462527ea7982934ecbe758471ac8b38ab53062716058d9",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          -24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.31835565200003657,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 288608256,
+      "repetition": 3,
+      "rss_before_operation_bytes": 210661376,
+      "scenario": "writer-strided",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 11,
+      "setup_seconds": 0.5803801159999011,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "a06357b57b846b8c7c462527ea7982934ecbe758471ac8b38ab53062716058d9",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "chunk_size": 120000,
+        "input_dtype": "float64",
+        "input_shape": [
+          2000000,
+          3,
+          3
+        ],
+        "input_storage_bytes": 144000000,
+        "input_strides_bytes": [
+          72,
+          -24,
+          8
+        ]
+      },
+      "elapsed_seconds": 0.32594578900000215,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 207724544,
+      "repetition": 3,
+      "rss_before_operation_bytes": 207810560,
+      "scenario": "writer-strided",
+      "scope": "real triangle-soup writer plus BinarySTLWriter.close(True)/fsync; float64 input already constructed",
+      "sequence": 12,
+      "setup_seconds": 0.46782450299997436,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "a06357b57b846b8c7c462527ea7982934ecbe758471ac8b38ab53062716058d9",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "fixture_generation_chunk": 120000,
+        "input_stl_bytes": 100000084
+      },
+      "elapsed_seconds": 0.6214970409999978,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 121921536,
+      "repetition": 1,
+      "rss_before_operation_bytes": 63479808,
+      "scenario": "stats",
+      "scope": "real binary_stl_stats, including its file hash; generated STL fixture already on disk",
+      "sequence": 13,
+      "setup_seconds": 0.3096852979999767,
+      "signature": {
+        "bounds_max": [
+          0.9999996423721313,
+          0.9999999403953552,
+          0.999999463558197
+        ],
+        "bounds_min": [
+          1.733328858222194e-08,
+          2.326623445014775e-07,
+          2.1376240511017386e-07
+        ],
+        "bytes": 100000084,
+        "degenerate_triangles": 0,
+        "extents": [
+          0.9999996250388428,
+          0.9999997077330107,
+          0.9999992497957919
+        ],
+        "sha256": "6abeb287b2a4b8832074aadfbe93801bb74536221ac5212c4cff5639c6c2771e",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "fixture_generation_chunk": 120000,
+        "input_stl_bytes": 100000084
+      },
+      "elapsed_seconds": 0.6458748339999829,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 87990272,
+      "repetition": 1,
+      "rss_before_operation_bytes": 69140480,
+      "scenario": "stats",
+      "scope": "real binary_stl_stats, including its file hash; generated STL fixture already on disk",
+      "sequence": 14,
+      "setup_seconds": 0.3833869689999574,
+      "signature": {
+        "bounds_max": [
+          0.9999996423721313,
+          0.9999999403953552,
+          0.999999463558197
+        ],
+        "bounds_min": [
+          1.733328858222194e-08,
+          2.326623445014775e-07,
+          2.1376240511017386e-07
+        ],
+        "bytes": 100000084,
+        "degenerate_triangles": 0,
+        "extents": [
+          0.9999996250388428,
+          0.9999997077330107,
+          0.9999992497957919
+        ],
+        "sha256": "6abeb287b2a4b8832074aadfbe93801bb74536221ac5212c4cff5639c6c2771e",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "fixture_generation_chunk": 120000,
+        "input_stl_bytes": 100000084
+      },
+      "elapsed_seconds": 0.657344610999985,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 87986176,
+      "repetition": 2,
+      "rss_before_operation_bytes": 69132288,
+      "scenario": "stats",
+      "scope": "real binary_stl_stats, including its file hash; generated STL fixture already on disk",
+      "sequence": 15,
+      "setup_seconds": 0.34357490499996857,
+      "signature": {
+        "bounds_max": [
+          0.9999996423721313,
+          0.9999999403953552,
+          0.999999463558197
+        ],
+        "bounds_min": [
+          1.733328858222194e-08,
+          2.326623445014775e-07,
+          2.1376240511017386e-07
+        ],
+        "bytes": 100000084,
+        "degenerate_triangles": 0,
+        "extents": [
+          0.9999996250388428,
+          0.9999997077330107,
+          0.9999992497957919
+        ],
+        "sha256": "6abeb287b2a4b8832074aadfbe93801bb74536221ac5212c4cff5639c6c2771e",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "fixture_generation_chunk": 120000,
+        "input_stl_bytes": 100000084
+      },
+      "elapsed_seconds": 0.5199518819999867,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 121962496,
+      "repetition": 2,
+      "rss_before_operation_bytes": 63475712,
+      "scenario": "stats",
+      "scope": "real binary_stl_stats, including its file hash; generated STL fixture already on disk",
+      "sequence": 16,
+      "setup_seconds": 0.2861623730000247,
+      "signature": {
+        "bounds_max": [
+          0.9999996423721313,
+          0.9999999403953552,
+          0.999999463558197
+        ],
+        "bounds_min": [
+          1.733328858222194e-08,
+          2.326623445014775e-07,
+          2.1376240511017386e-07
+        ],
+        "bytes": 100000084,
+        "degenerate_triangles": 0,
+        "extents": [
+          0.9999996250388428,
+          0.9999997077330107,
+          0.9999992497957919
+        ],
+        "sha256": "6abeb287b2a4b8832074aadfbe93801bb74536221ac5212c4cff5639c6c2771e",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "fixture_generation_chunk": 120000,
+        "input_stl_bytes": 100000084
+      },
+      "elapsed_seconds": 0.8878755650000585,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 121913344,
+      "repetition": 3,
+      "rss_before_operation_bytes": 63479808,
+      "scenario": "stats",
+      "scope": "real binary_stl_stats, including its file hash; generated STL fixture already on disk",
+      "sequence": 17,
+      "setup_seconds": 0.4269919649999565,
+      "signature": {
+        "bounds_max": [
+          0.9999996423721313,
+          0.9999999403953552,
+          0.999999463558197
+        ],
+        "bounds_min": [
+          1.733328858222194e-08,
+          2.326623445014775e-07,
+          2.1376240511017386e-07
+        ],
+        "bytes": 100000084,
+        "degenerate_triangles": 0,
+        "extents": [
+          0.9999996250388428,
+          0.9999997077330107,
+          0.9999992497957919
+        ],
+        "sha256": "6abeb287b2a4b8832074aadfbe93801bb74536221ac5212c4cff5639c6c2771e",
+        "triangles": 2000000
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "fixture_generation_chunk": 120000,
+        "input_stl_bytes": 100000084
+      },
+      "elapsed_seconds": 0.7452157479999642,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 87994368,
+      "repetition": 3,
+      "rss_before_operation_bytes": 69148672,
+      "scenario": "stats",
+      "scope": "real binary_stl_stats, including its file hash; generated STL fixture already on disk",
+      "sequence": 18,
+      "setup_seconds": 0.4996141860000307,
+      "signature": {
+        "bounds_max": [
+          0.9999996423721313,
+          0.9999999403953552,
+          0.999999463558197
+        ],
+        "bounds_min": [
+          1.733328858222194e-08,
+          2.326623445014775e-07,
+          2.1376240511017386e-07
+        ],
+        "bytes": 100000084,
+        "degenerate_triangles": 0,
+        "extents": [
+          0.9999996250388428,
+          0.9999997077330107,
+          0.9999992497957919
+        ],
+        "sha256": "6abeb287b2a4b8832074aadfbe93801bb74536221ac5212c4cff5639c6c2771e",
+        "triangles": 2000000
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "duplicates": "every seventh row has a duplicate; direction/contact metadata retained",
+        "edge_rows": 6000000,
+        "input_row_storage_bytes": 192000000,
+        "row_bytes": 32
+      },
+      "elapsed_seconds": 5.177867211000034,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 660611072,
+      "repetition": 1,
+      "rss_before_operation_bytes": 276684800,
+      "scenario": "edge-sort",
+      "scope": "actual verifier key creation, NumPy lexsort and row gather only; excludes edge extraction/bucketing/counting/Numba",
+      "sequence": 19,
+      "setup_seconds": 0.927884769000002,
+      "signature": {
+        "edge_rows": 6000000,
+        "sorted_rows_sha256": "29b5bc0f1d3d740df5e2b4aceffe184d853bae7932736c4e40cb744f31a07d40"
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "duplicates": "every seventh row has a duplicate; direction/contact metadata retained",
+        "edge_rows": 6000000,
+        "input_row_storage_bytes": 192000000,
+        "row_bytes": 32
+      },
+      "elapsed_seconds": 4.57155073499996,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 509476864,
+      "repetition": 1,
+      "rss_before_operation_bytes": 269619200,
+      "scenario": "edge-sort",
+      "scope": "actual verifier key creation, NumPy lexsort and row gather only; excludes edge extraction/bucketing/counting/Numba",
+      "sequence": 20,
+      "setup_seconds": 0.9362375509999765,
+      "signature": {
+        "edge_rows": 6000000,
+        "sorted_rows_sha256": "29b5bc0f1d3d740df5e2b4aceffe184d853bae7932736c4e40cb744f31a07d40"
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "duplicates": "every seventh row has a duplicate; direction/contact metadata retained",
+        "edge_rows": 6000000,
+        "input_row_storage_bytes": 192000000,
+        "row_bytes": 32
+      },
+      "elapsed_seconds": 4.585111859999984,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 509456384,
+      "repetition": 2,
+      "rss_before_operation_bytes": 269623296,
+      "scenario": "edge-sort",
+      "scope": "actual verifier key creation, NumPy lexsort and row gather only; excludes edge extraction/bucketing/counting/Numba",
+      "sequence": 21,
+      "setup_seconds": 0.6031331649999174,
+      "signature": {
+        "edge_rows": 6000000,
+        "sorted_rows_sha256": "29b5bc0f1d3d740df5e2b4aceffe184d853bae7932736c4e40cb744f31a07d40"
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "duplicates": "every seventh row has a duplicate; direction/contact metadata retained",
+        "edge_rows": 6000000,
+        "input_row_storage_bytes": 192000000,
+        "row_bytes": 32
+      },
+      "elapsed_seconds": 5.9489968799999815,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 662683648,
+      "repetition": 2,
+      "rss_before_operation_bytes": 278757376,
+      "scenario": "edge-sort",
+      "scope": "actual verifier key creation, NumPy lexsort and row gather only; excludes edge extraction/bucketing/counting/Numba",
+      "sequence": 22,
+      "setup_seconds": 1.0967808840000544,
+      "signature": {
+        "edge_rows": 6000000,
+        "sorted_rows_sha256": "29b5bc0f1d3d740df5e2b4aceffe184d853bae7932736c4e40cb744f31a07d40"
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "duplicates": "every seventh row has a duplicate; direction/contact metadata retained",
+        "edge_rows": 6000000,
+        "input_row_storage_bytes": 192000000,
+        "row_bytes": 32
+      },
+      "elapsed_seconds": 4.526335948999986,
+      "label": "baseline",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 660615168,
+      "repetition": 3,
+      "rss_before_operation_bytes": 276688896,
+      "scenario": "edge-sort",
+      "scope": "actual verifier key creation, NumPy lexsort and row gather only; excludes edge extraction/bucketing/counting/Numba",
+      "sequence": 23,
+      "setup_seconds": 0.7788172340000301,
+      "signature": {
+        "edge_rows": 6000000,
+        "sorted_rows_sha256": "29b5bc0f1d3d740df5e2b4aceffe184d853bae7932736c4e40cb744f31a07d40"
+      },
+      "source_sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "triangles": 2000000
+    },
+    {
+      "details": {
+        "duplicates": "every seventh row has a duplicate; direction/contact metadata retained",
+        "edge_rows": 6000000,
+        "input_row_storage_bytes": 192000000,
+        "row_bytes": 32
+      },
+      "elapsed_seconds": 4.853859542000009,
+      "label": "candidate",
+      "peak_rss_method": "resource.ru_maxrss (process lifetime)",
+      "process_peak_rss_bytes": 509472768,
+      "repetition": 3,
+      "rss_before_operation_bytes": 269615104,
+      "scenario": "edge-sort",
+      "scope": "actual verifier key creation, NumPy lexsort and row gather only; excludes edge extraction/bucketing/counting/Numba",
+      "sequence": 24,
+      "setup_seconds": 0.9467719460000126,
+      "signature": {
+        "edge_rows": 6000000,
+        "sorted_rows_sha256": "29b5bc0f1d3d740df5e2b4aceffe184d853bae7932736c4e40cb744f31a07d40"
+      },
+      "source_sha256": "e0b31a8435361452f43bf471c700c8fc6e52d18669f15df4a4331d57a3c16f82",
+      "triangles": 2000000
+    }
+  ],
+  "summary": {
+    "edge-sort": {
+      "baseline": {
+        "elapsed_seconds_median": 5.177867211000034,
+        "process_peak_rss_bytes_median": 660615168,
+        "samples": 3
+      },
+      "candidate": {
+        "elapsed_seconds_median": 4.585111859999984,
+        "process_peak_rss_bytes_median": 509472768,
+        "samples": 3
+      },
+      "parity_passed": true,
+      "signature": {
+        "edge_rows": 6000000,
+        "sorted_rows_sha256": "29b5bc0f1d3d740df5e2b4aceffe184d853bae7932736c4e40cb744f31a07d40"
+      }
+    },
+    "stats": {
+      "baseline": {
+        "elapsed_seconds_median": 0.6214970409999978,
+        "process_peak_rss_bytes_median": 121921536,
+        "samples": 3
+      },
+      "candidate": {
+        "elapsed_seconds_median": 0.657344610999985,
+        "process_peak_rss_bytes_median": 87990272,
+        "samples": 3
+      },
+      "parity_passed": true,
+      "signature": {
+        "bounds_max": [
+          0.9999996423721313,
+          0.9999999403953552,
+          0.999999463558197
+        ],
+        "bounds_min": [
+          1.733328858222194e-08,
+          2.326623445014775e-07,
+          2.1376240511017386e-07
+        ],
+        "bytes": 100000084,
+        "degenerate_triangles": 0,
+        "extents": [
+          0.9999996250388428,
+          0.9999997077330107,
+          0.9999992497957919
+        ],
+        "sha256": "6abeb287b2a4b8832074aadfbe93801bb74536221ac5212c4cff5639c6c2771e",
+        "triangles": 2000000
+      }
+    },
+    "writer-contiguous": {
+      "baseline": {
+        "elapsed_seconds_median": 0.4497668579999754,
+        "process_peak_rss_bytes_median": 288600064,
+        "samples": 3
+      },
+      "candidate": {
+        "elapsed_seconds_median": 0.3604564240000627,
+        "process_peak_rss_bytes_median": 207728640,
+        "samples": 3
+      },
+      "parity_passed": true,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "cb5195a561a048be497e58b3188014a0f1ff4ce19e057fe1d1736d34152d1e8a",
+        "triangles": 2000000
+      }
+    },
+    "writer-strided": {
+      "baseline": {
+        "elapsed_seconds_median": 0.3260990190000257,
+        "process_peak_rss_bytes_median": 288600064,
+        "samples": 3
+      },
+      "candidate": {
+        "elapsed_seconds_median": 0.28898496300007537,
+        "process_peak_rss_bytes_median": 207728640,
+        "samples": 3
+      },
+      "parity_passed": true,
+      "signature": {
+        "bytes": 100000084,
+        "sha256": "a06357b57b846b8c7c462527ea7982934ecbe758471ac8b38ab53062716058d9",
+        "triangles": 2000000
+      }
+    }
+  }
+}

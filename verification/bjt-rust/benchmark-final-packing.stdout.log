@@ -1,0 +1,42 @@
+{
+  "pack-phase": {
+    "parity_passed": true,
+    "python": {
+      "operation_sampled_peak_rss_bytes_median": 495505408,
+      "process_lifetime_peak_rss_bytes_median": 495247360,
+      "rss_before_bytes_median": 303243264,
+      "seconds_median": 0.35251063899886503
+    },
+    "rust": {
+      "operation_sampled_peak_rss_bytes_median": 301875200,
+      "process_lifetime_peak_rss_bytes_median": 301744128,
+      "rss_before_bytes_median": 301826048,
+      "seconds_median": 0.02577459900021495
+    },
+    "signature": {
+      "triangles": 2000000,
+      "writer_count": 2000000
+    }
+  },
+  "writer": {
+    "parity_passed": true,
+    "python": {
+      "operation_sampled_peak_rss_bytes_median": 497094656,
+      "process_lifetime_peak_rss_bytes_median": 496791552,
+      "rss_before_bytes_median": 304832512,
+      "seconds_median": 0.36591912299991236
+    },
+    "rust": {
+      "operation_sampled_peak_rss_bytes_median": 301801472,
+      "process_lifetime_peak_rss_bytes_median": 301596672,
+      "rss_before_bytes_median": 301731840,
+      "seconds_median": 0.04921761600053287
+    },
+    "signature": {
+      "bytes": 100000084,
+      "sha256": "761fa27147764689cec6752546f920f39e95954f972ca020f15db5db3282ae51",
+      "triangles": 2000000,
+      "writer_count": 2000000
+    }
+  }
+}

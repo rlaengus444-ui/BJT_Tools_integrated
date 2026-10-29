@@ -1,0 +1,62 @@
+{
+  "provenance": {
+    "baseline": {
+      "source": {
+        "sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+        "bytes": 534649
+      },
+      "fixture": {
+        "sha256": "39e78cd232cd4a83f3b9d4c8401141e6768b890d3a34f48055df97ef5d58e148",
+        "bytes": 4409
+      }
+    },
+    "candidate": {
+      "source": {
+        "sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72",
+        "bytes": 535217
+      },
+      "fixture": {
+        "sha256": "39e78cd232cd4a83f3b9d4c8401141e6768b890d3a34f48055df97ef5d58e148",
+        "bytes": 4409
+      }
+    }
+  },
+  "status": "passed",
+  "dependencies": {
+    "baseline": {
+      "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "vtk": "9.3.1",
+      "Pillow": "12.3.0",
+      "psutil": "7.2.2",
+      "numba": "0.68.1",
+      "trimesh": "4.12.2",
+      "shapely": "2.2.0",
+      "scikit-image": "0.26.0",
+      "rtree": "1.4.1"
+    },
+    "candidate": {
+      "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "vtk": "9.3.1",
+      "Pillow": "12.3.0",
+      "psutil": "7.2.2",
+      "numba": "0.68.1",
+      "trimesh": "4.12.2",
+      "shapely": "2.2.0",
+      "scikit-image": "0.26.0",
+      "rtree": "1.4.1"
+    }
+  },
+  "cases": [
+    "hex_face_xyz",
+    "hex_line_xyz_bmp",
+    "model_full",
+    "reconstruct_crop_center",
+    "shell_only",
+    "square_line_xy_png"
+  ],
+  "differences": []
+}

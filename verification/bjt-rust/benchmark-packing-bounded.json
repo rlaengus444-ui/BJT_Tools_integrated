@@ -1,0 +1,342 @@
+{
+  "configuration": {
+    "repeat": 3,
+    "triangles": 524288
+  },
+  "fixture": {
+    "bytes": 37748864,
+    "geometry": "ordered tiled cube triangles in doubled integer grid coordinates",
+    "sha256": "0454184a233c83d9e17dcef17b390b364f4e7fce5555acc12b272b94e0572e13"
+  },
+  "frozen_artifacts": {
+    "baseline/source.py": {
+      "bytes": 535217,
+      "original": "/workspace/scratch/bjt-rust-baseline/source.py",
+      "sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    "candidate/bjt_mesh_native.py": {
+      "bytes": 8387,
+      "original": "/workspace/BJT_Tools_integrated/suite/bjt_mesh_native.py",
+      "sha256": "92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905"
+    },
+    "candidate/native/bjt_mesh_native.build.json": {
+      "bytes": 787,
+      "original": "/workspace/BJT_Tools_integrated/suite/native/bjt_mesh_native.build.json",
+      "sha256": "316f5da6d4925f04371b4b284fe71a4cfa576da6466025d4fd505f5e29697b75"
+    },
+    "candidate/native/libbjt_mesh_native.so": {
+      "bytes": 391032,
+      "original": "/workspace/BJT_Tools_integrated/suite/native/libbjt_mesh_native.so",
+      "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+    },
+    "candidate/source.py": {
+      "bytes": 538331,
+      "original": "/workspace/BJT_Tools_integrated/suite/sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    }
+  },
+  "measurement": "Fresh alternating workers; all executable source/wrapper/binary inputs copied and hashed before launch. Existing q loaded before operation. No triangulation/JIT is timed. Pack phase writes records to os.devnull; writer adds real BinarySTLWriter close/fsync. RSS samples every 2ms may miss short spikes. Lifetime RSS includes Python/NumPy/Numba imports, source loading and q. This is not whole-app peak.",
+  "runs": [
+    {
+      "backend": "python",
+      "input_q_bytes": 37748736,
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 247787520,
+      "process_lifetime_peak_rss_bytes": 247578624,
+      "repetition": 1,
+      "rss_before_bytes": 197189632,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 42,
+      "scope": "pack-phase",
+      "seconds": 0.09283597600006033,
+      "sequence": 1,
+      "signature": {
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "input_q_bytes": 37748736,
+      "native": {
+        "path": "/workspace/scratch/bjt-pack-bounded-snapshots/candidate/native/libbjt_mesh_native.so",
+        "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+      },
+      "operation_sampled_peak_rss_bytes": 194822144,
+      "process_lifetime_peak_rss_bytes": 194576384,
+      "repetition": 1,
+      "rss_before_bytes": 194772992,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 3,
+      "scope": "pack-phase",
+      "seconds": 0.006119017998571508,
+      "sequence": 2,
+      "signature": {
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    },
+    {
+      "backend": "rust",
+      "input_q_bytes": 37748736,
+      "native": {
+        "path": "/workspace/scratch/bjt-pack-bounded-snapshots/candidate/native/libbjt_mesh_native.so",
+        "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+      },
+      "operation_sampled_peak_rss_bytes": 196575232,
+      "process_lifetime_peak_rss_bytes": 196481024,
+      "repetition": 2,
+      "rss_before_bytes": 196526080,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 3,
+      "scope": "pack-phase",
+      "seconds": 0.006642457999987528,
+      "sequence": 3,
+      "signature": {
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    },
+    {
+      "backend": "python",
+      "input_q_bytes": 37748736,
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 249581568,
+      "process_lifetime_peak_rss_bytes": 249401344,
+      "repetition": 2,
+      "rss_before_bytes": 198983680,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 44,
+      "scope": "pack-phase",
+      "seconds": 0.09206914300011704,
+      "sequence": 4,
+      "signature": {
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "python",
+      "input_q_bytes": 37748736,
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 249344000,
+      "process_lifetime_peak_rss_bytes": 249163776,
+      "repetition": 3,
+      "rss_before_bytes": 198746112,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 42,
+      "scope": "pack-phase",
+      "seconds": 0.08755150099932507,
+      "sequence": 5,
+      "signature": {
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "input_q_bytes": 37748736,
+      "native": {
+        "path": "/workspace/scratch/bjt-pack-bounded-snapshots/candidate/native/libbjt_mesh_native.so",
+        "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+      },
+      "operation_sampled_peak_rss_bytes": 195538944,
+      "process_lifetime_peak_rss_bytes": 195461120,
+      "repetition": 3,
+      "rss_before_bytes": 195489792,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 4,
+      "scope": "pack-phase",
+      "seconds": 0.00763228799951321,
+      "sequence": 6,
+      "signature": {
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    },
+    {
+      "backend": "python",
+      "input_q_bytes": 37748736,
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 250896384,
+      "process_lifetime_peak_rss_bytes": 250785792,
+      "repetition": 1,
+      "rss_before_bytes": 200298496,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 45,
+      "scope": "writer",
+      "seconds": 0.09713751600065734,
+      "sequence": 7,
+      "signature": {
+        "bytes": 26214484,
+        "sha256": "00d8b0088fe272810a94b7bd2e239eca9f9c4b19a5d7f97704d215fbe298e099",
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "input_q_bytes": 37748736,
+      "native": {
+        "path": "/workspace/scratch/bjt-pack-bounded-snapshots/candidate/native/libbjt_mesh_native.so",
+        "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+      },
+      "operation_sampled_peak_rss_bytes": 196751360,
+      "process_lifetime_peak_rss_bytes": 196554752,
+      "repetition": 1,
+      "rss_before_bytes": 196681728,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 6,
+      "scope": "writer",
+      "seconds": 0.011164813000505092,
+      "sequence": 8,
+      "signature": {
+        "bytes": 26214484,
+        "sha256": "00d8b0088fe272810a94b7bd2e239eca9f9c4b19a5d7f97704d215fbe298e099",
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    },
+    {
+      "backend": "rust",
+      "input_q_bytes": 37748736,
+      "native": {
+        "path": "/workspace/scratch/bjt-pack-bounded-snapshots/candidate/native/libbjt_mesh_native.so",
+        "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+      },
+      "operation_sampled_peak_rss_bytes": 198180864,
+      "process_lifetime_peak_rss_bytes": 197947392,
+      "repetition": 2,
+      "rss_before_bytes": 198111232,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 7,
+      "scope": "writer",
+      "seconds": 0.013688691999050207,
+      "sequence": 9,
+      "signature": {
+        "bytes": 26214484,
+        "sha256": "00d8b0088fe272810a94b7bd2e239eca9f9c4b19a5d7f97704d215fbe298e099",
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    },
+    {
+      "backend": "python",
+      "input_q_bytes": 37748736,
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 245751808,
+      "process_lifetime_peak_rss_bytes": 245616640,
+      "repetition": 2,
+      "rss_before_bytes": 195153920,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 45,
+      "scope": "writer",
+      "seconds": 0.0976412470008654,
+      "sequence": 10,
+      "signature": {
+        "bytes": 26214484,
+        "sha256": "00d8b0088fe272810a94b7bd2e239eca9f9c4b19a5d7f97704d215fbe298e099",
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "python",
+      "input_q_bytes": 37748736,
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 246546432,
+      "process_lifetime_peak_rss_bytes": 246296576,
+      "repetition": 3,
+      "rss_before_bytes": 195948544,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 43,
+      "scope": "writer",
+      "seconds": 0.08884746999865456,
+      "sequence": 11,
+      "signature": {
+        "bytes": 26214484,
+        "sha256": "00d8b0088fe272810a94b7bd2e239eca9f9c4b19a5d7f97704d215fbe298e099",
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "input_q_bytes": 37748736,
+      "native": {
+        "path": "/workspace/scratch/bjt-pack-bounded-snapshots/candidate/native/libbjt_mesh_native.so",
+        "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+      },
+      "operation_sampled_peak_rss_bytes": 194859008,
+      "process_lifetime_peak_rss_bytes": 194666496,
+      "repetition": 3,
+      "rss_before_bytes": 194789376,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 5,
+      "scope": "writer",
+      "seconds": 0.010553191999861156,
+      "sequence": 12,
+      "signature": {
+        "bytes": 26214484,
+        "sha256": "00d8b0088fe272810a94b7bd2e239eca9f9c4b19a5d7f97704d215fbe298e099",
+        "triangles": 524288,
+        "writer_count": 524288
+      },
+      "source_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    }
+  ],
+  "snapshot_directory": "/workspace/scratch/bjt-pack-bounded-snapshots",
+  "summary": {
+    "pack-phase": {
+      "parity_passed": true,
+      "python": {
+        "operation_sampled_peak_rss_bytes_median": 249344000,
+        "process_lifetime_peak_rss_bytes_median": 249163776,
+        "rss_before_bytes_median": 198746112,
+        "seconds_median": 0.09206914300011704
+      },
+      "rust": {
+        "operation_sampled_peak_rss_bytes_median": 195538944,
+        "process_lifetime_peak_rss_bytes_median": 195461120,
+        "rss_before_bytes_median": 195489792,
+        "seconds_median": 0.006642457999987528
+      },
+      "signature": {
+        "triangles": 524288,
+        "writer_count": 524288
+      }
+    },
+    "writer": {
+      "parity_passed": true,
+      "python": {
+        "operation_sampled_peak_rss_bytes_median": 246546432,
+        "process_lifetime_peak_rss_bytes_median": 246296576,
+        "rss_before_bytes_median": 195948544,
+        "seconds_median": 0.09713751600065734
+      },
+      "rust": {
+        "operation_sampled_peak_rss_bytes_median": 196751360,
+        "process_lifetime_peak_rss_bytes_median": 196554752,
+        "rss_before_bytes_median": 196681728,
+        "seconds_median": 0.011164813000505092
+      },
+      "signature": {
+        "bytes": 26214484,
+        "sha256": "00d8b0088fe272810a94b7bd2e239eca9f9c4b19a5d7f97704d215fbe298e099",
+        "triangles": 524288,
+        "writer_count": 524288
+      }
+    }
+  }
+}

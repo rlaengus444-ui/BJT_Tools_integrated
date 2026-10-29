@@ -1,0 +1,40 @@
+{
+  "source": "/workspace/BJT_Tools_integrated/suite/sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+  "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "versions": {
+    "numpy": "2.3.5",
+    "numba": "0.68.1",
+    "llvmlite": "0.50.0"
+  },
+  "kernel_load": "Actual AST-extracted production function bodies, original njit decorators removed then reapplied via numba.njit(cache=False,nogil=True) by BJT_TEST_NATIVE_NUMBA=1.",
+  "focused_suite_command": "BJT_TEST_NATIVE_NUMBA=1 /workspace/scratch/bjt-verify-venv/bin/python -m unittest discover -s suite/tests -p test_bjt_*.py -v",
+  "cube_metrics": {
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_winding_edges": 0,
+    "unique_edges": 18,
+    "voxel_contact_edges": 0
+  },
+  "dispatchers": {
+    "_bjt_edges_and_buckets": {
+      "type": "numba.core.registry.CPUDispatcher",
+      "signatures": [
+        "(Array(uint32, 3, 'C', False, aligned=True), Array(Record([('p0', {'type': uint32, 'offset': 0, 'alignment': None, 'title': None, }), ('p1', {'type': uint32, 'offset': 4, 'alignment': None, 'title': None, }), ('p2', {'type': uint32, 'offset': 8, 'alignment': None, 'title': None, }), ('p3', {'type': uint32, 'offset': 12, 'alignment': None, 'title': None, }), ('p4', {'type': uint32, 'offset': 16, 'alignment': None, 'title': None, }), ('p5', {'type': uint32, 'offset': 20, 'alignment': None, 'title': None, }), ('direction', {'type': int32, 'offset': 24, 'alignment': None, 'title': None, }), ('contact', {'type': int32, 'offset': 28, 'alignment': None, 'title': None, })], 32, False), 1, 'C', False, aligned=False), Array(uint16, 1, 'C', False, aligned=True), int64)"
+      ],
+      "nopython_signatures": [
+        "(Array(uint32, 3, 'C', False, aligned=True), Array(Record([('p0', {'type': uint32, 'offset': 0, 'alignment': None, 'title': None, }), ('p1', {'type': uint32, 'offset': 4, 'alignment': None, 'title': None, }), ('p2', {'type': uint32, 'offset': 8, 'alignment': None, 'title': None, }), ('p3', {'type': uint32, 'offset': 12, 'alignment': None, 'title': None, }), ('p4', {'type': uint32, 'offset': 16, 'alignment': None, 'title': None, }), ('p5', {'type': uint32, 'offset': 20, 'alignment': None, 'title': None, }), ('direction', {'type': int32, 'offset': 24, 'alignment': None, 'title': None, }), ('contact', {'type': int32, 'offset': 28, 'alignment': None, 'title': None, })], 32, False), 1, 'C', False, aligned=False), Array(uint16, 1, 'C', False, aligned=True), int64) -> none"
+      ]
+    },
+    "_bjt_edge_counts": {
+      "type": "numba.core.registry.CPUDispatcher",
+      "signatures": [
+        "(Array(Record([('p0', {'type': uint32, 'offset': 0, 'alignment': None, 'title': None, }), ('p1', {'type': uint32, 'offset': 4, 'alignment': None, 'title': None, }), ('p2', {'type': uint32, 'offset': 8, 'alignment': None, 'title': None, }), ('p3', {'type': uint32, 'offset': 12, 'alignment': None, 'title': None, }), ('p4', {'type': uint32, 'offset': 16, 'alignment': None, 'title': None, }), ('p5', {'type': uint32, 'offset': 20, 'alignment': None, 'title': None, }), ('direction', {'type': int32, 'offset': 24, 'alignment': None, 'title': None, }), ('contact', {'type': int32, 'offset': 28, 'alignment': None, 'title': None, })], 32, False), 1, 'C', False, aligned=False),)"
+      ],
+      "nopython_signatures": [
+        "(Array(Record([('p0', {'type': uint32, 'offset': 0, 'alignment': None, 'title': None, }), ('p1', {'type': uint32, 'offset': 4, 'alignment': None, 'title': None, }), ('p2', {'type': uint32, 'offset': 8, 'alignment': None, 'title': None, }), ('p3', {'type': uint32, 'offset': 12, 'alignment': None, 'title': None, }), ('p4', {'type': uint32, 'offset': 16, 'alignment': None, 'title': None, }), ('p5', {'type': uint32, 'offset': 20, 'alignment': None, 'title': None, }), ('direction', {'type': int32, 'offset': 24, 'alignment': None, 'title': None, }), ('contact', {'type': int32, 'offset': 28, 'alignment': None, 'title': None, })], 32, False), 1, 'C', False, aligned=False),) -> UniTuple(int64 x 5)"
+      ]
+    }
+  }
+}

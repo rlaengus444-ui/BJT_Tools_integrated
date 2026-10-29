@@ -1,0 +1,22 @@
+# Optional Rust BJT prototype: verification
+
+Stage 1 adds in-place edge sorting/counting and Stage 2 packs existing integer grid triangles into STL records; the Python triangulation and output order remain in place. Both stages were evaluated against the previously optimized source SHA-256 `727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72` (535,217 bytes). Final frozen inputs are source `ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372` (538,331 bytes), wrapper `92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905` (8,387 bytes), and Linux library `5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4` (391,032 bytes). Build metadata is in [build-linux.json](build-linux.json). The preliminary Stage 1 [benchmark](benchmark-2m.json) is superseded by the final frozen runs.
+
+The [final edge benchmark](benchmark-final-edges.json) used 1,999,992 triangles, a 256 MiB budget, four disk buckets and three alternating repetitions per case. Median full verifier results, including extraction and disk work:
+
+| Geometry | Python seconds | Rust seconds | Python sampled operation peak MiB | Rust sampled operation peak MiB |
+| --- | ---: | ---: | ---: | ---: |
+| Separated cubes | 2.846 | 2.274 | 309.2 | 247.6 |
+| Edge-touching cubes | 2.826 | 2.312 | 308.9 | 247.2 |
+
+Verifier counts matched, including contact classification. In this run the full verifier was about 18–20% faster and sampled operation peak RSS about 61.6 MiB lower. A separate sort/count phase was also measured in the linked evidence. RSS samples every 2 ms can miss short peaks; neither measurement establishes whole-application peak memory.
+
+A [bounded 524,288-triangle packing benchmark](benchmark-packing-bounded.json), within the production batch limit, also produced identical writer hashes. Across three alternating repetitions, median writer time was 0.0971 seconds in Python and 0.0112 seconds in Rust; sampled operation peak RSS was 235.1 and 187.6 MiB. This is still a synthetic isolated writer measurement, not whole-application performance.
+
+The [final packing benchmark](benchmark-final-packing.json) used a synthetic 2,000,000-triangle q batch, three alternating repetitions, and identical output STL hashes. Median pack-only time was 0.353 seconds in Python and 0.0258 seconds in Rust; writer time including close/fsync was 0.366 and 0.0492 seconds. Sampled writer operation peak RSS was 474.1 and 287.8 MiB respectively. This is a **stress batch larger than the v5.7 production limit**: `max_q = budget // 512` is at most 1,048,576, and common batches can be smaller. The approximately 186 MiB difference is not a whole-application or practical production-batch saving claim. Measurements exclude triangulation and are not general speed guarantees.
+
+Both final full-pipeline comparisons passed all six cases against the optimized Python baseline: [native present](pipeline-present/parity_summary.json) recorded six successful native sort/count and six packing calls; [native absent](pipeline-absent/parity_summary.json) selected Python with zero native calls. They compare STL statistics and file hashes, image pixel hashes, preview callback counts, final progress and report status, not full callback payloads, all progress events or complete report dictionaries.
+
+The final [focused suite](unit-complete-final.log) passed 46 tests without skips in 2.855 seconds, including the three staging tests; [Cargo tests](cargo-test.log) passed five. The real manifest-backed [ToolLoader smoke](loader-smoke.json) passed with 27 manifest checks and forced native packing and cube verification. [Suite state tests](suite-state-final.log) passed 11 with two Tk-display skips. The Windows source gate allows only explicitly named intentional native/platform skips and continues to reject unexpected skips.
+
+A Windows x86-64 GNU DLL was cross-compiled from the same crate (SHA-256 `a163dfb8f7b140974444fcbcf33a279cc40a0f9ffd68b51ebeda01d4efe18a8a`, 378,401 bytes). [Static build evidence](build-windows.json) records GCC 14.2, package hashes, eight expected exports and OS DLL imports; it was not executed on Windows. The build recipe now stages the optional host library when present; absent binaries preserve Python fallback. This staging change has focused tests but no EXE build. No GUI, Windows runtime, EXE packaging, equipment, release or deployment validation is claimed. The [independent Sol review](REVIEW.md) is complete with no unresolved code findings.

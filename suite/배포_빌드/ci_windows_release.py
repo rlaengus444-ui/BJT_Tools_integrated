@@ -17,9 +17,39 @@ import sys
 import traceback
 import xml.etree.ElementTree as ET
 
+from release_native import TARGET, TOOLCHAIN, crate_digest, verify_chain, verify_native, require_probe
+
 HERE = Path(__file__).resolve().parent
 SOURCE = HERE.parent
 REPOSITORY = SOURCE.parent
+
+
+# Native Rust is mandatory in release mode. Retain the prototype allowance only
+# for explicitly non-release callers; CI always passes rust_required=True.
+_ALLOWED_SKIPS = {
+    ('test_number_tools.NumberToolTests', 'test_original_valid_conflict_policies_match_file_bytes_and_metadata'): 'Original supplied tool is only present in the integration workspace',
+    ('test_bjt_build_publish.AtomicPublishTests', 'test_open_old_file_survives_replacement'): 'open-file replacement semantics vary by platform',
+    ('test_bjt_rust_backend.NativeDiscoveryTests', 'test_real_library_metadata_if_built'): 'optional host native library not built',
+    **{('test_bjt_rust_kernel.RustEdgeKernelTests', name): 'optional Rust library is absent' for name in (
+        'test_random_groups_keys_and_all_rows_preserved', 'test_contact_masks_signs_duplicates_and_balances',
+        'test_invalid_metadata_fails_before_mutation', 'test_ffi_rejects_invalid_ranges_without_dereferencing',
+        'test_complete_verifier_topologies_and_disk_paths')},
+    **{('test_bjt_rust_pack.RustGridPackingTests', name): 'optional Rust packing feature is absent' for name in (
+        'test_random_extreme_scaling_and_signed_zero_bytes', 'test_chunk_boundaries_scalar_buffers_and_readonly_input',
+        'test_invalid_transform_and_capacity_do_not_mutate_output', 'test_limits_and_cancellation_keep_atomic_writer_contract')},
+}
+
+
+def allowed_source_skip(item, *, rust_required=True):
+    classname = item.get('classname', '')
+    reason = item.find('skipped').get('message', '')
+    prefix = 'unittest.case.SkipTest: '
+    if reason.startswith(prefix):
+        reason = reason[len(prefix):]
+    if rust_required and any(part.startswith('test_bjt_rust_') for part in classname.split('.')):
+        return False
+    return any((classname == cls or classname.endswith('.' + cls)) and item.get('name') == name and reason == expected
+               for (cls, name), expected in _ALLOWED_SKIPS.items())
 
 
 def digest(path):
@@ -43,6 +73,50 @@ def run(command, directory, environment, log):
 def current_commit():
     return subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=REPOSITORY,
                                    text=True).strip()
+
+
+def build_native(output, reports, environment):
+    """Compile/test before any source tests import the optional native wrapper."""
+    target_directory = output / 'cargo-target'
+    if target_directory.is_relative_to(SOURCE):
+        raise RuntimeError('Cargo build output must stay outside source archives')
+    environment.update({'CARGO_TARGET_DIR': str(target_directory),
+                        'RUSTUP_TOOLCHAIN': TOOLCHAIN,
+                        'RUSTFLAGS': '-C panic=unwind -C target-cpu=generic'})
+    environment.pop('CARGO_ENCODED_RUSTFLAGS', None)
+    run(['cargo', 'test', '--offline', '--locked', '--manifest-path',
+         SOURCE / 'native/bjt_mesh_native/Cargo.toml', '--target', TARGET],
+        SOURCE, environment, reports / 'rust-cargo-test.log')
+    if 'test result: ok. 5 passed; 0 failed; 0 ignored;' not in (reports / 'rust-cargo-test.log').read_text(encoding='utf-8'):
+        raise RuntimeError('Expected all five native Rust unit tests without skips')
+    run([sys.executable, SOURCE / 'native/build_bjt_mesh_native.py', '--target', TARGET],
+        SOURCE, environment, reports / 'rust-native-build.log')
+    proof = verify_native(SOURCE / 'native',
+                          expected_source=crate_digest(SOURCE / 'native/bjt_mesh_native'))
+    sysroot = Path(subprocess.check_output(['rustc', '--print', 'sysroot'],
+                  env=environment, text=True).strip())
+    copyright_file = sysroot / 'share/doc/rust/COPYRIGHT-library.html'
+    if not copyright_file.is_file():
+        raise RuntimeError('Rust standard-library redistribution notices are required')
+    licenses = SOURCE / 'native/licenses'
+    licenses.mkdir(exist_ok=True)
+    shutil.copy2(copyright_file, licenses / copyright_file.name)
+    for name in ('LICENSE-APACHE', 'LICENSE-MIT'):
+        notice = sysroot / 'share/doc/rust' / name
+        if notice.is_file():
+            shutil.copy2(notice, licenses / name)
+    preflight = reports / 'rust-source-preflight.json'
+    run([sys.executable, '-c',
+         'import json, pathlib, bjt_mesh_native as m; '
+         's=m.backend_status(); '
+         'assert s["available"] and s["can_pack_grid"], s; '
+         'assert m.get_backend("rust").path == pathlib.Path(s["path"]).resolve(); '
+         'pathlib.Path(__import__("sys").argv[1]).write_text(json.dumps(s), encoding="utf-8")',
+         preflight], SOURCE, environment, reports / 'rust-source-preflight.log')
+    status = json.loads(preflight.read_text(encoding='utf-8'))
+    if Path(status['path']).resolve() != (SOURCE / 'native/bjt_mesh_native.dll').resolve():
+        raise RuntimeError('Source preflight loaded a side-path native DLL')
+    return {'passed': True, 'tests': 5, 'native': proof, 'preflight': status}
 
 
 def stage_ascii_assets(raw, output, version):
@@ -138,6 +212,8 @@ def main():
         return 0
     if os.name != 'nt' or sys.version_info[:2] != (3, 12):
         raise RuntimeError('This runner requires native Windows and CPython 3.12')
+    if output == SOURCE or output.is_relative_to(SOURCE):
+        raise RuntimeError('Release scratch output must stay outside the source tree')
     import ctypes
     try:
         getattr(ctypes.WinDLL('ntdll'), 'wine_get_version')
@@ -163,24 +239,33 @@ def main():
                'python': sys.version, 'checks': {}}
     environment = os.environ.copy()
     environment.update({'BJT_SOURCE_DIR': str(SOURCE), 'BJT_BUILD_PYTHON': sys.executable,
+        'BJT_RELEASE_COMMIT': summary['commit'],
         'PYTHONUTF8': '1', 'PYTHONDONTWRITEBYTECODE': '1',
         'BJT_STATE_TEST_REPORT': str(reports / 'all11-input-inventory.json'),
         'NUMBA_CACHE_DIR': str(output / ('n' + version.replace('.', '') + '-src')),
         'MPLCONFIGDIR': str(output / 'matplotlib-src')})
+    # Missing-library unit cases deliberately test auto fallback. Do not force
+    # Rust globally across those tests; enforce availability through preflight,
+    # forbid Rust-absence skips, then run a separate forced-Rust frozen proof.
+    environment.pop('BJT_MESH_BACKEND', None)
     environment['PATH'] = str(build / 'vendor-runtime') + os.pathsep + environment.get('PATH', '')
     try:
+        summary['checks']['native_rust_build'] = build_native(output, reports, environment)
         run([sys.executable, '-m', 'pytest', 'tests', 'chitu_tests', '-p', 'no:cacheprovider',
             '-q', '--junitxml=' + str(reports / 'source-tests.xml')], SOURCE, environment,
             reports / 'source-tests.log')
         xml = ET.parse(reports / 'source-tests.xml')
         skips = [{'test': item.get('name'), 'reason': item.find('skipped').get('message', '')}
                  for item in xml.iter('testcase') if item.find('skipped') is not None]
-        if any('Original supplied tool is only present in the integration workspace' not in item['reason'] for item in skips):
+        if any(not allowed_source_skip(item) for item in xml.iter('testcase') if item.find('skipped') is not None):
             raise RuntimeError('Unexpected native Windows test skip; see source-tests.xml')
         summary['checks']['full_source_suite'] = {'passed': True, 'skips': skips}
         run([sys.executable, build / 'prepare_build.py'], build, environment, reports / 'prepare.log')
+        write(build / 'build-provenance.json', {'commit': summary['commit'],
+            'source_manifest_sha256': digest(SOURCE / 'source_manifest.json'),
+            'native': summary['checks']['native_rust_build']['native']})
         for action in ('build', 'diagnose-exe', 'smoke-exe', 'smoke-gui-exe',
-                       'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe'):
+                       'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe'):
             run([sys.executable, build / 'run_build.py', action], build, environment,
                 reports / (action + '-runner.log'))
             if action != 'build':
@@ -191,6 +276,13 @@ def main():
         run([sys.executable, build / 'verify_cli.py'], build, environment, reports / 'cli-runner.log')
         summary['checks']['cli-exe'] = {'passed': True}
         dist = build / 'dist' / f'BJT_통합프로그램_{version}_EXE'
+        chain = verify_chain(SOURCE, build / 'app-source', dist / '_internal')
+        probe = json.loads((build / 'rust-probe-exe.json').read_text(encoding='utf-8'))
+        require_probe(probe, chain['source'], commit=summary['commit'],
+            manifest_sha256=digest(SOURCE / 'source_manifest.json'),
+            executable_sha256=digest(dist / 'BJT_명령줄.exe'))
+        summary['checks']['native_rust_provenance'] = {'passed': True, 'chain': chain,
+            'native_calls': probe['native_calls'], 'fixture_count': probe['fixture_count']}
         parity = []
         for path in sorted((build / 'app-source').rglob('*')):
             if path.is_file() and '__pycache__' not in path.parts:

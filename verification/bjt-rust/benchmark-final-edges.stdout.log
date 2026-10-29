@@ -1,0 +1,100 @@
+{
+  "edge-touching/full": {
+    "parity_passed": true,
+    "python": {
+      "operation_sampled_peak_rss_bytes_median": 323878912,
+      "process_lifetime_peak_rss_bytes_median": 324018176,
+      "rss_before_bytes_median": 211075072,
+      "seconds_median": 2.8261331079993397
+    },
+    "rust": {
+      "operation_sampled_peak_rss_bytes_median": 259219456,
+      "process_lifetime_peak_rss_bytes_median": 259112960,
+      "rss_before_bytes_median": 210980864,
+      "seconds_median": 2.3122210530000302
+    },
+    "signature": {
+      "metrics": {
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "nonmanifold_edges": 83333,
+        "unique_edges": 2916655,
+        "voxel_contact_edges": 83333
+      }
+    }
+  },
+  "edge-touching/phase": {
+    "parity_passed": true,
+    "python": {
+      "operation_sampled_peak_rss_bytes_median": 664563712,
+      "process_lifetime_peak_rss_bytes_median": 664576000,
+      "rss_before_bytes_median": 407130112,
+      "seconds_median": 0.8258240889990702
+    },
+    "rust": {
+      "operation_sampled_peak_rss_bytes_median": 407375872,
+      "process_lifetime_peak_rss_bytes_median": 420593664,
+      "rss_before_bytes_median": 407347200,
+      "seconds_median": 0.4333136300010665
+    },
+    "signature": {
+      "metrics": {
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "nonmanifold_edges": 83333,
+        "unique_edges": 2916655,
+        "voxel_contact_edges": 83333
+      },
+      "sorted_coordinate_keys_sha256": "e90f8ead6ab1f1ce7c23918091fffb6afccdef3ac0a97397cc99e3a122b9e2dd"
+    }
+  },
+  "separated/full": {
+    "parity_passed": true,
+    "python": {
+      "operation_sampled_peak_rss_bytes_median": 324190208,
+      "process_lifetime_peak_rss_bytes_median": 324218880,
+      "rss_before_bytes_median": 211107840,
+      "seconds_median": 2.846244327000022
+    },
+    "rust": {
+      "operation_sampled_peak_rss_bytes_median": 259633152,
+      "process_lifetime_peak_rss_bytes_median": 259395584,
+      "rss_before_bytes_median": 211447808,
+      "seconds_median": 2.2742230870007916
+    },
+    "signature": {
+      "metrics": {
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "nonmanifold_edges": 0,
+        "unique_edges": 2999988,
+        "voxel_contact_edges": 0
+      }
+    }
+  },
+  "separated/phase": {
+    "parity_passed": true,
+    "python": {
+      "operation_sampled_peak_rss_bytes_median": 661569536,
+      "process_lifetime_peak_rss_bytes_median": 661516288,
+      "rss_before_bytes_median": 407097344,
+      "seconds_median": 0.7915112419996149
+    },
+    "rust": {
+      "operation_sampled_peak_rss_bytes_median": 406708224,
+      "process_lifetime_peak_rss_bytes_median": 419848192,
+      "rss_before_bytes_median": 406679552,
+      "seconds_median": 0.4362357530008012
+    },
+    "signature": {
+      "metrics": {
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "nonmanifold_edges": 0,
+        "unique_edges": 2999988,
+        "voxel_contact_edges": 0
+      },
+      "sorted_coordinate_keys_sha256": "5c4d294d7ba5d913226aec842739e5830164b589a30c7506012a46fe99676d0b"
+    }
+  }
+}

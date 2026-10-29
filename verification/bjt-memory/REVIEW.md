@@ -1,0 +1,11 @@
+# Independent review
+
+The independent `sol_reviewer` was invoked through native collaboration with requested model `gpt-6.1-sol` and reasoning effort `max`. Provider identity was not independently verified. The final verdict reported no blocking or unresolved code findings; no code fix was required. A documentation typo in the strided writer candidate RSS was corrected to 198.125 MiB.
+
+The upstream baseline is `8a8f057c6d192de082a6a14f12397e1303653ee0`, represented locally by snapshot commit `e16f48fff76b43b68a43d19ea237031d953c2405`. The reviewed final source SHA-256 is `727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72` and its size is 535,217 bytes.
+
+The reviewer personally ran the 23 native tests (all passed in 3.530 seconds), checked 686 signed-zero statistics patterns (all matched), and loaded `bjt` using the actual manifest-backed `ToolLoader.load` without a Tk root (passed in 12.275 seconds; [loader evidence](loader-smoke.json)). The reviewer personally verified all 11 manifest source hashes, all 12 generated STL file hashes and lengths, all 24 benchmark samples' source hashes and signatures and their medians, identical source bytes outside the three changed functions including mixed line endings, and a clean CRLF diff check. The prior native test evidence includes actual compiled dispatcher signatures in [native-jit.json](native-jit.json).
+
+The reviewer inspected, without rerunning, the six-case [full-pipeline comparison](pipeline/parity_summary.json) and the final [2-million-triangle benchmark](benchmark-final-2m.json), with three repetitions. Measured process peak RSS fell about 28% for writer and statistics and 21% for the edge phase. Statistics took about 11.9% longer, edge timing was similar, and writer timing improved modestly in that run.
+
+The edge benchmark covers only its sorting phase; process peak RSS includes setup and is not whole-application memory validation. Pipeline parity covers preview callback counts, final progress reaching 100, and report status; it does not compare full callback payloads, all progress events, or full report dictionaries. GUI, Windows EXE, and packaging were not validated. This review does not publish or deploy anything.

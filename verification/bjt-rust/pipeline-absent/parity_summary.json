@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "baseline": {
+      "source": {
+        "sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72",
+        "bytes": 535217
+      },
+      "fixture": {
+        "sha256": "39e78cd232cd4a83f3b9d4c8401141e6768b890d3a34f48055df97ef5d58e148",
+        "bytes": 4409
+      },
+      "native_wrapper": {
+        "sha256": "92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905",
+        "bytes": 8387
+      },
+      "native_library": null
+    },
+    "candidate": {
+      "source": {
+        "sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372",
+        "bytes": 538331
+      },
+      "fixture": {
+        "sha256": "39e78cd232cd4a83f3b9d4c8401141e6768b890d3a34f48055df97ef5d58e148",
+        "bytes": 4409
+      },
+      "native_wrapper": {
+        "sha256": "92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905",
+        "bytes": 8387
+      },
+      "native_library": null
+    }
+  },
+  "backends": {
+    "baseline": {
+      "requested": "auto",
+      "helper_present": false,
+      "selected": "python",
+      "native_success_calls": {
+        "sort_count": 0,
+        "pack_grid_triangles": 0
+      }
+    },
+    "candidate": {
+      "requested": "auto",
+      "helper_present": true,
+      "selected": "python",
+      "native_success_calls": {
+        "sort_count": 0,
+        "pack_grid_triangles": 0
+      }
+    }
+  },
+  "status": "passed",
+  "dependencies": {
+    "baseline": {
+      "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "vtk": "9.3.1",
+      "Pillow": "12.3.0",
+      "psutil": "7.2.2",
+      "numba": "0.68.1",
+      "trimesh": "4.12.2",
+      "shapely": "2.2.0",
+      "scikit-image": "0.26.0",
+      "rtree": "1.4.1"
+    },
+    "candidate": {
+      "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "vtk": "9.3.1",
+      "Pillow": "12.3.0",
+      "psutil": "7.2.2",
+      "numba": "0.68.1",
+      "trimesh": "4.12.2",
+      "shapely": "2.2.0",
+      "scikit-image": "0.26.0",
+      "rtree": "1.4.1"
+    }
+  },
+  "cases": [
+    "hex_face_xyz",
+    "hex_line_xyz_bmp",
+    "model_full",
+    "reconstruct_crop_center",
+    "shell_only",
+    "square_line_xy_png"
+  ],
+  "differences": []
+}

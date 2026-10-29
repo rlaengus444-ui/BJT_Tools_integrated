@@ -1,0 +1,6 @@
+reconstruct_crop_center passed 7.261 72 
+hex_line_xyz_bmp passed 0.946 1532 
+square_line_xy_png passed 0.084 464 
+hex_face_xyz passed 0.116 1532 
+shell_only passed 0.086 252 
+model_full passed 1.789 568 

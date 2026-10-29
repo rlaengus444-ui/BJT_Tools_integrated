@@ -240,6 +240,18 @@ def tool_dispatch(arguments):
 def main():
     _patch_runtime()
     arguments = sys.argv[1:]
+    if arguments[:1] == ['--frozen-rust-probe']:
+        path = arguments[1] if len(arguments) > 1 else str(STATE / 'rust-probe.json')
+        try:
+            embedded_runtime_check()
+            from frozen_rust_probe import run as run_rust_probe
+            report = run_rust_probe(BASE)
+            _write(path, report)
+            return 0 if report['passed'] else 2
+        except Exception:
+            _write(path, {'passed': False, 'frozen': bool(getattr(sys, 'frozen', False)),
+                          'traceback': traceback.format_exc()})
+            return 2
     if arguments[:1] == ['--frozen-oven-playback']:
         path = arguments[1] if len(arguments) > 1 else str(STATE / 'oven-playback.json')
         try:

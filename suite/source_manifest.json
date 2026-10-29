@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.7.1",
+  "suite_version": "1.8.0",
   "tools": [
     {
       "id": "bjt",
@@ -7,8 +7,8 @@
       "description": "3D 모델·슬라이싱 이미지에서 쉘·격자 STL 생성",
       "source": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
       "original_path": "C:\\Users\\Kain\\PycharmProjects\\shellprinting\\260914_BJT_model_to_lattice_STL_all_in_one.py",
-      "sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
-      "bytes": 534649,
+      "sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372",
+      "bytes": 538331,
       "controller": "App",
       "embedded_base": true
     },
@@ -217,6 +217,12 @@
       "path": "oven_i18n.py",
       "purpose": "오븐 시뮬레이터 한국어·영어 표시 전환",
       "sha256": "6c8a09b8f52d6e186da7b011f9b55e28011aeb76eeb87507e50c88dd20626879"
+    },
+    {
+      "path": "bjt_mesh_native.py",
+      "purpose": "BJT 선택적 Rust 메시 검증·STL 기록 ABI 어댑터",
+      "sha256": "92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905",
+      "bytes": 8387
     }
   ]
 }

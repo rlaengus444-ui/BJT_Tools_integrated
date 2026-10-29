@@ -1,0 +1,42 @@
+{
+  "artifact_directory": "/workspace/scratch/bjt-stage1-artifacts",
+  "note": "Stage1 artifacts preserved before Stage2. Initial gate benchmark is preliminary; final frozen benchmark will rebind final binaries/source.",
+  "files": {
+    "source.py": {
+      "sha256": "2620f447ad2c6a881a7613d5ce956d8adf91f040d382741eccfb977bc55b3545",
+      "bytes": 537028
+    },
+    "bjt_mesh_native.py": {
+      "sha256": "a7efc6a8b4913580a78b78046e283aea7c039a7b600188efd9eaafa72614b3e1",
+      "bytes": 5372
+    },
+    "suite_loader.py": {
+      "sha256": "fa539600b41cf10252ff33fd13ba8b48d77e1d2ca3468289663cf9e8466eb4aa",
+      "bytes": 4776
+    },
+    "native/libbjt_mesh_native.so": {
+      "sha256": "126c7dbdc68f4baab8c90a6eafde3c2fd00d3f8e4aea2f0bca5dd0b4b8045c74",
+      "bytes": 388296
+    },
+    "native/bjt_mesh_native.build.json": {
+      "sha256": "39d938de487dbc0bd6456fd77fd17caaa0ead6997df10a999d0c2bc0822f4011",
+      "bytes": 787
+    },
+    "native/bjt_mesh_native/Cargo.toml": {
+      "sha256": "029fdd22cf848749d12e6e5f1e88aaec9f7b0e1ceff58761ea37bf2db9fe711c",
+      "bytes": 185
+    },
+    "native/bjt_mesh_native/Cargo.lock": {
+      "sha256": "b8202d4b58a8a7844e0b639e9284e2ca5507078703655c2498261c9d9cf4be92",
+      "bytes": 159
+    },
+    "native/bjt_mesh_native/src/lib.rs": {
+      "sha256": "4877de5d5651e6f45739dcb34f1f78d5d246925d58b4520f4bb0dbdc7cfbc9ca",
+      "bytes": 8061
+    },
+    "benchmark-2m.json": {
+      "sha256": "9734837c000ee7a4448c33456612c97e419a4e9616f32d8e49cc8f39d170d6ab",
+      "bytes": 28822
+    }
+  }
+}

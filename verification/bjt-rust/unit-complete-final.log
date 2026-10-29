@@ -1,0 +1,51 @@
+test_failure_before_replace_keeps_old_file (test_bjt_build_publish.AtomicPublishTests.test_failure_before_replace_keeps_old_file) ... ok
+test_open_old_file_survives_replacement (test_bjt_build_publish.AtomicPublishTests.test_open_old_file_survives_replacement) ... ok
+test_cancel_truncated_and_oversized_bucket (test_bjt_mesh_io.ExactEdgeVerifierTests.test_cancel_truncated_and_oversized_bucket) ... ok
+test_insufficient_temporary_disk (test_bjt_mesh_io.ExactEdgeVerifierTests.test_insufficient_temporary_disk) ... ok
+test_layout_guard (test_bjt_mesh_io.ExactEdgeVerifierTests.test_layout_guard) ... ok
+test_multiple_input_chunks (test_bjt_mesh_io.ExactEdgeVerifierTests.test_multiple_input_chunks) ... ok
+test_single_input_chunk_reuses_rows (test_bjt_mesh_io.ExactEdgeVerifierTests.test_single_input_chunk_reuses_rows) ... ok
+test_sort_keys_are_zero_copy_and_keep_exact_order (test_bjt_mesh_io.ExactEdgeVerifierTests.test_sort_keys_are_zero_copy_and_keep_exact_order) ... ok
+test_topology_metrics_in_memory_and_on_disk (test_bjt_mesh_io.ExactEdgeVerifierTests.test_topology_metrics_in_memory_and_on_disk) ... ok
+test_cancellation_removes_part_and_preserves_existing_file (test_bjt_mesh_io.TriangleSoupWriterTests.test_cancellation_removes_part_and_preserves_existing_file) ... ok
+test_default_chunk_boundary (test_bjt_mesh_io.TriangleSoupWriterTests.test_default_chunk_boundary) ... ok
+test_empty_preserves_buffer_and_skips_cancellation (test_bjt_mesh_io.TriangleSoupWriterTests.test_empty_preserves_buffer_and_skips_cancellation) ... ok
+test_exact_bytes_and_scalar_buffer_order (test_bjt_mesh_io.TriangleSoupWriterTests.test_exact_bytes_and_scalar_buffer_order) ... ok
+test_limit_and_uint32_checks_precede_writes (test_bjt_mesh_io.TriangleSoupWriterTests.test_limit_and_uint32_checks_precede_writes) ... ok
+test_sequence_is_only_converted_after_slicing (test_bjt_mesh_io.TriangleSoupWriterTests.test_sequence_is_only_converted_after_slicing) ... ok
+test_exact_platform_artifact_only (test_bjt_native_staging.NativeStagingTests.test_exact_platform_artifact_only) ... ok
+test_missing_and_unsupported_are_optional (test_bjt_native_staging.NativeStagingTests.test_missing_and_unsupported_are_optional) ... ok
+test_spec_data_loop_does_not_duplicate_binary (test_bjt_native_staging.NativeStagingTests.test_spec_data_loop_does_not_duplicate_binary) ... ok
+test_all_abi_mismatches_rejected (test_bjt_rust_backend.NativeDiscoveryTests.test_all_abi_mismatches_rejected) ... ok
+test_incompatible_binary_falls_back_in_auto (test_bjt_rust_backend.NativeDiscoveryTests.test_incompatible_binary_falls_back_in_auto) ... ok
+test_invalid_choice_and_environment (test_bjt_rust_backend.NativeDiscoveryTests.test_invalid_choice_and_environment) ... ok
+test_local_discovery_never_uses_path_search (test_bjt_rust_backend.NativeDiscoveryTests.test_local_discovery_never_uses_path_search) ... ok
+test_missing_library_auto_falls_back_and_rust_reports_error (test_bjt_rust_backend.NativeDiscoveryTests.test_missing_library_auto_falls_back_and_rust_reports_error) ... ok
+test_optional_packing_abi_does_not_disable_edge_backend (test_bjt_rust_backend.NativeDiscoveryTests.test_optional_packing_abi_does_not_disable_edge_backend) ... ok
+test_real_library_metadata_if_built (test_bjt_rust_backend.NativeDiscoveryTests.test_real_library_metadata_if_built) ... ok
+test_unsafe_buffers_rejected_before_native_call (test_bjt_rust_backend.NativeDiscoveryTests.test_unsafe_buffers_rejected_before_native_call) ... ok
+test_concurrent_first_use_only_publishes_complete_module (test_bjt_rust_kernel.BackendDiscoveryConcurrencyTests.test_concurrent_first_use_only_publishes_complete_module) ... ok
+test_complete_verifier_topologies_and_disk_paths (test_bjt_rust_kernel.RustEdgeKernelTests.test_complete_verifier_topologies_and_disk_paths) ... ok
+test_contact_masks_signs_duplicates_and_balances (test_bjt_rust_kernel.RustEdgeKernelTests.test_contact_masks_signs_duplicates_and_balances) ... ok
+test_ffi_rejects_invalid_ranges_without_dereferencing (test_bjt_rust_kernel.RustEdgeKernelTests.test_ffi_rejects_invalid_ranges_without_dereferencing) ... ok
+test_invalid_metadata_fails_before_mutation (test_bjt_rust_kernel.RustEdgeKernelTests.test_invalid_metadata_fails_before_mutation) ... ok
+test_random_groups_keys_and_all_rows_preserved (test_bjt_rust_kernel.RustEdgeKernelTests.test_random_groups_keys_and_all_rows_preserved) ... ok
+test_chunk_boundaries_scalar_buffers_and_readonly_input (test_bjt_rust_pack.RustGridPackingTests.test_chunk_boundaries_scalar_buffers_and_readonly_input) ... ok
+test_invalid_transform_and_capacity_do_not_mutate_output (test_bjt_rust_pack.RustGridPackingTests.test_invalid_transform_and_capacity_do_not_mutate_output) ... ok
+test_limits_and_cancellation_keep_atomic_writer_contract (test_bjt_rust_pack.RustGridPackingTests.test_limits_and_cancellation_keep_atomic_writer_contract) ... ok
+test_random_extreme_scaling_and_signed_zero_bytes (test_bjt_rust_pack.RustGridPackingTests.test_random_extreme_scaling_and_signed_zero_bytes) ... ok
+test_cancelled_and_empty_does_not_check_cancellation (test_bjt_stl_stats.BinaryStlStatsTests.test_cancelled_and_empty_does_not_check_cancellation) ... ok
+test_empty (test_bjt_stl_stats.BinaryStlStatsTests.test_empty) ... ok
+test_geometry_and_threshold (test_bjt_stl_stats.BinaryStlStatsTests.test_geometry_and_threshold) ... ok
+test_malformed_truncated_and_trailing (test_bjt_stl_stats.BinaryStlStatsTests.test_malformed_truncated_and_trailing) ... ok
+test_multi_chunk (test_bjt_stl_stats.BinaryStlStatsTests.test_multi_chunk) ... ok
+test_nonfinite_normals_and_vertices (test_bjt_stl_stats.BinaryStlStatsTests.test_nonfinite_normals_and_vertices) ... ok
+test_seeded_float32_matches_baseline_formula (test_bjt_stl_stats.BinaryStlStatsTests.test_seeded_float32_matches_baseline_formula) ... ok
+test_signed_zero_bounds_match_baseline (test_bjt_stl_stats.BinaryStlStatsTests.test_signed_zero_bounds_match_baseline) ... ok
+test_threshold_adjacent_float32_values (test_bjt_stl_stats.BinaryStlStatsTests.test_threshold_adjacent_float32_values) ... ok
+test_preserves_python_decorators_and_uses_last_definition (test_bjt_stl_stats.KernelSupportTests.test_preserves_python_decorators_and_uses_last_definition) ... ok
+
+----------------------------------------------------------------------
+Ran 46 tests in 2.855s
+
+OK

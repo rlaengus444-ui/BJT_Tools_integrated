@@ -8,6 +8,14 @@ HERE = Path(SPECPATH)
 APP = HERE / 'app-source'
 VERSION = json.loads((APP / 'source_manifest.json').read_text(encoding='utf-8'))['suite_version']
 inputs = json.loads((HERE / 'build_inputs.json').read_text(encoding='utf-8'))
+def optional_native_binary(app, platform):
+    names = {'win32': 'bjt_mesh_native.dll', 'darwin': 'libbjt_mesh_native.dylib'}
+    name = names.get(platform, 'libbjt_mesh_native.so' if platform.startswith('linux') else None)
+    path = app / 'native' / name if name else None
+    return (str(path), 'native') if path is not None and path.is_file() else None
+
+
+native_binary = optional_native_binary(APP, sys.platform)
 datas = []
 # Conda and the official python.org installer use different license names.
 python_license = next((Path(sys.prefix) / name for name in ('LICENSE_PYTHON.txt', 'LICENSE.txt')
@@ -15,13 +23,14 @@ python_license = next((Path(sys.prefix) / name for name in ('LICENSE_PYTHON.txt'
 if python_license is not None:
     datas.append((str(python_license), 'licenses/Python'))
 for path in APP.rglob('*'):
-    if path.is_file() and '__pycache__' not in path.parts and path.suffix not in ('.pyc', '.nbc', '.nbi'):
+    if (path.is_file() and '__pycache__' not in path.parts and path.suffix not in ('.pyc', '.nbc', '.nbi')
+            and (native_binary is None or path != Path(native_binary[0]))):
         datas.append((str(path), str(path.parent.relative_to(APP))))
 # vtk.py installs the legacy vtk.util alias at runtime. Its real file lives
 # under vtkmodules and can therefore be analyzed without a misleading error.
 hiddenimports = ['vtkmodules.util.numpy_support' if name == 'vtk.util.numpy_support' else name
                  for name in inputs['hiddenimports']]
-binaries = []
+binaries = [native_binary] if native_binary else []
 # These distributable VC++ DLLs are not part of clean Windows itself. Wine's
 # built-in substitutes must never conceal their absence from the release.
 vendor_runtime = HERE / 'vendor-runtime'
@@ -35,7 +44,8 @@ hiddenimports += ['vtk', 'vtkmodules.all', 'matplotlib.backends.backend_tkagg', 
                   'tkinter.filedialog', 'tkinter.messagebox', 'tkinter.scrolledtext', 'tkinter.font',
                   'numba.typed', 'numba.core.typing', 'scipy.optimize', 'scipy.ndimage',
                   'unittest.mock', 'frozen_fixtures', 'frozen_chitu_gui', 'frozen_large_chitu_gui',
-                  'frozen_camera_chitu_gui', 'frozen_suite_features', 'frozen_oven_playback']
+                  'frozen_camera_chitu_gui', 'frozen_suite_features', 'frozen_oven_playback',
+                  'frozen_rust_probe', 'release_native']
 hiddenimports += ['manifold3d', 'fcl', 'fcl.fcl', 'plotly', 'plotly.offline',
                   'chitu_overlap', 'chitu_overlap.geometry', 'chitu_overlap.chitubox',
                   'chitu_overlap.inputs', 'chitu_overlap.cli', 'chitu_overlap.viewer', 'chitu_overlap.seams']

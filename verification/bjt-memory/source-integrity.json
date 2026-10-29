@@ -1,0 +1,24 @@
+{
+  "baseline_revision": "e16f48fff76b43b68a43d19ea237031d953c2405",
+  "source": "suite/sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+  "sources": {
+    "baseline": {
+      "sha256": "893f656d9dfa7bc3dcc4d1c29f21191a4921e1f77d42f404b948e6a733b95e1f",
+      "bytes": 534649,
+      "crlf_count": 9609,
+      "bare_lf_count": 3
+    },
+    "candidate": {
+      "sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72",
+      "bytes": 535217,
+      "crlf_count": 9618,
+      "bare_lf_count": 3
+    }
+  },
+  "edited_functions": [
+    "_aio_fast_write_triangle_soup",
+    "binary_stl_stats",
+    "_bjt_verify_edges"
+  ],
+  "all_other_bytes_identical": true
+}

@@ -1060,15 +1060,16 @@ def _aio_fast_write_triangle_soup(
     chunk_size: int = 120_000,
 ) -> int:
     """indexed vertex를 만들지 않고 triangle soup를 Binary STL로 벡터 기록."""
-    tri = np.asarray(triangles_xyz, dtype=np.float32)
-    n_total = int(len(tri))
+    # Keep float64/strided inputs in their original storage; cast only this chunk.
+    n_total = int(len(triangles_xyz))
     if n_total <= 0:
         return 0
     _aio_fast_writer_check_limit(writer, n_total, max_triangles)
     writer._flush_buffer()
-    for begin in range(0, n_total, max(1, int(chunk_size))):
+    chunk_size = max(1, int(chunk_size))
+    for begin in range(0, n_total, chunk_size):
         recon_core.check_cancel(cancel_event)
-        t = np.ascontiguousarray(tri[begin:begin + chunk_size], dtype=np.float32)
+        t = np.ascontiguousarray(triangles_xyz[begin:begin + chunk_size], dtype=np.float32)
         a = t[:, 0]
         b = t[:, 1]
         c = t[:, 2]
@@ -1084,6 +1085,7 @@ def _aio_fast_write_triangle_soup(
         records["c"] = c
         records["attr"] = 0
         records.tofile(writer.f)
+        del t, a, b, c, normals, lengths, valid, records
     writer.tri_count += n_total
     return n_total
 
@@ -5380,16 +5382,18 @@ def binary_stl_stats(path: Path, cancel_event: Optional[threading.Event] = None)
             rec = np.frombuffer(raw, dtype=rec_dtype, count=take)
             if not np.all(np.isfinite(rec["normal"])):
                 raise ValueError("STL에 NaN/Inf normal이 있습니다.")
-            pts = np.concatenate((rec["a"], rec["b"], rec["c"]), axis=0).astype(np.float64, copy=False)
-            if not bool(np.all(np.isfinite(pts))):
-                raise ValueError(f"STL에 NaN/Inf 정점이 있습니다: {path}")
-            mins = np.minimum(mins, pts.min(axis=0))
-            maxs = np.maximum(maxs, pts.max(axis=0))
-            ab = rec["b"].astype(np.float64) - rec["a"].astype(np.float64)
-            ac = rec["c"].astype(np.float64) - rec["a"].astype(np.float64)
+            for name in ("a", "b", "c"):
+                vertices = rec[name]
+                if not bool(np.all(np.isfinite(vertices))):
+                    raise ValueError(f"STL에 NaN/Inf 정점이 있습니다: {path}")
+                mins = np.minimum(mins, vertices.min(axis=0))
+                maxs = np.maximum(maxs, vertices.max(axis=0))
+            ab = np.subtract(rec["b"], rec["a"], dtype=np.float64)
+            ac = np.subtract(rec["c"], rec["a"], dtype=np.float64)
             cross = np.cross(ab, ac)
             degenerate += int(np.count_nonzero(np.einsum("ij,ij->i", cross, cross) <= 1e-24))
             read_count += take
+            del vertices, rec, raw, ab, ac, cross
         if f.read(1):
             raise ValueError(f"STL 뒤에 예상 밖 데이터가 있습니다: {path}")
     return {
@@ -8450,8 +8454,44 @@ def _bjt_edge_counts(rows):
     return boundary,nonmanifold,winding,unique,contacts
 
 
-def _bjt_verify_edges(path,tri_count,cancel_event,budget_bytes=None):
+def _bjt_native_edge_backend(backend=None):
+    """Load the optional sibling wrapper without changing Python's search path."""
+    import hashlib as _hashlib
+    import importlib.util as _importlib_util
+    import os as _os
+    import sys as _sys
+    choice=str(backend if backend is not None else _os.environ.get('BJT_MESH_BACKEND','auto')).strip().lower()
+    if choice not in ('auto','python','rust'):
+        raise ValueError('BJT_MESH_BACKEND must be auto, python or rust')
+    if choice=='python':return None
+    folder=Path(__file__).resolve().parent
+    folders=(folder.parent,folder) if folder.name=='sources' else (folder,)
+    wrapper=next((root/'bjt_mesh_native.py' for root in folders if (root/'bjt_mesh_native.py').is_file()),None)
+    if wrapper is None:
+        if choice=='rust':raise RuntimeError('optional bjt_mesh_native.py wrapper is absent')
+        return None
+    alias='_bjt_mesh_native_'+_hashlib.sha256(str(wrapper).encode('utf-8')).hexdigest()[:16]
+    module=_sys.modules.get(alias)
+    if module is None:
+        spec=_importlib_util.spec_from_file_location(alias,wrapper)
+        if spec is None or spec.loader is None:
+            if choice=='rust':raise RuntimeError('optional native wrapper could not be loaded')
+            return None
+        module=_importlib_util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        # Concurrent first use must never observe a partially executed wrapper.
+        module=_sys.modules.setdefault(alias,module)
+    return module.get_backend(choice)
+
+
+def _bjt_verify_edges(path,tri_count,cancel_event,budget_bytes=None,backend=None):
+    native=_bjt_native_edge_backend(backend)
     budget=int(budget_bytes or min(256*1024**2,max(16*1024**2,_bjt_memory_available()*.08)))
+    # The first 24 bytes must remain the six little-endian coordinate words.
+    if (_BJT_EDGE_DTYPE.itemsize!=32 or len(_BJT_EDGE_FIELDS)!=6 or
+        any(_BJT_EDGE_DTYPE.fields[name][:2]!=(np.dtype('<u4'),4*col)
+            for col,name in enumerate(_BJT_EDGE_FIELDS))):
+        raise TypeError('edge verification requires six packed uint32 coordinates in 32-byte rows')
     edge_bytes=int(tri_count)*3*_BJT_EDGE_DTYPE.itemsize
     buckets=1
     while buckets<256 and edge_bytes/buckets>budget/4:buckets*=2
@@ -8481,27 +8521,31 @@ def _bjt_verify_edges(path,tri_count,cancel_event,budget_bytes=None):
                         order=np.argsort(ids,kind='stable');sorted_ids=ids[order];sorted_rows=rows[order]
                         starts=np.r_[0,np.flatnonzero(sorted_ids[1:]!=sorted_ids[:-1])+1,len(ids)]
                         for a,b in zip(starts[:-1],starts[1:]):sorted_rows[a:b].tofile(files[int(sorted_ids[a])])
+                        del order,sorted_ids,sorted_rows,starts
+                    del records,tri,bits,rows,ids
                     remaining-=take
             for f in files:f.close()
             totals=np.zeros(5,np.int64)
             for bucket in range(buckets):
                 check_cancel(cancel_event)
                 if buckets==1:
-                    rows=np.concatenate(memory);memory.clear()
+                    rows=memory[0] if len(memory)==1 else np.concatenate(memory);memory.clear()
                 else:
                     p=folder/f'{bucket:03d}.bin'
                     if p.stat().st_size>budget:
                         raise MemoryError('edge 검증 버킷의 메모리 예산을 초과했습니다. 메시 중복면 또는 RAM 상태를 확인하십시오.')
                     rows=np.fromfile(p,dtype=_BJT_EDGE_DTYPE)
-                # Three uint64 words encode all six exact float32 coordinate bits.
-                # A vectorized lexsort avoids slow structured scalar comparisons.
-                words=np.empty((len(rows),6),np.uint32)
-                for col,name in enumerate(_BJT_EDGE_FIELDS):words[:,col]=rows[name]
-                words=words.view(np.uint64).reshape(-1,3)
-                order=np.lexsort((words[:,2],words[:,1],words[:,0]))
-                rows=rows[order]
-                del words,order
-                totals+=_bjt_edge_counts(rows)
+                if native is None:
+                    # Three zero-copy uint64 keys encode all six exact coordinate bits.
+                    # Keep the 32-byte row stride, skipping direction/contact in word 4.
+                    words=rows.view('<u8').reshape(-1,4)[:,:3]
+                    order=np.lexsort((words[:,2],words[:,1],words[:,0]))
+                    rows=rows[order]
+                    del words,order
+                    totals+=_bjt_edge_counts(rows)
+                else:
+                    totals+=native.sort_count(rows)
+                check_cancel(cancel_event)
                 del rows
             return dict(zip(('boundary_edges','nonmanifold_edges','inconsistent_winding_edges','unique_edges','voxel_contact_edges'),map(int,totals)))
         finally:
@@ -9432,6 +9476,34 @@ def _bjt57_batch_end(rects,start,lines,positions,shifts,total,max_q):
     return end
 
 
+def _bjt_write_grid_triangle_soup(writer,q,coord,max_triangles=None,cancel_event=None,chunk_size=120_000,backend=None):
+    """Pack existing ordered grid triangles with bounded optional native output."""
+    count=int(len(q))
+    if count<=0:return 0
+    _aio_fast_writer_check_limit(writer,count,max_triangles)
+    native=_bjt_native_edge_backend(backend)
+    if native is None or not native.can_pack_grid:
+        if native is not None:
+            import os as _os
+            choice=str(backend if backend is not None else _os.environ.get('BJT_MESH_BACKEND','auto')).strip().lower()
+            if choice=='rust':raise RuntimeError('optional Rust grid triangle packing ABI is unavailable')
+        xyz=q.astype(np.float64)
+        xyz[:,:,0]=xyz[:,:,0]*(.5*coord.xsp)+coord.xoff
+        xyz[:,:,1]=xyz[:,:,1]*(.5*coord.ysp)+coord.yoff
+        xyz[:,:,2]*=.5*coord.zsp
+        return _aio_fast_write_triangle_soup(writer,xyz,max_triangles=max_triangles,cancel_event=cancel_event,chunk_size=chunk_size)
+    chunk_size=max(1,int(chunk_size))
+    records=np.empty(min(chunk_size,count),dtype=_AIO_FAST_EXACT_RECORD_DTYPE)
+    writer._flush_buffer()
+    for begin in range(0,count,chunk_size):
+        recon_core.check_cancel(cancel_event)
+        take=min(chunk_size,count-begin)
+        native.pack_grid_triangles(q[begin:begin+take],records,xsp=coord.xsp,ysp=coord.ysp,zsp=coord.zsp,xoff=coord.xoff,yoff=coord.yoff)
+        records[:take].tofile(writer.f)
+    writer.tri_count+=count
+    return count
+
+
 class _BJT57GridRectWriter(_GridRectWriter):
     def _flush(self):
         if self._buffer and shutil.disk_usage(self._temp.name).free<len(self._buffer)*56+16*1024**2:
@@ -9474,12 +9546,8 @@ class _BJT57GridRectWriter(_GridRectWriter):
                     q=_bjt57_stitch(rects[start:end],lines,positions,shifts,total)
                 else:
                     q=_bjt_stitch_rectangles(rects[start:end],lines,positions,shifts,total)
-                xyz=q.astype(np.float64)
-                xyz[:,:,0]=xyz[:,:,0]*(.5*self.coord.xsp)+self.coord.xoff
-                xyz[:,:,1]=xyz[:,:,1]*(.5*self.coord.ysp)+self.coord.yoff
-                xyz[:,:,2]*=.5*self.coord.zsp
                 if shutil.disk_usage(self.final_path.parent).free<len(q)*50+16*1024**2:raise OSError('STL 출력 공간이 부족합니다.')
-                _aio_fast_write_triangle_soup(writer,xyz,max_triangles=self.limit,cancel_event=self.cancel)
+                _bjt_write_grid_triangle_soup(writer,q,self.coord,max_triangles=self.limit,cancel_event=self.cancel)
                 emitted+=len(q);start=end
             self.tri_count=writer.tri_count;writer.close(success=True)
             _BJT_STAGE_LOCAL.exact_streaming={'mode':'external sort' if disk_mode else 'RAM sort','rectangle_count':self.rect_count,'endpoint_count':len(lines),'working_array_budget_bytes':budget,'triangles':self.tri_count,'geometry':'exact original voxel surface; no gaps, smoothing or decimation','resident_memory_limit_enforced':False}

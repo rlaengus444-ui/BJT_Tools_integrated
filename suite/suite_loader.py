@@ -73,8 +73,12 @@ class ToolLoader:
             if key in self.modules:
                 return self.modules[key]
             tool = self.specs[key]
-            if key in ('compare', 'exchanger', 'm2_converter', 'chitu_checker'):
+            if key in ('bjt', 'compare', 'exchanger', 'm2_converter', 'chitu_checker'):
                 for dependency in read_manifest().get('dependencies', []):
+                    # The optional BJT wrapper belongs only to the BJT tool;
+                    # preserve the existing checks for the other engines.
+                    if (key == 'bjt') != (dependency['path'] == 'bjt_mesh_native.py'):
+                        continue
                     path = BASE_DIR / dependency['path']
                     if hashlib.sha256(path.read_bytes()).hexdigest() != dependency['sha256']:
                         raise RuntimeError('검사 엔진의 무결성 검사가 실패했습니다: ' + str(path))

@@ -1,0 +1,19 @@
+{
+  "baseline_source": "/workspace/scratch/bjt-rust-baseline/source.py",
+  "baseline_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72",
+  "candidate_source": "suite/sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+  "candidate_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372",
+  "candidate_bytes": 538331,
+  "allowed_existing_changes": [
+    "_bjt_verify_edges",
+    "_BJT57GridRectWriter.close q-to-STL mapping call"
+  ],
+  "added_helpers": [
+    "_bjt_native_edge_backend",
+    "_bjt_write_grid_triangle_soup"
+  ],
+  "all_other_bytes_identical": true,
+  "crlf_count": 9677,
+  "bare_lf_count": 3,
+  "frozen_candidate_matches": true
+}

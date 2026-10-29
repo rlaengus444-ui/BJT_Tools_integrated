@@ -1,0 +1,170 @@
+{
+  "configuration": {
+    "repeat": 1,
+    "triangles": 10000
+  },
+  "fixture": {
+    "bytes": 720128,
+    "geometry": "ordered tiled cube triangles in doubled integer grid coordinates",
+    "sha256": "32d0cf7540ccad86c06aba224c61f57b4ab8a9bb2f3a36dc04b9a269493d5f4e"
+  },
+  "frozen_artifacts": {
+    "baseline/source.py": {
+      "bytes": 535217,
+      "original": "/workspace/scratch/bjt-rust-baseline/source.py",
+      "sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    "candidate/bjt_mesh_native.py": {
+      "bytes": 8387,
+      "original": "/workspace/BJT_Tools_integrated/suite/bjt_mesh_native.py",
+      "sha256": "92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905"
+    },
+    "candidate/native/bjt_mesh_native.build.json": {
+      "bytes": 787,
+      "original": "/workspace/BJT_Tools_integrated/suite/native/bjt_mesh_native.build.json",
+      "sha256": "316f5da6d4925f04371b4b284fe71a4cfa576da6466025d4fd505f5e29697b75"
+    },
+    "candidate/native/libbjt_mesh_native.so": {
+      "bytes": 391032,
+      "original": "/workspace/BJT_Tools_integrated/suite/native/libbjt_mesh_native.so",
+      "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+    },
+    "candidate/source.py": {
+      "bytes": 538331,
+      "original": "/workspace/BJT_Tools_integrated/suite/sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    }
+  },
+  "measurement": "Fresh alternating workers; all executable source/wrapper/binary inputs copied and hashed before launch. Existing q loaded before operation. No triangulation/JIT is timed. Pack phase writes records to os.devnull; writer adds real BinarySTLWriter close/fsync. RSS samples every 2ms may miss short spikes. Lifetime RSS includes Python/NumPy/Numba imports, source loading and q. This is not whole-app peak.",
+  "runs": [
+    {
+      "backend": "python",
+      "input_q_bytes": 720000,
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 163364864,
+      "process_lifetime_peak_rss_bytes": 184598528,
+      "repetition": 1,
+      "rss_before_bytes": 163201024,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 1,
+      "scope": "pack-phase",
+      "seconds": 0.0016983210007310845,
+      "sequence": 1,
+      "signature": {
+        "triangles": 10000,
+        "writer_count": 10000
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "input_q_bytes": 720000,
+      "native": {
+        "path": "/tmp/bjt_pack_benchmark_o4xis344/snapshot/candidate/native/libbjt_mesh_native.so",
+        "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+      },
+      "operation_sampled_peak_rss_bytes": 159817728,
+      "process_lifetime_peak_rss_bytes": 186867712,
+      "repetition": 1,
+      "rss_before_bytes": 159768576,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 1,
+      "scope": "pack-phase",
+      "seconds": 0.00033101600092777517,
+      "sequence": 2,
+      "signature": {
+        "triangles": 10000,
+        "writer_count": 10000
+      },
+      "source_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    },
+    {
+      "backend": "python",
+      "input_q_bytes": 720000,
+      "native": null,
+      "operation_sampled_peak_rss_bytes": 159416320,
+      "process_lifetime_peak_rss_bytes": 184545280,
+      "repetition": 1,
+      "rss_before_bytes": 159232000,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 1,
+      "scope": "writer",
+      "seconds": 0.0017382969999744091,
+      "sequence": 3,
+      "signature": {
+        "bytes": 500084,
+        "sha256": "252b4c08772915014439fc85052dd04ae4e7e92c1cbb9adb2d20533ec6e8443e",
+        "triangles": 10000,
+        "writer_count": 10000
+      },
+      "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72"
+    },
+    {
+      "backend": "rust",
+      "input_q_bytes": 720000,
+      "native": {
+        "path": "/tmp/bjt_pack_benchmark_o4xis344/snapshot/candidate/native/libbjt_mesh_native.so",
+        "sha256": "5bab25ff8764ac4305edc24a005e7993dc2806752c4000735e6db1352d46a0f4"
+      },
+      "operation_sampled_peak_rss_bytes": 157200384,
+      "process_lifetime_peak_rss_bytes": 185212928,
+      "repetition": 1,
+      "rss_before_bytes": 157130752,
+      "rss_sample_interval_seconds": 0.002,
+      "rss_samples": 1,
+      "scope": "writer",
+      "seconds": 0.0004187890008324757,
+      "sequence": 4,
+      "signature": {
+        "bytes": 500084,
+        "sha256": "252b4c08772915014439fc85052dd04ae4e7e92c1cbb9adb2d20533ec6e8443e",
+        "triangles": 10000,
+        "writer_count": 10000
+      },
+      "source_sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372"
+    }
+  ],
+  "snapshot_directory": "/tmp/bjt_pack_benchmark_o4xis344/snapshot",
+  "summary": {
+    "pack-phase": {
+      "parity_passed": true,
+      "python": {
+        "operation_sampled_peak_rss_bytes_median": 163364864,
+        "process_lifetime_peak_rss_bytes_median": 184598528,
+        "rss_before_bytes_median": 163201024,
+        "seconds_median": 0.0016983210007310845
+      },
+      "rust": {
+        "operation_sampled_peak_rss_bytes_median": 159817728,
+        "process_lifetime_peak_rss_bytes_median": 186867712,
+        "rss_before_bytes_median": 159768576,
+        "seconds_median": 0.00033101600092777517
+      },
+      "signature": {
+        "triangles": 10000,
+        "writer_count": 10000
+      }
+    },
+    "writer": {
+      "parity_passed": true,
+      "python": {
+        "operation_sampled_peak_rss_bytes_median": 159416320,
+        "process_lifetime_peak_rss_bytes_median": 184545280,
+        "rss_before_bytes_median": 159232000,
+        "seconds_median": 0.0017382969999744091
+      },
+      "rust": {
+        "operation_sampled_peak_rss_bytes_median": 157200384,
+        "process_lifetime_peak_rss_bytes_median": 185212928,
+        "rss_before_bytes_median": 157130752,
+        "seconds_median": 0.0004187890008324757
+      },
+      "signature": {
+        "bytes": 500084,
+        "sha256": "252b4c08772915014439fc85052dd04ae4e7e92c1cbb9adb2d20533ec6e8443e",
+        "triangles": 10000,
+        "writer_count": 10000
+      }
+    }
+  }
+}

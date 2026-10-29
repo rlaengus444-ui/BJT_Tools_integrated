@@ -23,7 +23,9 @@ EXCLUDED = {
 def app_files(app):
     for path in sorted(app.rglob('*')):
         relative = path.relative_to(app)
-        if path.is_file() and not EXCLUDED.intersection(relative.parts) and path.suffix not in {'.pyc', '.nbc', '.nbi', '.log'}:
+        if (relative.parts[:3] != ('native', 'bjt_mesh_native', 'target')
+                and path.is_file() and not EXCLUDED.intersection(relative.parts)
+                and path.suffix not in {'.pyc', '.nbc', '.nbi', '.log'}):
             yield path, relative.as_posix()
 
 

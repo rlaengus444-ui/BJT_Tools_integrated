@@ -25,6 +25,28 @@ if STAGE.exists():
     shutil.rmtree(STAGE)
 STAGE.mkdir()
 
+def stage_optional_native(source, stage, platform):
+    """Stage only the current host's optional native binary, if present."""
+    names = {'win32': 'bjt_mesh_native.dll', 'darwin': 'libbjt_mesh_native.dylib'}
+    name = names.get(platform, 'libbjt_mesh_native.so' if platform.startswith('linux') else None)
+    if name is None:
+        return None
+    binary = source / 'native' / name
+    if not binary.is_file():
+        return None
+    destination = stage / 'native' / name
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(binary, destination)
+    metadata = binary.with_name('bjt_mesh_native.build.json')
+    if metadata.is_file():
+        shutil.copy2(metadata, destination.with_name(metadata.name))
+    licenses = source / 'native/licenses'
+    if licenses.is_dir():
+        shutil.copytree(licenses, stage / 'licenses/BJT_Rust', dirs_exist_ok=True)
+    return destination
+
+
+stage_optional_native(SOURCE, STAGE, sys.platform)
 # Only product documents join the embedded runtime; QA reports stay with the build.
 PRODUCT_DOCUMENTS = {'사용_안내.txt', 'CHITU_THIRD_PARTY_NOTICES.md'}
 for path in SOURCE.iterdir():

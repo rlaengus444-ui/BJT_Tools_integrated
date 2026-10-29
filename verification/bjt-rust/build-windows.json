@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "target": "x86_64-pc-windows-gnu",
+  "profile": "release",
+  "rustflags": "-C panic=unwind -C target-cpu=generic",
+  "crate_source_sha256": "8a5bd5e9600a34431c6664edc7ea280729aad5ab7ed63a088241838f2349c492",
+  "binary": "bjt_mesh_native.dll",
+  "binary_sha256": "a163dfb8f7b140974444fcbcf33a279cc40a0f9ffd68b51ebeda01d4efe18a8a",
+  "binary_bytes": 378401,
+  "source_digest_scheme": "sha256 of sorted Cargo.toml and src/**/*.rs, each prefixed by 8-byte little-endian name length and data length",
+  "linker": "x86_64-w64-mingw32-gcc-posix 14.2.0 from locally extracted Debian trixie packages",
+  "packages": [
+    {
+      "Package": "binutils-mingw-w64-x86-64",
+      "Version": "2.44-3+12+b1",
+      "Filename": "pool/main/b/binutils-mingw-w64/binutils-mingw-w64-x86-64_2.44-3+12+b1_amd64.deb",
+      "Size": "3473344",
+      "SHA256": "b53f4a091b16a0d0952b8e3bd6027931641386258f96b37db1f0c62c787221d3"
+    },
+    {
+      "Package": "gcc-mingw-w64-x86-64-posix",
+      "Version": "14.2.0-19+27+b1",
+      "Filename": "pool/main/g/gcc-mingw-w64/gcc-mingw-w64-x86-64-posix_14.2.0-19+27+b1_amd64.deb",
+      "Size": "37567656",
+      "SHA256": "e32d24cfd1482394f16d9a84c1d0a9f5aa08ee826a79acc383c70cc8c23c4fe5"
+    },
+    {
+      "Package": "gcc-mingw-w64-x86-64-posix-runtime",
+      "Version": "14.2.0-19+27+b1",
+      "Filename": "pool/main/g/gcc-mingw-w64/gcc-mingw-w64-x86-64-posix-runtime_14.2.0-19+27+b1_amd64.deb",
+      "Size": "13037152",
+      "SHA256": "c898d96177574a8a7238564a1e799d8ddfed5a3d2ea005510305f9ad466a6f59"
+    },
+    {
+      "Package": "mingw-w64-x86-64-dev",
+      "Version": "12.0.0-5",
+      "Filename": "pool/main/m/mingw-w64/mingw-w64-x86-64-dev_12.0.0-5_all.deb",
+      "Size": "4871860",
+      "SHA256": "0bf89cf7454cccb49cd2a46a6f7b33896f6ae3a1a2fe33e02c40be6155bbb385"
+    }
+  ],
+  "pe_format": "pei-x86-64",
+  "exported_functions": [
+    "bjt_mesh_abi_version",
+    "bjt_mesh_counts_size",
+    "bjt_mesh_edge_row_align",
+    "bjt_mesh_edge_row_size",
+    "bjt_mesh_pack_grid_triangles",
+    "bjt_mesh_platform_supported",
+    "bjt_mesh_sort_count_edges",
+    "bjt_mesh_triangle_pack_abi_version"
+  ],
+  "dll_imports": [
+    "api-ms-win-core-synch-l1-2-0.dll",
+    "KERNEL32.dll",
+    "msvcrt.dll",
+    "ntdll.dll"
+  ],
+  "windows_runtime_executed": false,
+  "validation": "Cross-compilation and static PE import/export inspection only; Windows runtime and EXE are untested."
+}

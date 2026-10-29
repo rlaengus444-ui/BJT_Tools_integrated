@@ -1,0 +1,13 @@
+   Compiling bjt_mesh_native v0.1.0 (/workspace/BJT_Tools_integrated/suite/native/bjt_mesh_native)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running unittests src/lib.rs (suite/native/bjt_mesh_native/target/debug/deps/bjt_mesh_native-7434b9a115824b45)
+
+running 5 tests
+test tests::ffi_empty_null_length_and_overlap_checks ... ok
+test tests::exact_layout_and_paired_word_order ... ok
+test tests::invalid_metadata_is_rejected_before_mutation ... ok
+test tests::pack_abi_capacity_transform_and_exact_axis_normal ... ok
+test tests::incidence_and_contact_rules ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

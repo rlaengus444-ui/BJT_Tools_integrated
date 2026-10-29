@@ -1,0 +1,16 @@
+{
+  "source_sha256": "727b6db3b46c1f0d13696d93f7ba9ef039facd87c1722fee1613b5fe32a08d72",
+  "source_bytes": 535217,
+  "route": "suite_loader.ToolLoader.load(bjt), actual manifest check and compile_tool adaptation; no Tk root",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "status": "passed",
+  "module_name": "_bjt_native_727b6db3b46c1f0d1369",
+  "app_version": "5.8-faithful-contact-aware",
+  "controller_name": "App",
+  "adapted_classes": [
+    "App"
+  ],
+  "tk_root_created": false,
+  "edge_kernel_type": "numba.core.registry.CPUDispatcher",
+  "seconds": 12.275136895000003
+}
