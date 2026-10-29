@@ -24,7 +24,8 @@ class BackendDiscoveryConcurrencyTests(unittest.TestCase):
             root = Path(directory)
             wrapper = root / "bjt_mesh_native.py"
             wrapper.write_text("# Controlled test loader replaces execution.\n")
-            alias = "_bjt_mesh_native_" + hashlib.sha256(str(wrapper).encode()).hexdigest()[:16]
+            # Match the loader’s canonical path, including Windows short-name resolution.
+            alias = "_bjt_mesh_native_" + hashlib.sha256(str(wrapper.resolve()).encode("utf-8")).hexdigest()[:16]
             helper = load_definitions(fixtures.SOURCE, ["_bjt_native_edge_backend"],
                                       {"Path": Path, "__file__": str(root / "source.py")})["_bjt_native_edge_backend"]
             started, release, lock = threading.Event(), threading.Event(), threading.Lock()
