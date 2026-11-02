@@ -1,4 +1,4 @@
-"""CHITUBOX placement inspection hosted by the BJT suite.
+"""CHITUBOX triangle-surface clearance inspection hosted by the BJT suite.
 
 The UI imports native geometry modules only inside its worker. One source file
 is one object for STL fallback; native projects preserve their own instances.
@@ -29,23 +29,31 @@ except ModuleNotFoundError:
 
 
 DEFAULT_MIN_GAP_MM = 0.0
+SURFACE_SCOPE_TEXT = "삼각형 표면 간격 검사; 부피 겹침·완전 내부 포함은 검사하지 않음"
+DISTANCE_DISPLAY_NOTE = "수치는 소수 둘째 자리로 표시하며, 판정은 반올림 전 거리로 합니다."
 DROP_EXTENSIONS = frozenset({".chitubox", ".chitu", ".stl"})
 PAIR_LABELS = {
+    "contact_or_intersection": "FAIL · 표면 접촉/교차",
+    "surface_gap_satisfied": "표면 간격 조건 충족",
     "overlap": "FAIL · 부피 겹침",
     "touching": "FAIL · 표면 접촉",
-    "too_close": "FAIL · 최소 간격 미달",
+    "too_close": "FAIL · 표면 간격 미달",
     "clear": "PASS",
     "inconclusive": "판정 불가",
 }
 
 
-def _pair_label(pair):
-    if pair.get("status") == "inconclusive" and pair.get("placement_status") == "clear":
+def _pair_label(pair, *, surface_only=False):
+    if surface_only and pair.get("status") == "inconclusive":
+        return "거리 미판정"
+    if not surface_only and pair.get("status") == "inconclusive" and pair.get("placement_status") == "clear":
         return "배치 분리 · 형상 미완료"
     return PAIR_LABELS.get(pair.get("status"), "판정 불가")
 
 
-def _object_diagnostic_lines(obj):
+def _object_diagnostic_lines(obj, *, surface_only=False):
+    if surface_only or "query_available" in obj:
+        return [f"[{obj['index']}] {obj['name']}: 표면 거리 계산 불가 · {obj['query_error']}"] if obj.get("query_error") else []
     translations = {
         "Mesh contains degenerate or invalid triangles.": "퇴화되었거나 면적 수치가 유효하지 않은 삼각형이 있습니다.",
         "Mesh is not watertight; a solid volume is required.": "닫힌 다양체 메쉬가 아니어서 입체 형상을 확정하지 못했습니다.",
@@ -74,6 +82,22 @@ def _object_diagnostic_lines(obj):
 
 
 def _report_status_text(report):
+    if report.get("inspection_scope") == "surface-clearance":
+        if report.get("cancelled"):
+            title = "중단 · 표면 거리 검사 미완료"
+        elif report["status"] == "violation":
+            title = "FAIL · 표면 간격 위반" + (" · 검사 미완료" if not report.get("complete") else "")
+        elif report["status"] == "surface_gap_satisfied" and report.get("complete"):
+            title = "표면 간격 조건 충족"
+        else:
+            title = "표면 거리 미판정"
+        pairs = report.get("pairs", [])
+        measured = sum(pair.get("distance_mm") is not None for pair in pairs)
+        text = f"{title} · 오브젝트 {report.get('object_count', 0)}개 · 거리 측정 {measured}/{report.get('total_pair_count', len(pairs))}쌍"
+        if report.get("minimum_distance_mm") is not None:
+            label = "전체 쌍 최소 표면 간격" if report.get("closest_distance_is_global") else "측정된 최소 표면 간격"
+            text += f" · {label} {format_number(report['minimum_distance_mm'])} mm"
+        return text + f" · {format_number(report.get('elapsed_seconds', 0.0))}초\n" + SURFACE_SCOPE_TEXT
     invalid = sum(not row.get("valid") for row in report.get("objects", []))
     if report.get("cancelled"):
         title = "중단 · 검사 미완료"
@@ -176,15 +200,16 @@ def parse_gap(value):
 def inconclusive_report(paths, gap, error=None, *, cancelled=False):
     report = {
         "status": "inconclusive", "complete": False,
-        "placement_status": "unknown", "placement_complete": False,
-        "placement_minimum_distance_mm": None, "placement_minimum_distance_pair": None,
-        "placement_minimum_distance_is_certified": False,
-        "overlap_found": None, "violation_found": None,
+        "inspection_scope": "surface-clearance", "geometry_validation_performed": False,
+        "volume_overlap_evaluated": False, "containment_evaluated": False,
+        "violation_found": None,
         "object_count": 0, "min_gap_mm": gap,
-        "objects": [], "pairs": [], "overlaps": [], "violations": [],
+        "objects": [], "pairs": [], "violations": [], "total_pair_count": 0,
+        "minimum_distance_mm": None, "minimum_distance_pair": None,
+        "closest_distance_is_global": False, "pair_distances_complete": False,
         "processing_completed": False,
         "inputs": [str(path) for path in paths], "cancelled": cancelled,
-        "units": "mm (assumed)", "volume_units": "mm^3 (assumed)",
+        "units": "mm (assumed)",
     }
     if error:
         report["error"] = str(error)
@@ -210,7 +235,7 @@ def inspect_inputs(paths, min_gap_mm=DEFAULT_MIN_GAP_MM, cancel_event=None, prog
         if progress:
             progress(0, "파일의 오브젝트와 배치 좌표를 읽는 중입니다.")
         from chitu_overlap.inputs import load_objects
-        from chitu_overlap.geometry import check_overlaps
+        from chitu_overlap.surface import check_surface_clearances
         def load_progress(percent, message):
             if progress:
                 progress(0.45 * percent, message)
@@ -219,13 +244,13 @@ def inspect_inputs(paths, min_gap_mm=DEFAULT_MIN_GAP_MM, cancel_event=None, prog
             if progress:
                 progress(45 + 0.55 * percent, message)
 
-        objects, source_format = load_objects(paths, cancel_event=cancel_event, progress=load_progress)
-        report = check_overlaps(
+        objects, source_format = load_objects(paths, cancel_event=cancel_event, progress=load_progress, preserve_surface=True)
+        report = check_surface_clearances(
             objects, min_gap_mm=gap, cancel_event=cancel_event, progress=inspect_progress
         )
         report.update(
             inputs=[str(path) for path in paths], source_format=source_format,
-            units="mm (assumed)", volume_units="mm^3 (assumed)",
+            units="mm (assumed)",
         )
     except Exception as exc:
         message = "검사에 필요한 메모리가 부족합니다." if isinstance(exc, MemoryError) else str(exc)
@@ -235,11 +260,8 @@ def inspect_inputs(paths, min_gap_mm=DEFAULT_MIN_GAP_MM, cancel_event=None, prog
         report["cancelled"] = True
         report["complete"] = False
         report["processing_completed"] = False
-        report["placement_complete"] = False
-        report["placement_status"] = "unknown"
-        report["placement_minimum_distance_mm"] = None
-        report["placement_minimum_distance_pair"] = None
-        report["placement_minimum_distance_is_certified"] = False
+        report["pair_distances_complete"] = False
+        report["closest_distance_is_global"] = False
         if not report.get("violation_found"):
             report["status"] = "inconclusive"
     return InspectionResult(objects, report)
@@ -307,14 +329,14 @@ class ChituCheckerApp:
         self._dnd_available = False
         self._drop_was_busy = False
         self.drop_targets = ()
-        root.title("Chitu 오브젝트 검사")
+        root.title("Chitu 표면 간격 검사")
         root.geometry("1120x780")
         root.protocol("WM_DELETE_WINDOW", self.close)
         self.input_var = tk.StringVar(master=root, value="검사할 프로젝트를 선택하세요.")
         self.gap_var = tk.StringVar(master=root, value="0.0")
-        self.show_all_var = tk.BooleanVar(master=root, value=False)
-        self.status_var = tk.StringVar(master=root, value="미검사 · 표면 접촉은 최소 간격과 관계없이 FAIL입니다.")
-        self.detail_var = tk.StringVar(master=root, value="문제 쌍을 선택하면 오브젝트 이름과 판정 내용을 확인할 수 있습니다.")
+        self.show_all_var = tk.BooleanVar(master=root, value=True)
+        self.status_var = tk.StringVar(master=root, value="미검사 · 표면 접촉/교차는 최소 간격과 관계없이 FAIL입니다.\n" + SURFACE_SCOPE_TEXT)
+        self.detail_var = tk.StringVar(master=root, value="오브젝트 쌍을 선택하면 실제 표면 간격을 확인할 수 있습니다.\n" + SURFACE_SCOPE_TEXT)
         self.drop_hint_var = tk.StringVar(master=root)
         self._build_ui()
         self._enable_drag_drop()
@@ -348,7 +370,7 @@ class ChituCheckerApp:
         ttk.Label(settings, text="최소 간격 (mm)").pack(side="left")
         self.gap_entry = ttk.Entry(settings, textvariable=self.gap_var, width=12)
         self.gap_entry.pack(side="left", padx=(10, 20))
-        ttk.Label(settings, text=f"표면 접촉은 항상 FAIL · 기본 거리 오차 {format_number(1e-6)} mm",
+        ttk.Label(settings, text=f"표면 접촉/교차는 항상 FAIL · 기본 거리 오차 {format_number(1e-6)} mm\n{DISTANCE_DISPLAY_NOTE}",
                   style="Suite.Muted.TLabel").pack(side="left")
         actions = ttk.Frame(outer)
         actions.grid(row=2, column=0, sticky="ew", pady=(0, 8))
@@ -398,6 +420,8 @@ class ChituCheckerApp:
         self.progress_bar.grid(row=5, column=0, sticky="ew", pady=(0, 8))
         self.status_label = ttk.Label(outer, textvariable=self.status_var, wraplength=1030, justify="left")
         self.status_label.grid(row=6, column=0, sticky="ew")
+        ttk.Label(outer, text=SURFACE_SCOPE_TEXT, style="Suite.Muted.TLabel",
+                  wraplength=1030).grid(row=7, column=0, sticky="ew", pady=(4, 0))
         self._controls = [self.files_button, self.folder_button, self.gap_entry]
 
     def _enable_drag_drop(self):
@@ -528,25 +552,27 @@ class ChituCheckerApp:
     def stop(self):
         if self.is_busy():
             self.cancel_event.set()
-            self.status_var.set("중단 요청 · 현재 입체 연산과 파일 정리 후 중단합니다.")
+            self.status_var.set("중단 요청 · 현재 표면 거리 연산과 파일 정리 후 중단합니다.")
             self._refresh_actions()
 
     def _show_report(self, result):
         self.last_result = result
         self.last_report = result.report
         report = result.report
+        surface_only = report.get("inspection_scope") == "surface-clearance"
         self.status_var.set(_report_status_text(report))
         self.progress_bar.configure(value=100 if report.get("processing_completed", report.get("complete")) else 0)
         errors = []
         if report.get("error"):
             errors.append(report["error"])
         for obj in report.get("objects", []):
-            errors.extend(_object_diagnostic_lines(obj))
-        if report.get("placement_complete") and not report.get("complete"):
+            errors.extend(_object_diagnostic_lines(obj, surface_only=surface_only))
+        if not surface_only and report.get("placement_complete") and not report.get("complete"):
             errors.insert(0, "배치 분리는 확인했지만 형상 검증은 미완료입니다. 닫힌 입체·메쉬 품질의 PASS가 아닙니다.")
         if report.get("object_count") == 1:
             errors.append("인식된 오브젝트가 1개이므로 비교할 오브젝트 쌍이 없습니다.")
-        self.detail_var.set("\n".join(errors) if errors else "문제 쌍을 선택하거나 3D 배치 보기를 눌러 실제 배치를 확인하세요.")
+        default = "오브젝트 쌍을 선택하거나 3D 배치 보기를 눌러 실제 표면 간격을 확인하세요." if surface_only else "문제 쌍을 선택하거나 3D 배치 보기를 눌러 실제 배치를 확인하세요."
+        self.detail_var.set(("\n".join(errors) if errors else default) + ("\n" + SURFACE_SCOPE_TEXT if surface_only else ""))
         self._populate_pairs()
 
     def _update_details(self, *unused):
@@ -564,19 +590,21 @@ class ChituCheckerApp:
         if self.last_report is None:
             return
         pairs = self.last_report.get("pairs", [])
-        visible = pairs if self.show_all_var.get() else [pair for pair in pairs if pair["status"] != "clear"]
+        surface_only = self.last_report.get("inspection_scope") == "surface-clearance"
+        success = {"clear", "surface_gap_satisfied"}
+        visible = pairs if self.show_all_var.get() else [pair for pair in pairs if pair["status"] not in success]
         for index, pair in enumerate(visible[:10000]):
             identity = str(index)
             if pair.get("distance_mm") is not None:
                 gap = format_number(pair["distance_mm"])
-            elif pair.get("distance_lower_bound_mm") is not None:
+            elif not surface_only and pair.get("distance_lower_bound_mm") is not None:
                 gap = "≥ " + format_lower_bound(pair["distance_lower_bound_mm"])
-            elif pair.get("placement_distance_lower_bound_mm") is not None:
+            elif not surface_only and pair.get("placement_distance_lower_bound_mm") is not None:
                 gap = "≥ " + format_lower_bound(pair["placement_distance_lower_bound_mm"])
             else:
                 gap = "—"
-            tag = "unknown" if pair["status"] == "inconclusive" else "violation" if pair["status"] != "clear" else ""
-            self.tree.insert("", "end", iid=identity, values=(_pair_label(pair),
+            tag = "unknown" if pair["status"] == "inconclusive" else "violation" if pair["status"] not in success else ""
+            self.tree.insert("", "end", iid=identity, values=(_pair_label(pair, surface_only=surface_only),
                 f"[{pair['index_a']}] {pair['object_a']}", f"[{pair['index_b']}] {pair['object_b']}", gap), tags=(tag,))
             self._displayed_pairs[identity] = pair
         if len(visible) > 10000:
@@ -588,22 +616,27 @@ class ChituCheckerApp:
         selection = self.tree.selection()
         pair = self._displayed_pairs.get(selection[0]) if selection else None
         if pair is not None:
-            text = f"[{pair['index_a']}] {pair['object_a']} ↔ [{pair['index_b']}] {pair['object_b']}\n{_pair_label(pair)}"
+            surface_only = (getattr(self, "last_report", None) or {}).get("inspection_scope") == "surface-clearance"
+            text = f"[{pair['index_a']}] {pair['object_a']} ↔ [{pair['index_b']}] {pair['object_b']}\n{_pair_label(pair, surface_only=surface_only)}"
             if pair.get("distance_mm") is not None:
                 text += f" · 간격 {format_number(pair['distance_mm'])} mm"
-            elif pair.get("distance_lower_bound_mm") is not None:
+            elif not surface_only and pair.get("distance_lower_bound_mm") is not None:
                 text += f" · 간격 ≥ {format_lower_bound(pair['distance_lower_bound_mm'])} mm (확인된 거리 하한)"
-            elif pair.get("placement_distance_lower_bound_mm") is not None:
+            elif not surface_only and pair.get("placement_distance_lower_bound_mm") is not None:
                 text += f" · 원본 AABB 간격 ≥ {format_lower_bound(pair['placement_distance_lower_bound_mm'])} mm (거리 하한)"
-            if pair.get("intersection_volume"):
+            if not surface_only and pair.get("intersection_volume"):
                 text += f" · 교차 부피 {format_number(pair['intersection_volume'])} mm³"
-            if pair.get("status") == "inconclusive" and pair.get("placement_status") == "clear":
+            if surface_only:
+                if pair.get("aabb_relation") == "overlapping" and pair.get("distance_mm") is not None and pair["distance_mm"] > 0:
+                    text += "\n내부 포함 여부 미검사"
+                text += "\n" + SURFACE_SCOPE_TEXT
+            elif pair.get("status") == "inconclusive" and pair.get("placement_status") == "clear":
                 text += "\n원본 삼각형의 경계 상자로 분리를 확인했습니다. 형상 유효성의 PASS는 아닙니다."
             if pair.get("error"):
                 text += "\n" + pair["error"]
             for obj in (getattr(self, "last_report", None) or {}).get("objects", []):
                 if obj["index"] in (pair["index_a"], pair["index_b"]):
-                    lines = _object_diagnostic_lines(obj)
+                    lines = _object_diagnostic_lines(obj, surface_only=surface_only)
                     if lines:
                         text += "\n" + "\n".join(lines)
             self.detail_var.set(text)

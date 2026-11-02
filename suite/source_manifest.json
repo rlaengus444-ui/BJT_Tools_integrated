@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.8.1",
+  "suite_version": "1.8.2",
   "tools": [
     {
       "id": "bjt",
@@ -133,13 +133,13 @@
     {
       "id": "chitu_checker",
       "label": "치투 오브젝트 검사",
-      "description": "CHITUBOX 오브젝트의 겹침·접촉·최소 간격 검사와 3D 배치 확인",
+      "description": "CHITUBOX 오브젝트의 표면 접촉·교차 및 최소 간격 검사와 3D 배치 확인",
       "source": "sources/chitu_checker.py",
       "controller": "ChituCheckerApp",
       "embedded_base": false,
-      "sha256": "a77f281c472edcf82c2f8d3e65661c1a568440726457879079d252f6c581b3fc",
-      "bytes": 36995,
-      "adaptation": "CHITUBOX Basic 배치 유지, 표면 접촉 금지, 최소 간격 mm, 비동기 검사·중단, JSON 및 오프라인 3D HTML. 지원 파일 드래그앤드롭 입력."
+      "sha256": "0b922da26264238d46bfe657edf58dc8b0737193ec98c69e461278256511c550",
+      "bytes": 40087,
+      "adaptation": "CHITUBOX Basic 배치를 유지하여 삼각형 표면 접촉·교차와 최소 간격을 검사. 체적 겹침과 내부 포함은 검사하지 않음. 비동기 검사·중단, JSON 및 오프라인 3D HTML 지원."
     }
   ],
   "dependencies": [
@@ -185,7 +185,7 @@
     },
     {
       "path": "chitu_overlap/cli.py",
-      "sha256": "54e361b0b0cccb2e657c7ece1c281d26d3bec398a177f1fdf6edb7237759d591",
+      "sha256": "e6e22b2e0e609a13b9afe8878216d73bd69052eddc27a43d30124c2f3b131315",
       "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
     },
     {
@@ -195,12 +195,12 @@
     },
     {
       "path": "chitu_overlap/inputs.py",
-      "sha256": "32648d49ad2a3efe1955a769bc65a7df22911c93dd04e13c30d250396814ea6c",
+      "sha256": "4758058fa3d703ee4591519e44583d471636f20866d34f9caf0f268b60898cfe",
       "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
     },
     {
       "path": "chitu_overlap/viewer.py",
-      "sha256": "7a28975e46c17e84e3b7264951f0e4f65b930e15dfbd89794b9087c82640c26a",
+      "sha256": "0baa294137cedfb6c146feca584ee7c1c734626e4e9557cd511e76997c05c7ac",
       "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
     },
     {
@@ -233,6 +233,11 @@
       "path": "chitu_overlap/display_preview.py",
       "purpose": "원본 검사 메쉬를 보존하는 VTK 기반 경량 배치 미리보기",
       "sha256": "0e6d9158093257676817558e5a851144001729db5f3ef392e0ab604d66455689"
+    },
+    {
+      "path": "chitu_overlap/surface.py",
+      "purpose": "형상 품질 검사 없이 원본 삼각형 표면 간격·접촉·교차를 계산하는 조회",
+      "sha256": "18f2b2bff82b6f1ca5f88e1db4ae73544f9638d70098b089cf1ea13ffb5e59b8"
     }
   ]
 }

@@ -8,7 +8,7 @@ import math
 from pathlib import Path
 import sys
 
-from .geometry import check_overlaps
+from .surface import check_surface_clearances
 from .inputs import load_objects
 
 try:
@@ -22,24 +22,30 @@ except ModuleNotFoundError:
     format_number, format_lower_bound = _display_module.format_number, _display_module.format_lower_bound
 
 
+SURFACE_SCOPE_TEXT = "삼각형 표면 간격 검사; 부피 겹침·완전 내부 포함은 검사하지 않음"
+DISTANCE_DISPLAY_NOTE = "수치는 소수 둘째 자리로 표시하며, 판정은 반올림 전 거리로 합니다."
+
+
 def _tolerance(value: str) -> float:
     result = float(value)
     if not math.isfinite(result) or result < 0:
-        raise argparse.ArgumentTypeError("0 이상의 유한한 부피를 입력하세요.")
+        raise argparse.ArgumentTypeError("0 이상의 유한한 mm 값을 입력하세요.")
     return result
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="CHITUBOX Basic 프로젝트 내 겹침·표면 접촉·최소 간격을 검사합니다."
+        description=SURFACE_SCOPE_TEXT + "\n" + DISTANCE_DISPLAY_NOTE
     )
     parser.add_argument("inputs", nargs="+", type=Path, help="프로젝트 1개 또는 배치 좌표를 유지한 개별 STL 파일/폴더")
     parser.add_argument("--json", dest="json_path", type=Path, help="상세 결과를 저장할 JSON 경로")
-    parser.add_argument("--html", dest="html_path", type=Path, help="문제 오브젝트 쌍을 강조하는 회전·확대 가능한 3D HTML 경로")
-    parser.add_argument("--volume-tolerance", type=_tolerance, default=1e-6, metavar="VOLUME", help="이 값보다 큰 교차 부피만 겹침으로 판정 (기본 1e-6, mm³ 가정)")
-    parser.add_argument("--min-gap-mm", type=_tolerance, default=0.0, metavar="MM", help="유지해야 할 최소 간격(mm). 기본 0; 표면 접촉은 항상 불합격")
+    parser.add_argument("--html", dest="html_path", type=Path, help="오브젝트 쌍의 표면 간격을 확인하는 회전·확대 가능한 3D HTML 경로")
+    parser.add_argument("--volume-tolerance", help=argparse.SUPPRESS)
+    parser.add_argument("--min-gap-mm", type=_tolerance, default=0.0, metavar="MM", help="유지해야 할 최소 간격(mm). 기본 0; 표면 접촉/교차는 항상 불합격")
     parser.add_argument("--distance-tolerance-mm", type=_tolerance, default=1e-6, metavar="MM", help="접촉 및 간격 판정의 수치 허용 오차 (기본 1e-6 mm)")
     args = parser.parse_args(argv)
+    if args.volume_tolerance is not None:
+        parser.error("--volume-tolerance는 표면 간격 검사에서 지원하지 않습니다. 거리 오차는 --distance-tolerance-mm로 지정하세요.")
     outputs = [path for path in (args.json_path, args.html_path) if path is not None]
     if len({p.resolve() for p in outputs}) != len(outputs):
         print("오류: JSON과 HTML 결과 경로는 서로 달라야 합니다.", file=sys.stderr)
@@ -58,10 +64,9 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     objects = []
     try:
-        objects, source_format = load_objects(args.inputs)
-        report = check_overlaps(
+        objects, source_format = load_objects(args.inputs, preserve_surface=True)
+        report = check_surface_clearances(
             objects,
-            volume_tolerance=args.volume_tolerance,
             min_gap_mm=args.min_gap_mm,
             distance_tolerance_mm=args.distance_tolerance_mm,
         )
@@ -69,18 +74,18 @@ def main(argv: list[str] | None = None) -> int:
             source_format=source_format,
             inputs=[str(p) for p in args.inputs],
             units="mm (assumed)",
-            volume_units="mm^3 (assumed)",
         )
     except (OSError, ValueError, RuntimeError, IndexError, MemoryError) as exc:
         report = {
             "status": "inconclusive",
             "complete": False,
-            "placement_status": "unknown", "placement_complete": False,
-            "placement_minimum_distance_mm": None, "placement_minimum_distance_pair": None,
-            "placement_minimum_distance_is_certified": False,
-            "overlap_found": None,
+            "inspection_scope": "surface-clearance", "geometry_validation_performed": False,
+            "volume_overlap_evaluated": False, "containment_evaluated": False,
             "violation_found": None,
-            "object_count": None,
+            "object_count": 0, "objects": [], "pairs": [], "violations": [],
+            "total_pair_count": 0, "processing_completed": False, "cancelled": False,
+            "minimum_distance_mm": None, "minimum_distance_pair": None,
+            "closest_distance_is_global": False, "pair_distances_complete": False,
             "min_gap_mm": args.min_gap_mm,
             "inputs": [str(p) for p in args.inputs],
             "error": f"{type(exc).__name__}: " + ("검사에 필요한 메모리가 부족합니다." if isinstance(exc, MemoryError) else str(exc)),
@@ -104,10 +109,13 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(f"3D 배치 결과: {args.html_path}")
     _print_summary(report)
-    return 1 if report["status"] == "violation" else 0 if report["status"] == "clear" else 2
+    return 1 if report["status"] == "violation" else 0 if report["status"] == "surface_gap_satisfied" and report.get("complete") else 2
 
 
 def _print_summary(report: dict) -> None:
+    if report.get("inspection_scope") == "surface-clearance":
+        _print_surface_summary(report)
+        return
     if "error" in report:
         print(f"판정 불가: {report['error']}", file=sys.stderr)
         return
@@ -170,3 +178,39 @@ def _print_summary(report: dict) -> None:
         unknown = [pair for pair in report["pairs"] if pair.get("status") == "inconclusive"]
         if unknown:
             print(f"  형상 미판정 {len(unknown)}쌍: 전체 쌍의 형상·배치 판정은 JSON에 각각 보존됩니다.", file=sys.stderr)
+
+
+def _print_surface_summary(report: dict) -> None:
+    print(SURFACE_SCOPE_TEXT)
+    print(DISTANCE_DISPLAY_NOTE)
+    if report.get("error"):
+        print(f"표면 거리 미판정: {report['error']}", file=sys.stderr)
+        return
+    pairs = report.get("pairs", [])
+    measured = [pair for pair in pairs if pair.get("distance_mm") is not None]
+    print(f"오브젝트 {report.get('object_count', 0)}개 / 실제 거리 측정 {len(measured)}쌍 / 전체 {report.get('total_pair_count', len(pairs))}쌍")
+    if report.get("minimum_distance_mm") is not None:
+        a, b = report["minimum_distance_pair"]
+        label = "전체 쌍 최소 표면 간격" if report.get("closest_distance_is_global") else "측정된 최소 표면 간격"
+        print(f"{label}: {format_number(report['minimum_distance_mm'])} mm ([{a}] ↔ [{b}])")
+    if report["status"] == "surface_gap_satisfied" and report.get("complete"):
+        print(f"표면 간격 조건 충족: 요구 간격 {format_number(report['min_gap_mm'])} mm")
+    elif report["status"] == "violation":
+        print(f"FAIL · 표면 간격 위반 {len(report['violations'])}쌍 (요구 간격 {format_number(report['min_gap_mm'])} mm)")
+        labels = {"contact_or_intersection": "표면 접촉/교차", "too_close": "표면 간격 미달"}
+        for pair in report["violations"]:
+            print(f"  [{pair['index_a']}] {pair['object_a']} ↔ [{pair['index_b']}] {pair['object_b']}: "
+                  f"{labels.get(pair['status'], pair['status'])}, 표면 간격 {format_number(pair.get('distance_mm'))} mm")
+    for pair in measured:
+        if pair.get("aabb_relation") == "overlapping" and pair["distance_mm"] > 0:
+            print(f"  [{pair['index_a']}] ↔ [{pair['index_b']}]: 표면 간격 {format_number(pair['distance_mm'])} mm · 내부 포함 여부 미검사")
+    if report.get("object_count") == 1:
+        print("인식된 오브젝트가 1개이므로 비교 대상 쌍이 없습니다.")
+    if not report.get("complete"):
+        print("표면 거리 검사 미완료: 측정하지 못한 오브젝트/쌍이 있습니다.", file=sys.stderr)
+        for obj in report.get("objects", []):
+            if obj.get("query_error"):
+                print(f"  [{obj['index']}] {obj['name']}: {obj['query_error']}", file=sys.stderr)
+        for pair in pairs:
+            if pair.get("error"):
+                print(f"  [{pair['index_a']}] ↔ [{pair['index_b']}]: {pair['error']}", file=sys.stderr)

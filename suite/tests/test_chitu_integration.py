@@ -36,12 +36,12 @@ class ChituIntegrationTests(unittest.TestCase):
         result = app.inspect_inputs(self.boxes(0))
         self.assertEqual(result.report['status'], 'violation')
         self.assertTrue(result.report['complete'])
-        self.assertEqual(result.report['violations'][0]['status'], 'touching')
+        self.assertEqual(result.report['violations'][0]['status'], 'contact_or_intersection')
 
     def test_configurable_minimum_gap_and_equality(self):
         paths = self.boxes(.5)
         self.assertEqual(app.inspect_inputs(paths, 1).report['status'], 'violation')
-        self.assertEqual(app.inspect_inputs(paths, .5).report['status'], 'clear')
+        self.assertEqual(app.inspect_inputs(paths, .5).report['status'], 'surface_gap_satisfied')
 
     def test_source_files_unchanged(self):
         paths = self.boxes(.5)
@@ -122,7 +122,7 @@ class ChituIntegrationTests(unittest.TestCase):
     def test_manifest_keeps_ten_existing_tool_sources_valid(self):
         from suite_loader import read_manifest, verify_sources
         manifest = read_manifest()
-        self.assertEqual(manifest['suite_version'], '1.8.1')
+        self.assertEqual(manifest['suite_version'], '1.8.2')
         self.assertEqual(len(manifest['tools']), 11)
         spec = next(tool for tool in manifest['tools'] if tool['id'] == 'chitu_checker')
         self.assertFalse(spec['embedded_base'])

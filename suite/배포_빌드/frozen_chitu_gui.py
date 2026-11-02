@@ -15,6 +15,22 @@ import traceback
 from unittest import mock
 
 
+def surface_fixture_result(result, gap, label):
+    """Check this fixture's independent gap decisions without solid claims."""
+    violations = [(pair.get("index_a"), pair.get("index_b")) for pair in result.get("violations", [])]
+    if gap == 3:
+        expected = result.get("status") == "violation" and violations == [(15, 31)] and label.startswith("FAIL")
+    elif gap == 1:
+        expected = (result.get("status") == "surface_gap_satisfied" and not violations
+                    and label.startswith("표면 간격 조건 충족"))
+    else:
+        return False
+    return (expected and result.get("inspection_scope") == "surface-clearance"
+            and result.get("geometry_validation_performed") is False
+            and result.get("volume_overlap_evaluated") is False
+            and result.get("complete") is True and result.get("object_count") == 63)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--app", type=Path, required=True)
@@ -71,14 +87,23 @@ def main():
         controller.start()
         wait_until(lambda: not controller.is_busy() and controller.last_report is not None)
         result = controller.last_report
-        pair = result["violations"][0] if result.get("violations") else {}
-        checks["real_gap3_fail_complete"] = result["status"] == "violation" and result["complete"] and result["object_count"] == 63
-        checks["real_gap3_expected_pair"] = len(result["violations"]) == 1 and (pair.get("index_a"), pair.get("index_b")) == (15, 31)
-        checks["real_gap3_expected_distance"] = abs(pair.get("distance_mm", 0) - 2.924621820449829) < 1e-9
-        checks["fail_label_and_row"] = controller.status_var.get().startswith("FAIL") and len(controller.tree.get_children()) == 1
-        controller.tree.selection_set(controller.tree.get_children()[0])
+        checks["real_gap3_surface_scope_and_golden_decision"] = surface_fixture_result(result, 3, controller.status_var.get())
+        checks["surface_scope_label"] = ("부피 겹침" in controller.status_var.get()
+            and "내부 포함" in controller.status_var.get())
+        controller.show_all_var.set(True)
+        controller._populate_pairs()
         root.update()
-        checks["selected_failed_pair"] = controller._selected_pair() == (15, 31)
+        identity = next(iter(controller._displayed_pairs))
+        pair = controller._displayed_pairs[identity]
+        selected = (pair["index_a"], pair["index_b"])
+        checks["real_gap3_measured_pair"] = pair.get("distance_is_exact") is True and pair.get("distance_mm") is not None
+        # This independent fixture's previously measured nearest surface pair
+        # remains the expected value; no solid-quality conclusion is implied.
+        checks["real_gap3_golden_surface_distance"] = (result.get("minimum_distance_pair") == [15, 31]
+            and abs(result.get("minimum_distance_mm", 0) - 2.924621820449829) < 1e-9)
+        controller.tree.selection_set(identity)
+        root.update()
+        checks["selected_pair"] = controller._selected_pair() == selected
         if args.screenshot:
             try:
                 from PIL import ImageGrab
@@ -94,23 +119,23 @@ def main():
             controller.save_json()
             wait_until(lambda: not controller.is_busy())
         exported = json.loads(json_path.read_text(encoding="utf-8"))
-        checks["json_export_settings_and_pair"] = exported["min_gap_mm"] == 3 and exported["violations"][0]["distance_mm"] == pair["distance_mm"]
+        checks["json_export_settings_and_pair"] = exported["min_gap_mm"] == 3 and next(p for p in exported["pairs"] if (p["index_a"], p["index_b"]) == selected)["distance_mm"] == pair["distance_mm"]
         with mock.patch("tkinter.filedialog.asksaveasfilename", return_value=str(html_path)), mock.patch("webbrowser.open", return_value=True) as browser:
             controller.show_3d()
             wait_until(lambda: not controller.is_busy())
             checks["html_open_requested_without_real_browser"] = browser.call_count == 1
         page = html_path.read_text(encoding="utf-8")
-        checks["html_selected_pair_and_inline_viewer"] = '"selected_pair":[15,31]' in page and "Plotly.newPlot" in page and "<script src=" not in page
+        checks["html_selected_pair_and_inline_viewer"] = ('"selected_pair":' + json.dumps(list(selected), separators=(',', ':'))) in page and "Plotly.newPlot" in page and "<script src=" not in page and "부피 겹침·완전 내부 포함은 검사하지 않음" in page
         controller.gap_var.set("1")
         checks["changed_settings_invalidate_previous_result"] = controller.last_report is None and controller.last_result is None and not controller.tree.get_children() and str(controller.html_button.cget("state")) == "disabled"
         controller.start()
         wait_until(lambda: not controller.is_busy() and controller.last_report is not None)
         result = controller.last_report
-        checks["real_gap1_pass_complete"] = result["status"] == "clear" and result["complete"] and controller.status_var.get().startswith("PASS")
+        checks["real_gap1_surface_complete"] = surface_fixture_result(result, 1, controller.status_var.get())
         controller.start()
         controller.stop()
         wait_until(lambda: not controller.is_busy() and controller.last_report is not None)
-        checks["cancel_does_not_pass"] = controller.last_report.get("cancelled") and not controller.last_report["complete"] and not controller.status_var.get().startswith("PASS")
+        checks["cancel_does_not_pass"] = controller.last_report.get("cancelled") and not controller.last_report["complete"] and not controller.status_var.get().startswith("표면 간격 조건 충족")
         controller.start()
         app.request_close(confirm=False)
         deadline = time.monotonic() + 120

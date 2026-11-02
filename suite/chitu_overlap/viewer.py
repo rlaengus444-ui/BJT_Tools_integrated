@@ -267,14 +267,14 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
 <body>
 <main>
 <aside>
-<h1>Chitu 3D 간격 검사</h1>
-<div class="subtle">원본 배치 좌표 · 단위 mm · 표면 접촉 금지</div>
+<h1 id="heading">Chitu 3D 간격 검사</h1>
+<div id="scope" class="subtle">원본 배치 좌표 · 단위 mm · 표면 접촉 금지</div>
 <section class="card"><div id="status" class="status"></div><div id="summary" class="subtle"></div></section>
 <label for="pair">오브젝트 쌍 · 검사 결과</label>
 <select id="pair"><option value="">전체 배치</option></select>
 <div class="buttons"><button id="full">전체 보기</button><button id="focus" disabled>선택 쌍 확대</button></div>
 <label class="checkbox"><input type="checkbox" id="background" checked> 다른 오브젝트도 표시</label>
-<div class="legend"><span><i class="dot" style="background:#e63950"></i>오브젝트 A</span><span><i class="dot" style="background:#f99b2e"></i>오브젝트 B</span><span><i class="dot" style="background:#9caec0"></i>나머지</span><span><i class="dot" style="background:#9b6acc"></i>미판정</span></div>
+<div class="legend"><span><i class="dot" style="background:#e63950"></i>오브젝트 A</span><span><i class="dot" style="background:#f99b2e"></i>오브젝트 B</span><span><i class="dot" style="background:#9caec0"></i>나머지</span><span><i class="dot" style="background:#9b6acc"></i><span id="unknown-legend">미판정</span></span></div>
 <div id="preview-note" class="preview-note" hidden></div>
 <div id="details" class="details"></div>
 <div id="warning" class="warning" hidden></div>
@@ -288,18 +288,22 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
   "use strict";
   const data = JSON.parse(document.getElementById("viewer-data").textContent);
   const report = data.report;
+  const surfaceOnly=report.inspection_scope==="surface-clearance";
+  const scopeText="삼각형 표면 간격 검사; 부피 겹침·완전 내부 포함은 검사하지 않음";
+  const displayNote="수치는 소수 둘째 자리로 표시하며, 판정은 반올림 전 거리로 합니다.";
+  if(surfaceOnly){document.getElementById("heading").textContent="Chitu 표면 간격 검사";document.getElementById("scope").textContent=scopeText+" · 원본 배치 좌표 · 단위 mm\n"+displayNote;document.getElementById("unknown-legend").textContent="거리 미판정";}
   const violations = report.violations || [];
   const pairChoices=[...violations];
   const pairKeys=new Set(pairChoices.map(pair=>`${pair.index_a}:${pair.index_b}`));
   (report.pairs || []).forEach(pair=>{const key=`${pair.index_a}:${pair.index_b}`;if(!pairKeys.has(key)){pairKeys.add(key);pairChoices.push(pair);}});
   const objects = report.objects || [];
-  const labels = {overlap:"부피 겹침",touching:"표면 접촉",too_close:"최소 간격 미달",clear:"합격",inconclusive:"판정 불가"};
+  const labels = surfaceOnly ? {contact_or_intersection:"FAIL · 표면 접촉/교차",too_close:"FAIL · 표면 간격 미달",surface_gap_satisfied:"표면 간격 조건 충족",inconclusive:"거리 미판정"} : {overlap:"부피 겹침",touching:"표면 접촉",too_close:"최소 간격 미달",clear:"합격",inconclusive:"판정 불가"};
   const selector = document.getElementById("pair");
   const plot = document.getElementById("plot");
   const focus = document.getElementById("focus");
   const background = document.getElementById("background");
   const failed = new Set(violations.flatMap(pair => [pair.index_a,pair.index_b]));
-  const invalid = new Set(objects.filter(obj => !obj.valid).map(obj => obj.index));
+  const invalid = new Set(objects.filter(obj => surfaceOnly ? obj.query_available===false : !obj.valid).map(obj => obj.index));
   const format = value => {
     if(!Number.isFinite(value)) return "판정 불가";
     if(value!==0 && (Number(value.toFixed(2))===0 || Math.abs(value)>=1e21)) return value.toExponential(2);
@@ -322,9 +326,10 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
     const sign=units<0n ? "-" : "",magnitude=units<0n ? -units : units;
     return `${sign}${magnitude/100n}.${(magnitude%100n).toString().padStart(2,"0")}`;
   }
-  const gapText = pair => Number.isFinite(pair.distance_mm) ? `${format(pair.distance_mm)} mm` : Number.isFinite(pair.distance_lower_bound_mm) ? `≥ ${formatLowerBound(pair.distance_lower_bound_mm)} mm (보장 하한)` : "판정 불가";
-  const placementClear = report.placement_status==="clear" && report.placement_complete===true && !report.cancelled && report.status!=="violation" && !violations.length;
+  const gapText = pair => Number.isFinite(pair.distance_mm) ? `${format(pair.distance_mm)} mm` : !surfaceOnly && Number.isFinite(pair.distance_lower_bound_mm) ? `≥ ${formatLowerBound(pair.distance_lower_bound_mm)} mm (보장 하한)` : surfaceOnly ? "거리 미판정" : "판정 불가";
+  const placementClear = !surfaceOnly && report.placement_status==="clear" && report.placement_complete===true && !report.cancelled && report.status!=="violation" && !violations.length;
   const placementText = pair => {
+    if(surfaceOnly) return pair.aabb_relation==="overlapping" && Number.isFinite(pair.distance_mm) && pair.distance_mm>0 ? "내부 포함 여부 미검사" : "";
     if(!pair.placement_status) return "";
     if(pair.placement_status==="clear" && !["overlap","touching","too_close"].includes(pair.status)){
       const bound=pair.placement_distance_lower_bound_mm;
@@ -338,18 +343,22 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
   const previewMessages=[];
   if(approximations.length) previewMessages.push(`근사 미리보기: ${approximations.length}개 오브젝트의 표시용 삼각형을 줄였습니다. 거리 계산과 판정에는 이 단순화 형상을 사용하지 않습니다.`);
   if(proxies.length) previewMessages.push(`대용량 미리보기: ${proxies.length}개 오브젝트는 외곽박스로 표시합니다. 안전한 형상 단순화가 불가능하거나 표시 한도·중단 조건에 해당합니다.`);
-  if(report.pair_distances_complete===false) previewMessages.push("일부 분리된 쌍은 보장된 거리 하한(≥)으로 표시합니다.");
+  if(report.pair_distances_complete===false) previewMessages.push(surfaceOnly ? "일부 오브젝트 쌍의 실제 표면 거리가 미판정입니다." : "일부 분리된 쌍은 보장된 거리 하한(≥)으로 표시합니다.");
   if(previewMessages.length){const note=document.getElementById("preview-note");note.hidden=false;note.textContent=previewMessages.join("\n");}
   const status = document.getElementById("status");
-  if(report.status === "violation"){
+  if(surfaceOnly){
+    if(report.status==="surface_gap_satisfied" && report.complete && !report.cancelled){status.textContent="표면 간격 조건 충족";status.classList.add("good");}
+    else if(report.status==="violation"){status.textContent="FAIL · 표면 간격 위반"+(report.complete?"":" · 검사 미완료");status.classList.add("bad");}
+    else{status.textContent=report.cancelled?"중단 · 표면 거리 검사 미완료":"표면 거리 미판정";status.classList.add("unknown");}
+  } else if(report.status === "violation"){
     status.textContent = "불합격" + (report.complete ? "" : " · 검사 미완료"); status.classList.add("bad");
   } else if(report.status === "clear" && report.complete){
     status.textContent = "합격"; status.classList.add("good");
   } else {status.textContent = "판정 불가";status.classList.add("unknown");}
-  document.getElementById("summary").textContent = `오브젝트 ${data.object_count}개 · 불합격 ${violations.length}쌍\n요구 최소 간격 ${format(report.min_gap_mm || 0)} mm` + (placementClear ? "\n배치 분리 확인" + (report.complete && report.status==="clear" ? "" : " · 형상 미검증") : report.placement_status ? "\n배치 분리: " + (report.placement_status==="violation" ? "간격 조건 미달" : "판정 불가") : "");
+  document.getElementById("summary").textContent = `오브젝트 ${data.object_count}개 · ${surfaceOnly?"표면 간격 위반":"불합격"} ${violations.length}쌍\n요구 최소 간격 ${format(report.min_gap_mm || 0)} mm` + (surfaceOnly ? `\n실제 거리 측정 ${pairChoices.filter(pair=>Number.isFinite(pair.distance_mm)).length}/${report.total_pair_count ?? pairChoices.length}쌍` : placementClear ? "\n배치 분리 확인" + (report.complete && report.status==="clear" ? "" : " · 형상 미검증") : report.placement_status ? "\n배치 분리: " + (report.placement_status==="violation" ? "간격 조건 미달" : "판정 불가") : "");
   pairChoices.forEach((pair, index) => {
     const option=document.createElement("option"); option.value=String(index);
-    option.textContent=`[${pair.index_a}] ↔ [${pair.index_b}] ${labels[pair.status] || pair.status}` + (pair.placement_status==="clear" && pair.status==="inconclusive" ? " · 배치 분리 확인" : "");
+    option.textContent=`[${pair.index_a}] ↔ [${pair.index_b}] ${labels[pair.status] || pair.status}` + (!surfaceOnly && pair.placement_status==="clear" && pair.status==="inconclusive" ? " · 배치 분리 확인" : "");
     selector.appendChild(option);
   });
   if(Array.isArray(report.selected_pair)){
@@ -358,10 +367,13 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
   }
   selector.disabled = !pairChoices.length;
   const warnings=[];
-  if(!report.complete) warnings.push("검사하지 못한 항목이 있습니다. 이 화면은 전체 배치의 합격을 보증하지 않습니다.");
+  if(!report.complete) warnings.push(surfaceOnly ? "일부 표면 거리를 측정하지 못했습니다. 미판정 오브젝트와 쌍을 확인하세요." : "검사하지 못한 항목이 있습니다. 이 화면은 전체 배치의 합격을 보증하지 않습니다.");
   if(report.error) warnings.push(report.error);
-  objects.filter(obj => !obj.valid).forEach(obj => warnings.push(`[${obj.index}] ${obj.name}: ${(obj.errors || []).join(" / ")}`));
-  objects.filter(obj => obj.normalization).forEach(obj => warnings.push(`[${obj.index}] ${obj.name}: 원본 형상을 유지한 검사용 연결면 정리 완료 (정점 좌표 변경 없음).`));
+  if(surfaceOnly){objects.filter(obj=>obj.query_available===false && obj.query_error).forEach(obj=>warnings.push(`[${obj.index}] ${obj.name}: 표면 거리 계산 불가 · ${obj.query_error}`));}
+  else{
+    objects.filter(obj => !obj.valid).forEach(obj => warnings.push(`[${obj.index}] ${obj.name}: ${(obj.errors || []).join(" / ")}`));
+    objects.filter(obj => obj.normalization).forEach(obj => warnings.push(`[${obj.index}] ${obj.name}: 원본 형상을 유지한 검사용 연결면 정리 완료 (정점 좌표 변경 없음).`));
+  }
   if(data.skipped.length) warnings.push("표시할 수 없는 메쉬: " + data.skipped.map(obj => `[${obj.index}] ${obj.name}`).join(", "));
   if(warnings.length){const warning=document.getElementById("warning");warning.hidden=false;warning.textContent=warnings.join("\n\n");}
   const traces = data.traces;
@@ -391,7 +403,7 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
     const validPoints=Array.isArray(points) && points.length===2 && points.every(point=>Array.isArray(point) && point.length===3 && point.every(Number.isFinite));
     Plotly.restyle(plot,{x:[validPoints?points.map(p=>p[0]):[]],y:[validPoints?points.map(p=>p[1]):[]],z:[validPoints?points.map(p=>p[2]):[]]},[meshCount]);
     const proxyDescription=pair ? previewObjects.filter(obj=>(obj.index===pair.index_a || obj.index===pair.index_b) && obj.mode!=="exact").map(obj=>`[${obj.index}] 표시: ${obj.mode==="approximate" ? "근사 미리보기" : "외곽박스"} (원본 ${obj.original_faces.toLocaleString("ko-KR")}개 삼각형${obj.mode==="approximate" ? " → "+obj.displayed_faces.toLocaleString("ko-KR")+"개" : ""})`).join("\n") : "";
-    document.getElementById("details").textContent=pair ? `[${pair.index_a}] ${pair.object_a}\n[${pair.index_b}] ${pair.object_b}\n\n형상 판정: ${labels[pair.status] || pair.status}\n간격: ${gapText(pair)}${placementText(pair)?"\n"+placementText(pair):""}${Number.isFinite(pair.intersection_volume)?"\n교차 부피: "+format(pair.intersection_volume)+" mm³":""}${proxyDescription?"\n\n"+proxyDescription:""}` : violations.length ? "목록에서 불합격 쌍을 선택하세요. 전체 보기에서 빨간색은 불합격에 포함된 오브젝트입니다." : report.complete && report.status==="clear" ? "검사한 모든 오브젝트 쌍이 간격 조건을 충족했습니다." : placementClear ? "배치의 간격 조건은 분리 확인되었습니다. 형상 유효성은 미검증이므로 전체 형상 합격을 뜻하지 않습니다." : "확인된 불합격 쌍은 없지만, 판정하지 못한 항목을 확인해야 합니다.";
+    document.getElementById("details").textContent=pair ? `[${pair.index_a}] ${pair.object_a}\n[${pair.index_b}] ${pair.object_b}\n\n${surfaceOnly?"표면 간격 판정":"형상 판정"}: ${labels[pair.status] || pair.status}\n간격: ${gapText(pair)}${placementText(pair)?"\n"+placementText(pair):""}${surfaceOnly && pair.error?"\n거리 계산 오류: "+pair.error:""}${!surfaceOnly && Number.isFinite(pair.intersection_volume)?"\n교차 부피: "+format(pair.intersection_volume)+" mm³":""}${proxyDescription?"\n\n"+proxyDescription:""}` : surfaceOnly ? report.status==="surface_gap_satisfied" && report.complete ? "측정한 모든 쌍의 표면 간격 조건을 충족했습니다. 목록에서 각 쌍의 실제 간격을 확인하세요." : "목록에서 오브젝트 쌍을 선택해 실제 표면 간격과 미판정 원인을 확인하세요." : violations.length ? "목록에서 불합격 쌍을 선택하세요. 전체 보기에서 빨간색은 불합격에 포함된 오브젝트입니다." : report.complete && report.status==="clear" ? "검사한 모든 오브젝트 쌍이 간격 조건을 충족했습니다." : placementClear ? "배치의 간격 조건은 분리 확인되었습니다. 형상 유효성은 미검증이므로 전체 형상 합격을 뜻하지 않습니다." : "확인된 불합격 쌍은 없지만, 판정하지 못한 항목을 확인해야 합니다.";
   }
   function fit(pair){
     const chosen=data.traces.slice(0,meshCount).filter(trace=>!pair || trace.meta.object_index===pair.index_a || trace.meta.object_index===pair.index_b);

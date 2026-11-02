@@ -81,21 +81,23 @@ def test_cli_exposes_independent_clear_and_all_four_strict_errors(capsys):
     assert "합격:" not in output.out
 
 
-def test_late_cancellation_revokes_placement_completion_and_minimum(monkeypatch):
+def test_late_cancellation_revokes_surface_completion_and_global_minimum(monkeypatch):
     event = threading.Event()
     monkeypatch.setattr("chitu_overlap.inputs.load_objects", lambda *a, **kw: ([], "test"))
     def finish(*args, **kwargs):
-        result = report()
-        result.update(status="clear", complete=True, placement_minimum_distance_mm=1.23456789,
-                      placement_minimum_distance_pair=[0, 1], placement_minimum_distance_is_certified=True)
+        result = {"inspection_scope": "surface-clearance", "status": "surface_gap_satisfied", "complete": True,
+                  "processing_completed": True, "minimum_distance_mm": 1.23456789,
+                  "minimum_distance_pair": [0, 1], "closest_distance_is_global": True,
+                  "pair_distances_complete": True, "violation_found": False}
         event.set()
         return result
-    monkeypatch.setattr("chitu_overlap.geometry.check_overlaps", finish)
+    monkeypatch.setattr("chitu_overlap.surface.check_surface_clearances", finish)
     result = app.inspect_inputs(["unused.chitubox"], cancel_event=event)
     assert result.report["cancelled"] and not result.report["complete"]
-    assert result.report["placement_status"] == "unknown" and not result.report["placement_complete"]
-    assert not result.report["placement_minimum_distance_is_certified"]
-    assert result.report["placement_minimum_distance_mm"] is None
+    assert result.report["status"] == "inconclusive" and not result.report["processing_completed"]
+    assert not result.report["closest_distance_is_global"]
+    assert not result.report["pair_distances_complete"]
+    assert result.report["minimum_distance_mm"] == 1.23456789  # Preserve measurements already made.
 
 
 def test_html_export_forwards_cancellation_without_changing_raw_report(monkeypatch, tmp_path):

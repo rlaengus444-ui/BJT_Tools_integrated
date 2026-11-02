@@ -5,6 +5,7 @@ import argparse
 from collections import Counter
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -42,8 +43,11 @@ def main():
               'executable': str(exe), 'executable_sha256': exe_hash,
               'project': str(project), 'project_sha256': input_hash,
               'python_removed_from_child_path': True}
+    # Prior camera fixture's seam treatment preserved its exact surface set;
+    # these measured surface-distance decisions remain independent golden checks.
     expected_by_gap = {0: [], 1: [], 1.5: [(5, 6)],
                        2: [(1, 4), (2, 4), (5, 6), (5, 7)]}
+    expected_minimum_mm = 1.4999923706054688
     started = time.monotonic()
     try:
         checks['genuine_camera_project'] = input_hash == 'c22dc0cfc58b42a0f6528e512ae9b1947222c6bbfc8fad67747b807cad2270ad'
@@ -62,45 +66,42 @@ def main():
             (work / (name + '.stderr.txt')).write_text(child.stderr, encoding='utf-8')
             result = json.loads(result_path.read_text(encoding='utf-8'))
             pairs = sorted((p['index_a'], p['index_b']) for p in result['violations'])
-            normalized = [o for o in result['objects'] if o.get('normalization')]
-            distances = [p['distance_mm'] for p in result['pairs'] if p.get('distance_mm') is not None]
-            proof_ok = [o['index'] for o in normalized] == [4, 5] and all(
-                o['normalization']['method'] == 'exact-collinear-seam-retriangulation'
-                and o['normalization']['zero_area_seams_removed'] == 2
-                and all(o['normalization'][key] is True for key in
-                    ('coordinates_unchanged', 'exact_surface_union_preserved',
-                     'exact_oriented_surface_chain_preserved')) for o in normalized)
-            expected_counts = {'clear': 1176 - len(expected_pairs)}
-            if expected_pairs:
-                expected_counts['too_close'] = len(expected_pairs)
-            passed = (child.returncode == bool(expected_pairs)
-                      and result['status'] == ('violation' if expected_pairs else 'clear')
+            distances = [p.get('distance_mm') for p in result['pairs']]
+            tolerance = result['distance_tolerance_mm']
+            def expected_status(distance):
+                return ('contact_or_intersection' if distance <= tolerance else
+                        'too_close' if distance + tolerance < gap else 'surface_gap_satisfied')
+            measured = (len(distances) == 1176 and all(isinstance(d, (int, float)) and math.isfinite(d) and d >= 0 for d in distances)
+                        and all(p.get('distance_is_exact') is True and p.get('status') == expected_status(p['distance_mm']) for p in result['pairs']))
+            passed = (child.returncode == (1 if pairs else 0)
+                      and result['status'] == ('violation' if pairs else 'surface_gap_satisfied')
+                      and result['inspection_scope'] == 'surface-clearance'
+                      and result.get('geometry_validation_performed') is False
+                      and result.get('volume_overlap_evaluated') is False
                       and result['complete'] is True and result['processing_completed'] is True
-                      and result['object_count'] == 49 and len(result['pairs']) == 1176
-                      and dict(Counter(p['status'] for p in result['pairs'])) == expected_counts
-                      and all(o['valid'] for o in result['objects']) and pairs == expected_pairs
-                      and proof_ok and min(distances) == 1.4999923706054688
-                      and '연결면 정리: 2개' in child.stdout
+                      and result['object_count'] == 49 and len(result['pairs']) == 1176 and measured
+                      and pairs == expected_pairs and abs(min(distances) - expected_minimum_mm) < 1e-9
+                      and pairs == sorted((p['index_a'], p['index_b']) for p in result['pairs'] if p['status'] != 'surface_gap_satisfied')
+                      and '부피 겹침' in child.stdout and '내부 포함' in child.stdout
                       and not child.stderr.strip())
-            checks[f'{name}_decisions_normalization_and_notice'] = passed
+            checks[f'{name}_surface_decisions_and_scope'] = passed
             cases.append({'gap_mm': gap, 'passed': passed, 'exit_code': child.returncode,
                           'seconds': elapsed, 'status': result['status'], 'complete': result['complete'],
                           'processing_completed': result['processing_completed'],
                           'object_count': result['object_count'], 'pair_count': len(result['pairs']),
                           'pair_status_counts': dict(Counter(p['status'] for p in result['pairs'])),
-                          'violating_pairs': pairs, 'normalized_indices': [o['index'] for o in normalized],
-                          'minimum_distance_mm': min(distances), 'result_file': str(result_path)})
+                          'violating_pairs': pairs, 'minimum_surface_distance_mm': min(distances) if measured else None,
+                          'result_file': str(result_path)})
             if gap == 2:
                 page = html_path.read_text(encoding='utf-8')
                 match = re.search(r'<script id="viewer-data" type="application/json">(.*?)</script>', page, re.S)
                 payload = json.loads(match.group(1)) if match else {}
-                checks['standalone_html_preserves_notices_and_failed_pairs'] = (
+                checks['standalone_html_preserves_scope_and_failed_pairs'] = (
                     'Plotly.newPlot' in page and '<script src=' not in page
-                    and '원본 형상을 유지한 검사용 연결면 정리 완료' in page
-                    and [o['index'] for o in payload.get('report', {}).get('objects', [])
-                         if o.get('normalization')] == [4, 5]
+                    and '부피 겹침·완전 내부 포함은 검사하지 않음' in page
+                    and payload.get('report', {}).get('inspection_scope') == 'surface-clearance'
                     and sorted((p['index_a'], p['index_b']) for p in
-                               payload.get('report', {}).get('violations', [])) == expected_pairs)
+                               payload.get('report', {}).get('violations', [])) == pairs)
                 report['html_file'], report['html_bytes'] = str(html_path), html_path.stat().st_size
     except Exception:
         report['traceback'] = traceback.format_exc()

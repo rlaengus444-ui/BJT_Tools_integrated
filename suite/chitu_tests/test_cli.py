@@ -34,7 +34,10 @@ def test_contact_is_a_failure_and_json_preserves_result(tmp_path):
     result = json.loads(output.read_text(encoding="utf-8"))
     assert result["status"] == "violation"
     assert result["complete"]
-    assert result["pairs"][0]["status"] == "touching"
+    assert result["pairs"][0]["status"] == "contact_or_intersection"
+    assert result["inspection_scope"] == "surface-clearance"
+    assert result["geometry_validation_performed"] is False
+    assert result["volume_overlap_evaluated"] is False
 
 
 def test_configured_gap_changes_acceptance(tmp_path):
@@ -68,7 +71,7 @@ def test_cli_writes_interactive_failure_report(tmp_path):
     output = tmp_path / "failure.html"
     assert main([str(first), str(second), "--html", str(output)]) == 1
     page = output.read_text(encoding="utf-8")
-    assert '"status":"touching"' in page
+    assert '"status":"contact_or_intersection"' in page
     assert "Plotly.newPlot" in page
 
 
@@ -87,3 +90,10 @@ def test_invalid_gap_rejected(tmp_path, gap):
     with pytest.raises(SystemExit) as exc:
         main([str(tmp_path), "--min-gap-mm", gap])
     assert exc.value.code == 2
+
+
+def test_volume_tolerance_is_explicitly_rejected_in_surface_mode(tmp_path, capsys):
+    with pytest.raises(SystemExit) as exc:
+        main([str(tmp_path), "--volume-tolerance", "0.001"])
+    assert exc.value.code == 2
+    assert "표면 간격 검사에서 지원하지 않습니다" in capsys.readouterr().err
