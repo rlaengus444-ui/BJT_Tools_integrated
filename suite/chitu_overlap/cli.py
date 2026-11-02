@@ -11,6 +11,16 @@ import sys
 from .geometry import check_overlaps
 from .inputs import load_objects
 
+try:
+    from display_numbers import format_number, format_lower_bound
+except ModuleNotFoundError:
+    # Also support the package entry point without changing sys.path.
+    import importlib.util
+    _display_spec = importlib.util.spec_from_file_location("_chitu_display_numbers", Path(__file__).resolve().parents[1] / "display_numbers.py")
+    _display_module = importlib.util.module_from_spec(_display_spec)
+    _display_spec.loader.exec_module(_display_module)
+    format_number, format_lower_bound = _display_module.format_number, _display_module.format_lower_bound
+
 
 def _tolerance(value: str) -> float:
     result = float(value)
@@ -65,6 +75,9 @@ def main(argv: list[str] | None = None) -> int:
         report = {
             "status": "inconclusive",
             "complete": False,
+            "placement_status": "unknown", "placement_complete": False,
+            "placement_minimum_distance_mm": None, "placement_minimum_distance_pair": None,
+            "placement_minimum_distance_is_certified": False,
             "overlap_found": None,
             "violation_found": None,
             "object_count": None,
@@ -99,31 +112,42 @@ def _print_summary(report: dict) -> None:
         print(f"판정 불가: {report['error']}", file=sys.stderr)
         return
     print(f"오브젝트 {report['object_count']}개 / 비교 쌍 {len(report['pairs'])}개")
+    invalid = [obj for obj in report.get("objects", []) if not obj.get("valid")]
+    if report.get("placement_complete") and report.get("placement_status") == "clear":
+        print(f"배치 분리 확인: {len(report['pairs'])}쌍 · 요구 간격 {format_number(report['min_gap_mm'])} mm 충족")
+        if not report.get("complete"):
+            print(f"형상 검증 미완료: {len(invalid)}개 · 배치 분리는 메쉬의 닫힘·품질 합격을 뜻하지 않습니다.", file=sys.stderr)
+    elif "placement_status" in report:
+        label = "위반 확인" if report["placement_status"] == "violation" else "미완료"
+        print(f"배치 검사 {label}")
     normalized = [obj for obj in report.get("objects", []) if obj.get("normalization")]
     if normalized:
         print(f"원본 형상을 유지한 검사용 연결면 정리: {len(normalized)}개 (원본 파일·좌표 유지)")
     measured_pairs = [pair for pair in report["pairs"] if pair.get("distance_mm") is not None]
-    if measured_pairs:
+    if report.get("placement_minimum_distance_is_certified"):
+        a, b = report["placement_minimum_distance_pair"]
+        print(f"배치 전체 최소 간격 (인증): {format_number(report['placement_minimum_distance_mm'])} mm ([{a}] ↔ [{b}])")
+    elif measured_pairs:
         nearest = min(measured_pairs, key=lambda pair: pair["distance_mm"])
         scope = "측정된 최소 간격" if report.get("closest_distance_is_global", report.get("complete")) else "검사된 유효 메쉬 쌍의 최소 간격"
-        print(f"{scope}: {nearest['distance_mm']:.9g} mm ([{nearest['index_a']}] ↔ [{nearest['index_b']}])")
+        print(f"{scope}: {format_number(nearest['distance_mm'])} mm ([{nearest['index_a']}] ↔ [{nearest['index_b']}])")
     if report.get("distance_mode") == "certified-clearance":
         print("멀리 떨어진 통과 쌍의 거리 하한은 JSON의 distance_lower_bound_mm에 기록했습니다.")
     if report["status"] == "violation":
-        print(f"불합격: {len(report['violations'])}쌍 (요구 간격 {report['min_gap_mm']:.9g} mm / 표면 접촉 금지)")
+        print(f"불합격: {len(report['violations'])}쌍 (요구 간격 {format_number(report['min_gap_mm'])} mm / 표면 접촉 금지)")
         labels = {"overlap": "부피 겹침", "touching": "표면 접촉", "too_close": "최소 간격 미달"}
         for pair in report["violations"]:
             detail = labels[pair["status"]]
             if pair.get("distance_mm") is not None:
-                detail += f", 간격 {pair['distance_mm']:.9g} mm"
+                detail += f", 간격 {format_number(pair['distance_mm'])} mm"
             if pair.get("intersection_volume"):
-                detail += f", 교차 부피 {pair['intersection_volume']:.9g} mm³"
+                detail += f", 교차 부피 {format_number(pair['intersection_volume'])} mm³"
             print(
                 f"  [{pair['index_a']}] {pair['object_a']} ↔ "
                 f"[{pair['index_b']}] {pair['object_b']}: {detail}"
             )
     elif report["status"] == "clear":
-        print(f"합격: 겹침·접촉 없음, 최소 간격 {report['min_gap_mm']:.9g} mm 충족")
+        print(f"합격: 겹침·접촉 없음, 최소 간격 {format_number(report['min_gap_mm'])} mm 충족")
         if report["object_count"] == 1:
             print("  인식된 오브젝트가 1개이므로 비교 대상 쌍이 없습니다.")
     if not report["complete"]:
@@ -131,6 +155,18 @@ def _print_summary(report: dict) -> None:
         for obj in report["objects"]:
             for error in obj["errors"]:
                 print(f"  [{obj['index']}] {obj['name']}: {error}", file=sys.stderr)
+            diagnostic = obj.get("topology_diagnostics", {})
+            if obj.get("errors") and diagnostic.get("face_counts_complete"):
+                print(f"    진단: 퇴화면 {diagnostic['degenerate_face_count']}개, "
+                      f"면적 수치 오류 {diagnostic['invalid_area_face_count']}개, "
+                      f"비다양체 edge {format_number(diagnostic.get('nonmanifold_edge_count'))}개, "
+                      f"경계 edge {format_number(diagnostic.get('boundary_edge_count'))}개", file=sys.stderr)
+            if obj.get("normalization_error"):
+                print("    연결면 정리 보류: 원본 표면·체적 보존을 증명하지 못해 자동 수정하지 않았습니다. "
+                      + obj["normalization_error"], file=sys.stderr)
         for pair in report["pairs"]:
-            if pair.get("error"):
+            if pair.get("error") and pair["error"] != "One or both objects failed solid-mesh validation.":
                 print(f"  [{pair['index_a']}] ↔ [{pair['index_b']}]: {pair['error']}", file=sys.stderr)
+        unknown = [pair for pair in report["pairs"] if pair.get("status") == "inconclusive"]
+        if unknown:
+            print(f"  형상 미판정 {len(unknown)}쌍: 전체 쌍의 형상·배치 판정은 JSON에 각각 보존됩니다.", file=sys.stderr)

@@ -79,6 +79,12 @@ from tkinter import ttk, filedialog, messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
+try:
+    from display_numbers import format_number
+except ModuleNotFoundError:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from display_numbers import format_number
+
 # The standalone source and the frozen/integrated app share the same explicit
 # presentation catalogue. No translated value is passed to the solver or CSV.
 try:
@@ -2359,6 +2365,7 @@ class ThermalGUI(tk.Tk):
 
     def _format_plot_text(self, figure):
         from matplotlib.text import Text
+        from matplotlib.ticker import FuncFormatter
         korean = self.language_var.get() == "ko"
         font = self._korean_plot_font() if korean else None
         for artist in figure.findobj(match=Text):
@@ -2368,6 +2375,15 @@ class ThermalGUI(tk.Tk):
                 # The Korean font may omit scientific glyphs such as O₂.
                 artist.set_fontfamily([font, "DejaVu Sans"])
         for axes in figure.axes:
+            # Limit rendered ticks and toolbar coordinates, including colorbar
+            # axes. The plotted arrays, normalization and limits stay intact.
+            for name in ("x", "y", "z"):
+                axis = getattr(axes, name + "axis", None)
+                if axis is not None:
+                    axis.set_major_formatter(FuncFormatter(
+                        lambda value, _position: format_number(value)
+                    ))
+                    setattr(axes, "fmt_" + name + "data", format_number)
             for artist in [*axes.get_lines(), *axes.collections]:
                 label = artist.get_label()
                 if label and not label.startswith("_"):
@@ -3196,9 +3212,9 @@ CSV Export
             )
             self.psd_label.config(
                 text=(
-                    f"PSD span={(st['span']):.3f}   |   "
-                    f"lognormal σ={st['sigma_ln']:.3f}   |   "
-                    f"estimated D32={st['d32_um']:.1f} µm"
+                    f"PSD span={format_number(st['span'])}   |   "
+                    f"lognormal σ={format_number(st['sigma_ln'])}   |   "
+                    f"estimated D32={format_number(st['d32_um'])} µm"
                 )
             )
         except Exception:
@@ -3211,7 +3227,7 @@ CSV Export
             phi = rho_b / rho_s
             eps = 1.0 - phi
             self.porosity_label.config(
-                text=f"Solid fraction: {phi:.3f}   |   Porosity: {eps:.3f}"
+                text=f"Solid fraction: {format_number(phi)}   |   Porosity: {format_number(eps)}"
             )
         except Exception:
             self.porosity_label.config(text="Porosity: -")
@@ -3228,22 +3244,22 @@ CSV Export
 
             lines = [
                 f"Mode: {inp.k_mode}",
-                f"Bed density: {inp.bed_density_kgm3/1000.0:.4f} g/cc",
-                f"Porosity: {1.0 - inp.bed_density_kgm3/inp.true_density_kgm3:.4f}",
-                f"D10 / D50 / D90: {inp.d10_um:g} / {inp.d50_um:g} / {inp.d90_um:g} µm",
-                f"PSD span: {stats['span']:.4f}",
-                f"Estimated D32: {stats['d32_um']:.2f} µm",
+                f"Bed density: {format_number(inp.bed_density_kgm3/1000.0)} g/cc",
+                f"Porosity: {format_number(1.0 - inp.bed_density_kgm3/inp.true_density_kgm3)}",
+                f"D10 / D50 / D90: {format_number(inp.d10_um)} / {format_number(inp.d50_um)} / {format_number(inp.d90_um)} µm",
+                f"PSD span: {format_number(stats['span'])}",
+                f"Estimated D32: {format_number(stats['d32_um'])} µm",
                 "",
                 "Predicted k_eff:",
             ]
             for t, k in zip(temps, np.atleast_1d(kvals)):
-                lines.append(f"  {t:6.1f} °C : {float(k):.4f} W/mK")
+                lines.append(f"  {format_number(t)} °C : {format_number(float(k))} W/mK")
 
             if inp.k_mode == "Calibrated":
                 lines += [
                     "",
-                    f"Calibration k scale: {inp.calibration_k_scale:.4f}",
-                    f"Calibrated h: {inp.calibration_h_wm2k:.3f} W/m²K",
+                    f"Calibration k scale: {format_number(inp.calibration_k_scale)}",
+                    f"Calibrated h: {format_number(inp.calibration_h_wm2k)} W/m²K",
                 ]
 
             lines += [
@@ -3359,7 +3375,7 @@ CSV Export
             self.tc_status.config(
                 text=(
                     f"Loaded {len(arr_t)} points | "
-                    f"{arr_t[0]:.1f}–{arr_t[-1]:.1f} min | "
+                    f"{format_number(arr_t[0])}–{format_number(arr_t[-1])} min | "
                     f"{Path(path).name}"
                 )
             )
@@ -3430,16 +3446,16 @@ CSV Export
 
             lines = [
                 "=== O₂ diffusion-only model preview ===",
-                f"Porosity: {por:.4f}",
-                f"Tortuosity τ: {tau:.4f} ({inp.o2_tortuosity_mode})",
-                f"PSD-based characteristic pore length: {pore_um:.2f} µm",
+                f"Porosity: {format_number(por)}",
+                f"Tortuosity τ: {format_number(tau)} ({inp.o2_tortuosity_mode})",
+                f"PSD-based characteristic pore length: {format_number(pore_um)} µm",
                 f"Knudsen correction: {'ON' if inp.o2_use_knudsen else 'OFF'}",
                 "",
                 "Effective O₂ diffusivity:",
             ]
             for temp, d in zip(temps, ds):
                 lines.append(
-                    f"  {temp:6.1f} °C : {float(d):.4e} m²/s"
+                    f"  {format_number(temp)} °C : {format_number(float(d), scientific=True)} m²/s"
                 )
 
             if abs(
@@ -3627,8 +3643,8 @@ CSV Export
                     self.progress["value"] = min(95.0, n * 3.0)
                     self.status.config(
                         text=(
-                            f"Calibration eval {n}: RMSE={rmse:.3f}°C, "
-                            f"k-scale={scale:.3f}, h={hfit:.2f}"
+                            f"Calibration eval {n}: RMSE={format_number(rmse)}°C, "
+                            f"k-scale={format_number(scale)}, h={format_number(hfit)}"
                         )
                     )
                 elif kind == "cal_done":
@@ -3639,13 +3655,13 @@ CSV Export
                     self._save_settings(silent=True)
                     self.progress["value"] = 100
                     self.status.config(
-                        text=f"Calibration completed: RMSE={fit['rmse_c']:.3f} °C"
+                        text=f"Calibration completed: RMSE={format_number(fit['rmse_c'])} °C"
                     )
                     self.cal_status.config(
                         text=(
-                            f"Fit: k scale={fit['k_scale']:.4f}, "
-                            f"h={fit['h_conv']:.3f} W/m²K, "
-                            f"RMSE={fit['rmse_c']:.3f}°C, nfev={fit['nfev']}"
+                            f"Fit: k scale={format_number(fit['k_scale'])}, "
+                            f"h={format_number(fit['h_conv'])} W/m²K, "
+                            f"RMSE={format_number(fit['rmse_c'])}°C, nfev={fit['nfev']}"
                         )
                     )
                     self.run_btn.configure(state=tk.NORMAL)
@@ -3654,9 +3670,9 @@ CSV Export
                     self._dialogs.showinfo(
                         "Calibration complete",
                         (
-                            f"k_eff scale = {fit['k_scale']:.5f}\n"
-                            f"h = {fit['h_conv']:.4f} W/m²K\n"
-                            f"Center-temperature RMSE = {fit['rmse_c']:.4f} °C\n\n"
+                            f"k_eff scale = {format_number(fit['k_scale'])}\n"
+                            f"h = {format_number(fit['h_conv'])} W/m²K\n"
+                            f"Center-temperature RMSE = {format_number(fit['rmse_c'])} °C\n\n"
                             "Mode has been switched to Calibrated. "
                             "Press Run simulation to generate the final 3D result."
                         )
@@ -3784,8 +3800,8 @@ CSV Export
         self.hover_annotation.xy = (x_cursor, y_curve)
         self.hover_annotation.set_text(
             self._tr(f"{line.get_label()}\n"
-            f"X: {x_cursor:.3f} h\n"
-            f"Y: {y_curve:.2f} °C")
+            f"X: {format_number(x_cursor)} h\n"
+            f"Y: {format_number(y_curve)} °C")
         )
         self.hover_annotation.set_visible(True)
         self._draw_canvas(self.canvas_plot)
@@ -3920,8 +3936,8 @@ CSV Export
         )
         self.o2_hover_annotation.set_text(
             self._tr(f"{line.get_label()}\n"
-            f"X: {x_cursor:.3f} h\n"
-            f"Y: {y_curve:.3f} vol%")
+            f"X: {format_number(x_cursor)} h\n"
+            f"Y: {format_number(y_curve)} vol%")
         )
         self.o2_hover_annotation.set_visible(True)
         self._draw_canvas(self.o2_canvas_plot)
@@ -3936,13 +3952,13 @@ CSV Export
             initial = float(self.o2_initial.get())
 
             lines += [
-                f"Ambient O₂: {ambient:.4f} vol%",
-                f"Initial pore O₂: {initial:.4f} vol%",
-                f"Final center O₂: {r.o2_center_percent[-1]:.4f} vol%",
-                f"Final volume-average O₂: {r.o2_avg_percent[-1]:.4f} vol%",
-                f"Center D_eff at start: {r.o2_deff_center_m2s[0]:.4e} m²/s",
-                f"Center D_eff at end: {r.o2_deff_center_m2s[-1]:.4e} m²/s",
-                f"Center cumulative O₂ dose: {r.o2_center_dose_air_h[-1]:.4f} air-equivalent h",
+                f"Ambient O₂: {format_number(ambient)} vol%",
+                f"Initial pore O₂: {format_number(initial)} vol%",
+                f"Final center O₂: {format_number(r.o2_center_percent[-1])} vol%",
+                f"Final volume-average O₂: {format_number(r.o2_avg_percent[-1])} vol%",
+                f"Center D_eff at start: {format_number(r.o2_deff_center_m2s[0], scientific=True)} m²/s",
+                f"Center D_eff at end: {format_number(r.o2_deff_center_m2s[-1], scientific=True)} m²/s",
+                f"Center cumulative O₂ dose: {format_number(r.o2_center_dose_air_h[-1])} air-equivalent h",
             ]
 
             if ambient > initial + 1e-12:
@@ -3961,7 +3977,7 @@ CSV Export
                     else:
                         lines.append(
                             f"  {frac*100:.0f}% of ambient: "
-                            f"{tm:.2f} min ({tm/60.0:.3f} h)"
+                            f"{format_number(tm)} min ({format_number(tm/60.0)} h)"
                         )
 
             if abs(initial - ambient) < 1e-12:
@@ -4272,7 +4288,7 @@ CSV Export
 
         self.o2_field_ax.set_title(
             self._tr(f"3D O₂ diffusion field — "
-            f"{time_min/60.0:.3f} h")
+            f"{format_number(time_min/60.0)} h")
         )
 
         shown = C.size
@@ -4286,9 +4302,9 @@ CSV Export
         self.o2_field_time_label.config(
             text=(
                 f"{idx+1}/{len(r.o2_snapshots_percent)}  "
-                f"t={time_min/60.0:.3f} h  "
-                f"Center={center_o2:.3f} vol%  "
-                f"Range={cmin:.3f}–{cmax:.3f} vol%  |  "
+                f"t={format_number(time_min/60.0)} h  "
+                f"Center={format_number(center_o2)} vol%  "
+                f"Range={format_number(cmin)}–{format_number(cmax)} vol%  |  "
                 f"{display_note}"
             )
         )
@@ -4486,7 +4502,7 @@ CSV Export
         field_max = float(np.max(Tfull))
 
         self.field_ax.set_title(
-            self._tr(f"3D powder temperature field — {time_min/60.0:.3f} h")
+            self._tr(f"3D powder temperature field — {format_number(time_min/60.0)} h")
         )
 
         shown = T.size
@@ -4499,9 +4515,9 @@ CSV Export
         self.field_time_label.config(
             text=(
                 f"{idx+1}/{len(r.snapshot_time_min)}  "
-                f"t={time_min/60.0:.3f} h  "
-                f"Oven={oven_c:.1f}°C  Center={center_c:.1f}°C  "
-                f"Range={field_min:.1f}–{field_max:.1f}°C  |  {display_note}"
+                f"t={format_number(time_min/60.0)} h  "
+                f"Oven={format_number(oven_c)}°C  Center={format_number(center_c)}°C  "
+                f"Range={format_number(field_min)}–{format_number(field_max)}°C  |  {display_note}"
             )
         )
 
@@ -4517,29 +4533,29 @@ CSV Export
         lines = [
             "=== Simulation summary ===",
             f"Grid: nx×ny×nz = {r.grid_shape[0]}×{r.grid_shape[1]}×{r.grid_shape[2]}",
-            f"Stable Δt actually used: {r.dt_used_s:.4f} s",
-            f"Powder solid fraction: {r.solid_fraction:.4f}",
-            f"Powder porosity: {r.porosity:.4f}",
+            f"Stable Δt actually used: {format_number(r.dt_used_s)} s",
+            f"Powder solid fraction: {format_number(r.solid_fraction)}",
+            f"Powder porosity: {format_number(r.porosity)}",
             f"k_eff mode: {r.k_mode}",
-            f"Center k_eff at start: {r.k_center_wmk[0]:.4f} W/mK",
-            f"Center k_eff at end: {r.k_center_wmk[-1]:.4f} W/mK",
+            f"Center k_eff at start: {format_number(r.k_center_wmk[0])} W/mK",
+            f"Center k_eff at end: {format_number(r.k_center_wmk[-1])} W/mK",
             f"3D snapshots stored: {len(r.snapshot_time_min)} frames",
-            f"3D snapshot interval used: {r.snapshot_interval_used_s/60.0:.3f} min",
+            f"3D snapshot interval used: {format_number(r.snapshot_interval_used_s/60.0)} min",
             f"O₂ diffusion-only enabled: {r.o2_enabled}",
             "",
-            f"Peak center temperature: {center_peak:.2f} °C",
-            f"Final center temperature: {final_center:.2f} °C",
-            f"Final side-wall average: {r.side_wall_avg_c[-1]:.2f} °C",
-            f"Final bottom-plate average: {r.bottom_plate_avg_c[-1]:.2f} °C",
-            f"Final under-plate air-layer h: {r.bottom_gap_h_wm2k[-1]:.3f} W/m²K",
-            f"Final under-plate air-layer heat: {r.bottom_gap_air_w[-1]:.2f} W",
-            f"Final under-plate radiation heat: {r.bottom_gap_radiation_w[-1]:.2f} W",
-            f"Maximum oven-center ΔT: {lag_peak:.2f} °C at {lag_time_h:.2f} h",
+            f"Peak center temperature: {format_number(center_peak)} °C",
+            f"Final center temperature: {format_number(final_center)} °C",
+            f"Final side-wall average: {format_number(r.side_wall_avg_c[-1])} °C",
+            f"Final bottom-plate average: {format_number(r.bottom_plate_avg_c[-1])} °C",
+            f"Final under-plate air-layer h: {format_number(r.bottom_gap_h_wm2k[-1])} W/m²K",
+            f"Final under-plate air-layer heat: {format_number(r.bottom_gap_air_w[-1])} W",
+            f"Final under-plate radiation heat: {format_number(r.bottom_gap_radiation_w[-1])} W",
+            f"Maximum oven-center ΔT: {format_number(lag_peak)} °C at {format_number(lag_time_h)} h",
             "",
             "Center-temperature cumulative time above thresholds:",
         ]
         for th, hr in r.threshold_hours.items():
-            lines.append(f"  ≥ {th:5.1f} °C : {hr:.3f} h")
+            lines.append(f"  ≥ {format_number(th)} °C : {format_number(hr)} h")
 
         if self.tc_time_min is not None and self.tc_center_c is not None:
             valid = (
@@ -4553,13 +4569,13 @@ CSV Export
                 rmse = float(np.sqrt(np.mean(
                     (pred - self.tc_center_c[valid]) ** 2
                 )))
-                lines += ["", f"Center TC comparison RMSE: {rmse:.3f} °C"]
+                lines += ["", f"Center TC comparison RMSE: {format_number(rmse)} °C"]
 
         lines += [
             "",
             "Interpretation caution:",
             "- Bottom input includes floor radiation and horizontal air-layer natural convection/conduction.",
-            f"- No forced convection is applied in the {r.bottom_gap_mm:.1f}-mm under-plate gap.",
+            f"- No forced convection is applied in the {format_number(r.bottom_gap_mm)}-mm under-plate gap.",
             "- Oven-floor temperature is assumed to follow the oven profile.",
             "- Side-wall metal conduction into the connected bottom plate remains active.",
             "- k_eff/contact physics and h_conv still dominate uncertainty without calibration.",

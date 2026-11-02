@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.8.0",
+  "suite_version": "1.8.1",
   "tools": [
     {
       "id": "bjt",
@@ -7,8 +7,8 @@
       "description": "3D 모델·슬라이싱 이미지에서 쉘·격자 STL 생성",
       "source": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
       "original_path": "C:\\Users\\Kain\\PycharmProjects\\shellprinting\\260914_BJT_model_to_lattice_STL_all_in_one.py",
-      "sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372",
-      "bytes": 538331,
+      "sha256": "21ca1cb5665aa05fbb1953ea322326ba62fa0cb4bee18a4ecc81f870b7c61477",
+      "bytes": 540484,
       "controller": "App",
       "embedded_base": true
     },
@@ -18,8 +18,8 @@
       "description": "이미지·STL 배치, 이동·회전·복제 및 레이어 합성",
       "source": "sources/slicing arrange.py",
       "original_path": "C:\\Users\\Kain\\PycharmProjects\\shellprinting\\slicing arrange.py",
-      "sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
-      "bytes": 111281,
+      "sha256": "393e8f1887c0d461f62379ca96c32a45e8a5b8108b734ed23417880d8c7d56cf",
+      "bytes": 111686,
       "controller": "SliceLayoutApp",
       "embedded_base": false
     },
@@ -29,8 +29,8 @@
       "description": "여러 슬라이싱 폴더의 레이어별 합성",
       "source": "sources/slice_folder_overlay.py",
       "original_path": "C:\\Users\\Kain\\PycharmProjects\\shellprinting\\slice_folder_overlay.py",
-      "sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
-      "bytes": 25838,
+      "sha256": "997d115c885ef05ec0e1a29b7f5a22e56b5c8650d89d764d8aab2eaef4c4d9e1",
+      "bytes": 26116,
       "controller": "App",
       "embedded_base": true
     },
@@ -53,8 +53,8 @@
       "description": "치환 경계·전체 인접층의 위치 이동 신호 검사",
       "source": "sources/slice_alignment_checker.py",
       "original_path": "C:\\Users\\Kain\\PycharmProjects\\slicing checker\\slice_alignment_checker.py",
-      "sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
-      "bytes": 137262,
+      "sha256": "fa381af80ebe15e84ed2f6373dbc74a1e70d277a8b22835988940920ba74c665",
+      "bytes": 138588,
       "controller": "SimpleAlignmentApp",
       "embedded_base": false
     },
@@ -64,8 +64,8 @@
       "description": "오븐 온도 이력에 따른 3D 열전달·산소 확산과 실측 보정",
       "source": "sources/sic_buildbox_thermal_gui_v5.py",
       "original_path": "C:\\Users\\Kain\\PycharmProjects\\build oven profile\\sic_buildbox_thermal_gui_v5.py",
-      "sha256": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece",
-      "bytes": 173719,
+      "sha256": "45041aa9fed420f5902efed77ec43d58c343eb484e3a02f10d627ef8c3cb29e5",
+      "bytes": 175372,
       "controller": "ThermalGUI",
       "embedded_base": true
     },
@@ -75,8 +75,8 @@
       "description": "두 폴더·ZIP의 픽셀·위치·해상도·비트 수·파일 형식 비교",
       "source": "sources/slice_compare_app.py",
       "original_path": "C:\\Users\\Kain\\Documents\\Codex\\2026-10-23\\new-chat\\outputs\\slice-compare\\app.py",
-      "sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
-      "bytes": 37944,
+      "sha256": "a1267e5aa1deed9522a320c5ba80d09a01d014b2a336d7f0b8873f38ac5a2913",
+      "bytes": 38146,
       "controller": "Application",
       "embedded_base": false,
       "adaptation": "통합 탭의 스타일 분리, 모듈 이름 및 작업 수명 추적. 비교 엔진은 원본과 바이트 일치."
@@ -104,8 +104,8 @@
       "original_path": "C:/Users/Kain/Desktop/work/Tools/M1 Tools.xlsm!M1 Z축",
       "original_sha256": "2865e4965090b129739478120f8d5737c927eb24c34d0409ea7d9c60cc20a61d",
       "adaptation": "원본 수식의 고정 0.1 간격과 이동 +0.1 보정 보존. Decimal 계산, 단일 조회·표·CSV 제공. Excel/VBA 실행 불필요.",
-      "sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
-      "bytes": 28062
+      "sha256": "30200c2ad6ac9f58729529cf22e6fef9c6a70e524584336e5030ada2eae0148f",
+      "bytes": 28577
     },
     {
       "id": "m2_converter",
@@ -127,8 +127,8 @@
       ],
       "integration_adapter": "m2_image_engine.py",
       "adaptation": "정적 분석한 원본 GDI+ 호출(리사이즈·4비트 VGA 팔레트·RGB 반전·LZW) 보존. 순서 관리, 안전 저장, 건너뛰기/덮어쓰기, 중단, 출력 태그 검사 추가. 출력 가로·세로 픽셀과 X/Y DPI 사용자 지정 및 기존 싱글·멀티 기본값 유지.",
-      "sha256": "856efcb9b94846719c7261991c3964c45418463c122999ed8398c13b41faf7da",
-      "bytes": 31617
+      "sha256": "5b51db81683e98cef33f63e7f8f908d3c084e3fac8988c16c858aca7ad9150fe",
+      "bytes": 31932
     },
     {
       "id": "chitu_checker",
@@ -137,8 +137,8 @@
       "source": "sources/chitu_checker.py",
       "controller": "ChituCheckerApp",
       "embedded_base": false,
-      "sha256": "bb5c6845a4727ab49fc4dc8fc9c913bb0e16248aba896e849d0c76cc82088fe0",
-      "bytes": 31244,
+      "sha256": "a77f281c472edcf82c2f8d3e65661c1a568440726457879079d252f6c581b3fc",
+      "bytes": 36995,
       "adaptation": "CHITUBOX Basic 배치 유지, 표면 접촉 금지, 최소 간격 mm, 비동기 검사·중단, JSON 및 오프라인 3D HTML. 지원 파일 드래그앤드롭 입력."
     }
   ],
@@ -180,17 +180,17 @@
     },
     {
       "path": "chitu_overlap/chitubox.py",
-      "sha256": "4a0a4f13295c44a5e7cd6a5b10a7689d53d41338c914356d8049a5cf63eeb355",
+      "sha256": "7516b84093232456f8edb49a135c5fdd961565a432f5b13d603d1b6abee84d31",
       "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
     },
     {
       "path": "chitu_overlap/cli.py",
-      "sha256": "8090bd4f56172c2865da0704285b955524dcdb33db424b7abd4376a3fc4edc7d",
+      "sha256": "54e361b0b0cccb2e657c7ece1c281d26d3bec398a177f1fdf6edb7237759d591",
       "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
     },
     {
       "path": "chitu_overlap/geometry.py",
-      "sha256": "9ed0ee4801a0d1daebc970644a1775a62c993dfc533301b301b74def0646e7d3",
+      "sha256": "e458dec1cfffd03959f0d8881eda58e8fe0ee2448095f75a5fd62392a1154d0f",
       "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
     },
     {
@@ -200,7 +200,7 @@
     },
     {
       "path": "chitu_overlap/viewer.py",
-      "sha256": "cc34ef52f347e78b95777c26b3c3af79d4a09aa446e8e8aa5d040fb0010204d8",
+      "sha256": "7a28975e46c17e84e3b7264951f0e4f65b930e15dfbd89794b9087c82640c26a",
       "purpose": "치투 오브젝트 입체·거리 검사 및 오프라인 3D 결과"
     },
     {
@@ -223,6 +223,16 @@
       "purpose": "BJT 선택적 Rust 메시 검증·STL 기록 ABI 어댑터",
       "sha256": "92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905",
       "bytes": 8387
+    },
+    {
+      "path": "display_numbers.py",
+      "purpose": "화면 전용 소수 둘째 자리 표시와 안전한 거리 하한 표현",
+      "sha256": "426ff1c0aecc18a59c76dde69c7ce9511b3f4ae5f6791a79d00ffd5f9e1fff90"
+    },
+    {
+      "path": "chitu_overlap/display_preview.py",
+      "purpose": "원본 검사 메쉬를 보존하는 VTK 기반 경량 배치 미리보기",
+      "sha256": "0e6d9158093257676817558e5a851144001729db5f3ef392e0ab604d66455689"
     }
   ]
 }

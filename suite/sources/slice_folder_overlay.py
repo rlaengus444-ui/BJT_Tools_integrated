@@ -46,6 +46,14 @@ import time
 import threading
 import traceback
 from pathlib import Path
+try:
+    from display_numbers import format_number
+except ModuleNotFoundError as exc:
+    if exc.name != "display_numbers":
+        raise
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from display_numbers import format_number
 from dataclasses import dataclass
 from typing import List, Tuple, Dict, Optional
 
@@ -371,7 +379,7 @@ def run_overlay(params: Params, log: Logger, cancel_event: threading.Event):
     log.write(f"입력 material pixel 합산: {input_material_total:,}")
     log.write(f"출력 material pixel: {output_material_total:,}")
     if input_material_total > 0:
-        log.write(f"출력/입력 material 비율 참고: {output_material_total / input_material_total:.4f}")
+        log.write(f"출력/입력 material 비율 참고: {format_number(output_material_total / input_material_total)}")
     log.write(f"소요 시간: {format_seconds(elapsed)}")
     log.write("==========================================")
     log.progress(100, "complete")

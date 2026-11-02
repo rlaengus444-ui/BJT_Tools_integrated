@@ -9,6 +9,14 @@ import json
 import math
 import os
 from pathlib import Path
+try:
+    from display_numbers import format_number
+except ModuleNotFoundError as exc:
+    if exc.name != "display_numbers":
+        raise
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from display_numbers import format_number
 import queue
 import re
 import threading
@@ -223,7 +231,7 @@ class M2ConverterApp:
         except ValueError:
             self.spec_var.set("출력 크기와 DPI를 확인하세요.")
             return
-        self.spec_var.set(f"{values['width']:,} × {values['height']:,} px  ·  DPI {values['dpi_x']:g} × {values['dpi_y']:g}")
+        self.spec_var.set(f"{values['width']:,} × {values['height']:,} px  ·  DPI {format_number(values['dpi_x'], trim=True)} × {format_number(values['dpi_y'], trim=True)}")
 
     def apply_preset(self):
         spec = MODE_SPECS.get(self.mode_var.get())

@@ -18,6 +18,15 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import webbrowser
 
+try:
+    from display_numbers import format_number, format_lower_bound
+except ModuleNotFoundError:
+    import importlib.util
+    _display_spec = importlib.util.spec_from_file_location("_chitu_display_numbers", Path(__file__).resolve().parents[1] / "display_numbers.py")
+    _display_module = importlib.util.module_from_spec(_display_spec)
+    _display_spec.loader.exec_module(_display_module)
+    format_number, format_lower_bound = _display_module.format_number, _display_module.format_lower_bound
+
 
 DEFAULT_MIN_GAP_MM = 0.0
 DROP_EXTENSIONS = frozenset({".chitubox", ".chitu", ".stl"})
@@ -28,6 +37,72 @@ PAIR_LABELS = {
     "clear": "PASS",
     "inconclusive": "판정 불가",
 }
+
+
+def _pair_label(pair):
+    if pair.get("status") == "inconclusive" and pair.get("placement_status") == "clear":
+        return "배치 분리 · 형상 미완료"
+    return PAIR_LABELS.get(pair.get("status"), "판정 불가")
+
+
+def _object_diagnostic_lines(obj):
+    translations = {
+        "Mesh contains degenerate or invalid triangles.": "퇴화되었거나 면적 수치가 유효하지 않은 삼각형이 있습니다.",
+        "Mesh is not watertight; a solid volume is required.": "닫힌 다양체 메쉬가 아니어서 입체 형상을 확정하지 못했습니다.",
+        "Mesh face winding is inconsistent.": "면 방향이 일관되지 않습니다.",
+        "Mesh contains non-finite coordinates.": "좌표에 NaN 또는 무한대가 있습니다.",
+        "Mesh contains invalid face indices.": "삼각형의 정점 인덱스가 유효하지 않습니다.",
+        "Mesh is empty.": "비어 있는 메쉬입니다.",
+        "Mesh must have finite positive volume and outward-facing faces.": "유한한 양의 체적과 바깥쪽 면 방향을 확인하지 못했습니다.",
+    }
+    lines = []
+    prefix = f"[{obj['index']}] {obj['name']}"
+    if obj.get("errors"):
+        lines.append(prefix + ": " + "; ".join(translations.get(error, error) for error in obj["errors"]))
+        diagnostic = obj.get("topology_diagnostics", {})
+        if diagnostic.get("face_counts_complete"):
+            lines.append("  진단: 퇴화면 " + format_number(diagnostic.get("degenerate_face_count"))
+                         + "개 · 면적 수치 오류 " + format_number(diagnostic.get("invalid_area_face_count"))
+                         + "개 · 비다양체 edge " + format_number(diagnostic.get("nonmanifold_edge_count"))
+                         + "개 · 경계 edge " + format_number(diagnostic.get("boundary_edge_count")) + "개")
+    elif obj.get("normalization"):
+        lines.append(prefix + ": 원본 형상을 유지한 검사용 연결면 정리 완료")
+    if obj.get("normalization_error"):
+        lines.append("  연결면 정리 보류: 원본 표면·체적 보존을 증명하지 못해 자동 수정하지 않았습니다.")
+        lines.append("  세부 원인: " + obj["normalization_error"])
+    return lines
+
+
+def _report_status_text(report):
+    invalid = sum(not row.get("valid") for row in report.get("objects", []))
+    if report.get("cancelled"):
+        title = "중단 · 검사 미완료"
+    elif report.get("placement_complete") and report.get("placement_status") == "clear" and not report.get("complete"):
+        title = f"배치 분리 확인 · 형상 검증 미완료 {invalid}개"
+    elif report["status"] == "violation":
+        title = "FAIL" + (f" · 형상 검증 미완료 {invalid}개" if not report["complete"] else "")
+    elif report["status"] == "clear" and report["complete"]:
+        title = "PASS"
+    else:
+        title = "판정 불가"
+    text = f"{title} · 오브젝트 {report.get('object_count', 0)}개 · 불합격 {len(report.get('violations', []))}쌍"
+    unknown = sum(pair.get("status") == "inconclusive" for pair in report.get("pairs", []))
+    if unknown:
+        text += f" · 형상 미판정 {unknown}쌍"
+    if report.get("placement_status") == "unknown" and not report.get("cancelled"):
+        text += " · 배치 분리 미확인"
+    normalized = sum(bool(obj.get("normalization")) for obj in report.get("objects", []))
+    if normalized:
+        text += f" · 형상 유지 정리 {normalized}개"
+    if report.get("placement_minimum_distance_is_certified"):
+        text += f" · 배치 전체 최소 간격 {format_number(report['placement_minimum_distance_mm'])} mm (인증)"
+    else:
+        measured = [pair["distance_mm"] for pair in report.get("pairs", []) if pair.get("distance_mm") is not None]
+        if measured:
+            text += f" · 측정된 최소 간격 {format_number(min(measured))} mm"
+            if not report.get("complete"):
+                text += " (검사된 유효 메쉬 쌍에 한함)"
+    return text + f" · {format_number(report.get('elapsed_seconds', 0.0))}초"
 
 
 @dataclass
@@ -101,6 +176,9 @@ def parse_gap(value):
 def inconclusive_report(paths, gap, error=None, *, cancelled=False):
     report = {
         "status": "inconclusive", "complete": False,
+        "placement_status": "unknown", "placement_complete": False,
+        "placement_minimum_distance_mm": None, "placement_minimum_distance_pair": None,
+        "placement_minimum_distance_is_certified": False,
         "overlap_found": None, "violation_found": None,
         "object_count": 0, "min_gap_mm": gap,
         "objects": [], "pairs": [], "overlaps": [], "violations": [],
@@ -157,6 +235,11 @@ def inspect_inputs(paths, min_gap_mm=DEFAULT_MIN_GAP_MM, cancel_event=None, prog
         report["cancelled"] = True
         report["complete"] = False
         report["processing_completed"] = False
+        report["placement_complete"] = False
+        report["placement_status"] = "unknown"
+        report["placement_minimum_distance_mm"] = None
+        report["placement_minimum_distance_pair"] = None
+        report["placement_minimum_distance_is_certified"] = False
         if not report.get("violation_found"):
             report["status"] = "inconclusive"
     return InspectionResult(objects, report)
@@ -193,7 +276,7 @@ def write_result(result, destination, *, kind="json", selected_pair=None, cancel
             temporary.write_text(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
         else:
             from chitu_overlap.viewer import write_html_report
-            write_html_report(result.objects, report, temporary)
+            write_html_report(result.objects, report, temporary, cancel_event=cancel_event)
         if cancel_event is not None and cancel_event.is_set():
             return False
         os.replace(temporary, path)
@@ -265,7 +348,7 @@ class ChituCheckerApp:
         ttk.Label(settings, text="최소 간격 (mm)").pack(side="left")
         self.gap_entry = ttk.Entry(settings, textvariable=self.gap_var, width=12)
         self.gap_entry.pack(side="left", padx=(10, 20))
-        ttk.Label(settings, text="표면 접촉은 항상 FAIL · 기본 거리 오차 0.000001 mm",
+        ttk.Label(settings, text=f"표면 접촉은 항상 FAIL · 기본 거리 오차 {format_number(1e-6)} mm",
                   style="Suite.Muted.TLabel").pack(side="left")
         actions = ttk.Frame(outer)
         actions.grid(row=2, column=0, sticky="ew", pady=(0, 8))
@@ -300,8 +383,17 @@ class ChituCheckerApp:
         horizontal.grid(row=1, column=0, sticky="ew")
         self.tree.configure(yscrollcommand=scroll.set, xscrollcommand=horizontal.set)
         self.tree.bind("<<TreeviewSelect>>", self._selection_changed)
-        details = ttk.Label(outer, textvariable=self.detail_var, wraplength=1030, justify="left")
+        details = ttk.Frame(outer)
         details.grid(row=4, column=0, sticky="ew", pady=(0, 8))
+        details.columnconfigure(0, weight=1)
+        self.details_text = tk.Text(details, height=5, wrap="word", font="TkDefaultFont",
+                                    state="disabled", borderwidth=1, relief="solid")
+        self.details_text.grid(row=0, column=0, sticky="ew")
+        detail_scroll = ttk.Scrollbar(details, orient="vertical", command=self.details_text.yview)
+        detail_scroll.grid(row=0, column=1, sticky="ns")
+        self.details_text.configure(yscrollcommand=detail_scroll.set)
+        self.detail_var.trace_add("write", self._update_details)
+        self._update_details()
         self.progress_bar = ttk.Progressbar(outer, maximum=100)
         self.progress_bar.grid(row=5, column=0, sticky="ew", pady=(0, 8))
         self.status_label = ttk.Label(outer, textvariable=self.status_var, wraplength=1030, justify="left")
@@ -443,42 +535,27 @@ class ChituCheckerApp:
         self.last_result = result
         self.last_report = result.report
         report = result.report
-        if report.get("cancelled"):
-            title = "중단 · 검사 미완료"
-        elif report["status"] == "violation":
-            title = "FAIL" + (" · 검사 미완료" if not report["complete"] else "")
-        elif report["status"] == "clear" and report["complete"]:
-            title = "PASS"
-        else:
-            title = "판정 불가"
-        measured = [pair for pair in report.get("pairs", []) if pair.get("distance_mm") is not None]
-        minimum = min((pair["distance_mm"] for pair in measured), default=None)
-        text = f"{title} · 오브젝트 {report.get('object_count', 0)}개 · 불합격 {len(report.get('violations', []))}쌍"
-        unknown_count = sum(pair.get("status") == "inconclusive" for pair in report.get("pairs", []))
-        if unknown_count:
-            text += f" · 미판정 {unknown_count}쌍"
-        normalized = [obj for obj in report.get("objects", []) if obj.get("normalization")]
-        if normalized:
-            text += f" · 형상 유지 정리 {len(normalized)}개"
-        if minimum is not None:
-            text += f" · 측정된 최소 간격 {minimum:.8g} mm"
-            if not report.get("complete"):
-                text += " (검사된 쌍에 한함)"
-        text += f" · {report.get('elapsed_seconds', 0):.2f}초"
-        self.status_var.set(text)
+        self.status_var.set(_report_status_text(report))
         self.progress_bar.configure(value=100 if report.get("processing_completed", report.get("complete")) else 0)
         errors = []
         if report.get("error"):
             errors.append(report["error"])
         for obj in report.get("objects", []):
-            if obj.get("errors"):
-                errors.append(f"[{obj['index']}] {obj['name']}: " + "; ".join(obj["errors"]))
-            elif obj.get("normalization"):
-                errors.append(f"[{obj['index']}] {obj['name']}: 원본 형상을 유지한 검사용 연결면 정리 완료")
+            errors.extend(_object_diagnostic_lines(obj))
+        if report.get("placement_complete") and not report.get("complete"):
+            errors.insert(0, "배치 분리는 확인했지만 형상 검증은 미완료입니다. 닫힌 입체·메쉬 품질의 PASS가 아닙니다.")
         if report.get("object_count") == 1:
             errors.append("인식된 오브젝트가 1개이므로 비교할 오브젝트 쌍이 없습니다.")
-        self.detail_var.set("\n".join(errors[:3]) if errors else "문제 쌍을 선택하거나 3D 배치 보기를 눌러 실제 배치를 확인하세요.")
+        self.detail_var.set("\n".join(errors) if errors else "문제 쌍을 선택하거나 3D 배치 보기를 눌러 실제 배치를 확인하세요.")
         self._populate_pairs()
+
+    def _update_details(self, *unused):
+        if self._closed:
+            return
+        self.details_text.configure(state="normal")
+        self.details_text.delete("1.0", "end")
+        self.details_text.insert("1.0", self.detail_var.get())
+        self.details_text.configure(state="disabled")
 
     def _populate_pairs(self):
         for row in self.tree.get_children():
@@ -491,31 +568,44 @@ class ChituCheckerApp:
         for index, pair in enumerate(visible[:10000]):
             identity = str(index)
             if pair.get("distance_mm") is not None:
-                gap = f"{pair['distance_mm']:.8g}"
+                gap = format_number(pair["distance_mm"])
             elif pair.get("distance_lower_bound_mm") is not None:
-                gap = f"≥ {pair['distance_lower_bound_mm']:.8g}"
+                gap = "≥ " + format_lower_bound(pair["distance_lower_bound_mm"])
+            elif pair.get("placement_distance_lower_bound_mm") is not None:
+                gap = "≥ " + format_lower_bound(pair["placement_distance_lower_bound_mm"])
             else:
                 gap = "—"
             tag = "unknown" if pair["status"] == "inconclusive" else "violation" if pair["status"] != "clear" else ""
-            self.tree.insert("", "end", iid=identity, values=(PAIR_LABELS[pair["status"]],
+            self.tree.insert("", "end", iid=identity, values=(_pair_label(pair),
                 f"[{pair['index_a']}] {pair['object_a']}", f"[{pair['index_b']}] {pair['object_b']}", gap), tags=(tag,))
             self._displayed_pairs[identity] = pair
         if len(visible) > 10000:
-            self.detail_var.set("화면에는 앞 10,000쌍을 표시합니다. 전체 결과는 JSON에 저장됩니다.")
+            note = "화면에는 앞 10,000쌍을 표시합니다. 전체 결과는 JSON에 저장됩니다."
+            if note not in self.detail_var.get():
+                self.detail_var.set(self.detail_var.get() + "\n" + note)
 
     def _selection_changed(self, *unused):
         selection = self.tree.selection()
         pair = self._displayed_pairs.get(selection[0]) if selection else None
         if pair is not None:
-            text = f"[{pair['index_a']}] {pair['object_a']} ↔ [{pair['index_b']}] {pair['object_b']}\n{PAIR_LABELS[pair['status']]}"
+            text = f"[{pair['index_a']}] {pair['object_a']} ↔ [{pair['index_b']}] {pair['object_b']}\n{_pair_label(pair)}"
             if pair.get("distance_mm") is not None:
-                text += f" · 간격 {pair['distance_mm']:.9g} mm"
+                text += f" · 간격 {format_number(pair['distance_mm'])} mm"
             elif pair.get("distance_lower_bound_mm") is not None:
-                text += f" · 간격 ≥ {pair['distance_lower_bound_mm']:.9g} mm (확인된 거리 하한)"
+                text += f" · 간격 ≥ {format_lower_bound(pair['distance_lower_bound_mm'])} mm (확인된 거리 하한)"
+            elif pair.get("placement_distance_lower_bound_mm") is not None:
+                text += f" · 원본 AABB 간격 ≥ {format_lower_bound(pair['placement_distance_lower_bound_mm'])} mm (거리 하한)"
             if pair.get("intersection_volume"):
-                text += f" · 교차 부피 {pair['intersection_volume']:.9g} mm³"
+                text += f" · 교차 부피 {format_number(pair['intersection_volume'])} mm³"
+            if pair.get("status") == "inconclusive" and pair.get("placement_status") == "clear":
+                text += "\n원본 삼각형의 경계 상자로 분리를 확인했습니다. 형상 유효성의 PASS는 아닙니다."
             if pair.get("error"):
                 text += "\n" + pair["error"]
+            for obj in (getattr(self, "last_report", None) or {}).get("objects", []):
+                if obj["index"] in (pair["index_a"], pair["index_b"]):
+                    lines = _object_diagnostic_lines(obj)
+                    if lines:
+                        text += "\n" + "\n".join(lines)
             self.detail_var.set(text)
 
     def _selected_pair(self):

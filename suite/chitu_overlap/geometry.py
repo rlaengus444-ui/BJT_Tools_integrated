@@ -47,17 +47,12 @@ def _geometry_key(mesh):
         return None
 
 
-def _strict_topology(mesh, cancel_event=None):
-    """Require exactly two oppositely directed incidences per indexed edge.
+def _strict_topology(mesh, cancel_event=None, *, diagnostics=None):
+    """Keep strict edge certification and collect complete bounded diagnostics.
 
-    Manifold's constructor can accept/normalize some non-manifold soups, so
-    native acceptance alone must not relax the original Trimesh contract.
-    One uint64 per directed edge replaces cached two-column edge arrays,
-    argsorts, triangle arrays and adjacency matrices. Larger sorts are backed
-    by a temporary mapping; comparisons use fixed-size chunks.
-
-    A false watertight result returns winding=None because winding is then
-    irrelevant to solid certification. It does not claim that winding passed.
+    Sorted indexed-edge runs must each have exactly two opposite directions.
+    Run counts are reduced in fixed chunks, including runs crossing chunks;
+    neither a four-incidence edge nor cancellation can become a closed solid.
     """
     vertex_count = len(mesh.vertices)
     face_count = len(mesh.faces)
@@ -65,10 +60,8 @@ def _strict_topology(mesh, cancel_event=None):
     if bits > 31:
         raise ValueError("Mesh has too many indexed vertices for strict topology certification")
     edge_count = face_count * 3
-    if edge_count % 2:
-        return False, None
     directory = None
-    keys = view = None
+    keys = view = target = left = right = None
     try:
         if edge_count * 8 > TOPOLOGY_SORT_BYTES:
             directory = tempfile.TemporaryDirectory(prefix="BJT_topology_")
@@ -89,29 +82,49 @@ def _strict_topology(mesh, cancel_event=None):
         if _stopped(cancel_event):
             raise InterruptedError("Inspection cancelled before topology sorting.")
         keys.sort(kind="quicksort")
-        previous = None
-        winding = True
-        for start in range(0, edge_count, 2 * TOPOLOGY_CHECK_PAIRS):
+        boundary = nonmanifold = inconsistent = unique = 0
+        pending_base = None
+        pending_count = pending_xor = 0
+        for start in range(0, edge_count, max(2, 2 * TOPOLOGY_CHECK_PAIRS)):
             if _stopped(cancel_event):
                 raise InterruptedError("Inspection cancelled during topology validation.")
-            view = keys[start:start + 2 * TOPOLOGY_CHECK_PAIRS]
-            left, right = view[0::2], view[1::2]
-            bases = left >> np.uint64(1)
-            if np.any(bases != (right >> np.uint64(1))):
-                return False, None
-            # Merely grouping neighboring entries in pairs would accept four
-            # incidences as two pairs. Distinct consecutive keys reject that.
-            if (previous is not None and int(bases[0]) == previous) or np.any(bases[1:] == bases[:-1]):
-                return False, None
-            if np.any(np.bitwise_xor(left, right) != 1):
-                winding = False
-            previous = int(bases[-1])
-        return True, winding
+            view = keys[start:start + max(2, 2 * TOPOLOGY_CHECK_PAIRS)]
+            bases = view >> np.uint64(1)
+            starts = np.r_[0, np.flatnonzero(bases[1:] != bases[:-1]) + 1]
+            counts = np.diff(np.r_[starts, len(view)])
+            xors = np.bitwise_xor.reduceat(view, starts)
+            if pending_base is not None:
+                if int(bases[0]) == pending_base:
+                    counts[0] += pending_count
+                    xors[0] ^= np.uint64(pending_xor)
+                else:
+                    boundary += pending_count == 1
+                    nonmanifold += pending_count > 2
+                    inconsistent += pending_count == 2 and pending_xor != 1
+                    unique += 1
+            finished = counts[:-1]
+            boundary += int(np.count_nonzero(finished == 1))
+            nonmanifold += int(np.count_nonzero(finished > 2))
+            inconsistent += int(np.count_nonzero((finished == 2) & (xors[:-1] != 1)))
+            unique += len(finished)
+            pending_base = int(bases[-1])
+            pending_count, pending_xor = int(counts[-1]), int(xors[-1])
+        if pending_base is not None:
+            boundary += pending_count == 1
+            nonmanifold += pending_count > 2
+            inconsistent += pending_count == 2 and pending_xor != 1
+            unique += 1
+        if _stopped(cancel_event):
+            raise InterruptedError("Inspection cancelled during topology validation.")
+        if diagnostics is not None:
+            diagnostics.update(boundary_edge_count=int(boundary), nonmanifold_edge_count=int(nonmanifold),
+                               inconsistent_winding_edge_count=int(inconsistent), unique_edge_count=int(unique),
+                               edge_counts_complete=True)
+        watertight = boundary == 0 and nonmanifold == 0
+        return watertight, inconsistent == 0 if watertight else None
     finally:
-        # Drop every view before closing/unlinking a Windows file mapping.
-        view = None
+        view = target = left = right = None
         if isinstance(keys, np.memmap):
-            target = left = right = None
             keys.flush()
             keys._mmap.close()
         keys = None
@@ -121,8 +134,13 @@ def _strict_topology(mesh, cancel_event=None):
 
 def _validate_object(index, obj, topology_cache=None, cancel_event=None):
     record = {"index": index, "name": obj.name, "valid": False, "errors": [],
-              "bounds": None, "volume": None}
+              "bounds": None, "volume": None, "original_triangle_bounds": None,
+              "source_triangles_finite_indexed": False,
+              "topology_diagnostics": {"degenerate_face_count": None, "invalid_area_face_count": None,
+                                       "face_counts_complete": False, "edge_counts_complete": False,
+                                       "boundary_edge_count": None, "nonmanifold_edge_count": None}}
     errors = record["errors"]
+    diagnostics = record["topology_diagnostics"]
     mesh = obj.mesh
     if not isinstance(mesh, trimesh.Trimesh):
         errors.append("Object does not contain a triangle mesh.")
@@ -132,8 +150,10 @@ def _validate_object(index, obj, topology_cache=None, cancel_event=None):
         errors.append("Mesh is empty.")
         return record
     try:
-        # Trimesh's cached edges/triangles/mass properties retained ~8 GB on
-        # the 1.3 GB fixture. Working arrays here have a fixed chunk size.
+        if (vertices.ndim != 2 or vertices.shape[1] != 3 or faces.ndim != 2 or faces.shape[1] != 3
+                or not np.issubdtype(faces.dtype, np.integer)):
+            errors.append("Mesh contains invalid face indices.")
+            return record
         for start in range(0, len(vertices), VALIDATION_FACE_CHUNK * 4):
             if _stopped(cancel_event):
                 raise InterruptedError("Inspection cancelled during mesh validation.")
@@ -147,6 +167,7 @@ def _validate_object(index, obj, topology_cache=None, cancel_event=None):
         origin = np.asarray(vertices[int(first[0, 0])], dtype=float)
         lower, upper = np.full(3, np.inf), np.full(3, -np.inf)
         volumes = []
+        degenerate = invalid_area = 0
         for start in range(0, len(faces), VALIDATION_FACE_CHUNK):
             if _stopped(cancel_event):
                 raise InterruptedError("Inspection cancelled during mesh validation.")
@@ -160,25 +181,37 @@ def _validate_object(index, obj, topology_cache=None, cancel_event=None):
             with np.errstate(over="ignore", invalid="ignore", under="ignore"):
                 cross = np.cross(triangle[:, 1] - triangle[:, 0], triangle[:, 2] - triangle[:, 0])
                 squared = np.einsum("ij,ij->i", cross, cross)
-            if not np.isfinite(squared).all() or np.any(squared <= 0):
-                errors.append("Mesh contains degenerate or invalid triangles.")
-                return record
-            centered = triangle - origin
-            with np.errstate(over="ignore", invalid="ignore"):
+                degenerate += int(np.count_nonzero(np.isfinite(squared) & (squared <= 0)))
+                invalid_area += int(np.count_nonzero(~np.isfinite(squared)))
+                centered = triangle - origin
                 tetra = np.einsum("ij,ij->i", centered[:, 0], np.cross(centered[:, 1], centered[:, 2]))
                 volumes.append(float(np.sum(tetra, dtype=np.float64) / 6.0))
+        if _stopped(cancel_event):
+            raise InterruptedError("Inspection cancelled during mesh validation.")
+        # This certificate concerns original finite indexed triangles only. It
+        # is not solid validation, and is never based on native auto-repair.
+        record["original_triangle_bounds"] = [lower.tolist(), upper.tolist()]
+        record["source_triangles_finite_indexed"] = True
+        diagnostics.update(degenerate_face_count=degenerate, invalid_area_face_count=invalid_area,
+                           face_counts_complete=True)
+        if degenerate or invalid_area:
+            errors.append("Mesh contains degenerate or invalid triangles.")
+            _strict_topology(mesh, cancel_event, diagnostics=diagnostics)
+            return record
         volume = math.fsum(volumes)
         record["bounds"] = [lower.tolist(), upper.tolist()]
         if math.isfinite(volume):
             record["volume"] = volume
         if not math.isfinite(volume) or volume <= 0:
             errors.append("Mesh must have finite positive volume and outward-facing faces.")
+            _strict_topology(mesh, cancel_event, diagnostics=diagnostics)
             return record
         key = _geometry_key(mesh)
         cached = topology_cache.get(key) if topology_cache is not None and key is not None else None
         if cached is None:
+            topology = {}
             try:
-                watertight, winding = _strict_topology(mesh, cancel_event)
+                watertight, winding = _strict_topology(mesh, cancel_event, diagnostics=topology)
                 topology_errors = []
                 if not watertight:
                     topology_errors.append("Mesh is not watertight; a solid volume is required.")
@@ -187,18 +220,19 @@ def _validate_object(index, obj, topology_cache=None, cancel_event=None):
                 if not topology_errors:
                     solid = _manifold(mesh)
                     del solid
-                cached = (not topology_errors, tuple(topology_errors))
+                cached = (not topology_errors, tuple(topology_errors), topology)
+            except InterruptedError:
+                raise
             except Exception as exc:
-                cached = (False, (f"Geometry backend rejected mesh: {type(exc).__name__}: {exc}",))
+                cached = (False, (f"Geometry backend rejected mesh: {type(exc).__name__}: {exc}",), topology)
             if topology_cache is not None and key is not None:
                 topology_cache[key] = cached
+        diagnostics.update(cached[2])
         if not cached[0]:
             errors.extend(cached[1])
     except Exception as exc:
         errors.append(f"Mesh validation failed: {type(exc).__name__}: {exc}")
     finally:
-        # Base coordinates/faces are unchanged; derived properties can be
-        # recomputed later by callers without retaining inspection temporaries.
         mesh._cache.clear()
     record["valid"] = not errors
     return record
@@ -239,6 +273,23 @@ def _surface_distance(a, b):
 def _bbox_distance(a, b):
     delta = np.maximum(np.maximum(a[0] - b[1], b[0] - a[1]), 0.0)
     return float(np.linalg.norm(delta))
+
+
+def _placement_bbox_lower_bound(a, b):
+    """Conservative finite AABB bound for original referenced triangles only."""
+    components = []
+    for axis in range(3):
+        distance = max(float(a[0][axis]) - float(b[1][axis]),
+                       float(b[0][axis]) - float(a[1][axis]), 0.0)
+        if not math.isfinite(distance):
+            return None
+        # Round each subtraction and the final hypot toward zero. This new
+        # certificate never rounds its bound upward; legacy queries are intact.
+        components.append(math.nextafter(distance, 0.0) if distance > 0 else 0.0)
+    distance = math.hypot(*components)
+    if not math.isfinite(distance):
+        return None
+    return math.nextafter(distance, 0.0) if distance > 0 else 0.0
 
 
 def _surface_upper_bound(a, b):
@@ -422,6 +473,9 @@ def check_overlaps(objects: Iterable[MeshObject], *, volume_tolerance=1e-6,
                         raise ValueError("Prepared mesh did not pass ordinary solid validation")
                     prepared_record.update(index=i, name=obj.name,
                                            source_errors=list(record["errors"]),
+                                           original_triangle_bounds=record["original_triangle_bounds"],
+                                           source_triangles_finite_indexed=record["source_triangles_finite_indexed"],
+                                           source_topology_diagnostics=record["topology_diagnostics"],
                                            normalization={key: value for key, value in proof.items()
                                                           if key != "ordinary_validation"})
                     # The caller's placed objects/arrays are never replaced.
@@ -435,10 +489,26 @@ def check_overlaps(objects: Iterable[MeshObject], *, volume_tolerance=1e-6,
     pairs, candidates, attempted = [], [], set()
     total_pair_count = len(objects) * (len(objects) - 1) // 2
     for i, j in combinations(range(len(objects)), 2):
+        if stopped():
+            break
         pair = {"index_a": i, "index_b": j, "object_a": objects[i].name,
                 "object_b": objects[j].name, "status": "inconclusive",
-                "intersection_volume": None, "distance_mm": None, "distance_is_exact": False}
+                "intersection_volume": None, "distance_mm": None, "distance_is_exact": False,
+                "placement_status": "unknown", "placement_method": "unknown",
+                "placement_distance_lower_bound_mm": None}
         pairs.append(pair)
+        if (records[i].get("source_triangles_finite_indexed")
+                and records[j].get("source_triangles_finite_indexed")):
+            placement_lower = _placement_bbox_lower_bound(records[i]["original_triangle_bounds"],
+                                                          records[j]["original_triangle_bounds"])
+            if placement_lower is not None:
+                pair.update(placement_method="original-triangle-aabb-bound",
+                            placement_distance_lower_bound_mm=placement_lower)
+                if (placement_lower > distance_tolerance_mm
+                        and placement_lower + distance_tolerance_mm >= min_gap_mm):
+                    pair["placement_status"] = "clear"
+        if stopped():
+            break
         if not records[i]["valid"] or not records[j]["valid"]:
             pair["error"] = "One or both objects failed solid-mesh validation."
             if not stopped():
@@ -476,6 +546,10 @@ def check_overlaps(objects: Iterable[MeshObject], *, volume_tolerance=1e-6,
         if use_bound and safe_gap and lower >= best:
             pair.update(status="clear", intersection_volume=0.0,
                         distance_lower_bound_mm=lower, method="aabb-clearance-bound")
+            # Keep the legacy result, but never let its rounded AABB value
+            # override the independent conservative original-triangle proof.
+            if pair["placement_status"] == "clear":
+                pair["placement_method"] = "validated-solid-aabb-bound"
             continue
         try:
             extents = np.minimum(bounds_a[1], bounds_b[1]) - np.maximum(bounds_a[0], bounds_b[0])
@@ -506,6 +580,8 @@ def check_overlaps(objects: Iterable[MeshObject], *, volume_tolerance=1e-6,
                           "too_close" if distance + distance_tolerance_mm < min_gap_mm else "clear")
             pair.update(status=status, intersection_volume=volume, distance_mm=distance,
                         distance_is_exact=True, method="manifold64+fcl")
+            pair.update(placement_status="clear" if status == "clear" else "violation",
+                        placement_method="validated-solid-query")
             if 0 < volume <= volume_tolerance:
                 pair["reason"] = "Positive intersection at or below volume tolerance."
             if nearest is not None:
@@ -523,11 +599,25 @@ def check_overlaps(objects: Iterable[MeshObject], *, volume_tolerance=1e-6,
     complete = bool(objects) and not stopped() and all(row["valid"] for row in records) and all(pair["status"] != "inconclusive" for pair in pairs)
     valid_scope_complete = not stopped() and all(pair["status"] != "inconclusive" for pair in pairs
                                                 if records[pair["index_a"]]["valid"] and records[pair["index_b"]]["valid"])
+    placement_complete = (bool(objects) and not stopped() and len(pairs) == total_pair_count
+                          and all(row.get("source_triangles_finite_indexed") for row in records)
+                          and all(pair["placement_status"] != "unknown" for pair in pairs))
+    placement_violation = any(pair["placement_status"] == "violation" for pair in pairs)
+    placement_minimum_certified = (not stopped() and len(pairs) == total_pair_count
+        and all(row.get("source_triangles_finite_indexed") for row in records)
+        and math.isfinite(best) and all(
+            pair["distance_is_exact"] or (pair["placement_distance_lower_bound_mm"] is not None
+                and pair["placement_distance_lower_bound_mm"] >= best) for pair in pairs))
     return {"status": "violation" if violations else "clear" if complete else "inconclusive",
             "complete": complete, "overlap_found": bool(overlaps), "violation_found": bool(violations),
             "cancelled": stopped(), "total_pair_count": total_pair_count, "object_count": len(objects), **parameters,
             "processing_completed": not stopped(),
             "objects": records, "pairs": pairs, "overlaps": overlaps, "violations": violations,
+            "placement_status": "violation" if placement_violation else "clear" if placement_complete else "unknown",
+            "placement_complete": placement_complete,
+            "placement_minimum_distance_mm": best if placement_minimum_certified else None,
+            "placement_minimum_distance_pair": best_pair if placement_minimum_certified else None,
+            "placement_minimum_distance_is_certified": placement_minimum_certified,
             "distance_mode": "certified-clearance" if large or normalized_indices else "exact-all-pairs",
             "pair_distances_complete": not stopped() and len(pairs) == total_pair_count and all(pair["distance_mm"] is not None for pair in pairs),
             "minimum_distance_mm": best if math.isfinite(best) else None,

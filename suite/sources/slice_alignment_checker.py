@@ -19,6 +19,14 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+try:
+    from display_numbers import format_number
+except ModuleNotFoundError as exc:
+    if exc.name != "display_numbers":
+        raise
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from display_numbers import format_number
 import subprocess
 import sys
 import traceback
@@ -1363,6 +1371,23 @@ main{padding:14px 20px}.stage{border:1px solid #334561;border-radius:6px;overflo
                              if include_inline else "")
 
 
+def _display_alignment_summary(result):
+    """Format known measurements for logs without modifying saved result text."""
+    summary = result["summary"]
+    for key in (("boundary_signal_mm",) if result.get("boundary_signal_mm") is not None else ("boundary_raw_movement_mm",)):
+        value = result.get(key)
+        if value is not None:
+            original = f"최대 {value:.3f} mm"
+            summary = summary.replace(original, f"최대 {format_number(value)} mm")
+    if result.get("boundary_status") in ("suspected", "no_signal"):
+        value = result["settings"]["tolerance_mm"]
+        for prefix in ("기준 ", ""):
+            original = f"{prefix}{value:.3f} mm 초과" if not prefix else f"{prefix}{value:.3f} mm를"
+            replacement = f"{prefix}{format_number(value)} mm 초과" if not prefix else f"{prefix}{format_number(value)} mm를"
+            summary = summary.replace(original, replacement)
+    return summary
+
+
 def _write_reports(result, directory, *, cancel_event=None, progress_callback=None):
     """Keep full diagnostic data; present concise decisions and numbered figures."""
     e = html.escape
@@ -1520,7 +1545,7 @@ def _write_reports(result, directory, *, cancel_event=None, progress_callback=No
 <style>body{{font:15px/1.65 "Malgun Gothic",sans-serif;color:#203348;max-width:1100px;margin:32px auto;padding:0 20px}}h1{{font-size:26px}}h2{{font-size:21px;margin-top:30px}}table{{border-collapse:collapse;width:100%}}td,th{{border:1px solid #d3dce5;padding:10px;text-align:left}}th{{background:#173252;color:white}}.REVIEW_SUSPECTED,.MISALIGNED{{background:#ffede6}}.box{{background:#f0f5fa;padding:16px;border-radius:8px}}a{{color:#176696}}.numbered-map{{margin:16px 0}}.numbered-map svg{{display:block;width:100%;height:auto;background:#000;border-radius:6px}}figcaption,.muted{{color:#526578;font-size:13px}}details{{margin:12px 0}}summary{{cursor:pointer;font-weight:bold}}</style>
 <style>.boundary-layout{{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:18px;align-items:start}}.boundary-layout .numbered-map{{margin:0}}@media(max-width:900px){{.boundary-layout{{grid-template-columns:1fr}}}}</style>
 <h1>{e(result["label"])}</h1>
-<div class="box"><b>{e(summary)}</b>{mode_text}<br>전체 {image_count}층 · DPI {result["settings"]["dpi_x"]:g} · 검사기 v{e(result["software_version"])}</div>
+<div class="box"><b>{e(summary)}</b>{mode_text}<br>전체 {image_count}층 · DPI {format_number(result["settings"]["dpi_x"], trim=True)} · 검사기 v{e(result["software_version"])}</div>
 {scan_section}
 {boundary_section}
 <p class="muted">빨강: 앞층에만 있음 · 청록: 뒤층에만 있음 · 흰색: 겹침 · 노랑: 이동 방향 · 파란 번호: 검사 형상</p>
@@ -1758,7 +1783,7 @@ def run_check(options, progress_callback: Callable[[str], None] | None = None, c
                 (directory / filename).unlink(missing_ok=True)
             raise CheckCancelled("검사를 중지했습니다. 완료된 보고서로 판정하지 마세요.")
         incomplete.unlink()
-        log(result["label"] + ": " + result["summary"])
+        log(result["label"] + ": " + _display_alignment_summary(result))
         log("보고서: " + result["report_html"])
         return result
     finally:
@@ -2323,7 +2348,7 @@ class SimpleAlignmentApp:
                     label = self.summary.get("label", self.summary.get("status", "완료"))
                     count = self.summary.get("count", "")
                     self.status.set(f"검사 완료 · {label} · 비교 {count}쌍")
-                    self._append(self.summary.get("summary", ""))
+                    self._append(_display_alignment_summary(self.summary) if "summary" in self.summary else "")
                     self._append(f"결과 폴더: {self.summary.get('result_dir', '')}")
                     self._append("보고서에서 판정 근거와 겹쳐 보기 이미지를 확인하세요.")
                     if self.summary.get("report_html"):

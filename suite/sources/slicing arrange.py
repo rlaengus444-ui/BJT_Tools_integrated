@@ -42,6 +42,14 @@ import traceback
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
+try:
+    from display_numbers import format_number
+except ModuleNotFoundError as exc:
+    if exc.name != "display_numbers":
+        raise
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from display_numbers import format_number
 from typing import Callable, Dict, List, Optional, Sequence, Tuple
 
 
@@ -1292,7 +1300,7 @@ class SliceLayoutApp:
         if self.stl_import_button is not None:
             self.stl_import_button.configure(state="disabled")
         self.status_var.set(
-            f"STL {len(valid)}개 슬라이싱 준비 · {dpi_x}×{dpi_y} DPI · {layer_height_mm:g} mm"
+            f"STL {len(valid)}개 슬라이싱 준비 · {dpi_x}×{dpi_y} DPI · {format_number(layer_height_mm, trim=True)} mm"
         )
 
         worker = threading.Thread(
@@ -1476,8 +1484,8 @@ class SliceLayoutApp:
                 size_x, size_y, size_z = source.model_size_mm
                 self.selected_info_var.set(
                     f"STL: {source.origin_path}\n"
-                    f"모델 크기: {size_x:.3f} × {size_y:.3f} × {size_z:.3f} mm\n"
-                    f"슬라이스: {len(source.images)}장 · {source.layer_height_mm:g} mm · "
+                    f"모델 크기: {format_number(size_x)} × {format_number(size_y)} × {format_number(size_z)} mm\n"
+                    f"슬라이스: {len(source.images)}장 · {format_number(source.layer_height_mm, trim=True)} mm · "
                     f"{source.dpi_x}×{source.dpi_y} DPI\n"
                     f"현재 층: {self.current_layer + 1}\n회전: {normalize_rotation(placement.rotation)}° (Z축·시계방향)"
                 )
@@ -1720,8 +1728,8 @@ class SliceLayoutApp:
                 size_x, size_y, size_z = source.model_size_mm
                 self.selected_info_var.set(
                     f"STL: {source.origin_path}\n"
-                    f"모델 크기: {size_x:.3f} × {size_y:.3f} × {size_z:.3f} mm\n"
-                    f"슬라이스: {len(source.images)}장 · {source.layer_height_mm:g} mm · "
+                    f"모델 크기: {format_number(size_x)} × {format_number(size_y)} × {format_number(size_z)} mm\n"
+                    f"슬라이스: {len(source.images)}장 · {format_number(source.layer_height_mm, trim=True)} mm · "
                     f"{source.dpi_x}×{source.dpi_y} DPI\n"
                     f"현재 층: {self.current_layer + 1}\n회전: {normalize_rotation(placement.rotation)}° (Z축·시계방향)"
                 )

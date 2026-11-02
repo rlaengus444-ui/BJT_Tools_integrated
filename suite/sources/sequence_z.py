@@ -12,6 +12,14 @@ from decimal import Decimal, InvalidOperation, localcontext
 import numbers
 import os
 from pathlib import Path
+try:
+    from display_numbers import format_number
+except ModuleNotFoundError as exc:
+    if exc.name != "display_numbers":
+        raise
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from display_numbers import format_number
 import queue
 import tempfile
 import threading
@@ -112,6 +120,11 @@ def format_decimal(value):
 def row_values(row):
     return (str(row.layer), format_decimal(row.printing_z),
             format_decimal(row.trinity_z), format_decimal(row.recoating_z))
+
+
+def display_row_values(row):
+    return (str(row.layer), *(format_number(value, trim=True) for value in
+            (row.printing_z, row.trinity_z, row.recoating_z)))
 
 
 def calculate_page(settings, start, end, page_index=0, page_size=PAGE_SIZE):
@@ -408,7 +421,7 @@ class SequenceZApp:
             messagebox.showerror("입력 확인", str(exc), parent=self.root)
             return
         self._query_row = row
-        for variable, value in zip(self.query_values, row_values(row)[1:]):
+        for variable, value in zip(self.query_values, display_row_values(row)[1:]):
             variable.set(value)
         self.query_status_var.set(f"{layer:,} 레이어 · 계산 완료")
         self.status_var.set("단일 조회 완료 · 원본 수식 그대로 계산했습니다.")
@@ -437,7 +450,7 @@ class SequenceZApp:
         rows = calculate_page(settings, start, end, self._page_index)
         self.table.delete(*self.table.get_children())
         for row in rows:
-            self.table.insert("", "end", iid=str(row.layer), values=row_values(row))
+            self.table.insert("", "end", iid=str(row.layer), values=display_row_values(row))
         pages = (end - start) // PAGE_SIZE + 1
         self.table_status_var.set(f"{rows[0].layer:,}~{rows[-1].layer:,} / 총 {end - start + 1:,}행 · {self._page_index + 1:,}/{pages:,}페이지")
         self._refresh_actions()
@@ -467,7 +480,8 @@ class SequenceZApp:
 
     def copy_selected(self, event=None):
         if self._table_snapshot is not None and not self.is_busy():
-            rows = [self.table.item(iid, "values") for iid in self.table.selection()]
+            settings, _, _ = self._table_snapshot
+            rows = [row_values(calculate_z(settings, int(iid))) for iid in self.table.selection()]
             if rows:
                 self._copy(rows)
                 self.status_var.set(f"선택한 {len(rows):,}행을 클립보드에 복사했습니다.")

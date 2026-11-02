@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 
 from .geometry import MeshObject
+from .display_preview import PreviewUnavailable
 
 
 # Bound both arrays: a triangle budget alone would still allow millions of
@@ -16,6 +17,8 @@ from .geometry import MeshObject
 MAX_EXACT_FACES = 200_000
 MAX_EXACT_VERTICES = 120_000
 _CHUNK_ROWS = 65_536
+_SMALL_FACES = 4_096
+_RESERVE_ROWS = 256
 
 
 def _shape_ok(values) -> bool:
@@ -25,7 +28,10 @@ def _shape_ok(values) -> bool:
 def _report_bounds(record) -> list | None:
     if record is None or record.get("bounds") is None:
         return None
-    bounds = np.asarray(record["bounds"], dtype=float)
+    try:
+        bounds = np.asarray(record["bounds"], dtype=float)
+    except (TypeError, ValueError):
+        return None
     if bounds.shape != (2, 3) or not np.isfinite(bounds).all() or np.any(bounds[0] > bounds[1]):
         return None
     return bounds.tolist()
@@ -63,12 +69,12 @@ def _box_trace(bounds, index, label, face_count):
            for number, axis in enumerate(("x", "y", "z"))},
         "line": {"width": 4, "color": "#9caec0"}, "showlegend": False,
         "hovertemplate": label + f"<br>외곽박스 미리보기 · 원본 {face_count:,}개 삼각형"
-                         + "<br>X %{x:.4f} mm<br>Y %{y:.4f} mm<br>Z %{z:.4f} mm<extra></extra>",
+                         + "<br>X %{x:.2f} mm<br>Y %{y:.2f} mm<br>Z %{z:.2f} mm<extra></extra>",
     }
 
 
 def _preview_plan(objects, report):
-    """Reserve exact geometry for selected/failed small objects first."""
+    """Reserve a fair shape budget before granting selected exact detail."""
     selected = set(report.get("selected_pair") or ())
     failed = {pair[key] for pair in report.get("violations", [])
               for key in ("index_a", "index_b")}
@@ -77,17 +83,42 @@ def _preview_plan(objects, report):
         vertices, faces = obj.mesh.vertices, obj.mesh.faces
         drawable = _shape_ok(vertices) and _shape_ok(faces) and bool(len(vertices)) and bool(len(faces))
         entries.append((index, vertices, faces, drawable))
-    remaining_faces, remaining_vertices = MAX_EXACT_FACES, MAX_EXACT_VERTICES
     priorities = sorted((entry for entry in entries if entry[3]),
                         key=lambda item: (0 if item[0] in selected else 1 if item[0] in failed else 2,
                                           len(item[2]), len(item[1]), item[0]))
-    exact = set()
-    for index, vertices, faces, _ in priorities:
-        if len(faces) <= remaining_faces and len(vertices) <= remaining_vertices:
-            exact.add(index)
-            remaining_faces -= len(faces)
-            remaining_vertices -= len(vertices)
-    return entries, exact
+    capacity = {index: (len(faces), len(vertices)) for index, vertices, faces, _ in priorities}
+    limits = (MAX_EXACT_FACES, MAX_EXACT_VERTICES)
+    if all(sum(values[axis] for values in capacity.values()) <= limits[axis] for axis in (0, 1)):
+        return entries, capacity
+    allocations = {index: [0, 0] for index in capacity}
+    remaining = list(limits)
+    # Tiny meshes remain exact. If even minimum reservations cannot fit, the
+    # selected objects win and every omitted object gets an explicit fallback.
+    for index, _vertices, faces, _ in priorities:
+        raw = capacity[index]
+        reservation = raw if len(faces) <= _SMALL_FACES else tuple(min(value, _RESERVE_ROWS) for value in raw)
+        if all(reservation[axis] <= remaining[axis] for axis in (0, 1)):
+            allocations[index] = list(reservation)
+            for axis in (0, 1):
+                remaining[axis] -= reservation[axis]
+    for index in sorted(selected):
+        if index not in capacity or not all(allocations[index]):
+            continue
+        extras = [capacity[index][axis] - allocations[index][axis] for axis in (0, 1)]
+        if all(extras[axis] <= remaining[axis] for axis in (0, 1)):
+            allocations[index] = list(capacity[index])
+            for axis in (0, 1):
+                remaining[axis] -= extras[axis]
+    for axis in (0, 1):
+        active = [index for index in capacity if all(allocations[index]) and allocations[index][axis] < capacity[index][axis]]
+        while active and remaining[axis]:
+            share = max(1, remaining[axis] // len(active))
+            for index in active:
+                take = min(share, capacity[index][axis] - allocations[index][axis], remaining[axis])
+                allocations[index][axis] += take
+                remaining[axis] -= take
+            active = [index for index in active if allocations[index][axis] < capacity[index][axis]]
+    return entries, allocations
 
 
 def _safe_json(value: object) -> str:
@@ -103,13 +134,13 @@ def _safe_json(value: object) -> str:
     )
 
 
-def write_html_report(objects: list[MeshObject], report: dict, path: str | Path) -> None:
+def write_html_report(objects: list[MeshObject], report: dict, path: str | Path, *, cancel_event=None) -> None:
     """Write an offline report with bounded display geometry and inline JS.
 
     No server, account, CDN, or Internet connection is needed to open the file.
-    Small scenes retain every original triangle. Over-budget objects use
-    explicitly labeled wire bounds; inspection data and source meshes remain
-    unchanged. Bounds from the inspection avoid scanning giant arrays again.
+    Small scenes retain every original triangle. Larger scenes share bounded,
+    topology-checked approximate display meshes. Explicit bounds are the
+    fallback when safe simplification cannot fit; inspection data stays raw.
     """
     from plotly.offline import get_plotlyjs
 
@@ -117,28 +148,57 @@ def write_html_report(objects: list[MeshObject], report: dict, path: str | Path)
     skipped = []
     previews = []
     records = {item["index"]: item for item in report.get("objects", []) if "index" in item}
-    entries, exact = _preview_plan(objects, report)
+    entries, allocations = _preview_plan(objects, report)
     for index, raw_vertices, raw_faces, drawable in entries:
         obj = objects[index]
         if not drawable:
             skipped.append({"index": index, "name": obj.name})
             continue
         label = html.escape(f"[{index}] {obj.name}", quote=True)
-        if index not in exact:
+        face_budget, vertex_budget = allocations[index]
+        vertices, faces = raw_vertices, raw_faces
+        mode = "exact"
+        reason = None
+        approximation = None
+        if len(raw_faces) > face_budget or len(raw_vertices) > vertex_budget:
+            mode = "approximate"
+            try:
+                from .display_preview import MAX_INPUT_FACES, MAX_INPUT_VERTICES, MAX_INPUT_COPY_BYTES, simplify
+                if (len(raw_faces) > MAX_INPUT_FACES or len(raw_vertices) > MAX_INPUT_VERTICES
+                        or 2 * (len(raw_vertices) * 24 + len(raw_faces) * 32) > MAX_INPUT_COPY_BYTES):
+                    raise PreviewUnavailable("source_memory_limit")
+                if cancel_event is not None and cancel_event.is_set():
+                    raise PreviewUnavailable("cancelled")
+                if not face_budget or not vertex_budget:
+                    raise PreviewUnavailable("display_budget")
+                if _checked_bounds(raw_vertices, raw_faces) is None:
+                    raise PreviewUnavailable("invalid_source_geometry")
+                vertices, faces, approximation = simplify(raw_vertices, raw_faces, face_budget, vertex_budget, cancel_event=cancel_event)
+                # Recheck the returned arrays independently of the VTK adapter.
+                if len(vertices) > vertex_budget or len(faces) > face_budget or _checked_bounds(vertices, faces) is None:
+                    raise PreviewUnavailable("invalid_simplified_geometry")
+            except Exception as exc:
+                mode = "bounds"
+                reason = str(exc) if isinstance(exc, PreviewUnavailable) else "simplification_failed"
+        if mode == "bounds":
             bounds = _report_bounds(records.get(index))
             if bounds is None:
-                bounds = _checked_bounds(raw_vertices, raw_faces)
+                try:
+                    bounds = _checked_bounds(raw_vertices, raw_faces)
+                except Exception:
+                    bounds = None
             if bounds is None:
                 skipped.append({"index": index, "name": obj.name})
                 continue
             traces.append(_box_trace(bounds, index, label, len(raw_faces)))
             previews.append({"index": index, "name": obj.name, "mode": "bounds",
-                             "reason": "display_budget", "original_faces": len(raw_faces),
+                             "reason": reason, "original_faces": len(raw_faces),
                              "original_vertices": len(raw_vertices), "displayed_faces": 0,
+                             "displayed_vertices": 0,
                              "bounds": bounds})
             continue
-        vertices = np.asarray(raw_vertices)
-        faces = np.asarray(raw_faces)
+        vertices = np.asarray(vertices)
+        faces = np.asarray(faces)
         bounds = _checked_bounds(vertices, faces)
         if bounds is None:
             skipped.append({"index": index, "name": obj.name})
@@ -147,7 +207,7 @@ def write_html_report(objects: list[MeshObject], report: dict, path: str | Path)
             {
                 "type": "mesh3d",
                 "name": label,
-                "meta": {"object_index": index, "preview_kind": "exact", "bounds": bounds},
+                "meta": {"object_index": index, "preview_kind": mode, "bounds": bounds},
                 "x": vertices[:, 0].tolist(),
                 "y": vertices[:, 1].tolist(),
                 "z": vertices[:, 2].tolist(),
@@ -155,17 +215,25 @@ def write_html_report(objects: list[MeshObject], report: dict, path: str | Path)
                 "j": faces[:, 1].tolist(),
                 "k": faces[:, 2].tolist(),
                 "flatshading": True,
+                "colorbar": {"tickformat": ".2f"},
                 "showlegend": False,
-                "hovertemplate": label + "<br>X %{x:.4f} mm<br>Y %{y:.4f} mm<br>Z %{z:.4f} mm<extra></extra>",
+                "hovertemplate": label + ("<br>근사 미리보기 · 검사는 원본 형상 사용" if mode == "approximate" else "<br>원본 삼각형 표시")
+                    + "<br>X %{x:.2f} mm<br>Y %{y:.2f} mm<br>Z %{z:.2f} mm<extra></extra>",
                 "lighting": {"ambient": 0.65, "diffuse": 0.75, "specular": 0.12},
             }
         )
-        previews.append({"index": index, "name": obj.name, "mode": "exact",
-                         "original_faces": len(faces), "original_vertices": len(vertices),
-                         "displayed_faces": len(faces), "bounds": bounds})
+        previews.append({"index": index, "name": obj.name, "mode": mode,
+                         "method": approximation["method"] if mode == "approximate" else "original",
+                         "approximation": approximation,
+                         "original_faces": len(raw_faces), "original_vertices": len(raw_vertices),
+                         "displayed_faces": len(faces), "displayed_vertices": len(vertices), "bounds": bounds})
     preview = {"objects": previews, "uses_bounds_proxies": any(item["mode"] == "bounds" for item in previews),
-               "exact_faces": sum(item["displayed_faces"] for item in previews),
-               "exact_vertices": sum(item["original_vertices"] for item in previews if item["mode"] == "exact"),
+               "uses_approximate_meshes": any(item["mode"] == "approximate" for item in previews),
+               "exact_faces": sum(item["displayed_faces"] for item in previews if item["mode"] == "exact"),
+               "exact_vertices": sum(item["displayed_vertices"] for item in previews if item["mode"] == "exact"),
+               "displayed_faces": sum(item["displayed_faces"] for item in previews),
+               "displayed_vertices": sum(item["displayed_vertices"] for item in previews),
+               "max_displayed_faces": MAX_EXACT_FACES, "max_displayed_vertices": MAX_EXACT_VERTICES,
                "max_exact_faces": MAX_EXACT_FACES, "max_exact_vertices": MAX_EXACT_VERTICES}
     payload = {"traces": traces, "report": report, "skipped": skipped,
                "object_count": len(objects), "preview": preview}
@@ -202,7 +270,7 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
 <h1>Chitu 3D 간격 검사</h1>
 <div class="subtle">원본 배치 좌표 · 단위 mm · 표면 접촉 금지</div>
 <section class="card"><div id="status" class="status"></div><div id="summary" class="subtle"></div></section>
-<label for="pair">불합격 오브젝트 쌍</label>
+<label for="pair">오브젝트 쌍 · 검사 결과</label>
 <select id="pair"><option value="">전체 배치</option></select>
 <div class="buttons"><button id="full">전체 보기</button><button id="focus" disabled>선택 쌍 확대</button></div>
 <label class="checkbox"><input type="checkbox" id="background" checked> 다른 오브젝트도 표시</label>
@@ -221,6 +289,9 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
   const data = JSON.parse(document.getElementById("viewer-data").textContent);
   const report = data.report;
   const violations = report.violations || [];
+  const pairChoices=[...violations];
+  const pairKeys=new Set(pairChoices.map(pair=>`${pair.index_a}:${pair.index_b}`));
+  (report.pairs || []).forEach(pair=>{const key=`${pair.index_a}:${pair.index_b}`;if(!pairKeys.has(key)){pairKeys.add(key);pairChoices.push(pair);}});
   const objects = report.objects || [];
   const labels = {overlap:"부피 겹침",touching:"표면 접촉",too_close:"최소 간격 미달",clear:"합격",inconclusive:"판정 불가"};
   const selector = document.getElementById("pair");
@@ -229,12 +300,44 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
   const background = document.getElementById("background");
   const failed = new Set(violations.flatMap(pair => [pair.index_a,pair.index_b]));
   const invalid = new Set(objects.filter(obj => !obj.valid).map(obj => obj.index));
-  const format = value => Number.isFinite(value) ? value.toLocaleString("ko-KR", {maximumFractionDigits:8}) : "판정 불가";
-  const gapText = pair => Number.isFinite(pair.distance_mm) ? `${format(pair.distance_mm)} mm` : Number.isFinite(pair.distance_lower_bound_mm) ? `≥ ${format(pair.distance_lower_bound_mm)} mm (보장 하한)` : "판정 불가";
+  const format = value => {
+    if(!Number.isFinite(value)) return "판정 불가";
+    if(value!==0 && (Number(value.toFixed(2))===0 || Math.abs(value)>=1e21)) return value.toExponential(2);
+    const rendered=value.toFixed(2);return Number(rendered)===0 ? "0.00" : rendered;
+  };
+  function formatLowerBound(value){
+    if(!Number.isFinite(value)) return "판정 불가";
+    // Floor the actual IEEE-754 value with integer arithmetic. Multiplying a
+    // float by 100 can round upward at the exact boundary of a guarantee.
+    const view=new DataView(new ArrayBuffer(8));view.setFloat64(0,value,false);
+    const hi=view.getUint32(0,false),lo=view.getUint32(4,false),exponent=(hi>>>20)&2047;
+    let mantissa=(BigInt(hi&1048575)<<32n)|BigInt(lo);
+    if(exponent) mantissa+=1n<<52n;
+    const power=exponent ? exponent-1075 : -1074;
+    let numerator=mantissa*100n,denominator=1n;
+    if(power>=0) numerator<<=BigInt(power);else denominator<<=BigInt(-power);
+    if(hi>>>31) numerator=-numerator;
+    let units=numerator/denominator;
+    if(numerator<0n && numerator%denominator!==0n) units-=1n;
+    const sign=units<0n ? "-" : "",magnitude=units<0n ? -units : units;
+    return `${sign}${magnitude/100n}.${(magnitude%100n).toString().padStart(2,"0")}`;
+  }
+  const gapText = pair => Number.isFinite(pair.distance_mm) ? `${format(pair.distance_mm)} mm` : Number.isFinite(pair.distance_lower_bound_mm) ? `≥ ${formatLowerBound(pair.distance_lower_bound_mm)} mm (보장 하한)` : "판정 불가";
+  const placementClear = report.placement_status==="clear" && report.placement_complete===true && !report.cancelled && report.status!=="violation" && !violations.length;
+  const placementText = pair => {
+    if(!pair.placement_status) return "";
+    if(pair.placement_status==="clear" && !["overlap","touching","too_close"].includes(pair.status)){
+      const bound=pair.placement_distance_lower_bound_mm;
+      return "배치 분리 확인" + (!Number.isFinite(pair.distance_mm) && Number.isFinite(bound) ? ` · ≥ ${formatLowerBound(bound)} mm (보장 하한)` : "") + (pair.status==="inconclusive" ? " · 형상 미검증" : "");
+    }
+    return pair.placement_status==="violation" ? "배치 간격 조건 미달" : "배치 분리 판정 불가";
+  };
   const previewObjects=(data.preview && data.preview.objects) || [];
   const proxies=previewObjects.filter(obj=>obj.mode==="bounds");
+  const approximations=previewObjects.filter(obj=>obj.mode==="approximate");
   const previewMessages=[];
-  if(proxies.length) previewMessages.push(`대용량 미리보기: ${proxies.length}개 오브젝트는 외곽박스로 표시합니다. 거리와 판정은 원본 형상으로 계산했습니다.`);
+  if(approximations.length) previewMessages.push(`근사 미리보기: ${approximations.length}개 오브젝트의 표시용 삼각형을 줄였습니다. 거리 계산과 판정에는 이 단순화 형상을 사용하지 않습니다.`);
+  if(proxies.length) previewMessages.push(`대용량 미리보기: ${proxies.length}개 오브젝트는 외곽박스로 표시합니다. 안전한 형상 단순화가 불가능하거나 표시 한도·중단 조건에 해당합니다.`);
   if(report.pair_distances_complete===false) previewMessages.push("일부 분리된 쌍은 보장된 거리 하한(≥)으로 표시합니다.");
   if(previewMessages.length){const note=document.getElementById("preview-note");note.hidden=false;note.textContent=previewMessages.join("\n");}
   const status = document.getElementById("status");
@@ -243,17 +346,17 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
   } else if(report.status === "clear" && report.complete){
     status.textContent = "합격"; status.classList.add("good");
   } else {status.textContent = "판정 불가";status.classList.add("unknown");}
-  document.getElementById("summary").textContent = `오브젝트 ${data.object_count}개 · 불합격 ${violations.length}쌍\n요구 최소 간격 ${format(report.min_gap_mm || 0)} mm`;
-  violations.forEach((pair, index) => {
+  document.getElementById("summary").textContent = `오브젝트 ${data.object_count}개 · 불합격 ${violations.length}쌍\n요구 최소 간격 ${format(report.min_gap_mm || 0)} mm` + (placementClear ? "\n배치 분리 확인" + (report.complete && report.status==="clear" ? "" : " · 형상 미검증") : report.placement_status ? "\n배치 분리: " + (report.placement_status==="violation" ? "간격 조건 미달" : "판정 불가") : "");
+  pairChoices.forEach((pair, index) => {
     const option=document.createElement("option"); option.value=String(index);
-    option.textContent=`[${pair.index_a}] ↔ [${pair.index_b}] ${labels[pair.status] || pair.status}`;
+    option.textContent=`[${pair.index_a}] ↔ [${pair.index_b}] ${labels[pair.status] || pair.status}` + (pair.placement_status==="clear" && pair.status==="inconclusive" ? " · 배치 분리 확인" : "");
     selector.appendChild(option);
   });
   if(Array.isArray(report.selected_pair)){
-    const initial=violations.findIndex(pair => pair.index_a===report.selected_pair[0] && pair.index_b===report.selected_pair[1]);
+    const initial=pairChoices.findIndex(pair => pair.index_a===report.selected_pair[0] && pair.index_b===report.selected_pair[1]);
     if(initial>=0) selector.value=String(initial);
   }
-  selector.disabled = !violations.length;
+  selector.disabled = !pairChoices.length;
   const warnings=[];
   if(!report.complete) warnings.push("검사하지 못한 항목이 있습니다. 이 화면은 전체 배치의 합격을 보증하지 않습니다.");
   if(report.error) warnings.push(report.error);
@@ -263,9 +366,9 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
   if(warnings.length){const warning=document.getElementById("warning");warning.hidden=false;warning.textContent=warnings.join("\n\n");}
   const traces = data.traces;
   const meshCount=traces.length;
-  traces.push({type:"scatter3d",mode:"lines+markers",x:[],y:[],z:[],name:"최근접점",line:{color:"#039c80",width:7},marker:{color:"#039c80",size:4},showlegend:false,hovertemplate:"최근접점<br>X %{x:.5f} mm<br>Y %{y:.5f} mm<br>Z %{z:.5f} mm<extra></extra>"});
-  const layout={margin:{l:0,r:0,t:0,b:0},paper_bgcolor:"#eef2f6",showlegend:false,uirevision:"chitu-placement",scene:{aspectmode:"data",bgcolor:"#eef2f6",camera:{eye:{x:1.5,y:-1.7,z:1.3},up:{x:0,y:0,z:1}},xaxis:{title:{text:"X (mm)"},gridcolor:"#d2dce6",zerolinecolor:"#99aebe"},yaxis:{title:{text:"Y (mm)"},gridcolor:"#d2dce6",zerolinecolor:"#99aebe"},zaxis:{title:{text:"Z (mm)"},gridcolor:"#d2dce6",zerolinecolor:"#99aebe"}}};
-  const selectedPair=()=>selector.value === "" ? null : violations[Number(selector.value)];
+  traces.push({type:"scatter3d",mode:"lines+markers",x:[],y:[],z:[],name:"최근접점",line:{color:"#039c80",width:7},marker:{color:"#039c80",size:4},showlegend:false,hovertemplate:"최근접점<br>X %{x:.2f} mm<br>Y %{y:.2f} mm<br>Z %{z:.2f} mm<extra></extra>"});
+  const layout={margin:{l:0,r:0,t:0,b:0},paper_bgcolor:"#eef2f6",showlegend:false,uirevision:"chitu-placement",scene:{aspectmode:"data",bgcolor:"#eef2f6",camera:{eye:{x:1.5,y:-1.7,z:1.3},up:{x:0,y:0,z:1}},xaxis:{title:{text:"X (mm)"},tickformat:".2f",hoverformat:".2f",gridcolor:"#d2dce6",zerolinecolor:"#99aebe"},yaxis:{title:{text:"Y (mm)"},tickformat:".2f",hoverformat:".2f",gridcolor:"#d2dce6",zerolinecolor:"#99aebe"},zaxis:{title:{text:"Z (mm)"},tickformat:".2f",hoverformat:".2f",gridcolor:"#d2dce6",zerolinecolor:"#99aebe"}}};
+  const selectedPair=()=>selector.value === "" ? null : pairChoices[Number(selector.value)];
   function refresh(){
     const pair=selectedPair();focus.disabled=!pair;
     const colors=[], opacities=[], visible=[];
@@ -287,8 +390,8 @@ button{border:1px solid #c6d1dc;border-radius:6px;background:#fff;color:#223b51;
     const points=pair && pair.status!=="overlap" && pair.nearest_points_mm;
     const validPoints=Array.isArray(points) && points.length===2 && points.every(point=>Array.isArray(point) && point.length===3 && point.every(Number.isFinite));
     Plotly.restyle(plot,{x:[validPoints?points.map(p=>p[0]):[]],y:[validPoints?points.map(p=>p[1]):[]],z:[validPoints?points.map(p=>p[2]):[]]},[meshCount]);
-    const proxyDescription=pair ? proxies.filter(obj=>obj.index===pair.index_a || obj.index===pair.index_b).map(obj=>`[${obj.index}] 표시: 외곽박스 (원본 ${obj.original_faces.toLocaleString("ko-KR")}개 삼각형)`).join("\n") : "";
-    document.getElementById("details").textContent=pair ? `[${pair.index_a}] ${pair.object_a}\n[${pair.index_b}] ${pair.object_b}\n\n판정: ${labels[pair.status] || pair.status}\n간격: ${gapText(pair)}${Number.isFinite(pair.intersection_volume)?"\n교차 부피: "+format(pair.intersection_volume)+" mm³":""}${proxyDescription?"\n\n"+proxyDescription:""}` : violations.length ? "목록에서 불합격 쌍을 선택하세요. 전체 보기에서 빨간색은 불합격에 포함된 오브젝트입니다." : report.complete && report.status==="clear" ? "검사한 모든 오브젝트 쌍이 간격 조건을 충족했습니다." : "확인된 불합격 쌍은 없지만, 판정하지 못한 항목을 확인해야 합니다.";
+    const proxyDescription=pair ? previewObjects.filter(obj=>(obj.index===pair.index_a || obj.index===pair.index_b) && obj.mode!=="exact").map(obj=>`[${obj.index}] 표시: ${obj.mode==="approximate" ? "근사 미리보기" : "외곽박스"} (원본 ${obj.original_faces.toLocaleString("ko-KR")}개 삼각형${obj.mode==="approximate" ? " → "+obj.displayed_faces.toLocaleString("ko-KR")+"개" : ""})`).join("\n") : "";
+    document.getElementById("details").textContent=pair ? `[${pair.index_a}] ${pair.object_a}\n[${pair.index_b}] ${pair.object_b}\n\n형상 판정: ${labels[pair.status] || pair.status}\n간격: ${gapText(pair)}${placementText(pair)?"\n"+placementText(pair):""}${Number.isFinite(pair.intersection_volume)?"\n교차 부피: "+format(pair.intersection_volume)+" mm³":""}${proxyDescription?"\n\n"+proxyDescription:""}` : violations.length ? "목록에서 불합격 쌍을 선택하세요. 전체 보기에서 빨간색은 불합격에 포함된 오브젝트입니다." : report.complete && report.status==="clear" ? "검사한 모든 오브젝트 쌍이 간격 조건을 충족했습니다." : placementClear ? "배치의 간격 조건은 분리 확인되었습니다. 형상 유효성은 미검증이므로 전체 형상 합격을 뜻하지 않습니다." : "확인된 불합격 쌍은 없지만, 판정하지 못한 항목을 확인해야 합니다.";
   }
   function fit(pair){
     const chosen=data.traces.slice(0,meshCount).filter(trace=>!pair || trace.meta.object_index===pair.index_a || trace.meta.object_index===pair.index_b);

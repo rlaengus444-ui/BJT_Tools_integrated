@@ -12,6 +12,14 @@ import traceback
 import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+try:
+    from display_numbers import format_display_value
+except ModuleNotFoundError as exc:
+    if exc.name != "display_numbers":
+        raise
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from display_numbers import format_display_value
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
@@ -67,9 +75,7 @@ def difference_label(value):
 def display_value(value):
     if value is None:
         return '—'
-    if isinstance(value, (dict, list, tuple)):
-        return json.dumps(value, ensure_ascii=False)
-    return str(value)
+    return format_display_value(value)
 
 
 def file_size(value):
@@ -479,7 +485,7 @@ class Application:
             self.table.selection_set(first)
         else:
             self._set_detail('현재 검색 / 필터에 맞는 결과가 없습니다.\n\n' +
-                             json.dumps(summary, ensure_ascii=False, indent=2) + '\n\n' +
+                             format_display_value(summary) + '\n\n' +
                              '\n'.join(getattr(report, 'warnings', [])))
 
     @staticmethod
@@ -576,7 +582,7 @@ class Application:
                 text += [f"주의: {title}의 확장자 {meta.get('extension')}와 실제 형식 {meta.get('format')}이 다릅니다.", '']
         for key, label in fields:
             text.append(f'{label}    A: {display_value(a.get(key))}    |    B: {display_value(b.get(key))}')
-        text += ['', '전체 검사 데이터:', json.dumps(row, ensure_ascii=False, indent=2)]
+        text += ['', '전체 검사 데이터 (화면 표시: 소수 둘째 자리):', format_display_value(row)]
         if self.report and getattr(self.report, 'warnings', None):
             text += ['', '묶음 검사 참고:'] + list(self.report.warnings)
         self._set_detail('\n'.join(text))

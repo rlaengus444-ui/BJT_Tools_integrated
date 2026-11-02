@@ -311,7 +311,7 @@ def parse_chitubox(data: bytes, *, source_name: str = "project.chitubox",
             raise ChituboxFormatError(
                 f"{name}: 별도 서포트/래프트 블록이 있는 프로젝트는 현재 지원하지 않습니다. "
                 "서포트와 모델의 실제 Z 배치를 확인할 수 없어 검사를 중단했습니다. "
-                "CHITUBOX에서 배치 좌표가 유지된 개별 STL 또는 3MF로 내보내 주세요."
+                "CHITUBOX에서 배치 좌표가 유지된 개별 STL로 내보내 주세요. 현재 3MF 입력은 지원하지 않습니다."
             )
 
         geometry_start = u32(tail + 16)
