@@ -7,6 +7,7 @@ name: Integrated suite Windows verification and draft release
       - codex/integrated-suite-1.7.1
       - codex/integrated-suite-1.8.0
       - codex/integrated-packing-policy-1.9.0
+      - codex/verify-bjt-1.9.0-exe-20261113
   workflow_dispatch:
 
 permissions:
@@ -21,7 +22,7 @@ jobs:
     runs-on: windows-2022
     timeout-minutes: 45
     permissions:
-      contents: write
+      contents: read
     env:
       PYTHONUTF8: '1'
       PYTHONDONTWRITEBYTECODE: '1'
@@ -70,10 +71,3 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 7
-      - name: Upload verified assets to a private draft release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          BJT_CI_OUTPUT: ${{ runner.temp }}\bjt-suite-native
-        shell: pwsh
-        run: |
-          python 'suite/배포_빌드/ci_windows_release.py' --output "$env:BJT_CI_OUTPUT" --publish-only
