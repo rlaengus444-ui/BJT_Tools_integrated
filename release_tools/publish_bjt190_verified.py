@@ -41,9 +41,20 @@ for a in r['assets']:
 readback=ROOT/'readback';readback.mkdir()
 gh('release','download',TAG,'--repo',REPO,'--dir',readback)
 for name,e in EXPECTED.items():assert (readback/name).stat().st_size==e['bytes'] and digest(readback/name)==e['sha256'],name
+tags=json.loads(gh('api','--paginate','--slurp',f'repos/{REPO}/tags?per_page=100'))
+assert not any(t['name']==TAG for page in tags for t in page),'Tag appeared before publication; inspect draft manually'
 gh('release','edit',TAG,'--repo',REPO,'--draft=false')
 r=api(f'repos/{REPO}/releases/{rid}')
 assert r['draft'] is False and r['target_commitish']==COMMIT and r['tag_name']==TAG
+assert {a['name'] for a in r['assets']}==set(EXPECTED)
+for a in r['assets']:
+    e=EXPECTED[a['name']]
+    assert a['state']=='uploaded' and a['size']==e['bytes'] and a['digest']=='sha256:'+e['sha256']
+obj=api(f'repos/{REPO}/git/ref/tags/{TAG}')['object']
+for _ in range(10):
+    if obj['type'] != 'tag':break
+    obj=api(f'repos/{REPO}/git/tags/{obj["sha"]}')['object']
+assert obj['type']=='commit' and obj['sha']==COMMIT,'Published tag commit differs'
 report={'passed':True,'release_url':r['html_url'],'release_id':rid,'verified_commit':COMMIT,'download_sha256_verified':True,'assets':EXPECTED}
 (ROOT/'publication-report.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
 print(json.dumps(report))
