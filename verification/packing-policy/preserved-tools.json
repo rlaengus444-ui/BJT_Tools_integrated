@@ -1,0 +1,71 @@
+{
+  "base_commit": "b162078a377300636f4ec0d15e7287599d4efb27",
+  "checks": [
+    {
+      "id": "bjt",
+      "path": "sources/260914_BJT_model_to_lattice_STL_all_in_one.py",
+      "sha256": "ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "arrange",
+      "path": "sources/slicing arrange.py",
+      "sha256": "e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "overlay",
+      "path": "sources/slice_folder_overlay.py",
+      "sha256": "5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "exchanger",
+      "path": "sources/slice exchanger.py",
+      "sha256": "71c8ae1e272cdbfb0f21acae101628073c5c04bc50ac73f5e57240cb33856a5b",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "alignment",
+      "path": "sources/slice_alignment_checker.py",
+      "sha256": "aa54ddb053b84e062b2152bdccb2ef374651925622a726dba246e9d54069c648",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "thermal",
+      "path": "sources/sic_buildbox_thermal_gui_v5.py",
+      "sha256": "2a2d75f97786ac0fc1738cee66afc64be7cdfae0fd624ff3ef329609c52faece",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "compare",
+      "path": "sources/slice_compare_app.py",
+      "sha256": "08d9217ac71333052cbd9d906c4f61020f6901f34f0caab809a98b8354ea80c7",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "number_tools",
+      "path": "sources/number_tools.py",
+      "sha256": "280cacc658aeb03b01de9d326f01cb0d4b5450102d9383f684cc8d1addb56dc5",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "sequence_z",
+      "path": "sources/sequence_z.py",
+      "sha256": "3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "m2_converter",
+      "path": "sources/m2_converter.py",
+      "sha256": "856efcb9b94846719c7261991c3964c45418463c122999ed8398c13b41faf7da",
+      "matches_v1_8_0": true
+    },
+    {
+      "id": "chitu_checker",
+      "path": "sources/chitu_checker.py",
+      "sha256": "bb5c6845a4727ab49fc4dc8fc9c913bb0e16248aba896e849d0c76cc82088fe0",
+      "matches_v1_8_0": true
+    }
+  ]
+}

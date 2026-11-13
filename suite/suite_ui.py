@@ -503,6 +503,8 @@ class SuiteApp:
 
     @staticmethod
     def busy(key, controller):
+        if key == 'nesting':
+            return controller.is_busy
         for name in ('worker', 'worker_thread', '_suite_export_worker'):
             worker = getattr(controller, name, None)
             if isinstance(worker, threading.Thread) and worker.is_alive():

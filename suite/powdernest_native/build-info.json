@@ -1,0 +1,48 @@
+{
+  "rust": "1.85.1",
+  "zig": "0.13.0",
+  "crate": "powdernest-native 0.1.0",
+  "cargo_dependencies": [],
+  "profile": "release, opt-level=3, lto=true, codegen-units=1, panic=abort, strip=symbols; baseline x86-64, no fast-math",
+  "source_sha256": {
+    "native/src/lib.rs": "17dff43e3d7f2640bdf7422161db9bfe2f247c15b45ec325bd8ea48dea03fa5a",
+    "native/Cargo.toml": "200ea702a204b2861cc8b0d9d55d9fe668b226e676ca996c3cdbfa3488d8c9a0",
+    "native/Cargo.lock": "85221d7a08a9f5f1a3f41407b3ba645aadbf8f6b9d15a5fcc38fba5a873ac7c1",
+    "scripts/zig_windows_linker.py": "0323f5aff69dd29393fb74422751fee1809530a785412d00487dd8a29236947f"
+  },
+  "libraries": {
+    "linux-x86_64": {
+      "sha256": "458bc5aca998cdd243720ff3ad3fe2d937c9ac15fd9557aac33ef25969be5764",
+      "bytes": 379128
+    },
+    "windows-x86_64": {
+      "sha256": "b19a7745bb814df7c21bb53511457bb8886ed836b9421c3c1681418c0d370cc7",
+      "bytes": 922112
+    }
+  },
+  "windows_exports": [
+    "pn_abi_version",
+    "pn_compaction_contacts",
+    "pn_mesh_contacts",
+    "pn_neighbors",
+    "pn_overlap_cost",
+    "pn_solid_filter",
+    "pn_triangle_pairs",
+    "pn_unique_rows"
+  ],
+  "windows_imports": [
+    "api-ms-win-core-synch-l1-2-0.dll",
+    "bcryptprimitives.dll",
+    "KERNEL32.dll",
+    "api-ms-win-crt-runtime-l1-1-0.dll",
+    "WS2_32.dll",
+    "USERENV.dll",
+    "ntdll.dll",
+    "api-ms-win-crt-string-l1-1-0.dll",
+    "api-ms-win-crt-stdio-l1-1-0.dll",
+    "api-ms-win-crt-environment-l1-1-0.dll",
+    "api-ms-win-crt-heap-l1-1-0.dll",
+    "api-ms-win-crt-time-l1-1-0.dll"
+  ],
+  "windows_build": "cross-compiled on Linux; native Windows runtime not exercised in this environment"
+}

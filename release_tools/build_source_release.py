@@ -61,13 +61,13 @@ def main():
     checksum = hashlib.sha256(payload).hexdigest()
     launcher = args.launcher_output or (app.parent / 'BJT_통합프로그램.pyw')
     original = (args.launcher_template or launcher).read_text(encoding='utf-8')
-    original = re.sub(r"PAYLOAD_SHA256 = '[^']+'", f"PAYLOAD_SHA256 = '{checksum}'", original)
+    original = re.sub(r"PAYLOAD_SHA256 = '[^']*'", f"PAYLOAD_SHA256 = '{checksum}'", original)
     start = original.index('PAYLOAD = b"""')
     end = original.index('"""', start + len('PAYLOAD = b"""')) + 3
     encoded = '\n'.join(textwrap.wrap(base64.b85encode(payload).decode('ascii'), 110))
     original = original[:start] + 'PAYLOAD = b"""' + encoded + '"""' + original[end:]
-    original = re.sub(r'workbench \d+\.\d+(?:\.\d+)?: (?:ten|eleven) tools',
-                      f'workbench {version}: eleven tools', original)
+    original = re.sub(r'workbench \d+\.\d+(?:\.\d+)?: (?:ten|eleven|twelve) tools',
+                      f'workbench {version}: twelve tools', original)
     launcher.parent.mkdir(parents=True, exist_ok=True)
     launcher.write_text(original, encoding='utf-8')
     tree = ast.parse(original)
@@ -84,7 +84,9 @@ def main():
         assert len(archive.namelist()) == len(items)
         assert all(archive.read(name) == path.read_bytes() for path, name in items)
     source_name = f'BJT_통합프로그램_{version}_전체소스.zip'
-    source_items = [(launcher, launcher.name)] + [(path, f'BJT_통합도구/{name}') for path, name in items]
+    standalone = app.parent / 'standalone'
+    standalone_items = [(p, 'standalone/' + p.name) for p in sorted(standalone.iterdir()) if p.is_file()] if standalone.is_dir() else []
+    source_items = [(launcher, launcher.name)] + [(path, f'BJT_통합도구/{name}') for path, name in items] + standalone_items
     (args.output / source_name).write_bytes(make_zip(source_items, timestamp))
     manual_items = [(path, path.name) for path in sorted((app / 'manuals').iterdir()) if path.is_file()]
     manual_name = f'BJT_통합프로그램_{version}_사용설명서.zip'

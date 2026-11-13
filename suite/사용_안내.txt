@@ -1,5 +1,5 @@
-BJT 통합 작업 도구 1.7.1 — 사용 안내
-문서 갱신: 2026-10-26 (Asia/Seoul)
+BJT 통합 작업 도구 1.9.0 — 사용 안내
+문서 갱신: 2026-11-13 (Asia/Seoul)
 
 실행
 - Windows 10·11 64비트용입니다. EXE판은 Python·Excel·.NET을 따로 설치하지 않습니다.
@@ -11,7 +11,7 @@ BJT 통합 작업 도구 1.7.1 — 사용 안내
 - 소스판은 Python이 필요합니다. 폴더 안에서 python run_suite.py를 실행하거나 .pyw 실행 파일을 엽니다.
 
 입력값 자동 저장
-- 통합 프로그램을 정상 종료하면 11개 기능의 입력값을 사용자별로 저장합니다.
+- 통합 프로그램을 정상 종료하면 12개 기능의 입력값을 사용자별로 저장합니다.
 - 다음 실행에서 해당 탭을 열 때 값을 복원합니다. 열지 않은 탭의 이전 설정도 유지합니다.
 - 공통 설정이 없는 모델·격자·STL, 슬라이싱 배치·합성, 오븐은 1.6.2의 기존 설정을 먼저 읽습니다.
   이후에는 공통 설정을 우선하며 이전 설정 파일은 수정·삭제하지 않습니다.
@@ -87,3 +87,7 @@ BJT 통합 작업 도구 1.7.1 — 사용 안내
   python run_suite.py --verify-sources
   python run_suite.py --compare-cli "D:\기준" "D:\비교.zip" --json result.json --csv result.csv
   python run_suite.py --tool chitu_checker -- "D:\작업.chitubox" --min-gap-mm 1.5 --json result.json --html result.html
+
+모델 자동 배치: STEP/STL 모델별 수량을 입력하고 분말 베드에 3D 배치합니다.
+내장 정책 608회 학습 · 추가 학습 없음 · XY에만 벽 간격 적용 · 기존 형상 검증과 저장 유지.
+파일 다시 읽기를 눌러 저장된 모델 목록을 가져온 뒤 계산하세요.

@@ -44,7 +44,7 @@ hiddenimports += ['vtk', 'vtkmodules.all', 'matplotlib.backends.backend_tkagg', 
                   'tkinter.filedialog', 'tkinter.messagebox', 'tkinter.scrolledtext', 'tkinter.font',
                   'numba.typed', 'numba.core.typing', 'scipy.optimize', 'scipy.ndimage',
                   'unittest.mock', 'frozen_fixtures', 'frozen_chitu_gui', 'frozen_large_chitu_gui',
-                  'frozen_camera_chitu_gui', 'frozen_suite_features', 'frozen_oven_playback',
+                  'frozen_camera_chitu_gui', 'frozen_suite_features', 'frozen_oven_playback', 'frozen_packing_gui',
                   'frozen_rust_probe', 'release_native']
 hiddenimports += ['manifold3d', 'fcl', 'fcl.fcl', 'plotly', 'plotly.offline',
                   'chitu_overlap', 'chitu_overlap.geometry', 'chitu_overlap.chitubox',
@@ -53,6 +53,9 @@ datas += collect_data_files('plotly')
 binaries += collect_dynamic_libs('manifold3d')
 binaries += collect_dynamic_libs('fcl')
 datas, binaries = collect_delvewheel_libs_directory('fcl', libdir_name='python_fcl.libs', datas=datas, binaries=binaries)
+hiddenimports += collect_submodules('OCP') + collect_submodules('powdernest')
+binaries += collect_dynamic_libs('OCP')
+datas, binaries = collect_delvewheel_libs_directory('OCP', libdir_name='cadquery_ocp.libs', datas=datas, binaries=binaries)
 
 for package in ('imagecodecs',):
     package_datas, package_binaries, package_imports = collect_all(package)
@@ -68,7 +71,7 @@ for distribution in ('numpy', 'scipy', 'Pillow', 'scikit-image', 'trimesh', 'sha
                      'rtree', 'opencv-python', 'tkinterdnd2', 'vtk', 'matplotlib', 'tifffile', 'pypng',
                      'imagecodecs', 'networkx', 'ImageIO', 'lazy-loader', 'packaging', 'contourpy', 'cycler',
                      'fonttools', 'kiwisolver', 'pyparsing', 'python-dateutil', 'six',
-                     'manifold3d', 'python-fcl', 'plotly', 'narwhals'):
+                     'manifold3d', 'python-fcl', 'plotly', 'narwhals', 'cadquery-ocp'):
     datas += copy_metadata(distribution)
 
 a = Analysis([str(HERE / 'bjt_frozen_entry.py')], pathex=[str(APP), str(HERE)],

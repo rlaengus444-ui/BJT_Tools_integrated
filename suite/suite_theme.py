@@ -63,6 +63,7 @@ _BUTTON_ROLES = {
     'number': {'primary': ('duplicate_button', 'scan_button'), 'danger': ('stop_button',)},
     'sequence_z': {'primary': ('calculate_button',), 'danger': ('stop_button',)},
     'm2_converter': {'primary': ('run_button',), 'danger': ('stop_button',)},
+    'nesting': {'primary': ('run_button',), 'danger': ('stop_button',)},
 }
 
 

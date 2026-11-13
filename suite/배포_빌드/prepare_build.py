@@ -53,7 +53,7 @@ for path in SOURCE.iterdir():
     if path.is_file() and (path.suffix.lower() in ('.py', '.pyw', '.json') or
                            path.name in PRODUCT_DOCUMENTS):
         shutil.copy2(path, STAGE / path.name)
-for name in ('sources', 'manuals', 'chitu_overlap'):
+for name in ('sources', 'manuals', 'chitu_overlap', 'powdernest', 'powdernest_native'):
     shutil.copytree(SOURCE / name, STAGE / name, dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.nbi', '*.nbc'))
 # Development-only, opt-in frozen verification. These fixtures create files in
@@ -109,7 +109,7 @@ inventory.append({'distribution': 'CPython', 'version': sys.version.split()[0],
 runtime_distributions = ('numpy', 'scipy', 'Pillow', 'scikit-image', 'trimesh', 'shapely', 'numba', 'llvmlite',
     'rtree', 'opencv-python', 'tkinterdnd2', 'vtk', 'matplotlib', 'tifffile', 'pypng', 'imagecodecs',
     'networkx', 'ImageIO', 'lazy-loader', 'packaging', 'contourpy', 'cycler', 'fonttools', 'kiwisolver',
-    'pyparsing', 'python-dateutil', 'six', 'PyInstaller', 'manifold3d', 'python-fcl', 'plotly', 'narwhals')
+    'pyparsing', 'python-dateutil', 'six', 'PyInstaller', 'manifold3d', 'python-fcl', 'plotly', 'narwhals', 'cadquery-ocp')
 for name in runtime_distributions:
     distribution = importlib.metadata.distribution(name)
     entries = []
@@ -198,7 +198,7 @@ def inspect(tree):
             if node.args and isinstance(node.args[0], ast.Constant) and isinstance(node.args[0].value, str):
                 imports.add(node.args[0].value)
 
-for path in list(STAGE.glob('*.py')) + list((STAGE / 'sources').glob('*.py')) + list((STAGE / 'chitu_overlap').rglob('*.py')):
+for path in list(STAGE.glob('*.py')) + list((STAGE / 'sources').glob('*.py')) + list((STAGE / 'chitu_overlap').rglob('*.py')) + list((STAGE / 'powdernest').rglob('*.py')):
     tree = ast.parse(path.read_text(encoding='utf-8-sig'))
     inspect(tree)
     for node in tree.body:

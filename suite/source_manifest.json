@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.8.0",
+  "suite_version": "1.9.0",
   "tools": [
     {
       "id": "bjt",
@@ -140,6 +140,17 @@
       "sha256": "bb5c6845a4727ab49fc4dc8fc9c913bb0e16248aba896e849d0c76cc82088fe0",
       "bytes": 31244,
       "adaptation": "CHITUBOX Basic 배치 유지, 표면 접촉 금지, 최소 간격 mm, 비동기 검사·중단, JSON 및 오프라인 3D HTML. 지원 파일 드래그앤드롭 입력."
+    },
+    {
+      "id": "nesting",
+      "label": "모델 자동 배치",
+      "description": "STEP/STL 수량·24개 직교 자세·내장 정책으로 분말 베드 3D 자동 배치",
+      "source": "sources/powdernest_tool.py",
+      "original_path": "BJT integrated native Tk adapter for PowderNest",
+      "sha256": "5a4875b27bdc0d2f848a55449faf93a812bf80daf65c9445293f6c279ece1ed2",
+      "bytes": 29051,
+      "controller": "PackingApp",
+      "embedded_base": false
     }
   ],
   "dependencies": [
@@ -155,7 +166,7 @@
     },
     {
       "path": "suite_theme.py",
-      "sha256": "1327da31712ca5126e55817940dca8b57b542ec480b4ad36c3f6b744cbdc2d6e",
+      "sha256": "5fbd82eb413adcd006c8da7161a6462e33ea49fee0a7ef9d5960cf007f3408e5",
       "purpose": "10개 탭 공통 디자인과 외관 전용 어댑터"
     },
     {
@@ -211,7 +222,7 @@
     {
       "path": "suite_state.py",
       "purpose": "사용자별 전체 도구 입력값 저장 및 복원",
-      "sha256": "a2452d072cc475c8bf14fe55a00d52ba9b7af1f064a1da5d8b3865d97788b97b"
+      "sha256": "516d8d28834c72cd2cccaf3291b4af0662518311bc771a1030c2fa7e4d6b33a3"
     },
     {
       "path": "oven_i18n.py",
@@ -223,6 +234,182 @@
       "purpose": "BJT 선택적 Rust 메시 검증·STL 기록 ABI 어댑터",
       "sha256": "92a1bb775a771f5409a715d5b9059c2c0c9798cfe53bdbc8be19ccfb03bb9905",
       "bytes": 8387
+    },
+    {
+      "path": "packing_service.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "de77e67ffcfdd76c5ffddb76aee6bdbfed49f50704e54b02a7f4efef2bab9b23",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "packing_preview.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "6da98d3a4c80b619296a15697dea9dad8f675591fd96f81454cdea3f14bac902",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/native.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "a6324fc8005157025632beffa18b9e74273c69e32291b5c26e71e72a96476320",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/profiles.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "db089fff72550ad53e50817af267f48921d7d4b9c519147c60280cd3c53f4d78",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/__init__.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "2e35760cf37b447d57326155d979007cb6e94d59e379b13a455097a290f46edd",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/rl.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "5c1e14b11ed2230fdd1039852db15429a464f716a1394f5558f288e508aff0f1",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/_native_payloads.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "c0b70705036063dc829110f250c14a8ffe6c6753fbc64e80185f4fc7407290ac",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/types.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "58c459e057040998a2c590b5add132cf8c5565028a5cdd0b243a1d38ec1f4afe",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/interlocking.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "ddd7c001f8e919fd1fa06830fb2e2567cf0e19d79b0cf0b4b32311ad522a3f41",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/optimizer.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "37df0fcbb613e9640bd420bdb6cb068df12b6ba47108f747ce1664aac6b62392",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/chitubox.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "1a122b3246c6b4749229a393cee21dbf8b7270a469a2d0c6050542b48237a2fe",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/io.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "570fe5303665345ad175dcae9b2cede076ac805ac811490fa8bb7c7c812e7d0c",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/cancellation.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "d10ff4be7f34280023b8138e477d61cbba1fdc360932b28ea0390ca3f10b7b57",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/pretrained_policy.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "6f15d005a6f5338090e04b1d7c88374b68c88bf092a76e5a5cbc9023a16a49ab",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/cache.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "7af6e182d1affe46bcd35c948647cdf4e164774b6978b569458cb3a61f42260e",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/rotations.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "07292d5e66c78ad112632babb7219c0a235cb3f22ca39ca99e6b58da6601dd2a",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/precision.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "7edb2b428700bbf1fe8ba86845164841e8d94e701ffd9877e386ea0003738819",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/validation.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "aee6b466b491116dfde65599a1b1edc335d409c376fff18d90de4e42d59fe185",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/inspection.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "d61f55c13f20480ac30cb7879310ed146605842f16226bd77006a37efc0a7333",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/balance.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "a2e1a0a4596eef8d7ce7e556951be4a5fd5c47d6672c2e1e3f5d257d9e5cbbbf",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/geometry.py",
+      "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
+      "sha256": "972439049f51ee5e5147dc51417152ab549b0bf9b00249bff458c3dc886d3b7a",
+      "tools": [
+        "nesting"
+      ]
+    },
+    {
+      "path": "powdernest/export_safety.py",
+      "purpose": "입력 원본을 보존하는 공통 저장 경로 검사",
+      "sha256": "588c0b5c41a26618d968ed21e667a98d163429081404a222820199cbf9fbc1f5",
+      "tools": [
+        "nesting"
+      ]
     }
   ]
 }

@@ -1,0 +1,225 @@
+"""Independent final inventory, transform, boundary, and solid-pair validation."""
+from __future__ import annotations
+
+from collections import Counter
+from dataclasses import asdict
+import itertools
+import math
+import numbers
+
+from .cancellation import check_cancelled, report_progress
+from .geometry import CollisionEngine, _position_array, revalidate_model
+from .types import Model, Placement, RequestItem, Settings
+
+
+def validate(models: dict[str, Model], items: list[RequestItem], settings: Settings,
+             placements: list[Placement], *, force_fresh=False) -> dict:
+    """Return a JSON-safe report; malformed candidates become errors, not crashes.
+
+    Missing copies affect completeness.  Illegal copies, overcounts, invalid
+    transforms, wall violations and solid intersections affect validity.  A
+    independent FCL engine recomputes bounds from actual input vertices. Only
+    completed geometry/pair proofs made by this checker can be reused, bound to
+    exact mesh bytes, transforms, tolerances and predicate code. Optimizer
+    feasibility caches and public Model diagnostics are never evidence.
+    ``force_fresh=True`` repeats all topology and FCL checks for an audit.
+    """
+    errors: list[str] = []
+    process_errors = []
+    from . import cache
+    from .geometry import validation_stamp
+    reuse = {'geometry_hits': 0, 'pair_hits': 0, 'force_fresh': bool(force_fresh)}
+    requested = Counter()
+    counts = Counter()
+    report = {"valid": False, "complete": False, "errors": errors,
+              "geometric_valid": False,
+              "counts": {}, "requested": {}, "checked_placements": 0,
+              "checked_pairs": 0, "minimum_pair_distance_mm": None,
+              "minimum_pair_clearance_surplus_mm": None,
+              "pair_distances": [], "tolerances": {},
+              "model_geometry_validation": {},
+              "method": "independent FCL triangle BVHs + oriented shell winding containment; exact-content validation proofs may be reused",
+              "validation_reuse": reuse,
+              "touching_policy": "Surface contact is conservatively rejected, including gap=0.",
+              "tessellation_bound_certified": False}
+    try:
+        checked_settings = Settings(**asdict(settings))
+    except Exception as exc:
+        errors.append(f"Invalid settings: {exc}")
+        return report
+    report['interlocking'] = {
+        'enabled': checked_settings.check_interlocking,
+        'status': 'no_certified_link_detected' if checked_settings.check_interlocking else 'disabled',
+        'linked_pairs': [], 'unresolved_pairs': [], 'separability_proven': False,
+        'method': 'closed mesh-edge homology cycles; exact rational signed crossings',
+        'scope': 'Positive linking proves nonseparability. Zero linking does not prove a removal path.'}
+    report["tolerances"] = {
+        "numerical_mm": checked_settings.tolerance,
+        "requested_gap_mm": checked_settings.gap,
+        "requested_wall_gap_mm": checked_settings.wall_gap,
+        "wall_gap_axes": ["X", "Y"],
+        "pair_rule": "distance >= gap + allowance_A + allowance_B - numerical tolerance; no surface intersections",
+        "wall_rule": "XY inside [wall_gap + allowance, size_xy - wall_gap - allowance]; Z inside [allowance, max_z - allowance], with numerical tolerance",
+        "containment_rule": "absolute oriented generalized winding number > 0.5 for any connected-shell witness",
+        "cad_allowance_caveat": "Declared tessellation allowance is not a certified exact BRep Hausdorff bound.",
+        "per_model_tessellation_mm": {},
+    }
+    if not isinstance(models, dict):
+        errors.append("Models must be a dictionary indexed by model identifier.")
+        return report
+    for model_id, model in models.items():
+        try:
+            if not isinstance(model_id, str) or model_id != model.model_id:
+                raise ValueError("dictionary key must match the model identifier")
+            allowance = float(model.tessellation_error)
+            if not math.isfinite(allowance) or allowance < 0:
+                raise ValueError("invalid tessellation allowance")
+            report["tolerances"]["per_model_tessellation_mm"][str(model_id)] = allowance
+        except (AttributeError, TypeError, ValueError) as exc:
+            errors.append(f"Model {model_id!r} is invalid: {exc}")
+    try:
+        request_list = list(items)
+    except (TypeError, ValueError):
+        errors.append("Requested items must be iterable.")
+        return report
+    for i, item in enumerate(request_list):
+        try:
+            model_id, quantity = item.model_id, item.quantity
+            if model_id not in models:
+                raise ValueError("unknown model identifier")
+            if (not isinstance(quantity, numbers.Integral) or isinstance(quantity, bool) or quantity < 0):
+                raise ValueError("quantity must be a nonnegative integer")
+            requested[model_id] += int(quantity)
+        except (AttributeError, TypeError, ValueError) as exc:
+            errors.append(f"Invalid request item {i}: {exc}")
+    report["requested"] = dict(requested)
+    # Models and meshes are public mutable records.  Import diagnostics alone
+    # cannot establish that a caller left the solid intact. Hash actual arrays
+    # before considering any private proof, and return private canonical arrays.
+    fresh_models = {}
+    for model_id in requested:
+        check_cancelled()
+        try:
+            from .native import backend
+            if force_fresh:
+                with backend('python'):
+                    fresh_models[model_id] = revalidate_model(models[model_id], model_id=model_id, use_cache=False)
+            else:
+                fresh_models[model_id] = revalidate_model(models[model_id], model_id=model_id)
+            checked = fresh_models[model_id]
+            reuse['geometry_hits'] += checked.diagnostics.get('geometry_validation_cache') == 'memory'
+            report["model_geometry_validation"][model_id] = {
+                "valid": True, "watertight": True, "winding_consistent": True,
+                "self_intersections_checked": True,
+                "geometry_epsilon_mm": checked.diagnostics["geometry_epsilon_mm"],
+                "triangles": len(checked.mesh.faces),
+                "shell_count": checked.diagnostics["shell_count"],
+            }
+        except Exception as exc:
+            errors.append(f"Model {model_id!r} failed independent geometry validation: {type(exc).__name__}: {exc}")
+            report["model_geometry_validation"][model_id] = {"valid": False, "reason": str(exc)}
+    try:
+        candidate_list = list(placements)
+    except (TypeError, ValueError):
+        errors.append("Placements must be iterable.")
+        return report
+    canonical = []
+    seen = set()
+    for i, p in enumerate(candidate_list):
+        check_cancelled()
+        try:
+            model_id, copy_index, rotation_id = p.model_id, p.copy_index, p.rotation_id
+            if model_id not in models:
+                raise ValueError("unknown model identifier")
+            if model_id not in requested:
+                raise ValueError("model was not requested")
+            counts[model_id] += 1
+            if model_id not in fresh_models:
+                raise ValueError("model failed independent geometry validation")
+            if (not isinstance(copy_index, numbers.Integral) or isinstance(copy_index, bool) or
+                    not 0 <= copy_index < requested[model_id]):
+                raise ValueError("copy_index is outside the requested range")
+            identity = (model_id, int(copy_index))
+            if identity in seen:
+                raise ValueError("duplicate model/copy_index identity")
+            seen.add(identity)
+            if (not isinstance(rotation_id, numbers.Integral) or isinstance(rotation_id, bool) or
+                    not 0 <= rotation_id < 24 or rotation_id not in models[model_id].allowed_rotations):
+                raise ValueError("rotation is outside this model's allowed 24-axis rotation IDs")
+            position = _position_array(p.position)
+            canonical.append((i, Placement(model_id, int(copy_index), int(rotation_id), tuple(map(float, position)))))
+        except (AttributeError, KeyError, TypeError, ValueError, IndexError, OverflowError) as exc:
+            errors.append(f"Invalid placement {i}: {exc}")
+    report["counts"] = {model_id: int(counts[model_id]) for model_id in requested}
+    for model_id, quantity in counts.items():
+        if quantity > requested[model_id]:
+            errors.append(f"Model {model_id!r}: placed {quantity}, exceeding requested {requested[model_id]}.")
+    report["complete"] = bool(not any("Invalid request" in e for e in errors) and
+                              all(counts[mid] == quantity for mid, quantity in requested.items()) and
+                              len(seen) == sum(requested.values()) and len(canonical) == len(candidate_list))
+    engine = CollisionEngine(fresh_models, checked_settings)
+    stamp = validation_stamp()
+    geometry_keys = {key: cache.mesh_digest(model.mesh) for key, model in fresh_models.items()}
+    try:
+        usable = []
+        for index, p in canonical:
+            try:
+                if not engine.in_bounds(p):
+                    errors.append(f"Placement {index} ({p.model_id}, copy {p.copy_index}) violates the build volume or wall allowance.")
+                usable.append((index, p))
+                report["checked_placements"] += 1
+            except Exception as exc:
+                errors.append(f"Placement {index} geometry cannot be evaluated: {type(exc).__name__}: {exc}")
+        distances, surpluses = [], []
+        for (ia, a), (ib, b) in itertools.combinations(usable, 2):
+            check_cancelled()
+            report_progress(f'부품 쌍 거리·포함 검사 {report["checked_pairs"]:,}/{len(usable)*(len(usable)-1)//2:,}',
+                            completed=report['checked_pairs'], total_work=len(usable)*(len(usable)-1)//2)
+            try:
+                def pair_identity(p):
+                    return (geometry_keys[p.model_id], p.rotation_id, p.position,
+                            fresh_models[p.model_id].tessellation_error)
+                pair_key = (stamp, pair_identity(a), pair_identity(b), checked_settings.gap, checked_settings.tolerance,
+                            checked_settings.check_interlocking)
+                cached = None if force_fresh else cache.pair_get(pair_key)
+                if cached is None:
+                    valid, distance, reason = engine.check_pair(a, b, exact_distance=True)
+                    interlocking = engine.last_interlocking
+                    if not (interlocking or {}).get('status', '').startswith('unknown'):
+                        cache.pair_put(pair_key, (valid, distance, reason, interlocking))
+                else:
+                    valid, distance, reason = cached[:3]
+                    interlocking = cached[3] if len(cached) > 3 else None
+                    reuse['pair_hits'] += 1
+                if interlocking and interlocking['status'] == 'linked':
+                    report['interlocking']['linked_pairs'].append({'a': ia, 'b': ib, **interlocking})
+                    report['interlocking']['status'] = 'interlocking_detected'
+                elif interlocking and interlocking['status'].startswith('unknown'):
+                    report['interlocking']['unresolved_pairs'].append({'a': ia, 'b': ib, **interlocking})
+                    if not report['interlocking']['linked_pairs']: report['interlocking']['status'] = 'incomplete'
+                required = (checked_settings.gap + fresh_models[a.model_id].tessellation_error +
+                            fresh_models[b.model_id].tessellation_error)
+                value = float(distance) if math.isfinite(distance) else None
+                surplus = None if value is None else value - required
+                report["pair_distances"].append({"a": ia, "b": ib, "distance_mm": value,
+                                                  "required_mm": float(required), "valid": bool(valid)})
+                if value is not None:
+                    distances.append(value)
+                    surpluses.append(surplus)
+                report["checked_pairs"] += 1
+                if not valid:
+                    message = f"Placements {ia} and {ib}: {reason}"
+                    errors.append(message)
+                    if interlocking and (interlocking['status'] == 'linked' or interlocking['status'].startswith('unknown')):
+                        process_errors.append(message)
+            except Exception as exc:
+                errors.append(f"Pair {ia}/{ib} cannot be evaluated: {type(exc).__name__}: {exc}")
+        if distances:
+            report["minimum_pair_distance_mm"] = float(min(distances))
+            report["minimum_pair_clearance_surplus_mm"] = float(min(surpluses))
+        report["collision_statistics"] = dict(engine.statistics)
+    finally:
+        engine.close()
+    report["valid"] = not errors
+    report['geometric_valid'] = not any(error not in process_errors for error in errors)
+    return report

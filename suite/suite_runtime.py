@@ -15,9 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent
 EXTRA_REQUIREMENTS = ('matplotlib==3.11.2', 'pypng==0.20220715.0',
                       'tifffile==2026.10.15', 'imagecodecs==2026.10.10',
                       'manifold3d==3.5.4', 'python-fcl==0.7.0.11',
-                      'plotly==7.1.0', 'narwhals==2.27.1')
+                      'plotly==7.1.0', 'narwhals==2.27.1', 'cadquery-ocp==7.8.1.1.post1')
 EXTRA_MODULES = ('matplotlib', 'png', 'tifffile', 'imagecodecs',
-                 'manifold3d', 'fcl', 'plotly', 'narwhals')
+                 'manifold3d', 'fcl', 'plotly', 'narwhals', 'OCP')
 
 
 def original_bootstrap():

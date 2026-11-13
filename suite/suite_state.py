@@ -207,7 +207,9 @@ def capture_inputs(key, controller):
     if unbound:
         state['entries'] = unbound
     inputs = state['inputs']
-    if key in {'chitu_checker', 'm2_converter'}:
+    if key == 'nesting':
+        inputs.update(_plain(controller.input_state()))
+    elif key in {'chitu_checker', 'm2_converter'}:
         inputs['paths'] = _plain(controller.input_paths)
     elif key == 'overlay':
         inputs['folders'] = _plain(controller.folders)
@@ -246,7 +248,9 @@ def _paths(value):
 def _restore_collections(key, controller, inputs):
     if not isinstance(inputs, dict):
         return
-    if key == 'chitu_checker' and 'paths' in inputs:
+    if key == 'nesting':
+        controller.restore_input_state(inputs)
+    elif key == 'chitu_checker' and 'paths' in inputs:
         controller.set_inputs(_paths(inputs['paths']))
     elif key == 'm2_converter' and 'paths' in inputs:
         controller.input_paths = _paths(inputs['paths'])

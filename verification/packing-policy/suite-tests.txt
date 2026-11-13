@@ -1,0 +1,48 @@
+.................................s..sssssssss.................s.....................................sssssssssssssssssssssssss..............s....s....ss......................................... [ 41%]
+....................................................................... [ 57%]
+.............................................. [ 67%]
+........................................................................ [ 82%]
+........................................................................ [ 98%]
+........                                                     [100%]
+=========================== short test summary info ============================
+SKIPPED [1] suite/tests/test_bjt_rust_backend.py:108: optional host native library not built
+SKIPPED [1] suite/tests/test_bjt_rust_kernel.py:132: optional Rust library is absent
+SKIPPED [1] suite/tests/test_bjt_rust_kernel.py:97: optional Rust library is absent
+SKIPPED [1] suite/tests/test_bjt_rust_kernel.py:120: optional Rust library is absent
+SKIPPED [1] suite/tests/test_bjt_rust_kernel.py:108: optional Rust library is absent
+SKIPPED [1] suite/tests/test_bjt_rust_kernel.py:80: optional Rust library is absent
+SKIPPED [1] suite/tests/test_bjt_rust_pack.py:60: optional Rust packing feature is absent
+SKIPPED [1] suite/tests/test_bjt_rust_pack.py:71: optional Rust packing feature is absent
+SKIPPED [1] suite/tests/test_bjt_rust_pack.py:82: optional Rust packing feature is absent
+SKIPPED [1] suite/tests/test_bjt_rust_pack.py:41: optional Rust packing feature is absent
+SKIPPED [1] suite/tests/test_chitu_drop.py:68: Windows case-insensitive filesystem check
+SKIPPED [1] suite/tests/test_image_conversion_settings.py:186: Native GDI+ conversion requires Windows
+SKIPPED [1] suite/tests/test_image_conversion_settings.py:172: Native GDI+ conversion requires Windows
+SKIPPED [1] suite/tests/test_m2_image_engine.py:93: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:90: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:237: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:263: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:249: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:272: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:183: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:194: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:319: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:294: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:215: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:151: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:303: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:227: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:283: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:340: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:132: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:139: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:203: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:121: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:161: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:171: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_m2_image_engine.py:331: Original M2 conversion requires Windows GDI+
+SKIPPED [1] suite/tests/test_number_tools.py:237: Original supplied tool is only present in the integration workspace
+SKIPPED [1] suite/tests/test_number_tools.py:193: Windows rename no-overwrite race
+SKIPPED [1] suite/tests/test_number_tools.py:172: Windows rename no-overwrite race
+SKIPPED [1] suite/tests/test_number_tools.py:165: Windows rename publishes exclusively without filesystem hard links
+421 passed, 40 skipped, 279 subtests passed in 62.60s (0:01:02)

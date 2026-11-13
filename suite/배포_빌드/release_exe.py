@@ -20,6 +20,17 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
+def require_packing_check(report):
+    checks = [phase.get('report', {}).get('checks', {}).get('packing_inference_and_exports', {})
+              for phase in report.get('checks', []) if phase.get('phase') == 'save']
+    if (len(checks) != 1 or checks[0].get('passed') is not True
+            or checks[0].get('step_native_import') is not True
+            or checks[0].get('placed') != 2 or checks[0].get('height_mm') != 17
+            or checks[0].get('new_training_updates') != 0
+            or checks[0].get('preview_and_exports') is not True):
+        raise RuntimeError('Native packing STEP/preview/export verification is required')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path,
@@ -42,8 +53,9 @@ def main():
         if not report.get('passed') or (name != 'cli-exe' and not report.get('frozen')):
             raise RuntimeError('Frozen verification did not pass: ' + name)
         reports[name] = report
-    if reports['smoke-exe'].get('tool_count') != 11:
-        raise RuntimeError('Expected all 11 registered tools')
+    if reports['smoke-exe'].get('tool_count') != 12:
+        raise RuntimeError('Expected all 12 registered tools')
+    require_packing_check(reports['features-exe'])
     latest_exe = max((build / name).stat().st_mtime for name in
                      ('BJT_통합프로그램.exe', 'BJT_명령줄.exe'))
     additional = ('chitu-cli-exe', 'chitu-gui-exe', 'camera-cli-exe', 'camera-gui-exe')
@@ -105,7 +117,7 @@ def main():
 
 ZIP을 모두 풀고 BJT_통합프로그램.exe를 실행하세요.
 Python과 .NET 설치가 필요하지 않습니다. _internal 폴더를 함께 보관하세요.
-11개 도구 중 치투 배치 검사에서 겹침·표면 접촉·최소 간격을 검사합니다.
+12개 도구 중 치투 배치 검사에서 겹침·표면 접촉·최소 간격을 검사합니다.
 기본 간격은 0mm이며 표면 접촉은 항상 FAIL입니다. 입력 파일은 변경하지 않습니다.
 검사된 원본 형상을 그대로 유지하는 연결면 정리 결과는 화면·JSON·HTML에 표시합니다.
 명령줄은 BJT_명령줄.exe --tool chitu_checker 작업.chitubox --min-gap-mm 1 --json 결과.json --html 결과.html

@@ -11,7 +11,7 @@ import webbrowser
 
 BASE_DIR = Path(__file__).resolve().parent
 MANUAL_DIR = BASE_DIR / 'manuals'
-TOOL_IDS = ('bjt', 'arrange', 'overlay', 'exchanger', 'alignment', 'thermal', 'compare', 'number_tools', 'sequence_z', 'm2_converter', 'chitu_checker')
+TOOL_IDS = ('bjt', 'arrange', 'overlay', 'exchanger', 'alignment', 'thermal', 'compare', 'number_tools', 'sequence_z', 'm2_converter', 'chitu_checker', 'nesting')
 BLOCK_TYPES = {'paragraph', 'heading', 'note', 'steps', 'bullets', 'table', 'code'}
 
 

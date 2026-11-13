@@ -210,7 +210,7 @@ class AllToolCloseReopenTests(unittest.TestCase):
             except tk.TclError:
                 pass
 
-    def test_all_eleven_controllers_close_and_reopen_with_input_collections(self):
+    def test_all_twelve_controllers_close_and_reopen_with_input_collections(self):
         from suite_ui import SuiteApp, create_root
         from PIL import Image
         import numpy as np
@@ -234,7 +234,7 @@ class AllToolCloseReopenTests(unittest.TestCase):
                     return root, app
 
                 root, first = open_suite()
-                self.assertEqual(len(first.controllers), 11)
+                self.assertEqual(len(first.controllers), 12)
                 c = first.controllers
                 c['bjt'].input_var.set(str(base / '새 모델.stl'))
                 c['bjt'].output_var.set(str(base / '별도 출력.stl'))

@@ -1,0 +1,108 @@
+{
+  "engine_base": "43a58bf",
+  "checks": [
+    {
+      "path": "powdernest/__init__.py",
+      "sha256": "2e35760cf37b447d57326155d979007cb6e94d59e379b13a455097a290f46edd",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/_native_payloads.py",
+      "sha256": "c0b70705036063dc829110f250c14a8ffe6c6753fbc64e80185f4fc7407290ac",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/balance.py",
+      "sha256": "a2e1a0a4596eef8d7ce7e556951be4a5fd5c47d6672c2e1e3f5d257d9e5cbbbf",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/cache.py",
+      "sha256": "7af6e182d1affe46bcd35c948647cdf4e164774b6978b569458cb3a61f42260e",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/cancellation.py",
+      "sha256": "d10ff4be7f34280023b8138e477d61cbba1fdc360932b28ea0390ca3f10b7b57",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/chitubox.py",
+      "sha256": "1a122b3246c6b4749229a393cee21dbf8b7270a469a2d0c6050542b48237a2fe",
+      "comparison": "AST identical after removing added export preflight import/call"
+    },
+    {
+      "path": "powdernest/export_safety.py",
+      "sha256": "588c0b5c41a26618d968ed21e667a98d163429081404a222820199cbf9fbc1f5",
+      "comparison": "new non-numerical input preservation guard"
+    },
+    {
+      "path": "powdernest/geometry.py",
+      "sha256": "972439049f51ee5e5147dc51417152ab549b0bf9b00249bff458c3dc886d3b7a",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/inspection.py",
+      "sha256": "d61f55c13f20480ac30cb7879310ed146605842f16226bd77006a37efc0a7333",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/interlocking.py",
+      "sha256": "ddd7c001f8e919fd1fa06830fb2e2567cf0e19d79b0cf0b4b32311ad522a3f41",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/io.py",
+      "sha256": "570fe5303665345ad175dcae9b2cede076ac805ac811490fa8bb7c7c812e7d0c",
+      "comparison": "AST identical after removing added export preflight import/call"
+    },
+    {
+      "path": "powdernest/native.py",
+      "sha256": "a6324fc8005157025632beffa18b9e74273c69e32291b5c26e71e72a96476320",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/optimizer.py",
+      "sha256": "37df0fcbb613e9640bd420bdb6cb068df12b6ba47108f747ce1664aac6b62392",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/precision.py",
+      "sha256": "7edb2b428700bbf1fe8ba86845164841e8d94e701ffd9877e386ea0003738819",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/pretrained_policy.py",
+      "sha256": "6f15d005a6f5338090e04b1d7c88374b68c88bf092a76e5a5cbc9023a16a49ab",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/profiles.py",
+      "sha256": "db089fff72550ad53e50817af267f48921d7d4b9c519147c60280cd3c53f4d78",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/rl.py",
+      "sha256": "5c1e14b11ed2230fdd1039852db15429a464f716a1394f5558f288e508aff0f1",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/rotations.py",
+      "sha256": "07292d5e66c78ad112632babb7219c0a235cb3f22ca39ca99e6b58da6601dd2a",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/types.py",
+      "sha256": "58c459e057040998a2c590b5add132cf8c5565028a5cdd0b243a1d38ec1f4afe",
+      "comparison": "byte identical"
+    },
+    {
+      "path": "powdernest/validation.py",
+      "sha256": "aee6b466b491116dfde65599a1b1edc335d409c376fff18d90de4e42d59fe185",
+      "comparison": "byte identical"
+    }
+  ],
+  "preserved_original_tool_count": 11,
+  "standalone_sha256": "fcf6bedfb703ec6e619892a402c6e2d0d1a15751cd5f199a3d899a2f44170054",
+  "numerical_and_geometry_logic_unchanged": true
+}

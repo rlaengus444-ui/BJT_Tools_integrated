@@ -183,13 +183,15 @@ def run(mode, directory):
         for key in app.specs:
             app.mount_tool(key, app.loader.load(key))
         root.update_idletasks()
-        assert len(app.controllers) == 11
+        assert len(app.controllers) == 12
         assert app.specs['m2_converter']['label'] == '이미지 변환'
         assert app.specs['thermal']['label'] == '오븐 열확산 시뮬레이터'
         assert not any('하나의 공간' in text or '11가지 작업 도구' in text
                        for text in _captions(app.home))
-        checks['all_11_tools_and_simple_titles'] = {'passed': True}
+        checks['all_12_tools_and_simple_titles'] = {'passed': True}
         if mode == 'save':
+            from frozen_packing_gui import verify as verify_packing
+            checks['packing_inference_and_exports'] = verify_packing(root, app.controllers['nesting'], work / 'packing')
             assert not settings.exists(), 'A fresh verification profile is required'
             checks['native_image_custom_settings'] = _native_image_check(work)
             checks['native_drop_callback'] = _drop_check(root, app.controllers['chitu_checker'], work)
@@ -207,7 +209,7 @@ def run(mode, directory):
             assert not mismatches, 'Input restore mismatch: ' + repr(mismatches)
             assert app.controllers['thermal'].language_var.get() == 'en'
             assert app.controllers['thermal'].run_btn.cget('text') == 'Run simulation'
-            checks['fresh_process_all_11_inputs_restored'] = {'passed': True,
+            checks['fresh_process_all_12_inputs_restored'] = {'passed': True,
                 'tools': sorted(actual), 'oven_language': 'en'}
         else:
             raise ValueError('Unknown feature verification phase: ' + mode)
