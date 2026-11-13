@@ -9,7 +9,8 @@ import tempfile
 import zlib
 
 HERE = Path(__file__).resolve().parent
-VERSION = json.loads((HERE / 'app-source/source_manifest.json').read_text(encoding='utf-8'))['suite_version']
+MANIFEST = json.loads((HERE / 'app-source/source_manifest.json').read_text(encoding='utf-8'))
+VERSION = MANIFEST['suite_version']
 FOLDER = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else HERE / 'dist' / f'BJT_통합프로그램_{VERSION}_EXE'
 EXE = FOLDER / 'BJT_명령줄.exe'
 environment = os.environ.copy()
@@ -38,7 +39,14 @@ def png(path, value):
     path.write_bytes(b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', 2, 2, 8, 0, 0, 0, 0)) +
                      chunk(b'IDAT', zlib.compress(bytes((0, value, value, 0, value, value)))) + chunk(b'IEND', b''))
 
-invoke('list_11_tools', ['--list-tools'], 0, lambda s: len(json.loads(s)) == 11)
+def exact_tool_registry(stdout):
+    actual = [item['id'] for item in json.loads(stdout)]
+    expected = [item['id'] for item in MANIFEST['tools']]
+    return (len(actual) == len(set(actual)) == len(expected)
+            and len(expected) == len(set(expected))
+            and set(actual) == set(expected))
+
+invoke('list_tools_matches_manifest', ['--list-tools'], 0, exact_tool_registry)
 invoke('source_and_engine_hashes', ['--verify-sources'], 0, lambda s: all(c['valid'] for c in json.loads(s)))
 invoke('bjt_cli_no_original_bootstrap', ['--tool', 'bjt', '--help'], 0)
 invoke('alignment_cli_no_original_bootstrap', ['--tool', 'alignment', '--help'], 0)
