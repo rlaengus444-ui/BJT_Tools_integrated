@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "step_native_import": true,
+  "placed": 2,
+  "height_mm": 17,
+  "step_material_union": {
+    "passed": true,
+    "source_solids": 6,
+    "material_solids": 1,
+    "volume_mm3": 512.0,
+    "unicode_path": true,
+    "gui_import": true
+  },
+  "policy_digest": "3e7bda52178d48ddb116294337e7038c177fbcd87d5f82898243791e2005f04f",
+  "new_training_updates": 0,
+  "preview_and_exports": true,
+  "depth_buffer_preview": {
+    "size": [
+      469,
+      487
+    ],
+    "bore_rgb": [
+      255,
+      255,
+      255
+    ],
+    "wall_rgb": [
+      144,
+      121,
+      132
+    ]
+  },
+  "software_opengl": {
+    "passed": true,
+    "loaded_path": "D:\\a\\_temp\\bjt-suite-native\\build-work\\dist\\BJT_통합프로그램_1.9.2_EXE\\OPENGL32.dll",
+    "dll_sha256": "35cad2622a8e1e4bcdddf03ef91d87fe6fa35f2c166bb6a8c9c8fc67131629f2",
+    "capabilities": [
+      "OpenGL vendor string:  Mesa",
+      "OpenGL renderer string:  llvmpipe (LLVM 23.1.5, 256 bits)",
+      "OpenGL version string:  4.6 (Core Profile) Mesa 26.3.0"
+    ]
+  },
+  "preview_benchmark": {
+    "copies": 100,
+    "triangles": 409600,
+    "first_draw_seconds": 0.052917299999990064,
+    "camera_draw_seconds": 0.06643459999997958
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "release_id": 446930711,
+  "release_remains_draft": true,
+  "verified_app_commit": "16f2f5fa8c631d60222eeff178fab35d876913a1",
+  "verified_run": 43852970248,
+  "assets": {
+    "BJT_1.9.2_manual.zip": {
+      "bytes": 234668,
+      "sha256": "1a92eff45d65366a969a675ece1da720dc3077565c6e9f82aecdb99e4dc23409"
+    },
+    "BJT_1.9.2_source.zip": {
+      "bytes": 7015791,
+      "sha256": "12ed811bf4a575fce9f6503103b1ed10e01f55844c54b1ef8b2bd657461b302c"
+    },
+    "BJT_1.9.2_standalone.pyw": {
+      "bytes": 3949866,
+      "sha256": "0861fcc334a661d80238d2ffe5162ee7a0b418f9b8d8b4926cf7a205b419993c"
+    },
+    "BJT_1.9.2_Windows_x64.zip": {
+      "bytes": 408152034,
+      "sha256": "d444bd338ffc1c13a1ab9f845342d1ede025b7608e6e1904b35a154af243a747"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 357,
+      "sha256": "411e0ee772c706b6f24f9414e44f856fc20d45a1ef9fe442f4ab59b18efa3437"
+    }
+  },
+  "repository_visibility": "public",
+  "visibility_changed": false,
+  "publisher_commit": "2126ec3ae58eee616160cfc490980f63c99e636b",
+  "publisher_run": "43856341905",
+  "program_bytes_changed": false,
+  "server_digest_readback_passed": true
+}

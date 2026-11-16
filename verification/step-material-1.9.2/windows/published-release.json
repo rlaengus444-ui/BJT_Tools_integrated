@@ -1,0 +1,41 @@
+{
+  "id": 446930711,
+  "tag_name": "v1.9.2",
+  "target_commitish": "16f2f5fa8c631d60222eeff178fab35d876913a1",
+  "draft": false,
+  "prerelease": false,
+  "published_at": "2026-11-16T11:18:42Z",
+  "html_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.9.2",
+  "assets": [
+    {
+      "name": "BJT_1.9.2_manual.zip",
+      "size": 234668,
+      "digest": "sha256:1a92eff45d65366a969a675ece1da720dc3077565c6e9f82aecdb99e4dc23409",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.2/BJT_1.9.2_manual.zip"
+    },
+    {
+      "name": "BJT_1.9.2_source.zip",
+      "size": 7015791,
+      "digest": "sha256:12ed811bf4a575fce9f6503103b1ed10e01f55844c54b1ef8b2bd657461b302c",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.2/BJT_1.9.2_source.zip"
+    },
+    {
+      "name": "BJT_1.9.2_standalone.pyw",
+      "size": 3949866,
+      "digest": "sha256:0861fcc334a661d80238d2ffe5162ee7a0b418f9b8d8b4926cf7a205b419993c",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.2/BJT_1.9.2_standalone.pyw"
+    },
+    {
+      "name": "BJT_1.9.2_Windows_x64.zip",
+      "size": 408152034,
+      "digest": "sha256:d444bd338ffc1c13a1ab9f845342d1ede025b7608e6e1904b35a154af243a747",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.2/BJT_1.9.2_Windows_x64.zip"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "size": 357,
+      "digest": "sha256:411e0ee772c706b6f24f9414e44f856fc20d45a1ef9fe442f4ab59b18efa3437",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.2/SHA256SUMS.txt"
+    }
+  ]
+}

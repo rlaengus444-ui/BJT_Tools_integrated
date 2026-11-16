@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "route": "native collaboration followup_task",
+  "agent": "m8_step_review",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "max",
+  "app_commit": "16f2f5fa8c631d60222eeff178fab35d876913a1",
+  "native_run": 43852970248,
+  "technical_release_blockers": [],
+  "checks": [
+    "473 native source passes,2allowedskips,313subtests;all21STEPregressions",
+    "All16gates and9frozenreports",
+    "EXE/source/manualZIPCRC",
+    "BothAMD64EXEs numericfile/productversions1.9.2.0",
+    "All5nativeassetSHA256/size",
+    "Manifest/coregeometry/Mesa/RustDLL/license/capsuleintegrity"
+  ],
+  "publication_pending": true,
+  "limits": [
+    "ActualprivatefileLinuxintegration;nativeWindowssyntheticregressions",
+    "NoequipmentorexternalCHITUBOXapplicationvalidation"
+  ]
+}
