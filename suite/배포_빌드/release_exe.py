@@ -20,6 +20,15 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
+def _valid_preview_pixels(value):
+    size,bore,wall=(value.get(key) for key in ('size','bore_rgb','wall_rgb')) if isinstance(value,dict) else (None,None,None)
+    return (isinstance(size,(list,tuple)) and len(size)==2
+            and all(type(v) is int for v in size) and size[0]>=320 and size[1]>=240
+            and all(isinstance(rgb,(list,tuple)) and len(rgb)==3
+                    and all(type(v) is int and 0<=v<=255 for v in rgb) for rgb in (bore,wall))
+            and min(bore)>240 and max(wall)<245)
+
+
 def require_packing_check(report):
     checks = [phase.get('report', {}).get('checks', {}).get('packing_inference_and_exports', {})
               for phase in report.get('checks', []) if phase.get('phase') == 'save']
@@ -27,7 +36,8 @@ def require_packing_check(report):
             or checks[0].get('step_native_import') is not True
             or checks[0].get('placed') != 2 or checks[0].get('height_mm') != 17
             or checks[0].get('new_training_updates') != 0
-            or checks[0].get('preview_and_exports') is not True):
+            or checks[0].get('preview_and_exports') is not True
+            or not _valid_preview_pixels(checks[0].get('depth_buffer_preview'))):
         raise RuntimeError('Native packing STEP/preview/export verification is required')
 
 

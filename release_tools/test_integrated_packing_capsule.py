@@ -64,8 +64,15 @@ def test_native_release_cannot_pass_by_changing_tool_count_alone():
     import pytest
     with pytest.raises(RuntimeError,match='packing'):require_packing_check({'passed':True,'checks':[]})
     proof={'passed':True,'step_native_import':True,'placed':2,'height_mm':17,
-           'new_training_updates':0,'preview_and_exports':True}
+           'new_training_updates':0,'preview_and_exports':True,
+           'depth_buffer_preview':{'size':[640,480],'bore_rgb':[255,255,255],'wall_rgb':[90,100,130]}}
     require_packing_check({'checks':[{'phase':'save','report':{'checks':{'packing_inference_and_exports':proof}}}]})
     bad=dict(proof,new_training_updates=1)
     with pytest.raises(RuntimeError,match='packing'):
         require_packing_check({'checks':[{'phase':'save','report':{'checks':{'packing_inference_and_exports':bad}}}]})
+    for preview in (None,{}, {'size':[2,2],'bore_rgb':[255,255,255],'wall_rgb':[90,100,130]},
+                    {'size':[640,480],'bore_rgb':[255,255,255],'wall_rgb':[255,255,255]},
+                    {'size':[640,480],'bore_rgb':[20,20,20],'wall_rgb':[90,100,130]}):
+        bad=dict(proof,depth_buffer_preview=preview)
+        with pytest.raises(RuntimeError,match='packing'):
+            require_packing_check({'checks':[{'phase':'save','report':{'checks':{'packing_inference_and_exports':bad}}}]})

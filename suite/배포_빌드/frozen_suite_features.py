@@ -191,6 +191,8 @@ def run(mode, directory):
         checks['all_12_tools_and_simple_titles'] = {'passed': True}
         if mode == 'save':
             from frozen_packing_gui import verify as verify_packing
+            app.select_tool('nesting')
+            root.geometry('1400x950+0+0');root.deiconify();root.update()
             checks['packing_inference_and_exports'] = verify_packing(root, app.controllers['nesting'], work / 'packing')
             assert not settings.exists(), 'A fresh verification profile is required'
             checks['native_image_custom_settings'] = _native_image_check(work)
