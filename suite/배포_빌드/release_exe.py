@@ -39,6 +39,11 @@ def require_packing_check(report):
             or checks[0].get('preview_and_exports') is not True
             or not _valid_preview_pixels(checks[0].get('depth_buffer_preview'))):
         raise RuntimeError('Native packing STEP/preview/export verification is required')
+    from mesa_runtime import DLL_SHA256
+    software=checks[0].get('software_opengl') or {}
+    if (software.get('passed') is not True or software.get('dll_sha256')!=DLL_SHA256
+            or 'llvmpipe' not in '\n'.join(software.get('capabilities',[])).lower()):
+        raise RuntimeError('Native packing software OpenGL loaded-DLL verification is required')
 
 
 def main():
@@ -66,6 +71,8 @@ def main():
     if reports['smoke-exe'].get('tool_count') != 12:
         raise RuntimeError('Expected all 12 registered tools')
     require_packing_check(reports['features-exe'])
+    from mesa_runtime import verify_install
+    verify_install(build)
     latest_exe = max((build / name).stat().st_mtime for name in
                      ('BJT_통합프로그램.exe', 'BJT_명령줄.exe'))
     additional = ('chitu-cli-exe', 'chitu-gui-exe', 'camera-cli-exe', 'camera-gui-exe')

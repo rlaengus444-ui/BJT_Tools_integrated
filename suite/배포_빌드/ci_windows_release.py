@@ -18,6 +18,7 @@ import traceback
 import xml.etree.ElementTree as ET
 
 from release_native import TARGET, TOOLCHAIN, crate_digest, verify_chain, verify_native, require_probe
+from mesa_runtime import prepare_runtime, install_runtime
 
 HERE = Path(__file__).resolve().parent
 SOURCE = HERE.parent
@@ -250,6 +251,11 @@ def main():
     environment.pop('BJT_MESH_BACKEND', None)
     environment['PATH'] = str(build / 'vendor-runtime') + os.pathsep + environment.get('PATH', '')
     try:
+        graphics=prepare_runtime(output/'mesa-runtime')
+        summary['checks']['software_opengl_setup']=graphics
+        run([sys.executable,HERE/'mesa_runtime.py','--probe',reports/'source-opengl.json'],
+            SOURCE,environment,reports/'source-opengl.log')
+        summary['checks']['software_opengl_source']=json.loads((reports/'source-opengl.json').read_text(encoding='utf-8'))
         summary['checks']['native_rust_build'] = build_native(output, reports, environment)
         run([sys.executable, '-m', 'pytest', 'tests', 'chitu_tests', '-p', 'no:cacheprovider',
             '-q', '--junitxml=' + str(reports / 'source-tests.xml')], SOURCE, environment,
@@ -268,6 +274,9 @@ def main():
                        'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe'):
             run([sys.executable, build / 'run_build.py', action], build, environment,
                 reports / (action + '-runner.log'))
+            if action=='build':
+                dist=build/'dist'/f'BJT_통합프로그램_{version}_EXE'
+                summary['checks']['software_opengl_packaged']=install_runtime(graphics['runtime_directory'],dist)
             if action != 'build':
                 value = json.loads((build / (action + '.json')).read_text(encoding='utf-8'))
                 if not value.get('passed') or not value.get('frozen'):

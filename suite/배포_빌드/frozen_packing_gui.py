@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import time
+import os
 
 
 def _wait(root, controller, seconds=60):
@@ -67,8 +68,22 @@ def verify(root, controller, directory):
     bore,wall=pixel((0.,0.,10.)),pixel((11.,0.,10.))
     assert min(bore)>240 and max(wall)<245, 'Frozen depth-buffer bore/wall pixels failed'
     pixels={'size':[image.width,image.height],'bore_rgb':bore,'wall_rgb':wall}
+    software=None
+    if os.name=='nt':
+        from mesa_runtime import graphics_proof
+        software=graphics_proof(controller.preview.window)
+    stress=model_from_mesh(trimesh.creation.annulus(r_min=10,r_max=12,height=20,sections=512),'frozen-stress')
+    copies=[Placement(stress.model_id,i,rotation,((i%10)*28.,(i//10)*28.,0.)) for i in range(100)]
+    started=time.perf_counter();controller.preview.set_scene({stress.model_id:stress},copies,(300,300,30))
+    controller.preview.render();first_draw=time.perf_counter()-started
+    assert len(controller.preview.model_actors)==100 and len(controller.preview.model_mappers)==1
+    assert controller.preview.model_mappers[stress.model_id].GetInput().GetNumberOfPolys()==len(stress.mesh.faces)
+    started=time.perf_counter();controller.preview.align('origin');controller.preview.render()
+    camera_draw=time.perf_counter()-started
+    benchmark={'copies':100,'triangles':len(stress.mesh.faces)*100,
+               'first_draw_seconds':first_draw,'camera_draw_seconds':camera_draw}
     assert default_policy().to_dict()==before
     assert snapshot.result.metadata['reinforcement_learning']['td_updates']==0
     return {'passed':True,'step_native_import':True,'placed':2,'height_mm':17,
             'policy_digest':default_policy().digest,'new_training_updates':0,'preview_and_exports':True,
-            'depth_buffer_preview':pixels}
+            'depth_buffer_preview':pixels,'software_opengl':software,'preview_benchmark':benchmark}
