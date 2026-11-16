@@ -18,6 +18,9 @@ def verify(root, controller, directory):
     import numpy as np
     import trimesh
     from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox
+    from OCP.BRep import BRep_Builder
+    from OCP.TopoDS import TopoDS_Compound
+    from OCP.gp import gp_Pnt
     from OCP.IFSelect import IFSelect_RetDone
     from OCP.STEPControl import STEPControl_Writer,STEPControl_AsIs
     from powdernest.geometry import load_model, model_from_mesh
@@ -34,6 +37,25 @@ def verify(root, controller, directory):
     assert writer.Write(str(step))==IFSelect_RetDone
     cad=load_model(step,model_id='native-step')
     assert cad.original_shape is not None and cad.mesh.is_watertight
+    bodies=TopoDS_Compound();builder=BRep_Builder();builder.MakeCompound(bodies)
+    builder.Add(bodies,BRepPrimAPI_MakeBox(8.,8.,8.).Shape())
+    for x in range(1,6):
+        builder.Add(bodies,BRepPrimAPI_MakeBox(gp_Pnt(float(x),1.,1.),2.,2.,2.).Shape())
+    multi=directory/'overlapping-bodies.step';writer=STEPControl_Writer()
+    assert writer.Transfer(bodies,STEPControl_AsIs)==IFSelect_RetDone
+    assert writer.Write(str(multi))==IFSelect_RetDone
+    multi=multi.rename(directory/'보수시편 M8 (1).STEP.step')
+    # Exercise the same asynchronous GUI import path as a user's CAD file.
+    assert controller.add_paths([multi]);_wait(root,controller)
+    assert len(controller.models)==1, 'Frozen multi-body STEP GUI import failed'
+    imported=next(iter(controller.models.values()))
+    assert imported.diagnostics['source_solid_count']==6
+    assert imported.diagnostics['material_solid_count']==1
+    assert imported.diagnostics['step_material_union_applied']
+    assert abs(imported.mesh.volume-512.)<1e-6 and imported.mesh.is_watertight
+    union_proof={'passed':True,'source_solids':6,'material_solids':1,
+                 'volume_mm3':float(imported.mesh.volume),'unicode_path':True,'gui_import':True}
+    controller.rows.clear();controller.models.clear();controller._changed();controller._refresh_table()
     stl=directory/'packing-cube.stl';trimesh.creation.box((8,8,8)).export(stl)
     assert controller.add_paths([stl]);_wait(root,controller)
     assert len(controller.models)==1
@@ -85,5 +107,6 @@ def verify(root, controller, directory):
     assert default_policy().to_dict()==before
     assert snapshot.result.metadata['reinforcement_learning']['td_updates']==0
     return {'passed':True,'step_native_import':True,'placed':2,'height_mm':17,
+            'step_material_union':union_proof,
             'policy_digest':default_policy().digest,'new_training_updates':0,'preview_and_exports':True,
             'depth_buffer_preview':pixels,'software_opengl':software,'preview_benchmark':benchmark}

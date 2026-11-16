@@ -15,6 +15,27 @@ import zipfile
 import zlib
 
 HERE = Path(__file__).resolve().parent
+
+
+def verify_version_info(text, version):
+    """Require both human-readable and fixed numeric PE resource versions."""
+    import ast
+    tree = ast.parse(text)
+    strings = {node.args[0].value: node.args[1].value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+        and node.func.id == 'StringStruct' and len(node.args) == 2
+        and all(isinstance(arg, ast.Constant) for arg in node.args)}
+    fixed = [node for node in ast.walk(tree) if isinstance(node, ast.Call)
+             and isinstance(node.func, ast.Name) and node.func.id == 'FixedFileInfo']
+    expected = tuple(map(int, version.split('.'))) + (0,)
+    numbers = {item.arg: ast.literal_eval(item.value) for item in fixed[0].keywords
+               if item.arg in ('filevers', 'prodvers')} if len(fixed) == 1 else {}
+    if (strings.get('ProductVersion') != version or strings.get('FileVersion') != version + '.0'
+            or numbers.get('filevers') != expected or numbers.get('prodvers') != expected):
+        raise RuntimeError('PE version_info.txt must match source_manifest.json before building')
+
+
 SOURCE = Path(os.environ.get('BJT_SOURCE_DIR', str(HERE.parent))).expanduser().resolve()
 STAGE = HERE / 'app-source'
 # A fresh snapshot must not retain removed modules or old QA documents when a
@@ -158,14 +179,7 @@ licenses.mkdir(exist_ok=True)
 (licenses / 'inventory.json').write_text(json.dumps(inventory, ensure_ascii=False, indent=2), encoding='utf-8')
 manifest = json.loads((STAGE / 'source_manifest.json').read_text(encoding='utf-8'))
 version = manifest['suite_version']
-version_tree = ast.parse((HERE / 'version_info.txt').read_text(encoding='utf-8'))
-metadata_versions = {node.args[0].value: node.args[1].value
-    for node in ast.walk(version_tree)
-    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
-    and node.func.id == 'StringStruct' and len(node.args) == 2
-    and all(isinstance(arg, ast.Constant) for arg in node.args)}
-if metadata_versions.get('ProductVersion') != version or metadata_versions.get('FileVersion') != version + '.0':
-    raise RuntimeError('PE version_info.txt must match source_manifest.json before building')
+verify_version_info((HERE / 'version_info.txt').read_text(encoding='utf-8'), version)
 checks = []
 for item in manifest['tools']:
     path = STAGE / item['source']

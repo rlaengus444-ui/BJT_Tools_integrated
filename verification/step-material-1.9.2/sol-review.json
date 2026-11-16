@@ -1,0 +1,50 @@
+{
+  "status": "completed",
+  "route": "native collaboration spawn_agent + followup_task",
+  "agent": "m8_step_review",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "max",
+  "base_commit": "cb78c408008587ead2695e0bf7ce45bdcf6aa90d",
+  "geometry_sha256": "39374f465ab59709644a130de4e897710185db11d4f33105b31a31a08e65aad2",
+  "code_review_blockers": [],
+  "findings_resolved": [
+    "Reject inverted/unbounded solid material before and after Boolean union",
+    "Preserve current source launcher runtime during payload regeneration",
+    "Match numeric and string PE resource versions to1.9.2 and validate both",
+    "Reject NaN/infinite/malformed native union proof volume"
+  ],
+  "reviewer_executed": [
+    "Final focused33passed +3subtests",
+    "Additional packing/build23passed +15GUIskips +17subtests",
+    "Cache-disabled supplied STEP integration2placements/STL+CHITUBOX exports/strict STL reimport/source unchanged10.34seconds",
+    "Both Python and Rust predicates against actual input",
+    "Source BRep immutability, cavity/disconnected material, strict STL/cache/hash/capsule checks"
+  ],
+  "pending_at_review": [
+    "Native Windows full source tests and frozen GUI/EXE gates",
+    "Published asset verification"
+  ],
+  "untested": [
+    "Real printer/equipment",
+    "Opening project in external CHITUBOX app"
+  ],
+  "reviewed_files": {
+    "BJT_통합프로그램.py": "999cdbb7089d57cf282bd3b357445626f062d146b84fa20f4c676f4dac01fb7c",
+    "release_tools/test_integrated_packing_capsule.py": "e5b2e04e22690e8bb0fd678a2b8b909d884cb146b982c0b974a70414d470ac99",
+    "suite/manuals/nesting.html": "b6e5cc46491cc031616fc02c31386703be6321fd5721a87df35682c6f753783e",
+    "suite/manuals/nesting.json": "97e91b9fc892dd3d4273ceece61df8e1ba4a03a1b5b9d001d100973adfa4e535",
+    "suite/powdernest/geometry.py": "39374f465ab59709644a130de4e897710185db11d4f33105b31a31a08e65aad2",
+    "suite/source_manifest.json": "1ab83c143a66b9afe79eef6c6ed9018a97f68e4cbea1b9f6f4fdbf2b4c2610c3",
+    "suite/tests/test_bjt_native_staging.py": "3a83dcc3de332325733868f784bff3b07c1e54c0269f3f8e4f778c2a5e689dab",
+    "suite/tests/test_chitu_integration.py": "574e48e8016869025af7a041b8a5e386cd9f30d69909c4fef6615718fc879fb5",
+    "suite/배포_빌드/ci_windows_release.py": "5d63314424f1cdbc0965e9cec9b95ab3804a6f41fc61df609f5c37c2bd3615c5",
+    "suite/배포_빌드/frozen_packing_gui.py": "07c35d2daff078a0c0f7c7764cb3cad2de64c467119cbcd761c3acb2695c458d",
+    "suite/배포_빌드/prepare_build.py": "b4faeacecfe4c21ae26d0149f7f5c6052cd631e049f755506e8053059361c512",
+    "suite/배포_빌드/release_exe.py": "1004eb57036426af93322995ead734530a8970aec444652613912f1556833b4c",
+    "suite/배포_빌드/version_info.txt": "81e72e3255ac1dd4efd52d3e2d8113aa7a7c53491dec76b1a824455da1dce076",
+    "suite/배포_빌드/재빌드_안내.txt": "17111d264f32f9b2c287da15af68056654a135487efe0b76c16b967a19a8899e",
+    "suite/사용_안내.txt": "e28235936baa6b31a655659948fdb58c327d2db710db0f7181879c9131b4e0cc",
+    "suite/tests/test_step_material_union.py": "2713d47a9a3412fe62c69ba5435c0c5bd1c38ff1c1b12e5462718020519bd60e",
+    "release_tools/verify_step_material_import.py": "18d369a6282e892091abc5f7ee48f74596d2e00ccb8199f5c6a55afc3da58c27"
+  }
+}

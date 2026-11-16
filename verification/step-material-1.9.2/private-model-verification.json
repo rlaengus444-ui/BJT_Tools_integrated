@@ -1,0 +1,242 @@
+{
+  "passed": true,
+  "source_sha256": "7fc413b310f6220002f3d0a7798ba799525584412f0be0d0d950e0b7bc854ef1",
+  "source_bytes": 1045576,
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "import_seconds": 5.618496242997935,
+  "source_brep_valid": true,
+  "union_cad_volume_mm3": 1373.3511498871007,
+  "mesh_volume_mm3": 1373.1564989154313,
+  "bounds_mm": [
+    [
+      -4.0,
+      -4.000000000000001,
+      7.999999999999943
+    ],
+    [
+      4.0,
+      4.000000000000002,
+      33.0
+    ]
+  ],
+  "diagnostics": {
+    "format": "STEP",
+    "source_length_units": [
+      "millimetre"
+    ],
+    "working_unit": "mm",
+    "occt_system_length_unit_mm": 1.0,
+    "linear_deflection_mm": 0.02,
+    "angular_deflection_radians": 0.2,
+    "cad_tolerance_mm": 0.0002029422658959805,
+    "seam_weld_tolerance_mm": 0.0002029422658959805,
+    "max_seam_vertex_motion_mm": 0.0,
+    "collapsed_cad_seam_facets_removed": 0,
+    "tessellation_error_mm": 0.02020294226589598,
+    "tessellation_bound_certified": false,
+    "tessellation_caveat": "Declared allowance from meshing deflection, CAD tolerance and seam welding; not a certified exact BRep-to-mesh Hausdorff bound.",
+    "collinear_cad_facets_retriangulated": 0,
+    "cad_retriangulation_vertex_motion_mm": 0.0,
+    "cad_retriangulation_measured_deviation_sum_mm": 0.0,
+    "cad_retriangulation_surface_change_bound_mm": 0.0,
+    "cad_retriangulation_operations": [],
+    "source_solid_count": 6,
+    "material_solid_count": 1,
+    "step_material_union_applied": true,
+    "step_material_union_method": "OCCT non-destructive material union; default tolerance",
+    "step_material_union_fuzzy_value_mm": 1e-07,
+    "original_brep_modified": false,
+    "shell_count": 1,
+    "shell_depths": [
+      0
+    ],
+    "signed_shell_volumes_mm3": [
+      1373.156498915431
+    ],
+    "global_orientation": 1,
+    "material_volume_mm3": 1373.156498915431,
+    "watertight": true,
+    "winding_consistent": true,
+    "vertex_manifold": true,
+    "self_intersection_check": "triangle plane sections and coplanar clipping, R-tree candidates",
+    "self_intersection_candidate_pairs": 36528,
+    "geometry_epsilon_mm": 1e-10,
+    "vertices": 2556,
+    "triangles": 5108,
+    "automatic_repairs": false,
+    "geometry_validation_cache": "fresh",
+    "model_import_cache": "miss"
+  },
+  "source_unchanged": true,
+  "placed": 2,
+  "height_mm": 8.020202942265897,
+  "validation": {
+    "valid": true,
+    "complete": true,
+    "errors": [],
+    "geometric_valid": true,
+    "counts": {
+      "private-step": 2
+    },
+    "requested": {
+      "private-step": 2
+    },
+    "checked_placements": 2,
+    "checked_pairs": 1,
+    "minimum_pair_distance_mm": 2.040405884531789,
+    "minimum_pair_clearance_surplus_mm": -2.6645352591003757e-15,
+    "pair_distances": [
+      {
+        "a": 0,
+        "b": 1,
+        "distance_mm": 2.040405884531789,
+        "required_mm": 2.0404058845317916,
+        "valid": true
+      }
+    ],
+    "tolerances": {
+      "numerical_mm": 1e-06,
+      "requested_gap_mm": 2.0,
+      "requested_wall_gap_mm": 1.0,
+      "wall_gap_axes": [
+        "X",
+        "Y"
+      ],
+      "pair_rule": "distance >= gap + allowance_A + allowance_B - numerical tolerance; no surface intersections",
+      "wall_rule": "XY inside [wall_gap + allowance, size_xy - wall_gap - allowance]; Z inside [allowance, max_z - allowance], with numerical tolerance",
+      "containment_rule": "absolute oriented generalized winding number > 0.5 for any connected-shell witness",
+      "cad_allowance_caveat": "Declared tessellation allowance is not a certified exact BRep Hausdorff bound.",
+      "per_model_tessellation_mm": {
+        "private-step": 0.02020294226589598
+      }
+    },
+    "model_geometry_validation": {
+      "private-step": {
+        "valid": true,
+        "watertight": true,
+        "winding_consistent": true,
+        "self_intersections_checked": true,
+        "geometry_epsilon_mm": 1e-10,
+        "triangles": 5108,
+        "shell_count": 1
+      }
+    },
+    "method": "independent FCL triangle BVHs + oriented shell winding containment; exact-content validation proofs may be reused",
+    "validation_reuse": {
+      "geometry_hits": 1,
+      "pair_hits": 0,
+      "force_fresh": false
+    },
+    "touching_policy": "Surface contact is conservatively rejected, including gap=0.",
+    "tessellation_bound_certified": false,
+    "interlocking": {
+      "enabled": true,
+      "status": "no_certified_link_detected",
+      "linked_pairs": [],
+      "unresolved_pairs": [],
+      "separability_proven": false,
+      "method": "closed mesh-edge homology cycles; exact rational signed crossings",
+      "scope": "Positive linking proves nonseparability. Zero linking does not prove a removal path."
+    },
+    "collision_statistics": {
+      "bvh_models": 1,
+      "aabb_rejections": 0,
+      "fcl_queries": 1,
+      "containment_queries": 0,
+      "spatial_candidates": 0
+    }
+  },
+  "stl_roundtrip": true,
+  "chitubox_roundtrip": true,
+  "encoded_geometry_validation": {
+    "valid": true,
+    "complete": true,
+    "errors": [],
+    "geometric_valid": true,
+    "counts": {
+      "chitubox_object_0": 1,
+      "chitubox_object_1": 1
+    },
+    "requested": {
+      "chitubox_object_0": 1,
+      "chitubox_object_1": 1
+    },
+    "checked_placements": 2,
+    "checked_pairs": 1,
+    "minimum_pair_distance_mm": 2.040405750274658,
+    "minimum_pair_clearance_surplus_mm": -1.3425713341064238e-07,
+    "pair_distances": [
+      {
+        "a": 0,
+        "b": 1,
+        "distance_mm": 2.040405750274658,
+        "required_mm": 2.0404058845317916,
+        "valid": true
+      }
+    ],
+    "tolerances": {
+      "numerical_mm": 0.01,
+      "requested_gap_mm": 2.0,
+      "requested_wall_gap_mm": 1.0,
+      "wall_gap_axes": [
+        "X",
+        "Y"
+      ],
+      "pair_rule": "distance >= gap + allowance_A + allowance_B - numerical tolerance; no surface intersections",
+      "wall_rule": "XY inside [wall_gap + allowance, size_xy - wall_gap - allowance]; Z inside [allowance, max_z - allowance], with numerical tolerance",
+      "containment_rule": "absolute oriented generalized winding number > 0.5 for any connected-shell witness",
+      "cad_allowance_caveat": "Declared tessellation allowance is not a certified exact BRep Hausdorff bound.",
+      "per_model_tessellation_mm": {
+        "chitubox_object_0": 0.02020294226589598,
+        "chitubox_object_1": 0.02020294226589598
+      }
+    },
+    "model_geometry_validation": {
+      "chitubox_object_0": {
+        "valid": true,
+        "watertight": true,
+        "winding_consistent": true,
+        "self_intersections_checked": true,
+        "geometry_epsilon_mm": 1e-10,
+        "triangles": 5108,
+        "shell_count": 1
+      },
+      "chitubox_object_1": {
+        "valid": true,
+        "watertight": true,
+        "winding_consistent": true,
+        "self_intersections_checked": true,
+        "geometry_epsilon_mm": 1e-10,
+        "triangles": 5108,
+        "shell_count": 1
+      }
+    },
+    "method": "independent FCL triangle BVHs + oriented shell winding containment; exact-content validation proofs may be reused",
+    "validation_reuse": {
+      "geometry_hits": 0,
+      "pair_hits": 0,
+      "force_fresh": false
+    },
+    "touching_policy": "Surface contact is conservatively rejected, including gap=0.",
+    "tessellation_bound_certified": false,
+    "interlocking": {
+      "enabled": true,
+      "status": "no_certified_link_detected",
+      "linked_pairs": [],
+      "unresolved_pairs": [],
+      "separability_proven": false,
+      "method": "closed mesh-edge homology cycles; exact rational signed crossings",
+      "scope": "Positive linking proves nonseparability. Zero linking does not prove a removal path."
+    },
+    "collision_statistics": {
+      "bvh_models": 2,
+      "aabb_rejections": 0,
+      "fcl_queries": 1,
+      "containment_queries": 0,
+      "spatial_candidates": 0
+    }
+  },
+  "maximum_vertex_displacement_mm": 4.932778351512811e-07,
+  "total_seconds": 7.8929201969986025
+}

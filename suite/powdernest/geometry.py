@@ -60,7 +60,9 @@ def validation_stamp():
              '_orient2d_with_error', '_projected_vertex_separation', '_invalid_triangle_intersection',
              '_check_vertex_manifold', '_check_self_intersections', '_canonical_mesh', '_shell_information',
              'model_from_mesh', 'revalidate_model', '_weld_cad_vertices', '_conform_cad_collinear_facets',
-             '_read_step_shape', '_load_step', 'load_model', '_load_stl', '_position_array', '_code_signature')
+             '_step_solids', '_require_bounded_step_solids', '_step_material_shape',
+             '_read_step_shape', '_load_step', 'load_model',
+             '_load_stl', '_position_array', '_code_signature')
     functions = [(name, globals()[name]) for name in names]
     functions.append(('Settings.boundary_margins', Settings.boundary_margins))
     engine = globals().get('CollisionEngine')
@@ -695,6 +697,98 @@ def _conform_cad_collinear_facets(vertices: np.ndarray, faces: np.ndarray,
     return result, info
 
 
+def _step_solids(shape):
+    """Collect positioned solid leaves without discarding loose STEP geometry."""
+    from OCP.TopAbs import TopAbs_SOLID, TopAbs_COMPOUND, TopAbs_COMPSOLID
+    from OCP.TopoDS import TopoDS_Iterator
+    check_cancelled()
+    kind = shape.ShapeType()
+    if kind == TopAbs_SOLID:
+        return [shape]
+    if kind not in (TopAbs_COMPOUND, TopAbs_COMPSOLID):
+        raise GeometryError('STEP contains geometry outside closed solids; export solid bodies only.')
+    solids = []
+    children = TopoDS_Iterator(shape)
+    while children.More():
+        solids.extend(_step_solids(children.Value()))
+        children.Next()
+    return solids
+
+
+def _require_bounded_step_solids(solids):
+    """Refuse complemented solids: a valid BRep can enclose infinity."""
+    from OCP.BRepClass3d import BRepClass3d_SolidClassifier
+    from OCP.Precision import Precision
+    from OCP.TopAbs import TopAbs_OUT
+    for solid in solids:
+        check_cancelled()
+        classifier = BRepClass3d_SolidClassifier(solid)
+        classifier.PerformInfinitePoint(float(Precision.Confusion_s()))
+        if classifier.State() != TopAbs_OUT:
+            raise GeometryError('STEP contains an inverted or unbounded solid; '
+                                'export consistently outward-oriented CAD bodies before material union.')
+
+
+def _step_material_shape(shape):
+    """Union STEP body material before meshing; retain the source BRep itself.
+
+    CAD compounds may contain overlapping bodies (including contained thread
+    fragments). Concatenating their surfaces is not the boundary of material.
+    Use OCCT's non-destructive Boolean union with its default tolerance, then
+    subject the result to the same strict mesh checks as every other input.
+    Raw STL meshes never enter this path. Point/edge contacts remain invalid.
+    """
+    from OCP.BRepAlgoAPI import BRepAlgoAPI_Fuse
+    from OCP.BRepBuilderAPI import BRepBuilderAPI_Copy
+    from OCP.BRepCheck import BRepCheck_Analyzer
+    from OCP.TopTools import TopTools_ListOfShape
+    # Even non-destructive Booleans can update shared TopoDS flags. Isolate
+    # topology and geometry before both the union and subsequent meshing.
+    shape = BRepBuilderAPI_Copy(shape, True, False).Shape()
+    solids = _step_solids(shape)
+    if not solids:
+        raise GeometryError('STEP contains no closed solid material.')
+    information = {'source_solid_count': len(solids), 'material_solid_count': len(solids),
+                   'step_material_union_applied': False,
+                   'step_material_union_method': 'single solid; no Boolean operation'}
+    if len(solids) == 1:
+        return shape, information
+    # OCCT treats an inverted closed solid as the complement of its material.
+    # Such a Boolean can yield a valid but wrong finite mesh; do not rely on
+    # mesh closure or signed-volume magnitudes to detect it afterward.
+    _require_bounded_step_solids(solids)
+    check_cancelled()
+    report_progress(f'STEP 재료 영역 합치기: {len(solids)}개 솔리드', force=True)
+    arguments, tools = TopTools_ListOfShape(), TopTools_ListOfShape()
+    arguments.Append(solids[0])
+    for solid in solids[1:]:
+        tools.Append(solid)
+    operation = BRepAlgoAPI_Fuse()
+    operation.SetArguments(arguments)
+    operation.SetTools(tools)
+    operation.SetNonDestructive(True)
+    operation.SetRunParallel(False)
+    try:
+        operation.Build()
+        check_cancelled()
+        if not operation.IsDone():
+            raise GeometryError('STEP material union failed; repair the source CAD bodies.')
+        material = operation.Shape()
+        if material.IsNull() or not BRepCheck_Analyzer(material).IsValid():
+            raise GeometryError('STEP material union produced an invalid BRep; repair the source CAD bodies.')
+        result_solids = _step_solids(material)
+        count = len(result_solids)
+        if not count:
+            raise GeometryError('STEP material union produced no closed solid.')
+        _require_bounded_step_solids(result_solids)
+    except RuntimeError as exc:
+        raise GeometryError('STEP material union failed; repair the source CAD bodies.') from exc
+    information.update(material_solid_count=count, step_material_union_applied=True,
+                       step_material_union_method='OCCT non-destructive material union; default tolerance',
+                       step_material_union_fuzzy_value_mm=float(operation.FuzzyValue()))
+    return material, information
+
+
 def _read_step_shape(path: Path):
     from OCP.BRepCheck import BRepCheck_Analyzer
     from OCP.IFSelect import IFSelect_RetDone
@@ -727,7 +821,7 @@ def _load_step(path: Path, model_id: str, linear_deflection: float) -> Model:
     from OCP.BRep import BRep_Tool
     from OCP.BRepMesh import BRepMesh_IncrementalMesh
     from OCP.Precision import Precision
-    from OCP.TopAbs import TopAbs_FACE, TopAbs_REVERSED
+    from OCP.TopAbs import TopAbs_FACE, TopAbs_REVERSED, TopAbs_EDGE, TopAbs_VERTEX
     from OCP.TopExp import TopExp_Explorer
     from OCP.TopLoc import TopLoc_Location
     from OCP.TopoDS import TopoDS
@@ -736,11 +830,15 @@ def _load_step(path: Path, model_id: str, linear_deflection: float) -> Model:
             not math.isfinite(linear_deflection) or linear_deflection <= 0):
         raise GeometryError("STEP linear deflection must be a positive finite millimetre value.")
     shape, source_units = _read_step_shape(path)
-    mesher = BRepMesh_IncrementalMesh(shape, linear_deflection, False, .2, False)
+    mesh_shape, material_information = _step_material_shape(shape)
+    mesher = BRepMesh_IncrementalMesh(mesh_shape, linear_deflection, False, .2, False)
     if not mesher.IsDone():
         raise GeometryError("Open CASCADE could not tessellate the STEP solid.")
-    vertices, faces, max_cad_tolerance = [], [], float(Precision.Confusion_s())
-    explorer = TopExp_Explorer(shape, TopAbs_FACE)
+    vertices, faces = [], []
+    max_cad_tolerance = max(float(Precision.Confusion_s()),
+                            *(float(BRep_Tool.MaxTolerance_s(mesh_shape, kind))
+                              for kind in (TopAbs_FACE, TopAbs_EDGE, TopAbs_VERTEX)))
+    explorer = TopExp_Explorer(mesh_shape, TopAbs_FACE)
     while explorer.More():
         face = TopoDS.Face_s(explorer.Current())
         max_cad_tolerance = max(max_cad_tolerance, float(BRep_Tool.Tolerance_s(face)))
@@ -784,6 +882,7 @@ def _load_step(path: Path, model_id: str, linear_deflection: float) -> Model:
                 "tessellation_caveat": "Declared allowance from meshing deflection, CAD tolerance and seam welding; "
                                        "not a certified exact BRep-to-mesh Hausdorff bound."}
     metadata.update(retriangulation)
+    metadata.update(material_information)
     metadata['original_brep_modified'] = False
     unit_names = {"millimetre": "mm", "millimeter": "mm", "metre": "m", "meter": "m",
                   "centimetre": "cm", "centimeter": "cm", "inch": "in"}

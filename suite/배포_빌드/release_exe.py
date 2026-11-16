@@ -4,6 +4,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
+import numbers
 import os
 from pathlib import Path
 import shutil
@@ -39,6 +41,14 @@ def require_packing_check(report):
             or checks[0].get('preview_and_exports') is not True
             or not _valid_preview_pixels(checks[0].get('depth_buffer_preview'))):
         raise RuntimeError('Native packing STEP/preview/export verification is required')
+    union = checks[0].get('step_material_union')
+    volume = union.get('volume_mm3') if isinstance(union, dict) else None
+    if (not isinstance(union, dict) or union.get('passed') is not True or union.get('source_solids') != 6
+            or union.get('material_solids') != 1
+            or not isinstance(volume, numbers.Real) or isinstance(volume, bool)
+            or not math.isfinite(volume) or abs(volume - 512.) > 1e-6
+            or union.get('unicode_path') is not True or union.get('gui_import') is not True):
+        raise RuntimeError('Native packing multi-body STEP GUI import verification is required')
     from mesa_runtime import DLL_SHA256
     software=checks[0].get('software_opengl') or {}
     if (software.get('passed') is not True or software.get('dll_sha256')!=DLL_SHA256

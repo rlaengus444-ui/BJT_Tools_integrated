@@ -22,9 +22,22 @@ def definition(filename, name):
 
 stage = definition('prepare_build.py', 'stage_optional_native')
 spec_binary = definition('BJT_Suite.spec', 'optional_native_binary')
+verify_version_info = definition('prepare_build.py', 'verify_version_info')
 
 
 class NativeStagingTests(unittest.TestCase):
+    def test_fixed_numeric_and_string_versions_must_all_match(self):
+        import json
+        resource = (BUILD / 'version_info.txt').read_text(encoding='utf-8')
+        version = json.loads((BUILD.parent / 'source_manifest.json').read_text(encoding='utf-8'))['suite_version']
+        verify_version_info(resource, version)
+        numeric = ', '.join(version.split('.') + ['0'])
+        for damaged in (resource.replace(numeric, '0, 0, 0, 0', 1),
+                        resource.replace("StringStruct('ProductVersion', '" + version,
+                                         "StringStruct('ProductVersion', '0.0.0")):
+            with self.assertRaises(RuntimeError):
+                verify_version_info(damaged, version)
+
     def test_missing_and_unsupported_are_optional(self):
         with tempfile.TemporaryDirectory() as directory:
             source, output = Path(directory) / 'src', Path(directory) / 'stage'

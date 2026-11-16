@@ -333,7 +333,7 @@ def main():
         release_date = (datetime.now(timezone.utc) + timedelta(hours=9)).date().isoformat()
         run([sys.executable, REPOSITORY / 'release_tools/build_source_release.py', '--app', SOURCE,
             '--output', raw_assets, '--release-date', release_date,
-            '--launcher-template', REPOSITORY / 'versions/suite-v1.6.2/BJT_통합프로그램.pyw',
+            '--launcher-template', REPOSITORY / 'BJT_통합프로그램.py',
             '--launcher-output', raw_assets / 'BJT_통합프로그램.pyw'], REPOSITORY, environment,
             reports / 'package-source.log')
         shutil.move(raw_assets / 'source-release-verification.json', reports / 'source-release-verification.json')

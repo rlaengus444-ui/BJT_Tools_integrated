@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.9.1",
+  "suite_version": "1.9.2",
   "tools": [
     {
       "id": "bjt",
@@ -398,7 +398,7 @@
     {
       "path": "powdernest/geometry.py",
       "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
-      "sha256": "972439049f51ee5e5147dc51417152ab549b0bf9b00249bff458c3dc886d3b7a",
+      "sha256": "39374f465ab59709644a130de4e897710185db11d4f33105b31a31a08e65aad2",
       "tools": [
         "nesting"
       ]
