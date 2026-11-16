@@ -4,9 +4,11 @@
 
 ## 실행
 
-1.9.1 통합 소스판은 [BJT_통합프로그램.py](BJT_통합프로그램.py)를 PyCharm에서 실행하세요. Python 3.12 x64를 선택하며 첫 실행에 고정 패키지를 설치합니다. [전체 소스 ZIP](release_assets/1.9.1/BJT_통합프로그램_1.9.1_전체소스.zip)과 [설명서 ZIP](release_assets/1.9.1/BJT_통합프로그램_1.9.1_사용설명서.zip)도 제공합니다. 단독 배치 참고본은 [standalone](standalone/)에 별도로 보관합니다.
+[Windows EXE ZIP · 1.9.1 다운로드](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.1/BJT_1.9.1_Windows_x64.zip)을 새 폴더에 모두 압축 해제한 뒤 `BJT_통합프로그램.exe`를 실행하세요. Python은 따로 설치하지 않아도 됩니다. 같은 위치의 파일과 `_internal` 폴더를 모두 유지합니다.
 
-기존 EXE 배포본은 전체 압축 해제한 뒤 `BJT_통합프로그램.exe`를 실행합니다. 같은 위치의 `_internal` 폴더도 함께 유지하세요. 1.9.1의 실제 Windows EXE 검증은 소스판 검증과 별도로 필요합니다.
+1.9.1 통합 소스판은 [BJT_통합프로그램.py](BJT_통합프로그램.py)를 PyCharm에서 실행하세요. Python 3.12 x64를 선택하며 첫 실행에 고정 패키지를 설치합니다. [전체 소스 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.1/BJT_1.9.1_source.zip)과 [설명서 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.1/BJT_1.9.1_manual.zip)도 제공합니다. 단독 배치 참고본은 [standalone](standalone/)에 별도로 보관합니다.
+
+기존 EXE 배포본은 전체 압축 해제한 뒤 `BJT_통합프로그램.exe`를 실행합니다. 같은 위치의 `_internal` 폴더도 함께 유지하세요. 1.9.1 EXE는 Windows의 소스 검사 451개·하위 검사 313개와 16개 빌드·실행·출처 검사를 통과했습니다. [Windows 검증·배포 기록](verification/preview-progress/windows-release-1.9.1/)을 확인할 수 있습니다.
 
 소스 실행: `python suite/run_suite.py`. 필요한 Python 환경과 패키지는 [suite/suite_runtime.py](suite/suite_runtime.py)와 [빌드 안내](suite/배포_빌드/재빌드_안내.txt)를 참고하세요.
 
@@ -45,4 +47,4 @@
 
 3D 화면은 VTK 깊이 버퍼로 원본 표면 전체를 표시해 얇은 벽의 앞뒤 면이 뒤섞이는 현상을 해결했습니다. 면을 생략하지 않고 복사본끼리 메시 데이터를 공유합니다. 빌드박스·원점·XYZ축만 남기고 숫자 눈금·격자를 없앴습니다. 화면 표시 오류가 나도 검증된 결과는 저장할 수 있습니다.
 
-검증과 Sol 검토 기록은 [verification/preview-progress](verification/preview-progress/)에 있습니다. Windows EXE 검증은 이번 소스판 검증에 포함하지 않았습니다.
+검증과 Sol 검토 기록은 [verification/preview-progress](verification/preview-progress/)에 있습니다. 추가 Windows EXE 검증과 게시 결과는 [Windows 배포 기록](verification/preview-progress/windows-release-1.9.1/)에 있습니다.

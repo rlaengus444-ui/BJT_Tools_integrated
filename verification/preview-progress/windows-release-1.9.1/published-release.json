@@ -1,0 +1,49 @@
+{
+  "id": 446805923,
+  "tag_name": "v1.9.1",
+  "draft": false,
+  "target_commitish": "a9153ea7bb6402d1fd6f2ab85388f5a4f8791be0",
+  "html_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.9.1",
+  "assets": [
+    {
+      "id": 754174568,
+      "name": "BJT_1.9.1_manual.zip",
+      "size": 234431,
+      "digest": "sha256:e578da32af5f90cbb105e265e5e5ffabcf3f4fb622958f7f231ab1cd51e854aa",
+      "state": "uploaded",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.1/BJT_1.9.1_manual.zip"
+    },
+    {
+      "id": 754174658,
+      "name": "BJT_1.9.1_source.zip",
+      "size": 7003116,
+      "digest": "sha256:5feabc66e2295e5304194adede25b51a40085734a3693504769de350596cd341",
+      "state": "uploaded",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.1/BJT_1.9.1_source.zip"
+    },
+    {
+      "id": 754174725,
+      "name": "BJT_1.9.1_standalone.pyw",
+      "size": 3940879,
+      "digest": "sha256:6850f42a9c1af2a3d3ad2dd22b7f23d43a52c04a4be42f7cbd93bd64514b2f0d",
+      "state": "uploaded",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.1/BJT_1.9.1_standalone.pyw"
+    },
+    {
+      "id": 754174797,
+      "name": "BJT_1.9.1_Windows_x64.zip",
+      "size": 408139852,
+      "digest": "sha256:d28cc10ceaa2252c5ae3123f77fdc860a2dc9dbfa4ec2c84618e2b6d6f7305f9",
+      "state": "uploaded",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.1/BJT_1.9.1_Windows_x64.zip"
+    },
+    {
+      "id": 754175635,
+      "name": "SHA256SUMS.txt",
+      "size": 357,
+      "digest": "sha256:32db925df935f9698571ca735a060c645bfbcce1d3665956fc6c306c2ca4a57b",
+      "state": "uploaded",
+      "browser_download_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.9.1/SHA256SUMS.txt"
+    }
+  ]
+}

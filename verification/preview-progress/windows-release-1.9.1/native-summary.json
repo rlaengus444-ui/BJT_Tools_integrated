@@ -1,0 +1,237 @@
+{
+  "passed": true,
+  "version": "1.9.1",
+  "commit": "a9153ea7bb6402d1fd6f2ab85388f5a4f8791be0",
+  "scope": "Native GitHub-hosted Windows; synthetic inputs, no printer/oven hardware or private project files",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "checks": {
+    "software_opengl_setup": {
+      "passed": true,
+      "dll_sha256": "35cad2622a8e1e4bcdddf03ef91d87fe6fa35f2c166bb6a8c9c8fc67131629f2",
+      "archive_sha256": "11dc079e356f33ce2ff84aa399c975da1a7bdd4c470f6eef4cf359ad8b9ca80f",
+      "mesa_version": "26.3.0",
+      "notices": 10,
+      "runtime_directory": "D:\\a\\_temp\\bjt-suite-native\\mesa-runtime"
+    },
+    "software_opengl_source": {
+      "passed": true,
+      "loaded_path": "C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\OPENGL32.dll",
+      "dll_sha256": "35cad2622a8e1e4bcdddf03ef91d87fe6fa35f2c166bb6a8c9c8fc67131629f2",
+      "capabilities": [
+        "OpenGL vendor string:  Mesa",
+        "OpenGL renderer string:  llvmpipe (LLVM 23.1.5, 256 bits)",
+        "OpenGL version string:  4.6 (Core Profile) Mesa 26.3.0"
+      ],
+      "opaque_pixel_rgb": [
+        76,
+        102,
+        153
+      ]
+    },
+    "native_rust_build": {
+      "passed": true,
+      "tests": 5,
+      "native": {
+        "sha256": "c580e1fecb716a36bf374875cc5b6dd2d932ed3d52f54a3cbdbc131e9672f989",
+        "bytes": 125440,
+        "metadata_sha256": "f075c9a75d395ce095df587007bc65ff3065a7d4c53fe740546d81a31ea4ec08",
+        "machine": "AMD64",
+        "target": "x86_64-pc-windows-msvc",
+        "toolchain": "1.99.1",
+        "exports": [
+          "bjt_mesh_abi_version",
+          "bjt_mesh_counts_size",
+          "bjt_mesh_edge_row_align",
+          "bjt_mesh_edge_row_size",
+          "bjt_mesh_pack_grid_triangles",
+          "bjt_mesh_platform_supported",
+          "bjt_mesh_sort_count_edges",
+          "bjt_mesh_triangle_pack_abi_version"
+        ],
+        "crate_source_sha256": "8a5bd5e9600a34431c6664edc7ea280729aad5ab7ed63a088241838f2349c492"
+      },
+      "preflight": {
+        "available": true,
+        "reason": "available",
+        "path": "D:\\a\\BJT_Tools_integrated\\BJT_Tools_integrated\\suite\\native\\bjt_mesh_native.dll",
+        "abi_version": 1,
+        "can_pack_grid": true
+      }
+    },
+    "full_source_suite": {
+      "passed": true,
+      "skips": [
+        {
+          "test": "test_open_old_file_survives_replacement",
+          "reason": "open-file replacement semantics vary by platform"
+        },
+        {
+          "test": "test_original_valid_conflict_policies_match_file_bytes_and_metadata",
+          "reason": "Original supplied tool is only present in the integration workspace"
+        }
+      ]
+    },
+    "software_opengl_packaged": {
+      "passed": true,
+      "dll_sha256": "35cad2622a8e1e4bcdddf03ef91d87fe6fa35f2c166bb6a8c9c8fc67131629f2",
+      "archive_sha256": "11dc079e356f33ce2ff84aa399c975da1a7bdd4c470f6eef4cf359ad8b9ca80f",
+      "mesa_version": "26.3.0",
+      "notices": 10
+    },
+    "diagnose-exe": {
+      "passed": true
+    },
+    "smoke-exe": {
+      "passed": true
+    },
+    "smoke-gui-exe": {
+      "passed": true
+    },
+    "fixtures-exe": {
+      "passed": true
+    },
+    "fixtures-gui-exe": {
+      "passed": true
+    },
+    "features-exe": {
+      "passed": true
+    },
+    "oven-playback-exe": {
+      "passed": true
+    },
+    "rust-probe-exe": {
+      "passed": true
+    },
+    "cli-exe": {
+      "passed": true
+    },
+    "native_rust_provenance": {
+      "passed": true,
+      "chain": {
+        "source": {
+          "sha256": "c580e1fecb716a36bf374875cc5b6dd2d932ed3d52f54a3cbdbc131e9672f989",
+          "bytes": 125440,
+          "metadata_sha256": "f075c9a75d395ce095df587007bc65ff3065a7d4c53fe740546d81a31ea4ec08",
+          "machine": "AMD64",
+          "target": "x86_64-pc-windows-msvc",
+          "toolchain": "1.99.1",
+          "exports": [
+            "bjt_mesh_abi_version",
+            "bjt_mesh_counts_size",
+            "bjt_mesh_edge_row_align",
+            "bjt_mesh_edge_row_size",
+            "bjt_mesh_pack_grid_triangles",
+            "bjt_mesh_platform_supported",
+            "bjt_mesh_sort_count_edges",
+            "bjt_mesh_triangle_pack_abi_version"
+          ],
+          "crate_source_sha256": "8a5bd5e9600a34431c6664edc7ea280729aad5ab7ed63a088241838f2349c492"
+        },
+        "stage": {
+          "sha256": "c580e1fecb716a36bf374875cc5b6dd2d932ed3d52f54a3cbdbc131e9672f989",
+          "bytes": 125440,
+          "metadata_sha256": "f075c9a75d395ce095df587007bc65ff3065a7d4c53fe740546d81a31ea4ec08",
+          "machine": "AMD64",
+          "target": "x86_64-pc-windows-msvc",
+          "toolchain": "1.99.1",
+          "exports": [
+            "bjt_mesh_abi_version",
+            "bjt_mesh_counts_size",
+            "bjt_mesh_edge_row_align",
+            "bjt_mesh_edge_row_size",
+            "bjt_mesh_pack_grid_triangles",
+            "bjt_mesh_platform_supported",
+            "bjt_mesh_sort_count_edges",
+            "bjt_mesh_triangle_pack_abi_version"
+          ],
+          "crate_source_sha256": "8a5bd5e9600a34431c6664edc7ea280729aad5ab7ed63a088241838f2349c492"
+        },
+        "frozen": {
+          "sha256": "c580e1fecb716a36bf374875cc5b6dd2d932ed3d52f54a3cbdbc131e9672f989",
+          "bytes": 125440,
+          "metadata_sha256": "f075c9a75d395ce095df587007bc65ff3065a7d4c53fe740546d81a31ea4ec08",
+          "machine": "AMD64",
+          "target": "x86_64-pc-windows-msvc",
+          "toolchain": "1.99.1",
+          "exports": [
+            "bjt_mesh_abi_version",
+            "bjt_mesh_counts_size",
+            "bjt_mesh_edge_row_align",
+            "bjt_mesh_edge_row_size",
+            "bjt_mesh_pack_grid_triangles",
+            "bjt_mesh_platform_supported",
+            "bjt_mesh_sort_count_edges",
+            "bjt_mesh_triangle_pack_abi_version"
+          ],
+          "crate_source_sha256": "8a5bd5e9600a34431c6664edc7ea280729aad5ab7ed63a088241838f2349c492"
+        }
+      },
+      "native_calls": {
+        "sort_count": {
+          "success_calls": 6,
+          "rows": 13260
+        },
+        "pack_grid_triangles": {
+          "success_calls": 6,
+          "rows": 4420
+        }
+      },
+      "fixture_count": 6
+    },
+    "source_data_and_native_closure": {
+      "passed": true,
+      "matching_files": 254,
+      "excluded_os_dlls": [],
+      "executables": {
+        "BJT_통합프로그램.exe": {
+          "sha256": "85f6e6c9cfbc181d3f56c1b22d8008a4898bcb4815c7f47c47bd23bc1ecc6657",
+          "version": [
+            1,
+            9,
+            1,
+            0
+          ],
+          "machine": "AMD64"
+        },
+        "BJT_명령줄.exe": {
+          "sha256": "7e78572ce53c54ff4a4ef859e8a3a4eb29f1703dcbf77c1e3c4e8f16b7ae2e40",
+          "version": [
+            1,
+            9,
+            1,
+            0
+          ],
+          "machine": "AMD64"
+        }
+      }
+    }
+  },
+  "asset_name_mapping": {
+    "BJT_통합프로그램.pyw": "BJT_1.9.1_standalone.pyw",
+    "BJT_통합프로그램_1.9.1_EXE.zip": "BJT_1.9.1_Windows_x64.zip",
+    "BJT_통합프로그램_1.9.1_전체소스.zip": "BJT_1.9.1_source.zip",
+    "BJT_통합프로그램_1.9.1_사용설명서.zip": "BJT_1.9.1_manual.zip"
+  },
+  "assets": {
+    "BJT_1.9.1_manual.zip": {
+      "bytes": 234431,
+      "sha256": "e578da32af5f90cbb105e265e5e5ffabcf3f4fb622958f7f231ab1cd51e854aa"
+    },
+    "BJT_1.9.1_source.zip": {
+      "bytes": 7003116,
+      "sha256": "5feabc66e2295e5304194adede25b51a40085734a3693504769de350596cd341"
+    },
+    "BJT_1.9.1_standalone.pyw": {
+      "bytes": 3940879,
+      "sha256": "6850f42a9c1af2a3d3ad2dd22b7f23d43a52c04a4be42f7cbd93bd64514b2f0d"
+    },
+    "BJT_1.9.1_Windows_x64.zip": {
+      "bytes": 408139852,
+      "sha256": "d28cc10ceaa2252c5ae3123f77fdc860a2dc9dbfa4ec2c84618e2b6d6f7305f9"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 357,
+      "sha256": "32db925df935f9698571ca735a060c645bfbcce1d3665956fc6c306c2ca4a57b"
+    }
+  }
+}

@@ -25,3 +25,7 @@
 VTK 표시기 설계는 구현 전에 검토했습니다. 사후 검토에서 축 글자의 흰색 기본값, 프레임당 이중 렌더링, Z축 보기 후 전체 보기의 view-up 변경을 발견해 수정했습니다. 같은 검토자가 세 수정과 회귀 검사를 다시 확인했습니다.
 
 최종 응답: **“No remaining findings requiring changes.”** 검토자는 통합 검사 27개와 최종 렌더러 검사 6개, 별도의 크기 변경·확대·회전·저장·파괴 동작, 50개 매니페스트와 diff 공백 검사를 실행했습니다. 마지막 전체 검사·캡슐·ZIP·내보내기 결과는 부모가 실행한 별도 근거입니다. 검토한 파일 해시는 `reviewed-fingerprints.json`에 기록했습니다.
+
+## 추가 Windows EXE 배포
+
+소스판 이후 수행한 실제 Windows EXE 검증·다운로드 해시 확인·GitHub 게시 결과는 [windows-release-1.9.1](windows-release-1.9.1/)에 기록했습니다.

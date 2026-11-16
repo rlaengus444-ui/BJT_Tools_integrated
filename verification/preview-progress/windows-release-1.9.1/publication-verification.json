@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "commit": "a9153ea7bb6402d1fd6f2ab85388f5a4f8791be0",
+  "release_id": 446805923,
+  "server_asset_digests_verified": true,
+  "zip_crc_verified": true,
+  "zip_files": 3683,
+  "windows_amd64_executables_match_native_build": true,
+  "mesa_and_all_notices_verified": true,
+  "native_source_tests": {
+    "tests": 766,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 2
+  },
+  "assets": {
+    "BJT_1.9.1_manual.zip": {
+      "bytes": 234431,
+      "sha256": "e578da32af5f90cbb105e265e5e5ffabcf3f4fb622958f7f231ab1cd51e854aa"
+    },
+    "BJT_1.9.1_source.zip": {
+      "bytes": 7003116,
+      "sha256": "5feabc66e2295e5304194adede25b51a40085734a3693504769de350596cd341"
+    },
+    "BJT_1.9.1_standalone.pyw": {
+      "bytes": 3940879,
+      "sha256": "6850f42a9c1af2a3d3ad2dd22b7f23d43a52c04a4be42f7cbd93bd64514b2f0d"
+    },
+    "BJT_1.9.1_Windows_x64.zip": {
+      "bytes": 408139852,
+      "sha256": "d28cc10ceaa2252c5ae3123f77fdc860a2dc9dbfa4ec2c84618e2b6d6f7305f9"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 357,
+      "sha256": "32db925df935f9698571ca735a060c645bfbcce1d3665956fc6c306c2ca4a57b"
+    }
+  }
+}
