@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "route": "native collaboration followup_task",
+  "agent": "m8_step_review",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "max",
+  "app_commit": "16f2f5fa8c631d60222eeff178fab35d876913a1",
+  "release_id": 446930711,
+  "findings": [],
+  "tests": "33publisher tests passed including27newcases;real local and live remote read-only preflight passed",
+  "reviewed_files": {
+    "release_tools/publish_verified_192.py": "6c80094cd76d4c078ea2b90266323871683c3b5e0f3e70f56631e6abc82588da",
+    "release_tools/test_publish_verified_192.py": "384161fa0adcdab4c03960424f6839d76705228a1237e01c40fa6f1f7cc22baf",
+    ".github/workflows/publish-verified-suite-192.yml": "64d451a7c730bbfc8272cf8b804bbc7fad9f89ac3e930c951845707f3e9ccda2"
+  },
+  "credentials_changed": false,
+  "repository_visibility_changed": false
+}

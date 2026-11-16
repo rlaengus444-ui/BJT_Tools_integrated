@@ -1,0 +1,56 @@
+name: Upload exact verified 1.9.2 assets to existing draft
+
+'on':
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-verified-suite-1.9.2
+  cancel-in-progress: false
+
+jobs:
+  upload-verified:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download pinned verified native assets
+        uses: actions/download-artifact@v4
+        with:
+          name: BJT-native-Windows-release-43852970248
+          run-id: 43852970248
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/verified-192/assets
+      - name: Download matching verification evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: BJT-native-Windows-evidence-43852970248
+          run-id: 43852970248
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/verified-192/evidence
+      - name: Verify exact artifacts and upload without replacing files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BJT_VERIFIED_ROOT: ${{ runner.temp }}/verified-192
+        run: |
+          python release_tools/publish_verified_192.py --evidence "$BJT_VERIFIED_ROOT/evidence" --assets "$BJT_VERIFIED_ROOT/assets" --report "$BJT_VERIFIED_ROOT/publication-report.json" --upload
+      - name: Preserve server digest readback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BJT-1.9.2-publication-${{ github.run_id }}
+          path: ${{ runner.temp }}/verified-192/publication-report.json
+          if-no-files-found: warn
+          retention-days: 7
