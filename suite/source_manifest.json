@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.9.0",
+  "suite_version": "1.9.1",
   "tools": [
     {
       "id": "bjt",
@@ -147,8 +147,8 @@
       "description": "STEP/STL 수량·24개 직교 자세·내장 정책으로 분말 베드 3D 자동 배치",
       "source": "sources/powdernest_tool.py",
       "original_path": "BJT integrated native Tk adapter for PowderNest",
-      "sha256": "5a4875b27bdc0d2f848a55449faf93a812bf80daf65c9445293f6c279ece1ed2",
-      "bytes": 29051,
+      "sha256": "a01ebdf1e812a38793a134eabb8a61cbd1fae7a0f9d91d03a4396a9e1ef2ea2e",
+      "bytes": 33170,
       "controller": "PackingApp",
       "embedded_base": false
     }
@@ -246,7 +246,7 @@
     {
       "path": "packing_preview.py",
       "purpose": "모델 자동 배치 · 검증된 추론 전용 엔진",
-      "sha256": "6da98d3a4c80b619296a15697dea9dad8f675591fd96f81454cdea3f14bac902",
+      "sha256": "ec48cead12103d867b11d6a2969133721f74d64837515cde7f2cd21725527af7",
       "tools": [
         "nesting"
       ]

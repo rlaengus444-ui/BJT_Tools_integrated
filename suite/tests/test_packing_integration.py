@@ -19,7 +19,6 @@ import trimesh
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'sources'))
 import packing_service as service
-from packing_preview import preview_triangles
 from powdernest.geometry import model_from_mesh
 from powdernest.rl import default_policy
 from powdernest.types import Placement,Settings,matrix_for
@@ -108,16 +107,64 @@ def test_xy_walls_full_z_and_cancellation_return_independently_valid_incumbent(t
     assert cancelled.result.status=='cancelled' and cancelled.result.validation['valid']
 
 
-def test_preview_budget_repeated_copies_and_nonzero_origins_leave_geometry_unchanged():
+def test_preview_full_mesh_shared_for_all_copies_and_24_transforms(ui):
+    root,c=ui
     mesh=trimesh.creation.icosphere(subdivisions=2);mesh.apply_translation((123,-45,67))
     model=model_from_mesh(mesh,'part');before=(model.mesh.vertices.tobytes(),model.mesh.faces.tobytes())
     poses=[Placement('part',i,i%24,(i*3.,1.,0.)) for i in range(100)]
-    groups,displayed,original=preview_triangles({'part':model},poses,limit=18000)
-    assert len(groups)==100 and displayed<=18000 and original==100*len(mesh.faces)
-    first=groups[0][0];matrix=matrix_for(model,poses[0])
-    expected=trimesh.transform_points(model.mesh.vertices,matrix)
-    assert np.all(first>=expected.min(0)-1e-12) and np.all(first<=expected.max(0)+1e-12)
+    c.preview.set_scene({'part':model},poses,(500,500,350));c.preview.render()
+    assert len(c.preview.model_actors)==100 and len(c.preview.model_mappers)==1
+    mapper=c.preview.model_mappers['part']
+    assert mapper.GetInput().GetNumberOfPolys()==len(model.mesh.faces)
+    for pose,actor in zip(poses,c.preview.model_actors):
+        assert actor.GetMapper() is mapper
+        matrix=actor.GetUserMatrix()
+        actual=np.array([[matrix.GetElement(i,j) for j in range(4)] for i in range(4)])
+        np.testing.assert_allclose(actual,matrix_for(model,pose))
+    matrices=[actor.GetUserMatrix() for actor in c.preview.model_actors]
+    assert len({id(matrix) for matrix in matrices})==100
     assert before==(model.mesh.vertices.tobytes(),model.mesh.faces.tobytes())
+
+
+def test_preview_depth_buffer_shows_open_bore_opaque_wall_and_fresh_camera(ui,tmp_path):
+    from powdernest.rotations import ROTATIONS
+    root,c=ui
+    mesh=trimesh.creation.annulus(r_min=10,r_max=12,height=20,sections=128)
+    mesh.apply_translation((123,-45,67));before=(mesh.vertices.tobytes(),mesh.faces.tobytes())
+    model=model_from_mesh(mesh,'tube')
+    rotation=next(i for i,value in enumerate(ROTATIONS) if np.array_equal(value,np.eye(3)))
+    pose=Placement('tube',0,rotation,(10.,10.,0.))
+    c.preview.set_scene({'tube':model},[pose],(50,50,30));c.preview.align('z+');c.preview.render()
+    def pixel(local):
+        point=trimesh.transform_points([local],matrix_for(model,pose))[0]
+        c.preview.renderer.SetWorldPoint(*point,1.);c.preview.renderer.WorldToDisplay()
+        x,y,z=c.preview.renderer.GetDisplayPoint()
+        return np.array(c.preview.image.getpixel((int(x),c.preview.image.height-1-int(y))))
+    assert np.min(pixel((123,-45,77)))>240  # empty bore
+    assert np.min(pixel((134,-45,77)))<220  # opaque annular wall
+    first=c.preview.image.tobytes()
+    c.preview.align('x+');c.preview.save_image(tmp_path/'side.png')
+    assert c.preview.image.tobytes()!=first and (tmp_path/'side.png').is_file()
+    assert before==(mesh.vertices.tobytes(),mesh.faces.tobytes())
+
+
+def test_preview_close_cancels_pending_render_and_releases_window(ui):
+    root,c=ui;c.preview._request_render()
+    assert c.preview._render_id is not None
+    c.preview.close();c.preview.close();root.update()
+    assert c.preview.closed and c.preview._render_id is None
+    with pytest.raises(RuntimeError,match='닫혔습니다'):c.preview.render()
+
+
+def test_preview_one_render_per_frame_and_fit_preserves_top_view(ui):
+    root,c=ui;starts=[]
+    c.preview.window.AddObserver('StartEvent',lambda *unused:starts.append(True))
+    c.preview.render();assert len(starts)==1
+    for view in ('z+','z-'):
+        c.preview.align(view);before=c.preview.camera.GetViewUp()
+        c.preview.align('fit')
+        np.testing.assert_allclose(c.preview.camera.GetViewUp(),before)
+        assert abs(np.dot(c.preview.camera.GetViewUp(),c.preview.camera.GetDirectionOfProjection()))<1e-8
 
 
 @pytest.fixture
@@ -178,14 +225,69 @@ def test_error_and_stale_worker_completion_recover_controls(ui):
     def failure(*args):raise RuntimeError('expected import failure')
     c._launch('import',failure);pump(root,c)
     assert 'expected import failure' in c.details.get('1.0','end')
+    assert c.progress_bar['value']==0 and '오류' in c.progress_var.get()
     entered=threading.Event();release=threading.Event()
     def stale(*args):entered.set();release.wait(10);return {'invalid':'stale payload'}
     c._launch('import',stale);assert entered.wait(3)
     c._changed();release.set();pump(root,c)
     assert c.models=={} and c.snapshot is None and str(c.run_button.cget('state'))=='normal'
+    assert c.progress_bar['value']==0
     c._launch('import',lambda *args:{'bad':'terminal payload'});pump(root,c)
     assert c.snapshot is None and str(c.run_button.cget('state'))=='normal'
     assert '결과 표시 중 오류' in c.status_var.get()
+
+
+def test_live_progress_search_allowance_phases_and_cancellation(ui,tmp_path,monkeypatch):
+    from types import SimpleNamespace
+    import powdernest_tool as app
+    root,c=ui;clock=[100.]
+    rows,models,settings=fixture_job(tmp_path)
+    snapshot=service.calculate(models,rows,settings,threading.Event())
+    settings=replace(settings,time_limit=10,precision=True,precision_time=4)
+    monkeypatch.setattr(app,'time',SimpleNamespace(monotonic=lambda:clock[0]))
+    entered=threading.Event();release=threading.Event()
+    def waiting(*args):entered.set();release.wait(10);return snapshot
+    c._launch('optimize',waiting,settings);assert entered.wait(3)
+    try:
+        clock[0]=105.;c._poll()
+        assert '경과 5.0초' in c.progress_var.get() and '산정 전' in c.progress_var.get()
+        identity=c._job_identity
+        c.events.put(('progress',identity,{'placed':1,'requested':2,'height':5.,'elapsed':2.,'stage':'algorithm','status':'searching'}))
+        c._poll();clock[0]=108.;c._poll()
+        assert '최대 9.0초' in c.progress_var.get() and '1/2개 (50%)' in c.status_var.get()
+        c.events.put(('progress',identity,{'elapsed':11.,'stage':'precision','status':'searching'}));c._poll()
+        assert '정밀 탐색' in c.status_var.get() and '최대 3.0초' in c.progress_var.get()
+        c.events.put(('progress',identity,{'status':'xy_balancing','stage':'precision'}));c._poll()
+        assert 'XY 정렬' in c.status_var.get() and '1/2개' in c.status_var.get()
+        assert str(c.progress_bar.cget('mode'))=='indeterminate'
+        c.events.put(('progress',identity,{'status':'validating','stage':'precision'}));c._poll()
+        assert '최종 검증 중' in c.progress_var.get() and '계산 불가' in c.progress_var.get()
+        c.stop();c._poll()
+        assert '취소 요청' in c.status_var.get() and '취소 정리' in c.progress_var.get()
+    finally:
+        release.set();pump(root,c)
+    assert str(c.progress_bar.cget('mode'))=='determinate' and c.progress_bar['value']==0
+
+
+def test_preview_keeps_build_box_and_xyz_without_grid_or_ticks(ui):
+    root,c=ui
+    c.redraw();root.update()
+    axes=c.preview.axes
+    assert (axes.GetXAxisLabelText(),axes.GetYAxisLabelText(),axes.GetZAxisLabelText())==('X','Y','Z')
+    for caption in (axes.GetXAxisCaptionActor2D(),axes.GetYAxisCaptionActor2D(),axes.GetZAxisCaptionActor2D()):
+        assert max(caption.GetCaptionTextProperty().GetColor())<.85
+    assert c.preview.build_box.GetProperty().GetRepresentationAsString()=='Wireframe'
+    assert c.preview.renderer.GetViewProps().GetNumberOfItems()==3
+
+
+def test_preview_failure_keeps_valid_calculation_exportable(ui,tmp_path,monkeypatch):
+    root,c=ui;rows,models,settings=fixture_job(tmp_path)
+    snapshot=service.calculate(models,rows,settings,threading.Event())
+    def broken(*args):raise RuntimeError('display failure')
+    monkeypatch.setattr(c.preview,'set_scene',broken)
+    c._launch('optimize',lambda *args:snapshot,settings);pump(root,c)
+    assert c.snapshot is snapshot and c.snapshot.result.validation['valid']
+    assert str(c.export_button.cget('state'))=='normal' and 'display failure' in c.preview_notice.get()
 
 
 def test_close_waits_for_export_cleanup(ui):

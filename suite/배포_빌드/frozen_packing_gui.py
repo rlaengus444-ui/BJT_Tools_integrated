@@ -40,7 +40,7 @@ def verify(root, controller, directory):
     assert snapshot.result.height==17 and len(snapshot.result.placements)==2
     assert sorted(p.position[2] for p in snapshot.result.placements)==[0.,9.]
     for view in ('origin','fit','x+','x-','y+','y-','z+','z-'):controller.preview.align(view)
-    controller.preview.canvas.draw();controller.preview.figure.savefig(directory/'packing-preview.png')
+    controller.preview.save_image(directory/'packing-preview.png')
     save_snapshot(snapshot,directory/'packing-export')
     save_snapshot(snapshot,directory/'packing.chitubox','chitubox')
     encoded=json.loads((directory/'packing.chitubox.json').read_text(encoding='utf-8'))

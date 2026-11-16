@@ -1,0 +1,16 @@
+{
+  "version": "1.9.1",
+  "embedded_file_count": 311,
+  "payload_sha256": "28a53509ad8294ccba21fa6b124d509ea471dd463512234a7d38a536ff62bed0",
+  "embedded_bytes_match": true,
+  "archives": {
+    "BJT_통합프로그램_1.9.1_전체소스.zip": {
+      "bytes": 6374063,
+      "sha256": "5c03b5206fdbdc172af60061b389b2c94c59e33a9bc6bb10ba053d4337c81fbf"
+    },
+    "BJT_통합프로그램_1.9.1_사용설명서.zip": {
+      "bytes": 234431,
+      "sha256": "71130f639771977fa43214cc725d1c578498e5a958a5458b88e72f7ce92455d1"
+    }
+  }
+}

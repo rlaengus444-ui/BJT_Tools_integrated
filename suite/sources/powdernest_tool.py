@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import queue
 import threading
+import time
 import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog, ttk
 import traceback
@@ -33,6 +34,11 @@ class PackingApp:
         self.task_kind = None
         self._job_identity = None
         self._terminal_received = False
+        self._job_success = False
+        self._job_started = None
+        self._progress_data = {}
+        self._progress_received = None
+        self._search_allowance = 0.
         self.disposed = self.closing = False
         self.profile_library = ProfileLibrary.defaults()
         self.profile_var = tk.StringVar(root, value='대형 450 × 500 × 350')
@@ -49,6 +55,7 @@ class PackingApp:
         self.mode_var = tk.StringVar(root,value='메시')
         self.balance_var = tk.StringVar(root,value='중앙 정렬 + 대칭 개선')
         self.status_var = tk.StringVar(root,value='파일을 추가하거나 저장된 파일 목록을 다시 읽으세요.')
+        self.progress_var = tk.StringVar(root,value='')
         self.preview_notice = tk.StringVar(root,value='마우스 회전·휠 확대')
         self.drop_hint_var = tk.StringVar(root,value='STEP/STP/STL을 끌어 놓아 추가')
         self.controls = []
@@ -139,6 +146,9 @@ class PackingApp:
         self.stop_button=ttk.Button(actions,text='계산 취소',command=self.stop,state='disabled')
         self.stop_button.pack(side='left',padx=(5,0))
         ttk.Label(left,textvariable=self.status_var,wraplength=405).pack(fill='x',padx=(0,10))
+        self.progress_bar=ttk.Progressbar(left,maximum=100,mode='determinate')
+        self.progress_bar.pack(fill='x',padx=(0,10),pady=(5,2))
+        ttk.Label(left,textvariable=self.progress_var,wraplength=405).pack(fill='x',padx=(0,10))
         self.details=tk.Text(left,height=8,wrap='word',state='disabled');self.details.pack(fill='x',padx=(0,10),pady=6)
         row=ttk.Frame(left);row.pack(fill='x',padx=(0,10),pady=(0,5))
         self.export_button=ttk.Button(row,text='STL·좌표·보고서 저장',command=lambda:self.export('standard'),state='disabled')
@@ -148,7 +158,7 @@ class PackingApp:
         camera=ttk.Frame(right);camera.pack(fill='x')
         for key,label in (('origin','원점'),('fit','전체'),('x+','X+'),('x-','X−'),('y+','Y+'),('y-','Y−'),('z+','Z+'),('z-','Z−')):
             ttk.Button(camera,text=label,width=5,command=lambda value=key:self.preview.align(value)).pack(side='left',padx=2)
-        self.preview=PackingPreview(right)
+        self.preview=PackingPreview(right,on_error=lambda text:self.preview_notice.set('3D 표시 오류 · '+text))
         ttk.Label(right,textvariable=self.preview_notice).pack(fill='x',pady=5)
 
     def _changed(self,*unused):
@@ -243,11 +253,16 @@ class PackingApp:
         self._refresh_table();self.redraw()
         self._launch('import',lambda cancel,progress:load_inputs(records,cancel,progress))
 
-    def _launch(self,kind,function):
+    def _launch(self,kind,function,settings=None):
         if self.is_busy or self.disposed:return
         self.job_id+=1;identity=(self.job_id,self.revision,kind)
         self._job_identity=identity;self._terminal_received=False
+        self._job_success=False
         self.cancel_event=threading.Event();self.task_kind=kind
+        self._job_started=time.monotonic();self._progress_received=None;self._progress_data={}
+        self._search_allowance=(settings.time_limit + (settings.precision_time if settings.precision else 0.)) if settings else 0.
+        self.status_var.set({'optimize':'입력 준비·초기 배치 계산 중…','import':'모델 불러오는 중…','export':'결과 저장 중…'}[kind])
+        self._update_progress()
         use_native=self.native_var.get()
         def progress(data):self.events.put(('progress',identity,data))
         def work():
@@ -273,12 +288,46 @@ class PackingApp:
         try:settings=self.current_settings();records=input_records(self.rows)
         except Exception as exc:messagebox.showerror('배치 조건',str(exc),parent=self.root);return
         models=dict(self.models);self.snapshot=None
-        self._launch('optimize',lambda cancel,progress:calculate(models,records,settings,cancel,progress))
+        self._launch('optimize',lambda cancel,progress:calculate(models,records,settings,cancel,progress),settings)
 
     def stop(self):
         self.cancel_event.set()
         self.status_var.set('저장 정리를 기다리는 중…' if self.task_kind=='export' else '취소 요청 · 최선의 결과 검증/입력 정리 대기…')
         self.stop_button.configure(state='disabled')
+        self._update_progress()
+
+    def _update_progress(self,finished=None):
+        """A GUI heartbeat keeps elapsed time live between engine callbacks.
+
+        The bounded quantity is search allowance, not a completion-time ETA.
+        Preparation, postprocessing and independent verification are separate.
+        """
+        if self._job_started is None:return
+        elapsed=max(0.,time.monotonic()-self._job_started)
+        prefix=f'경과 {elapsed:.1f}초'
+        mode='indeterminate';value=0
+        data=self._progress_data
+        if finished is not None:
+            mode='determinate';value=100 if finished else 0
+            detail='작업 종료' if finished else '작업 중단·오류 또는 입력 변경'
+        elif self.cancel_event.is_set():detail='취소 정리·최종 검증 중 · 남은 시간 계산 불가'
+        elif self.task_kind!='optimize':detail='모델 읽기 중' if self.task_kind=='import' else '저장 중'
+        elif data.get('status')=='validating':detail='최종 검증 중 · 남은 시간 계산 불가'
+        elif data.get('status')=='xy_balancing':detail='XY 정렬 중 · 완료 후 최종 검증'
+        elif self._progress_received is None:detail='입력 준비·초기 배치 중 · 남은 시간 산정 전'
+        else:
+            used=max(0.,float(data.get('elapsed',0.))+time.monotonic()-self._progress_received)
+            remaining=max(0.,self._search_allowance-used)
+            fraction=min(1.,used/self._search_allowance) if self._search_allowance>0 else 1.
+            mode='determinate';value=min(99.,fraction*100.)
+            detail=(f'탐색 한도 {fraction:.0%} · 남은 탐색 한도 최대 {remaining:.1f}초'
+                    if remaining else '탐색 한도 도달 · 현재 연산 마무리 중')
+            detail+='\nXY 정렬·최종 검증 시간 별도 · 조기 종료 가능'
+        if str(self.progress_bar.cget('mode'))!=mode:
+            self.progress_bar.stop();self.progress_bar.configure(mode=mode)
+            if mode=='indeterminate':self.progress_bar.start(15)
+        if mode=='determinate':self.progress_bar['value']=value
+        self.progress_var.set(prefix+' · '+detail)
 
     def _poll(self):
         if self.disposed:return
@@ -286,14 +335,20 @@ class PackingApp:
             while True:
                 kind,identity,data=self.events.get_nowait()
                 belongs=identity==self._job_identity
-                if belongs and kind in ('done','error'):self._terminal_received=True
+                if belongs and kind in ('done','error'):
+                    self._terminal_received=True
+                    self._job_success=kind=='done' and identity[1]==self.revision and not self.cancel_event.is_set()
                 if not belongs or identity[1]!=self.revision:continue
                 if kind=='progress':
                     if isinstance(data,dict):
-                        phase={'policy':'정책 1차 배치','algorithm':'알고리즘 개선','precision':'정밀 탐색'}.get(data.get('stage'),'계산')
+                        self._progress_data.update(data);self._progress_received=time.monotonic()
+                        phase={'policy':'정책 1차 배치','algorithm':'알고리즘 개선','precision':'정밀 탐색','xy_balance':'XY 정렬'}.get(data.get('stage'),'계산')
+                        if data.get('status')=='xy_balancing':phase='XY 정렬'
                         if data.get('status')=='validating':phase='최종 형상·간격·경계 검증'
-                        self.status_var.set(f"{phase} · {data.get('placed',0)}/{data.get('requested','?')}개 · {data.get('height',0):.3f} mm")
-                    else:self.status_var.set(str(data))
+                        placed=self._progress_data.get('placed',0);requested=self._progress_data.get('requested',0)
+                        count=f'{placed}/{requested}개'+(f' ({placed/requested:.0%})' if requested else '')
+                        if not self.cancel_event.is_set():self.status_var.set(f"{phase} · {count} · {self._progress_data.get('height',0):.3f} mm")
+                    elif not self.cancel_event.is_set():self.status_var.set(str(data))
                 elif kind=='error':
                     self.status_var.set('작업 오류 · 입력과 마지막 정책은 유지됩니다.');self._details(data)
                 elif identity[2]=='import':
@@ -311,7 +366,9 @@ class PackingApp:
             self.status_var.set('결과 표시 중 오류 · 입력을 확인하고 다시 실행하세요.')
             self._details(traceback.format_exc())
         if self.worker is not None and not self.worker.is_alive() and self._terminal_received:
+            self._update_progress(finished=self._job_success and not self.cancel_event.is_set())
             self.worker=None;self.task_kind=None;self._job_identity=None;self._set_busy(False)
+        elif self.worker is not None:self._update_progress()
         if self.closing and not self.is_busy:
             self.root.destroy();return
         self._poll_id=self.root.after(60,self._poll)
@@ -333,6 +390,10 @@ class PackingApp:
 
     def redraw(self):
         if self.disposed:return
+        try:self._redraw()
+        except Exception as exc:self.preview_notice.set('3D 표시 오류 · '+str(exc))
+
+    def _redraw(self):
         if self.snapshot is not None:
             snapshot=self.snapshot;notice=self.preview.set_scene(snapshot.models,snapshot.result.placements,snapshot.settings.size)
         else:

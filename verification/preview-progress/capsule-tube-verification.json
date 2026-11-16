@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "source_sha256": "09b8001b09f51d02ef119ec14f82b8bf310df36fde97c2bf3550f51250c98786",
+  "source_faces": 3900,
+  "source_extent_mm": [
+    342.0000000000001,
+    134.0,
+    342.0
+  ],
+  "large_box": {
+    "requested": 2,
+    "placed": 2,
+    "fresh_valid": true,
+    "height_mm": 270.0600003,
+    "elapsed_seconds": 3.099270653000076
+  },
+  "small_box": {
+    "placed": 0,
+    "status": "not_found"
+  },
+  "stl_and_chitubox_export": true,
+  "source_and_policy_unchanged": true,
+  "grid_and_ticks_hidden": true,
+  "display_stress": {
+    "copies": 100,
+    "original_faces": 390000,
+    "displayed_faces": 390000,
+    "all_copies_full_source": true,
+    "first_draw_seconds": 0.4787940979999803,
+    "camera_draw_seconds": 0.14222374900009527
+  },
+  "capsule": true
+}
