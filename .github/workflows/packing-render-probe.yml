@@ -26,6 +26,21 @@ jobs:
       - name: Record display adapter
         shell: pwsh
         run: Get-CimInstance Win32_VideoController | Select-Object Name,DriverVersion,VideoProcessor | ConvertTo-Json
+      - name: Prepare hash-verified app-local software OpenGL for diagnosis
+        shell: pwsh
+        run: |
+          $mesaProbeRoot = Join-Path $env:RUNNER_TEMP 'bjt-mesa-probe'
+          New-Item -ItemType Directory -Path $mesaProbeRoot | Out-Null
+          $mesaProbeArchive = Join-Path $mesaProbeRoot 'mesa.7z'
+          Invoke-WebRequest 'https://github.com/mmozeiko/build-mesa/releases/download/26.3.0/mesa-llvmpipe-x64-26.3.0.7z' -OutFile $mesaProbeArchive
+          if ((Get-FileHash $mesaProbeArchive -Algorithm SHA256).Hash.ToLowerInvariant() -ne '11dc079e356f33ce2ff84aa399c975da1a7bdd4c470f6eef4cf359ad8b9ca80f') { throw 'Mesa archive hash mismatch' }
+          & 'C:\Program Files\7-Zip\7z.exe' e $mesaProbeArchive opengl32.dll "-o$mesaProbeRoot" -y
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $mesaProbeDll = Join-Path $mesaProbeRoot 'opengl32.dll'
+          if ((Get-FileHash $mesaProbeDll -Algorithm SHA256).Hash.ToLowerInvariant() -ne '35cad2622a8e1e4bcdddf03ef91d87fe6fa35f2c166bb6a8c9c8fc67131629f2') { throw 'Mesa DLL hash mismatch' }
+          $mesaProbeTarget = Join-Path (Split-Path -Parent (Get-Command python).Source) 'opengl32.dll'
+          if (Test-Path $mesaProbeTarget) { throw 'Refusing to replace an existing Python-local OpenGL DLL' }
+          Copy-Item -LiteralPath $mesaProbeDll -Destination $mesaProbeTarget
       - name: Run isolated renderer probes
         run: python -u verification/preview-progress/probe_windows_renderer.py
       - uses: actions/upload-artifact@v4

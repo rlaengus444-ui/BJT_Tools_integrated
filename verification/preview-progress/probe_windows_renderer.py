@@ -6,6 +6,18 @@ import subprocess
 import sys
 
 
+def loaded_opengl():
+    if sys.platform!='win32':return
+    import ctypes,hashlib
+    kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+    kernel.GetModuleHandleW.argtypes=[ctypes.c_wchar_p];kernel.GetModuleHandleW.restype=ctypes.c_void_p
+    kernel.GetModuleFileNameW.argtypes=[ctypes.c_void_p,ctypes.c_wchar_p,ctypes.c_uint]
+    handle=kernel.GetModuleHandleW('opengl32.dll');buffer=ctypes.create_unicode_buffer(32768)
+    if not handle or not kernel.GetModuleFileNameW(handle,buffer,len(buffer)):raise ctypes.WinError(ctypes.get_last_error())
+    path=Path(buffer.value)
+    print('loaded OpenGL',path,'sha256',hashlib.sha256(path.read_bytes()).hexdigest(),flush=True)
+
+
 def probe(case):
     print('initializing',case,flush=True)
     if case=='ocp-first':
@@ -32,6 +44,7 @@ def probe(case):
         print('before capture',flush=True);preview.capture.Modified();preview.capture.Update();print('after capture',flush=True)
         print('before PackingPreview.render',flush=True)
         preview.render();print('after PackingPreview.render',preview.image.size,flush=True)
+        loaded_opengl()
         print('before Finalize',flush=True)
         preview.close();root.destroy();return
     if case=='ocp-sphere':
@@ -51,6 +64,7 @@ def probe(case):
     print('before clipping',flush=True);renderer.ResetCamera();renderer.ResetCameraClippingRange();print('after clipping',flush=True)
     print('class',window.GetClassName(),'offscreen',window.GetOffScreenRendering(),'buffers',window.GetUseOffScreenBuffers(),flush=True)
     print('before Render',flush=True);window.Render();print('after Render',flush=True)
+    loaded_opengl()
     capabilities=window.ReportCapabilities()
     print('\n'.join(line for line in capabilities.splitlines() if any(word in line.lower() for word in ('vendor','renderer','version'))),flush=True)
     print('before Finalize',flush=True);window.Finalize();print('finalized',flush=True)
