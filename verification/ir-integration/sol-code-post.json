@@ -1,0 +1,212 @@
+{
+  "status": "completed_independent_postimplementation_source_review",
+  "review_completed": true,
+  "reviewer_role": "independent sol_reviewer",
+  "created_utc": "2026-11-17T13:03:20.159897+00:00",
+  "outcome": "no_unresolved_source_blockers_to_native_windows_offline_verification",
+  "decision": "Proceed to native Windows offline CI for the exact reviewed revision. Source review does not establish frozen Windows execution, desktop Excel results or equipment validation; final artifact review remains separate.",
+  "invocation": {
+    "route": "native collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_integration_post",
+    "fork_turns": "none",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "invocation_evidence": "Parent supplied the actual accepted requested model/effort and route in this independent task invocation. This report and the reviewer final response constitute the completed review result.",
+    "provider_model_identity_independently_attested": false,
+    "cli_authentication_diagnosis": "not attempted; native collaboration review is separate from CLI authentication"
+  },
+  "scope": {
+    "repository": "/workspace/BJT_Tools_integrated",
+    "base_commit": "a1c78e2113bbd7c5014bc5041a19c519bcbd1023",
+    "interim_implementation_commit": "eb4fbc0a2b780223c74894aa1c11697802bdb299",
+    "reviewed_revision": "a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e",
+    "reviewed_diff": "a1c78e2113bbd7c5014bc5041a19c519bcbd1023..a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e",
+    "branch": "feature/ir-image-workbook-1.10.0",
+    "worktree_at_initial_review": "clean at eb4fbc0",
+    "worktree_at_completion": "clean at a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e",
+    "standalone_repository": "/workspace/IR_feedback",
+    "standalone_commit": "2372c29602a9538f78593699c5e34c0485373524",
+    "design_review": "/workspace/ir-integration-2026.11.17/sol-design-review.json",
+    "design_review_preceded_implementation": true,
+    "followup_scope": "Presentation-only suite styling requested during review, historical capsule fixture repair, measured whole-flow native-operation guards and CI capsule regression gate, plus regenerated manifest/source capsule.",
+    "excluded": [
+      "source edits by reviewer",
+      "dependency installation",
+      "native Windows builds or execution",
+      "Excel COM",
+      "real equipment access or writes",
+      "pushes",
+      "uploads",
+      "publication"
+    ]
+  },
+  "instructions_read": [
+    "/workspace/BJT_Tools_integrated/AGENTS.md",
+    "/workspace/BJT_Tools_integrated/CODEX_REVIEW_PROTOCOL.md",
+    "/workspace/IR_feedback/AGENTS.md",
+    "/workspace/IR_feedback/CODEX_REVIEW_PROTOCOL.md",
+    "/workspace/IR_feedback/README.md",
+    "/workspace/IR_feedback/app/README.ko.md",
+    "/workspace/IR_feedback/docs/VALIDATION.ko.md"
+  ],
+  "actual_source_review": [
+    "Read the complete integrated wrapper, suite ToolRoot/mount/poll/state/shutdown paths, exact upstream diffs for the three integration-hook modules and package-import adaptation.",
+    "Traced the owner-worker, PreparedWorkbook byte pin, Excel fence and verified controller retirement, named lease acquisition/release, manual image restore and maximum-IR preference precedence.",
+    "Reviewed namespace/resource loader checks, provenance, manifest, source builder, staging/hidden imports/PyInstaller specification, Windows CI actions, frozen fixtures, release evidence assertions and negative tests.",
+    "Read integration/state test assertions and preserved upstream runner/snapshot semantics; inspected supplied raw failed Linux baseline evidence rather than treating it as a pass.",
+    "Re-reviewed the complete eb4fbc0..a8cc2a7 followup delta and independently verified the regenerated final source capsule and manifest."
+  ],
+  "findings": [
+    {
+      "id": "P1",
+      "priority": "medium",
+      "status": "resolved_in_a8cc2a7",
+      "title": "Historical source-capsule fixture omitted the newly required tools inventory.",
+      "location": "release_tools/test_integrated_packing_capsule.py:16; release_tools/build_source_release.py:69",
+      "origin": "Initially reported by parent; independently reproduced by reviewer from committed eb4fbc0 test bytes.",
+      "impact": "The existing real capsule extraction/cache regression failed in the builder with KeyError: tools, despite production manifests being valid.",
+      "resolution": "The fixture now declares tools=[]; native CI executes the actual pytest capsule, native source-filter and asset-staging tests and rejects skips.",
+      "verification": "Executed the entire repaired capsule test function with temporary files and an environment shim; extraction, payload hash, cache-recovery and standalone-source assertions passed. Native pytest execution remains for CI because pytest is unavailable here."
+    },
+    {
+      "id": "P2",
+      "priority": "medium",
+      "status": "resolved_in_a8cc2a7",
+      "title": "Frozen offline zero-operation fields initially reported constants outside the mount-only subprocess guard.",
+      "location": "suite/배포_빌드/frozen_ir_feedback.py:66; suite/배포_빌드/release_exe.py:72",
+      "impact": "The original fixture did not measure the no-native/no-COM claim throughout Connect and close.",
+      "resolution": "ExitStack guards now span mount, Connect, tab/resize and cleanup; they count and fail native Popen, adapter factory/constructor, Excel-controller and apply_ir_power attempts. The release gate requires both complete zero-counter records, with negative tests for each field.",
+      "verification": "Inspected the actual final guard targets, captured-default constructor coverage and release checker; all seven offline build-evidence tests pass. Whole frozen GUI flow itself remains unexecuted here."
+    }
+  ],
+  "unresolved_findings": [],
+  "architecture_assessment": {
+    "control_and_formula_preservation": "Independently normalized import namespaces in all 24 vendored Python modules: 21 are AST-equivalent to upstream; only excel_async.py, excel_workbook.py and standalone_ir.py contain the reviewed narrow hooks. The original workbook, approved bridge and 12 existing tool sources retain their expected hashes. No control-law, CSV/Save algorithm or workbook-formula rewrite found.",
+    "workbook_and_default_selection": "New instances select the authentic image-recovery workbook through fixed selection hooks; custom Excel/JSON paths and cells remain separate. Expected SHA is checked against the exact immutable bytes before bounded formula inspection. Preparation remains on the Excel owner worker. Missing/corrupt/unavailable built-in selection has no basic-algorithm fallback.",
+    "resource_lifecycle": "Suite initiates IR close before waiting for busy work. The integrated view disables the time-based close escape and requires actual session/discovery/slice worker completion, drained chart events, verified Excel fence retirement and completed CSV plus both PNGs before destroying its host. Failure/cancel retains UI/data and allows a new close attempt with a fresh preference capture.",
+    "lease_and_test_mode": "The exact standalone named mutex is acquired before explicit Connect, retained across disconnect and canceled close, and released on final host destruction. Test mode supplies inert discovery/lease/preference and a fail-fast offline runner; explicit fixture runners remain owned test code.",
+    "persistence": "IR capture and restore bypass generic Tk reflection using a strict input allowlist. Runtime host/PID/session/recommendation/image authority is ignored. Restored image paths stay unanalysed with debounce canceled and active/pending state cleared. Missing central cap preserves the original preference; malformed central cap remains a visible invalid input rather than widening to 100.",
+    "namespace_and_packaging": "Production imports remain isolated under ir_feedback with no flat aliases/sys.path mutation. Manifest-owned resources are staged with the expected relative scripts/DLL/JSON/template/workbook locations and explicit hidden package imports. The raw upstream test harness aliases exist only in its isolated test process.",
+    "presentation": "Final wrapper/theme delta uses the shared palette/fonts and primary/danger buttons, namespaced IR metrics/status, concise mode notice and one suite toolbar title. It changes presentation only; final appearance and native font/layout assertions still require Windows execution."
+  },
+  "reviewer_executed_checks": [
+    {
+      "name": "Integration contracts",
+      "command": "python -m unittest discover -s suite/tests -p test_ir_suite_integration.py -v",
+      "tests": 24,
+      "passed_tests": 16,
+      "skips": 8,
+      "result": "exit 0; seven Tk no-display skips and one native Windows mutex skip; no GUI/native verification"
+    },
+    {
+      "name": "State contracts",
+      "command": "python -m unittest discover -s suite/tests -p test_suite_state.py -v",
+      "tests": 13,
+      "passed_tests": 11,
+      "skips": 2,
+      "result": "exit 0; two real-GUI roundtrip checks skipped"
+    },
+    {
+      "name": "Final IR build/release evidence negatives",
+      "command": "python -m unittest discover -s suite/배포_빌드 -p test_ir_build_glue.py -v",
+      "tests": 7,
+      "passed_tests": 7,
+      "skips": 0,
+      "result": "exit 0; includes every native-attempt counter rejection"
+    },
+    {
+      "name": "Selected unchanged upstream regressions on actual vendored modules",
+      "modules": [
+        "test_excel_async",
+        "test_excel_history_continuity",
+        "test_live_limit_excel",
+        "test_layer_algorithm",
+        "test_output_limit",
+        "test_csv_source",
+        "test_session"
+      ],
+      "tests": 96,
+      "passed_tests": 90,
+      "failures": 0,
+      "errors": 6,
+      "skips": 0,
+      "result": "Not a clean pass: five no-DISPLAY Tk errors plus one Windows-only mutex error; other 90 tests passed. Test snapshots and scratch resource hashes verified by the actual preserved runner helpers."
+    },
+    {
+      "name": "Independent import-normalized source equivalence",
+      "modules": 24,
+      "same_except_import_namespace": 21,
+      "changed_modules": [
+        "excel_async.py",
+        "excel_workbook.py",
+        "standalone_ir.py"
+      ],
+      "result": "only reviewed narrow hooks differ"
+    },
+    {
+      "name": "Genuine workbook inspection through vendored PreparedWorkbook",
+      "passed": true,
+      "background_thread": true,
+      "seconds": 29.215,
+      "bytes": 11523470,
+      "sha256": "eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20",
+      "metadata": {
+        "first_row": 13,
+        "last_row": 3012,
+        "max_column": 123,
+        "sheet": "수동 테스트"
+      },
+      "result": "Exact immutable prepared bytes equal the original source bytes; no COM launched"
+    },
+    {
+      "name": "Committed failing and repaired full capsule fixture",
+      "result": "Confirmed eb4fbc0 KeyError: tools; final tools=[] fixture passes full existing function via environment shim without installing pytest"
+    },
+    {
+      "name": "Final manifest and source capsule",
+      "revision": "a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e",
+      "manifest_checks": 91,
+      "registered_tools": 13,
+      "source_capsule_members": 371,
+      "all_members_match_current_suite": true,
+      "payload_sha256": "80403da2770c97493a31e5611044bb844180fda9db648b4eb22b9a43e990caff",
+      "evidence": "/workspace/ir-integration-2026.11.17/sol-source-capsule-check.json"
+    },
+    {
+      "name": "Whitespace and repository revision",
+      "result": "git diff --check passed; final HEAD exact and working tree clean"
+    }
+  ],
+  "reviewer_execution_notes": [
+    "pytest is absent. An attempted pytest invocation failed with No module named pytest; no dependency was installed. unittest discovery correctly collects zero pytest-style capsule functions, so it was not counted as capsule coverage.",
+    "A first selected-upstream ad hoc harness could not import a dependent test helper; corrected it to use the preserved runner finder inventory. The subsequent 96-test result above retains all six environment errors.",
+    "First genuine parser attempt passed inspection and byte/hash assertions but the reviewer JSON emitter could not serialize immutable mappingproxy metadata. The corrected emitter converted metadata with dict(); the clean captured parser result is reported above."
+  ],
+  "supplied_evidence_reviewed": {
+    "design": "/workspace/ir-integration-2026.11.17/sol-design-review.json",
+    "full_raw_linux_upstream": "/workspace/ir-integration-2026.11.17/upstream-first.json",
+    "linux_failure_analysis": "/workspace/ir-integration-2026.11.17/upstream-first-analysis.json",
+    "full_raw_linux_result": {
+      "tests": 572,
+      "failures": 1,
+      "errors": 31,
+      "skips": 21,
+      "passed": false,
+      "classification": "30 no-display GUI errors, one Windows mutex error, and one Linux transport behavior failure reproduced against original source; not a successful full-suite run"
+    },
+    "parent_final_integration_log": "/workspace/ir-integration-2026.11.17/integration-ui-final.log",
+    "parent_final_build_gate_log": "/workspace/ir-integration-2026.11.17/ir-build-gates-ui-final.log",
+    "parent_final_source_builder": "/workspace/ir-integration-2026.11.17/source-build-ui.json"
+  },
+  "not_executed_and_limits": [
+    "No real Windows Tk integration, two-process Windows mutex execution, packaged executable, native frozen font/layout/lifecycle fixture, or complete native source regression suite was executed by this reviewer.",
+    "No installed Microsoft Excel desktop/COM calculation of the genuine workbook. Structural/formula-parser acceptance and owner-worker mock tests do not establish native Excel results or numerical equivalence in Excel.",
+    "No actual M1/S3 sensor, PLC, Sequence window, lamp output or long-duration experimental control was accessed or validated. CSV cannot independently establish freshness of normal-looking old thermometer values.",
+    "No source changes, dependency installs, GitHub pushes, uploads or release publication were performed by the reviewer."
+  ],
+  "holds": [
+    "Native Windows source/frozen checks and independent Windows artifact review remain required before distribution approval.",
+    "Final control-algorithm approval and real-equipment application remain HOLD; this code review does not lift the explicit user hold.",
+    "Excel COM and actual hardware remain unverified and must not be described as validated by these offline results."
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "status": "completed_independent_ci_only_delta_review",
+  "created_utc": "2026-11-17T13:17:36.702498+00:00",
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "native collaboration continuation of the existing independent reviewer agent",
+    "original_spawn_route": "collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_integration_post",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "configuration_evidence": "Original accepted spawn request supplied by parent; this followup remains on that independent reviewer agent.",
+    "provider_model_identity_independently_attested": false,
+    "cli_authentication_diagnosis": "not attempted"
+  },
+  "scope": {
+    "repository": "/workspace/BJT_Tools_integrated",
+    "base_revision": "a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e",
+    "reviewed_revision": "a6c136ee8cd89c70dc3834034b91470d66460f91",
+    "diff": "a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e..a6c136ee8cd89c70dc3834034b91470d66460f91",
+    "worktree": "clean at start and completion",
+    "changed_files": [
+      ".github/workflows/suite-release.yml",
+      "verification/ir-integration/test-requirements.txt"
+    ],
+    "excluded": [
+      "dependency installation",
+      "push or CI dispatch",
+      "artifact upload/publication",
+      "application source edits",
+      "Excel COM",
+      "real equipment"
+    ]
+  },
+  "outcome": "no_blocking_findings; suitable for retrying native Windows offline CI",
+  "findings": [],
+  "failure_evidence_reviewed": {
+    "failed_native_run": "44089070866",
+    "readback_diagnostic_run": "44090407104",
+    "local_log": "/workspace/ir-integration-2026.11.17/windows-CI/diagnostic-44090407104.log",
+    "owned_artifact_name": "BJT-native-Windows-evidence-44089070866",
+    "downloaded_artifact_digest_logged": "sha256:b2428940e607055c11480379187d62c14757c850ce572c6422bd154a8678db7b",
+    "source_suite": {
+      "tests": 499,
+      "failures": 0,
+      "errors": 0,
+      "skips": 2,
+      "result": "497 passed and two explicitly allowed platform/original-source skips"
+    },
+    "ir_runner": {
+      "tests": 0,
+      "failures": 0,
+      "errors": 1,
+      "skips": 0,
+      "result": "Collection aborted importing test_slice_excel because openpyxl was unavailable; no IR test assertion was executed"
+    },
+    "interpretation": "Dependency setup failure, not evidence of a product assertion regression and not a passing IR or full Windows build run. Reviewer read the preserved diagnostic log; reviewer did not retrieve remote artifacts."
+  },
+  "assessment": {
+    "dependency_fix": "The separate test requirements pin openpyxl 3.1.5 and its et_xmlfile 2.0.0 dependency with the same exact wheel hashes as IR_feedback/.github/workflows/validate-slice.yml. --only-binary=:all: and --require-hashes constrain CI installation. The new step runs before the native verification/build runner.",
+    "test_runtime_separation": "Only workflow and verification files change. The complete suite Git tree and root compressed source capsule are unchanged from the approved a8cc2a7 revision. The IR runtime has no openpyxl or et_xmlfile imports; openpyxl is used by preserved workbook verification tests. Packages install into the CI builder interpreter, so actual frozen dependency contents remain for the subsequent build/artifact review.",
+    "diagnostics": "Failure-only Python step emits an allowlist of report fields capped at 24000 characters per JSON report and the final 16000 characters of each fixed-name log. Missing files are skipped. It precedes the existing always-run evidence upload and does not change test outcomes, native gates, or the opt-in private-draft publication condition."
+  },
+  "pins_verified_against_reference": [
+    {
+      "package": "openpyxl",
+      "version": "3.1.5",
+      "sha256": "5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"
+    },
+    {
+      "package": "et_xmlfile",
+      "version": "2.0.0",
+      "sha256": "7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"
+    }
+  ],
+  "reviewer_executed_checks": [
+    {
+      "name": "Actual diff and tree identity",
+      "result": "Exactly two changed files; suite tree 90e223d06b5115a115e8c9d9a985a37a33792934 and capsule blob b53ca6beb5b87f992d10e88ff885a6e45364240d are identical in base and reviewed revisions"
+    },
+    {
+      "name": "Workflow syntax and ordering",
+      "result": "Parsed actual YAML with yaml.safe_load; checked binary-only/hash-required pip flags, install-before-verification order, failure condition and Python diagnostic syntax"
+    },
+    {
+      "name": "Dependency provenance and import separation",
+      "result": "Parsed both requirements and matched both versions/hashes to the actual standalone validation workflow; scanned every IR runtime Python module with zero openpyxl/et_xmlfile import-text hits"
+    },
+    {
+      "name": "Readable diagnostic behavior",
+      "result": "Executed actual YAML diagnostic Python against two oversized synthetic JSON reports and five oversized logs; non-allowlisted marker omitted, log heads omitted, all five tails retained, output 128158 characters. Missing-report/log fixture also completed without error"
+    },
+    {
+      "name": "Whitespace and repository status",
+      "result": "git diff --check a8cc2a7..a6c136e passed; exact target HEAD and clean working tree verified"
+    }
+  ],
+  "not_executed": [
+    "No wheel download, new dependency install or pip resolver execution by reviewer; pins were compared to the preserved reference workflow rather than newly hashing downloaded wheel bytes.",
+    "No CI retry or complete native Windows/frozen build was run by reviewer. The missing dependency fix still needs successful collection and all subsequent native gates.",
+    "No desktop Excel COM calculation, real sensors/PLCs/lamp outputs or equipment application."
+  ],
+  "holds": [
+    "Previous source review remains applicable because application bytes are unchanged; Windows artifact review and successful full native gates remain outstanding.",
+    "Actual Excel COM and equipment are unverified. Final control-algorithm approval and real-equipment application remain HOLD.",
+    "This review does not authorize publication or lift an explicit user distribution/equipment hold."
+  ]
+}

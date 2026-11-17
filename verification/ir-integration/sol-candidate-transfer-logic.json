@@ -1,0 +1,128 @@
+{
+  "status": "completed_independent_candidate_transfer_logic_review",
+  "review_completed": true,
+  "created_utc": "2026-11-17T13:40:28.404415+00:00",
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "native collaboration continuation of the existing independent reviewer agent",
+    "original_spawn_route": "collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_integration_post",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "configuration_evidence": "Parent supplied the accepted original native spawn configuration; this formal followup remains on that reviewer agent.",
+    "provider_model_identity_independently_attested": false
+  },
+  "scope": {
+    "repository": "/workspace/BJT_Tools_integrated_delivery",
+    "branch": "deliver/ir-suite-1.10.0",
+    "base_commit": "a6c136ee8cd89c70dc3834034b91470d66460f91",
+    "template_source_commit": "a6c136ee8cd89c70dc3834034b91470d66460f91",
+    "template_source_run_id": 44091377811,
+    "target_state": "Uncommitted final-stable candidate logic/workflow files, identified by exact SHA-256",
+    "reviewed_files_sha256": {
+      "release_tools/stage_verified_ir_110.py": "c5338ffb3743eb7a9b871e36e45dce053fbc4f7dcac51e946b086f6a8eba13f5",
+      "release_tools/stage_verified_ir_110.json": "fdfc3b8bf86d6542f00c9b9a3fc95cf41dead936c8c18851cad858eb80ffd425",
+      "release_tools/test_stage_verified_ir_110.py": "c1de0b534468d10ac4e3cbe7a903e8696d54986cd281ad8d5aa8762a70216576",
+      ".github/workflows/publish-verified-suite-192.yml": "3506ab9cbaaaf1949085dc7cc746757c36351389b8853f56d174e9039f5aa725"
+    },
+    "preparation_record": "/workspace/ir-integration-2026.11.17/publication-draft/candidate-preparation.json",
+    "excluded": [
+      "final immutable source/run/artifact/asset/release pin approval",
+      "actual candidate artifact approval",
+      "network mutation",
+      "dependency installation",
+      "push/dispatch/upload",
+      "public publication",
+      "Excel COM",
+      "real equipment"
+    ]
+  },
+  "outcome": "no_unresolved_logic_findings_after_material_fixes; final immutable pin delta review required before transfer",
+  "logic_review_accepted": true,
+  "execution_approved": false,
+  "candidate_artifact_approved": false,
+  "unresolved_findings": [],
+  "findings": [
+    {
+      "id": "T1",
+      "priority": "medium",
+      "status": "resolved_in_final_reviewed_logic",
+      "title": "Bind downloaded archive bytes to their pinned artifact IDs/digests.",
+      "initial_target": {
+        "script_sha256": "0761735a8c10d01bdd7ccaed406f75246faaa6879eb8eed0261c86d02a937864",
+        "workflow_sha256": "eead1054da651a06cb3b3b05f0341e69321ddc0dbb507df74a49208342eeab1a"
+      },
+      "initial_problem": "Workflow selected artifact names/run IDs while the script checked separate metadata IDs/digests. Actual evidence archive bytes were not enforced against the pin.",
+      "resolution": "Workflow now invokes an exact-ID GET through the normal gh Actions API. Both outer archive sizes/SHA-256 values and complete inventories must pass before either archive is extracted. Staging independently rechecks the outer archives and binds the complete extracted file inventory/bytes back to them.",
+      "verification": "Reviewed actual API arguments and extraction ordering. Tests cover wrong size, same-size corruption, extracted-file mutation, exact-ID binary streaming, unsafe ZIP inventories and download failure without extraction/retry. Raw signed-URL errors are not printed."
+    },
+    {
+      "id": "T2",
+      "priority": "high",
+      "status": "resolved_in_final_reviewed_logic",
+      "title": "Address the actual write by the verified release ID.",
+      "initial_problem": "The preflight checked releases/{release_id}, but gh release upload v1.10.0 re-resolved a tag for the mutation.",
+      "resolution": "Each upload is a POST to a generated constant-host https://uploads.github.com/repos/{fixed_repository}/releases/{pinned_positive_release_id}/assets endpoint with an encoded fixed asset name. It does not use an API-provided URL or resolve a tag to choose the write target. Per-file draft/prerelease/notes/tag checks and digest/size readbacks remain.",
+      "verification": "Tests assert the exact scheme, host, repository, release ID, method and encoded name in each actual command. A concurrent tag retarget cannot redirect the write to another release; later writes stop on detected tag/draft drift or server digest mismatch."
+    }
+  ],
+  "assessment": {
+    "fail_closed_template": "Unknown source run attempt, release ID/notes SHA, both artifact identities/digests/sizes and all five asset facts cause load_pins to fail before remote access. The reviewed template still has null pins and cannot execute a transfer.",
+    "source_and_evidence": "Requires exact completed source review/checker bytes, raw 499-case source XML with precisely the two allowed skips, raw eight-case capsule XML without skips, all twenty summary gates, a matching raw 572-case upstream report with zero errors/failures/skips, exact module/resource closure, and both reviewed frozen IR report checks. All 24 module and 40 resource pins independently match actual reviewed product bytes.",
+    "review_chain": "Exactly source plus one cumulative ci_delta is represented. The ci_delta base_revision must equal the source review revision and its reviewed_revision must equal the candidate source. Future source/CI updates must preserve this chain or receive a reviewed chain-structure update.",
+    "local_bytes": "Exactly five fixed regular files are permitted. Each size/SHA and the complete SHA256SUMS text must match immutable pins. The outer evidence/release ZIPs and extracted inventories are revalidated before staging; traversal, absolute/drive paths, links/special files, encryption, case collisions and file/directory conflicts are rejected.",
+    "remote_identity": "Checks public repository ID/name/visibility without modifying visibility, exact completed successful source run/workflow/attempt/job and successful artifact steps, skipped private-upload step, exact nonexpired artifact metadata, existing draft/prerelease ID, pinned notes, exact source target and bounded preexisting annotated-tag chain.",
+    "resume_and_writes": "Only exact existing uploaded asset size/digest records are skipped. Unknown/duplicate/incomplete/mismatched assets fail closed. Missing files are uploaded through the pinned release-ID endpoint without clobber, followed by per-file and final complete server digest readbacks.",
+    "workflow_authority": "Dispatch-only workflow restricted to the exact repository/delivery ref; job token permissions are actions:read and contents:write. It uses normal GitHub APIs and makes no release creation/edit/publication/deletion, tag creation, rebuild or visibility-change call. The old 1.9.2 publisher and all suite/runtime/capsule bytes are unchanged.",
+    "approval_separation": "All success reports retain candidate_artifact_approved=false, independent artifact review required after download, Excel/equipment false and equipment/final-control HOLD. Logic acceptance does not approve final pins, candidate artifact contents or public publication."
+  },
+  "reviewer_executed_checks": [
+    {
+      "name": "Instructions and complete source review",
+      "result": "Read delivery AGENTS.md/CODEX_REVIEW_PROTOCOL.md, full original and revised transfer script/workflow/test suite, pin inventory and unchanged 1.9.2 publisher for comparison"
+    },
+    {
+      "name": "Initial and material-fix test runs",
+      "result": "Initial 19 methods passed; material T1/T2 issues were nevertheless identified by source review. Revised 25 methods passed, then final stable 26 methods passed after stderr-failure coverage was added."
+    },
+    {
+      "name": "Final offline transfer suite",
+      "command": "python -m unittest discover -s release_tools -p test_stage_verified_ir_110.py -v",
+      "methods": 26,
+      "passed": 26,
+      "seconds": 3.555,
+      "remote_operations": "all download/upload/read operations mocked"
+    },
+    {
+      "name": "Exact review target and proof hashes",
+      "result": "All four final candidate-preparation SHA-256 values match actual files; source review/checker hashes match; 24 module and 40 resource hashes match reviewed product bytes"
+    },
+    {
+      "name": "Workflow and API command inspection",
+      "result": "YAML parses and no name-based download-artifact step remains. Explicit exact-ID binary GET and pinned release-ID POST inspected; job/ref/permission gates retained. Public GitHub CLI source read confirms normal GitHub subdomain token normalization; no real token or upload was exercised."
+    },
+    {
+      "name": "Whitespace and source preservation",
+      "result": "git diff --check passed; suite, root capsule and old publisher have no tracked changes"
+    }
+  ],
+  "untested_and_limits": [
+    "No artifact network download, remote mutation, dependency install, source edit, push, dispatch, release upload, publication or hardware operation performed by reviewer.",
+    "No actual candidate archive/executable has been independently reviewed. The current source/run constants are template targets; this review does not establish their CI run as successful or authorize them for transfer.",
+    "Actual GitHub transfer/authentication/digest readback remains unexecuted here; offline mocks exercise logic only.",
+    "Remote draft/tag reads are pre/post conditions, not an atomic lock against another operator publishing concurrently. Publication work must remain sequenced after transfer, candidate download and independent artifact review."
+  ],
+  "required_next_reviews": [
+    "After the final successful CI, review the exact source/run constants, run attempt, artifact IDs/digests/byte counts, all five asset facts, existing release ID/notes SHA and completed source-review chain.",
+    "Pin and independently review the exact committed delivery script/workflow/config delta before executing a transfer.",
+    "Download the staged candidate through normal release API/CDN routes and complete independent artifact review before any public publication."
+  ],
+  "holds": [
+    "current null pins remain inactive",
+    "candidate artifact approval remains false",
+    "final artifact/publication approval not granted",
+    "Excel COM unverified",
+    "real equipment application HOLD",
+    "final control-algorithm approval HOLD"
+  ]
+}

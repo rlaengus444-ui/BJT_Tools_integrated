@@ -1,4 +1,4 @@
-name: Upload exact verified 1.9.2 assets to existing draft
+name: Stage exact 1.10.0 CI candidate in existing invisible draft
 
 'on':
   workflow_dispatch:
@@ -7,11 +7,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: publish-verified-suite-1.9.2
+  group: stage-candidate-suite-1.10.0
   cancel-in-progress: false
 
 jobs:
-  upload-verified:
+  stage-candidate:
+    if: github.repository == 'rlaengus444-ui/BJT_Tools_integrated' && github.ref == 'refs/heads/deliver/ir-suite-1.10.0'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -24,33 +25,27 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Download pinned verified native assets
-        uses: actions/download-artifact@v4
-        with:
-          name: BJT-native-Windows-release-43852970248
-          run-id: 43852970248
-          repository: ${{ github.repository }}
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/verified-192/assets
-      - name: Download matching verification evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: BJT-native-Windows-evidence-43852970248
-          run-id: 43852970248
-          repository: ${{ github.repository }}
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/verified-192/evidence
-      - name: Verify exact artifacts and upload without replacing files
+      - name: Fail closed unless every immutable candidate pin is complete
+        run: python -c "from release_tools.stage_verified_ir_110 import load_pins; load_pins()"
+      - name: Download exact artifact IDs and require outer ZIP bytes and SHA256 before extraction
         env:
           GH_TOKEN: ${{ github.token }}
-          BJT_VERIFIED_ROOT: ${{ runner.temp }}/verified-192
+          BJT_CANDIDATE_ROOT: ${{ runner.temp }}/candidate-110
         run: |
-          python release_tools/publish_verified_192.py --evidence "$BJT_VERIFIED_ROOT/evidence" --assets "$BJT_VERIFIED_ROOT/assets" --report "$BJT_VERIFIED_ROOT/publication-report.json" --upload
+          python release_tools/stage_verified_ir_110.py --archives "$BJT_CANDIDATE_ROOT/archives" --evidence "$BJT_CANDIDATE_ROOT/evidence" --assets "$BJT_CANDIDATE_ROOT/assets" --report "$BJT_CANDIDATE_ROOT/candidate-download-report.json" --download
+      - name: Verify exact source evidence and transfer candidate to existing draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BJT_CANDIDATE_ROOT: ${{ runner.temp }}/candidate-110
+        run: |
+          python release_tools/stage_verified_ir_110.py --archives "$BJT_CANDIDATE_ROOT/archives" --evidence "$BJT_CANDIDATE_ROOT/evidence" --assets "$BJT_CANDIDATE_ROOT/assets" --report "$BJT_CANDIDATE_ROOT/candidate-staging-report.json" --stage
       - name: Preserve server digest readback
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: BJT-1.9.2-publication-${{ github.run_id }}
-          path: ${{ runner.temp }}/verified-192/publication-report.json
+          name: BJT-1.10.0-candidate-staging-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/candidate-110/candidate-download-report.json
+            ${{ runner.temp }}/candidate-110/candidate-staging-report.json
           if-no-files-found: warn
           retention-days: 7

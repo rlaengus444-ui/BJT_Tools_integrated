@@ -1,0 +1,355 @@
+{
+  "status": "candidate_transfer_immutable_pins_filled_pending_final_independent_review",
+  "repository": "rlaengus444-ui/BJT_Tools_integrated",
+  "repository_id": 1433912494,
+  "version": "1.10.0",
+  "commit": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+  "branch": "feature/ir-image-workbook-1.10.0",
+  "run_id": 44096041775,
+  "run_attempt": 1,
+  "workflow_id": 397074012,
+  "workflow_path": ".github/workflows/suite-release.yml",
+  "release_id": 448714553,
+  "release_notes_sha256": "78d67ed40521ea627d590bcf5bc95fe6ceec426584b6750be18b8933695cec1a",
+  "artifacts": {
+    "evidence": {
+      "id": 14335745446,
+      "name": "BJT-native-Windows-evidence-44096041775",
+      "digest": "sha256:dc4169d8597fef5748b5d3b61b9acad1a0d901cc73798b51bf795aad3b80adc1",
+      "bytes": 73994
+    },
+    "release": {
+      "id": 14335391187,
+      "name": "BJT-native-Windows-release-44096041775",
+      "digest": "sha256:9440c31db55457fc0a6c42c325bdd132a51e2f6bfd479afdfb11f09b361cc28b",
+      "bytes": 460941963
+    }
+  },
+  "assets": {
+    "BJT_1.10.0_manual.zip": {
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_source.zip": {
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "BJT_1.10.0_Windows_x64.zip": {
+      "bytes": 418199737,
+      "sha256": "7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "bbb7ea599fd00dcd5a2236fac9ca32de749b00dc5e34024ea6962b05c9883f7d"
+    }
+  },
+  "source_reviews": {
+    "source": {
+      "path": "verification/ir-integration/sol-code-post.json",
+      "sha256": "e153b764302b72c57c2216eddee8b25dd392c249f667d2f67ea9fac31e6d6e28",
+      "status": "completed_independent_postimplementation_source_review",
+      "reviewed_revision": "a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e"
+    },
+    "ci_delta": {
+      "path": "verification/ir-integration/sol-frozen-fixture-delta.json",
+      "sha256": "fb92ffa5df975567b5fccb0a2e62d39a4af9bfb649d1673c67325ee9b317dfa2",
+      "status": "completed_independent_ci_only_delta_review",
+      "reviewed_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7"
+    }
+  },
+  "imported_product_modules": [
+    {
+      "module": "ir_feedback.adapter_contracts",
+      "path": "ir_feedback/adapter_contracts.py",
+      "sha256": "29d5605cce7d75e81fbba304794f0a313bb96772caba82bd636fb5205a2df2fe"
+    },
+    {
+      "module": "ir_feedback.csv_source",
+      "path": "ir_feedback/csv_source.py",
+      "sha256": "477ee425a4d219820bd351c7f6cdada7d5c013621f795de65b784f53bfc4c289"
+    },
+    {
+      "module": "ir_feedback.excel_async",
+      "path": "ir_feedback/excel_async.py",
+      "sha256": "e5adc668252bf477950e6230ecdf34eb4fab54d3b7b25a1cead91e839023a53e"
+    },
+    {
+      "module": "ir_feedback.excel_calculation",
+      "path": "ir_feedback/excel_calculation.py",
+      "sha256": "b2edac4f820cb09e162e90ab9959e9d3c10b69cd3e29c82a4b5aba561ad9af0e"
+    },
+    {
+      "module": "ir_feedback.excel_test_helpers",
+      "path": "ir_feedback/excel_test_helpers.py",
+      "sha256": "51f57bf46e7ff07d29e1e794bf39f3131cfa830bc29b96a72aa167661a4bb7a9"
+    },
+    {
+      "module": "ir_feedback.excel_workbook",
+      "path": "ir_feedback/excel_workbook.py",
+      "sha256": "d1ca2f123b75cac8852f55a62897a063a3b5cedc1de04cf7b66dcd48806e20a1"
+    },
+    {
+      "module": "ir_feedback.layer_algorithm",
+      "path": "ir_feedback/layer_algorithm.py",
+      "sha256": "14f3ebcba7716269fe02b100c6d1248d0e0070ea434bd7d966b74c5a1ec5d005"
+    },
+    {
+      "module": "ir_feedback.layer_charts",
+      "path": "ir_feedback/layer_charts.py",
+      "sha256": "479980069281bff52ff33c8657234c03237f20523de2cee65d650f5cff98d942"
+    },
+    {
+      "module": "ir_feedback.observed_session",
+      "path": "ir_feedback/observed_session.py",
+      "sha256": "9243fb3419972c820febcf246ea94ffe60318555812b5408d96e05c498ef3f10"
+    },
+    {
+      "module": "ir_feedback.output_limit",
+      "path": "ir_feedback/output_limit.py",
+      "sha256": "b6aaaa870393fc228b953402810aa08712a1a279d6c056918531057df4552697"
+    },
+    {
+      "module": "ir_feedback.plot_archive",
+      "path": "ir_feedback/plot_archive.py",
+      "sha256": "e648f9ef7aed026a0c9990da9a602ab835eb1e42afb16ea7ed9a9f48ef00f20a"
+    },
+    {
+      "module": "ir_feedback.plot_images",
+      "path": "ir_feedback/plot_images.py",
+      "sha256": "b50c114f565a917c81cf20bbad5f13cb3c259d8d38b43d29474b5464b48a4e9c"
+    },
+    {
+      "module": "ir_feedback.replay_workbook",
+      "path": "ir_feedback/replay_workbook.py",
+      "sha256": "b43914db46f530b782374883c60f6bced4182f6b8874111c24da13f35df89d73"
+    },
+    {
+      "module": "ir_feedback.resilient_adapter",
+      "path": "ir_feedback/resilient_adapter.py",
+      "sha256": "602ebdbb8c8f77c27da8b8ef6290aa6794d749bde96af4fb69e1be1860b91ac3"
+    },
+    {
+      "module": "ir_feedback.sequence_field_audit",
+      "path": "ir_feedback/sequence_field_audit.py",
+      "sha256": "7baf56ded63c10d0ed07ef266aac9597835ecc92a13ca78f54de7ffc90372d42"
+    },
+    {
+      "module": "ir_feedback.sequence_persistence",
+      "path": "ir_feedback/sequence_persistence.py",
+      "sha256": "0fed8134015b4652d40136fce7f23af4c7a098e8715a3924258802b980d013c0"
+    },
+    {
+      "module": "ir_feedback.session",
+      "path": "ir_feedback/session.py",
+      "sha256": "c5c74ac1fc4a487220de1b31a6b86b21fc68be90739cd714a168233b7630d2c3"
+    },
+    {
+      "module": "ir_feedback.single_instance",
+      "path": "ir_feedback/single_instance.py",
+      "sha256": "28e6a4ef8d95d026b22d3d7e082b8d330b1a69a37f0f88b97605e9b857c3828f"
+    },
+    {
+      "module": "ir_feedback.slice_data",
+      "path": "ir_feedback/slice_data.py",
+      "sha256": "c9e16e8f95be8bdee1742910bf2d9fd3dd4f90d9460e3a4765714d60cff8f652"
+    },
+    {
+      "module": "ir_feedback.slice_panel",
+      "path": "ir_feedback/slice_panel.py",
+      "sha256": "610b30f4a9017a6a5f7cc45b8c8bcaf651cd582782d44ab18c302096fe8cdde3"
+    },
+    {
+      "module": "ir_feedback.slice_workbook",
+      "path": "ir_feedback/slice_workbook.py",
+      "sha256": "7f0cfe0dbaec85a0418fa57327aad919b2f02da4046d06426806d4ece7dac66a"
+    },
+    {
+      "module": "ir_feedback.standalone_ir",
+      "path": "ir_feedback/standalone_ir.py",
+      "sha256": "991a6b9e5d34fbc4cb531054e85ea3565cbd67fb6934e50d262f76bd692fb1d6"
+    },
+    {
+      "module": "ir_feedback.target_temperature",
+      "path": "ir_feedback/target_temperature.py",
+      "sha256": "dc022fb1ff0a996609ae7937954a1c3b3e27ff1949e2557b720601979d46a8df"
+    },
+    {
+      "module": "ir_feedback.windows_ui_adapter",
+      "path": "ir_feedback/windows_ui_adapter.py",
+      "sha256": "f88af55db9c74948e7c5e6f8541ca312cd720af1777240402f725ab77cbe9b3d"
+    }
+  ],
+  "inspected_resources": [
+    {
+      "path": "UiaBridge.cs",
+      "sha256": "314b4e646d81160eae9be839eda7201a76fb99d6ab939363589f940e796d5013"
+    },
+    {
+      "path": "UiaBridge.dll",
+      "sha256": "939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215"
+    },
+    {
+      "path": "UiaBridge.fields.part.cs",
+      "sha256": "e595c2dc7528d0712eb57d912cb56bcffc5a6711eec267788bbc23c75f6e147f"
+    },
+    {
+      "path": "UiaBridge.metadata.part.cs",
+      "sha256": "3fc5bd3a4c42f3c36fbd0a707de5a7aa29a2399a976cd1a903dfbd1373208f97"
+    },
+    {
+      "path": "UiaBridge.navigation.part.cs",
+      "sha256": "8224937800f3aa7dd8a53fbeaa56e2afa1e3c41f8d4620d017ea36668cdf7a0b"
+    },
+    {
+      "path": "UiaBridge.process.part.cs",
+      "sha256": "d57ba84055445b3e02c9c3fd79f6a0aa54089284a0d071f952f6660e71ca080b"
+    },
+    {
+      "path": "__init__.py",
+      "sha256": "0efef799f86deab91b54a41b10dc2f08131b63b058da9fc927b83364a220c0ee"
+    },
+    {
+      "path": "adapter_contracts.py",
+      "sha256": "29d5605cce7d75e81fbba304794f0a313bb96772caba82bd636fb5205a2df2fe"
+    },
+    {
+      "path": "build_uia_bridge.ps1",
+      "sha256": "38822a0856b26f32a905ccfebc0bfe3b2e512541f2856febda5a38b0a3e4e07b"
+    },
+    {
+      "path": "csv_source.py",
+      "sha256": "477ee425a4d219820bd351c7f6cdada7d5c013621f795de65b784f53bfc4c289"
+    },
+    {
+      "path": "excel_async.py",
+      "sha256": "e5adc668252bf477950e6230ecdf34eb4fab54d3b7b25a1cead91e839023a53e"
+    },
+    {
+      "path": "excel_calculation.py",
+      "sha256": "b2edac4f820cb09e162e90ab9959e9d3c10b69cd3e29c82a4b5aba561ad9af0e"
+    },
+    {
+      "path": "excel_test_helpers.py",
+      "sha256": "51f57bf46e7ff07d29e1e794bf39f3131cfa830bc29b96a72aa167661a4bb7a9"
+    },
+    {
+      "path": "excel_workbook.py",
+      "sha256": "d1ca2f123b75cac8852f55a62897a063a3b5cedc1de04cf7b66dcd48806e20a1"
+    },
+    {
+      "path": "excel_worker.ps1",
+      "sha256": "0723acfefd61f979503096f703c5405fb11a1fb1bf318742ec00061b9c4e0279"
+    },
+    {
+      "path": "input_example_validation.json",
+      "sha256": "48a8318183f2e92c33b720bb2157d0c5fde6df099065d0598dc991bc343059e1"
+    },
+    {
+      "path": "layer_algorithm.py",
+      "sha256": "14f3ebcba7716269fe02b100c6d1248d0e0070ea434bd7d966b74c5a1ec5d005"
+    },
+    {
+      "path": "layer_charts.py",
+      "sha256": "479980069281bff52ff33c8657234c03237f20523de2cee65d650f5cff98d942"
+    },
+    {
+      "path": "native_helper.ps1",
+      "sha256": "ba8d45748872182b61627285338efb44fc2400557ead387ad668ad864cd0c0c4"
+    },
+    {
+      "path": "observed_session.py",
+      "sha256": "9243fb3419972c820febcf246ea94ffe60318555812b5408d96e05c498ef3f10"
+    },
+    {
+      "path": "output_limit.py",
+      "sha256": "b6aaaa870393fc228b953402810aa08712a1a279d6c056918531057df4552697"
+    },
+    {
+      "path": "plot_archive.py",
+      "sha256": "e648f9ef7aed026a0c9990da9a602ab835eb1e42afb16ea7ed9a9f48ef00f20a"
+    },
+    {
+      "path": "plot_images.py",
+      "sha256": "b50c114f565a917c81cf20bbad5f13cb3c259d8d38b43d29474b5464b48a4e9c"
+    },
+    {
+      "path": "provenance.json",
+      "sha256": "4f15a97421379c4d25e07109620dc35198bd3ba62d25333451b75776431652e3"
+    },
+    {
+      "path": "random80_validation.json",
+      "sha256": "4597b3491d14ad813db64ad390e8fb110d523cb92e6d6f680f53987560dba66f"
+    },
+    {
+      "path": "replay_workbook.py",
+      "sha256": "b43914db46f530b782374883c60f6bced4182f6b8874111c24da13f35df89d73"
+    },
+    {
+      "path": "resilient_adapter.py",
+      "sha256": "602ebdbb8c8f77c27da8b8ef6290aa6794d749bde96af4fb69e1be1860b91ac3"
+    },
+    {
+      "path": "sequence_field_audit.py",
+      "sha256": "7baf56ded63c10d0ed07ef266aac9597835ecc92a13ca78f54de7ffc90372d42"
+    },
+    {
+      "path": "sequence_persistence.py",
+      "sha256": "0fed8134015b4652d40136fce7f23af4c7a098e8715a3924258802b980d013c0"
+    },
+    {
+      "path": "session.py",
+      "sha256": "c5c74ac1fc4a487220de1b31a6b86b21fc68be90739cd714a168233b7630d2c3"
+    },
+    {
+      "path": "single_instance.py",
+      "sha256": "28e6a4ef8d95d026b22d3d7e082b8d330b1a69a37f0f88b97605e9b857c3828f"
+    },
+    {
+      "path": "slice_data.py",
+      "sha256": "c9e16e8f95be8bdee1742910bf2d9fd3dd4f90d9460e3a4765714d60cff8f652"
+    },
+    {
+      "path": "slice_panel.py",
+      "sha256": "610b30f4a9017a6a5f7cc45b8c8bcaf651cd582782d44ab18c302096fe8cdde3"
+    },
+    {
+      "path": "slice_workbook.py",
+      "sha256": "7f0cfe0dbaec85a0418fa57327aad919b2f02da4046d06426806d4ece7dac66a"
+    },
+    {
+      "path": "standalone_ir.py",
+      "sha256": "991a6b9e5d34fbc4cb531054e85ea3565cbd67fb6934e50d262f76bd692fb1d6"
+    },
+    {
+      "path": "target_temperature.py",
+      "sha256": "dc022fb1ff0a996609ae7937954a1c3b3e27ff1949e2557b720601979d46a8df"
+    },
+    {
+      "path": "templates/IR_슬라이싱_수동계산.xlsx",
+      "sha256": "7d870e35c7c288573bf5ab279ede6eaab8fe37633cd0afbcc2c389bcdd79c8b3"
+    },
+    {
+      "path": "windows_ui_adapter.py",
+      "sha256": "f88af55db9c74948e7c5e6f8541ca312cd720af1777240402f725ab77cbe9b3d"
+    },
+    {
+      "path": "workbook-replay.settings.json",
+      "sha256": "3453c5f1911f484ced847505ce30c5f94367eb168f8f5402f5ec96ac31d3a8e6"
+    },
+    {
+      "path": "workbooks/01_IR_이미지기반_회복제어_2026.10.28.xlsx",
+      "sha256": "eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20"
+    }
+  ],
+  "checker_files": {
+    "suite/배포_빌드/release_exe.py": "be5a180d92932e332031fd22250da89c58bdf377a9116a30636cb31634e097e9",
+    "suite/배포_빌드/release_native.py": "daecda8667ece70570b8c7e09629d216368a4d3fafc4eaf4d0b30d8bef768b90"
+  },
+  "candidate_artifact_approved": false,
+  "equipment_application": "HOLD",
+  "final_control_algorithm_approval": "HOLD"
+}

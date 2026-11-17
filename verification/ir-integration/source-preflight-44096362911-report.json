@@ -1,0 +1,122 @@
+{
+  "passed": true,
+  "frozen": false,
+  "checks": {
+    "strict_manifest_resources": {
+      "passed": true,
+      "checks": 91
+    },
+    "test_mode_initialization_has_no_native_process": {
+      "passed": true,
+      "native_process_attempts": 0,
+      "auto_discovery_started": false
+    },
+    "authentic_builtin_workbook_and_worker_assets": {
+      "passed": true,
+      "workbook_sha256": "eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20",
+      "workbook_bytes": 11523470,
+      "bridge_sha256": "939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215",
+      "mapping": {
+        "sheet": "수동 테스트",
+        "temperature_cell": "B13",
+        "actual_power_cell": "C13",
+        "recommendation_cell": "D13",
+        "target_cell": "B5",
+        "layer_cell": "A13",
+        "slice_start_cell": "BL13"
+      },
+      "json_files": [
+        "input_example_validation.json",
+        "provenance.json",
+        "random80_validation.json",
+        "workbook-replay.settings.json"
+      ]
+    },
+    "production_parser_accepts_pinned_original": {
+      "passed": true,
+      "metadata": {
+        "first_row": 13,
+        "last_row": 3012,
+        "max_column": 123,
+        "sheet": "수동 테스트",
+        "sha256": "eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20"
+      },
+      "background_thread": true,
+      "excel_calculated": false
+    },
+    "manual_images_and_previous_layer_features": {
+      "passed": true,
+      "layers": 3,
+      "white_binder": true,
+      "dpi": [
+        400,
+        400
+      ]
+    },
+    "offline_connect_tab_resize_preserves_session": {
+      "passed": true,
+      "observed_layers": 3,
+      "save_calls": 0,
+      "real_adapters_created": 0
+    },
+    "suite_button_fonts_and_single_title": {
+      "passed": true,
+      "connect_style": "Suite.Primary.TButton",
+      "disconnect_style": "Suite.Danger.TButton",
+      "metric_font": {
+        "family": "Malgun Gothic",
+        "size": 22,
+        "weight": "bold",
+        "slant": "roman",
+        "underline": 0,
+        "overstrike": 0
+      },
+      "status_font": {
+        "family": "Malgun Gothic",
+        "size": 10,
+        "weight": "bold",
+        "slant": "roman",
+        "underline": 0,
+        "overstrike": 0
+      },
+      "duplicate_title_hidden": true
+    },
+    "asynchronous_close_preserves_csv_and_two_plots": {
+      "passed": true,
+      "rows": 3,
+      "files": [
+        "M1_2026-11-17_13-48-53.csv",
+        "M1_2026-11-17_13-48-53_IR.png",
+        "M1_2026-11-17_13-48-53_온도.png"
+      ],
+      "writer_pending_keeps_suite_alive": true,
+      "worker_retired": true
+    },
+    "whole_flow_has_no_native_or_com_attempts": {
+      "passed": true,
+      "measured_attempts": {
+        "native_processes": 0,
+        "adapter_factories": 0,
+        "adapter_constructors": 0,
+        "excel_controllers": 0,
+        "save_calls": 0
+      },
+      "scope": "mount, Connect, tab/resize and asynchronous close"
+    },
+    "callback_errors": {
+      "passed": true
+    }
+  },
+  "callback_errors": [],
+  "scope": "Owned synthetic suite/IR session, real bundled resources/Pillow/CSV/PNG; no equipment or Excel COM",
+  "excel_com_verified": false,
+  "equipment_verified": false,
+  "native_operation_attempts": {
+    "native_processes": 0,
+    "adapter_factories": 0,
+    "adapter_constructors": 0,
+    "excel_controllers": 0,
+    "save_calls": 0
+  },
+  "seconds": 26.406
+}

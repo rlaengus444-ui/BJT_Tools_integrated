@@ -1,0 +1,216 @@
+{
+  "status": "completed_independent_ci_only_delta_review",
+  "created_utc": "2026-11-17T13:45:23.412850+00:00",
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_frozen_delta",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "configuration_evidence": "Parent supplied the accepted native collaboration invocation with this requested configuration. This report records actual independent file inspection and checks performed by the spawned reviewer.",
+    "provider_model_identity_independently_attested": false,
+    "cli_authentication_diagnosis": "not attempted"
+  },
+  "scope": {
+    "repository": "/workspace/BJT_Tools_integrated",
+    "base_revision": "a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e",
+    "reviewed_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "diff": "a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e..0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "immediate_fixture_fix_base_revision": "a6c136ee8cd89c70dc3834034b91470d66460f91",
+    "source_review_record": "/workspace/ir-integration-2026.11.17/sol-code-post.json",
+    "previous_test_dependency_review_record": "/workspace/ir-integration-2026.11.17/sol-ci-deps-delta.json",
+    "worktree": "clean at start and completion; exact target HEAD independently checked",
+    "changed_files": [
+      ".github/workflows/suite-release.yml",
+      "BJT_통합프로그램.py",
+      "suite/배포_빌드/frozen_ir_feedback.py",
+      "suite/배포_빌드/test_ir_build_glue.py",
+      "verification/ir-integration/test-requirements.txt"
+    ],
+    "last_commit_changed_files": 4,
+    "cumulative_changed_files": 5,
+    "description": "Cumulative CI-only delta from the completed application/UI source review: pinned offline test dependencies, readable failure diagnostics, frozen-fixture configuration type correction, its real-PNG regression test, and regenerated compressed source capsule.",
+    "excluded": [
+      "publisher/release automation review assigned to another reviewer",
+      "dependency installation",
+      "push or CI dispatch",
+      "artifact upload/publication",
+      "product algorithm/runtime edits",
+      "Excel COM",
+      "real equipment"
+    ]
+  },
+  "outcome": "no_blocking_findings; suitable for retrying native Windows offline CI",
+  "proceed_native_ci": true,
+  "findings": [],
+  "failure_evidence_reviewed": {
+    "failed_native_run": "44091377811",
+    "readback_diagnostic_run": "44093777026",
+    "local_diagnostic_log": "/workspace/ir-integration-2026.11.17/windows-CI/diagnostic-44093777026.log",
+    "owned_artifact_name": "BJT-native-Windows-evidence-44091377811",
+    "downloaded_artifact_expected_digest_logged": "sha256:5c2c88125292b937cc3e349a5057d09a64f1a682ea85d91009b2b901a9c8030d",
+    "reviewed_native_commit": "a6c136ee8cd89c70dc3834034b91470d66460f91",
+    "source_suite": {
+      "tests": 499,
+      "passed_tests": 497,
+      "failures": 0,
+      "errors": 0,
+      "skips": 2,
+      "passed_subtests": 335,
+      "note": "Both skips are the platform-dependent open-file replacement test and the intentionally absent original-source fixture. These are evidence from the earlier a6 native run, not tests newly run by this reviewer."
+    },
+    "upstream_suite": {
+      "tests": 572,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "passed": true
+    },
+    "capsule_tests": {
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "earlier_native_checks_passed": [
+      "software OpenGL source/packaged setup",
+      "native Rust build/preflight",
+      "EXE build followed by diagnose-exe",
+      "smoke-exe",
+      "smoke-gui-exe",
+      "fixtures-exe",
+      "fixtures-gui-exe",
+      "features-exe",
+      "oven-playback-exe",
+      "rust-probe-exe"
+    ],
+    "new_ir_fixture": {
+      "passed": false,
+      "completed_passing_checks": [
+        "strict_manifest_resources",
+        "test_mode_initialization_has_no_native_process",
+        "authentic_builtin_workbook_and_worker_assets",
+        "production_parser_accepts_pinned_original"
+      ],
+      "strict_resource_checks": 91,
+      "workbook_bytes": 11523470,
+      "workbook_sha256": "eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20",
+      "bridge_sha256": "939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215",
+      "parser_metadata": {
+        "first_row": 13,
+        "last_row": 3012,
+        "max_column": 123,
+        "sheet": "수동 테스트"
+      },
+      "callback_errors": [],
+      "failing_assertion": "frozen_ir_feedback.py:158 assert ir.slice_panel.dataset.fingerprint == dataset.fingerprint",
+      "subsequent_gui_segments_and_cli_fixture": "not reached in that native run"
+    },
+    "interpretation": "The preserved JSON has an exact fingerprint assertion failure after the genuine workbook/resource/parser checks passed. This is not a passing complete native artifact run. Reviewer parsed the preserved local diagnostic JSON/counts and did not retrieve remote artifacts."
+  },
+  "assessment": {
+    "causal_claim": "Independently reproduced on the actual three PNG files using unchanged product SlicePanel.read_config and analyze. Original SliceConfig(radius_mm=1) and UI SliceConfig(radius_mm=1.0) compare equal numerically and produce identical records, but analyze hashes json.dumps(vars(config)); JSON 1 and 1.0 differ. Fixed helper uses 1.0 and now matches the UI fingerprint. Product fingerprint semantics and algorithms remain untouched.",
+    "regression_quality": "The new committed test reads fake StringVar .get values through actual SlicePanel.read_config, creates real 64x64 Pillow PNGs with values 0/255/0, invokes actual analyze twice, checks complete record equality and fingerprints. It is independent of the helper implementation on the UI-parsed side. Injecting the old integer helper makes the committed test fail specifically at the fingerprint assertion, without errors.",
+    "runtime_preservation": "Cumulative actual Git diff has exactly five files. All suite product source, UI, control algorithms, workbook/DLL/resources, source_manifest and historical versions remain unchanged from a8. Within the capsule only 배포_빌드/frozen_ir_feedback.py and 배포_빌드/test_ir_build_glue.py differ; launcher AST outside PAYLOAD/PAYLOAD_SHA256 is unchanged.",
+    "dependency_delta_rechecked": "Read the actual a8..a6 diff and previous completed dependency review. Both exact requirement versions and SHA256 pins match the preserved standalone IR validate-slice.yml wheel declarations; binary-only/hash-required installation precedes native verification. No openpyxl/et_xmlfile import-text hits exist in IR runtime Python modules. No installation or wheel download was performed by reviewer.",
+    "diagnostics": "The cumulative workflow change only adds pinned test dependency setup and failure-only bounded readback. Actual YAML diagnostic code emits allowlisted fields, now including checks/callback_errors from both GUI and CLI frozen IR reports; it leaves existing evidence files unchanged and precedes always-run evidence retention. No release/native success criterion or publish condition is weakened.",
+    "remaining_fixture_segments": "Inspected all remaining fixture code after the repaired assertion. The preserved component tests exercise SessionController generations/close behavior, actual chart histories, archive retention/retries, real PNG and CSV output, slice geometry/features and fake-canvas drawing. They do not replace native Tk tab/resize/font/session/close checks or either frozen executable."
+  },
+  "reviewer_executed_checks": [
+    {
+      "name": "Actual cumulative/immediate diff, instructions and clean target",
+      "result": "Read AGENTS.md, CODEX_REVIEW_PROTOCOL.md and both prior completed source/dependency records; inspected a8..a6 and a6..0a diffs; exactly five cumulative/four immediate files; git diff --check a8..0a passed."
+    },
+    {
+      "name": "Committed focused fixture/build-evidence suite",
+      "command": "python -m unittest discover -s suite/배포_빌드 -p test_ir_build_glue.py -v",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "result": "passed",
+      "log": "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-focused.log"
+    },
+    {
+      "name": "Independent causal reproduction and old-helper mutation",
+      "tests": 1,
+      "expected_assertion_failures": 1,
+      "unexpected_errors": 0,
+      "result": "Expected failure demonstrates that the new committed test detects the original defect. Actual UI/fixed fingerprint e9f79ee77cf4bf187321497e42a4b4751dccdbbaadc0643c1472382d2893c11a; old int fingerprint cef8d66af8d5bc35b872bbb02adac4d2286bb69f15c51d29080ba5e8e084242d; records equal, coverage [0,100,0], previous-layer feature 100.",
+      "log": "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-cause.log"
+    },
+    {
+      "name": "Preserved component regressions against actual namespaced vendored modules",
+      "tests": 50,
+      "passed_tests": 44,
+      "failures": 0,
+      "errors": 6,
+      "skips": 0,
+      "result": "Not a clean pass: all six test_layer_charts.TkHoverTests fail at tk.Tk initialization because DISPLAY is absent. The other 44 real slice, fake-canvas/history, controller and PNG/CSV archive tests pass. Snapshots were byte-verified before/after and actual package resources copied with digest checks. No frozen or full-GUI pass is claimed.",
+      "log": "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-components.log"
+    },
+    {
+      "name": "Workflow parsing, dependency pin provenance, ordering and actual failure-reader execution",
+      "result": "Parsed actual YAML with yaml.safe_load. Verified both upstream exact wheel pins and IR runtime import separation. Executed actual Python diagnostics against four synthetic reports and five oversized logs: new GUI+CLI checks/callback/traceback markers present, 24000-character JSON caps and 16000-character log tails enforced, non-allowlisted marker omitted, all report hashes unchanged, empty directory handled; 128536 output characters.",
+      "log": "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-workflow.log"
+    },
+    {
+      "name": "Independent capsule, source/manual archive and strict manifest proof",
+      "result": "passed",
+      "proof": {
+        "base_revision": "a8cc2a773bdcc4c0fa4cd77d766ba48d7a6e0f1e",
+        "reviewed_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+        "capsule_members": 371,
+        "payload_sha256": "d3886f8cd0cee873cabcb6d3ca6f2512452cfdffbf7f1a617a0655b511fd4fc6",
+        "old_payload_sha256": "80403da2770c97493a31e5611044bb844180fda9db648b4eb22b9a43e990caff",
+        "launcher_ast_outside_payload_unchanged": true,
+        "member_inventory_unchanged": true,
+        "only_changed_payload_members": [
+          "배포_빌드/frozen_ir_feedback.py",
+          "배포_빌드/test_ir_build_glue.py"
+        ],
+        "all_current_app_bytes_match": true,
+        "strict_resources_passed": 91,
+        "version": "1.10.0",
+        "tools": 13,
+        "source_and_manual_archives": {
+          "BJT_통합프로그램_1.10.0_전체소스.zip": {
+            "bytes": 26067052,
+            "sha256": "67a5af5d1467fd049d16f5556c75a418a1f4bd0c9328b6ffc7b70adfda9d652f",
+            "members": 374,
+            "all_current_bytes_match": true
+          },
+          "BJT_통합프로그램_1.10.0_사용설명서.zip": {
+            "bytes": 241422,
+            "sha256": "7d9b12ed557c8911f2d2d7751d7a10251bc7b83611afcf3497c6ddaf07f57459",
+            "members": 28,
+            "all_current_bytes_match": true
+          }
+        }
+      },
+      "evidence": "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-capsule.json"
+    }
+  ],
+  "not_executed_and_limits": [
+    "Linux has no DISPLAY. Six Tk hover tests error at initialization; reviewer did not execute the complete frozen IR fixture, tab/resize/font checks, Tk event-pump session integration or actual asynchronous suite-root teardown.",
+    "No fresh Windows CI/build or either frozen GUI/CLI executable was executed by this reviewer; the full native artifact run at exact target 0a48712 remains required. Earlier a6 passes and current Linux source/component checks cannot establish that result.",
+    "pytest is absent; no dependency was installed. The independently verified actual capsule/archives/manifest proof is not a claim that the full native pytest capsule suite ran here.",
+    "Requirement hashes were compared with preserved upstream declarations, without downloading/hashing new wheel bytes. Prior a6 native evidence confirms test collection and execution after those dependencies were installed there.",
+    "No Microsoft Excel desktop/COM calculation or real sensor/PLC/lamp/equipment operation was executed. Parser acceptance and owned mocks do not establish Excel numerical results or equipment validation.",
+    "Separate source-only Windows preflight and independent publisher review are outside this report and are not treated as completed here."
+  ],
+  "holds": [
+    "Proceeding with the authorized native offline CI retry is reasonable; require every full native gate, including both new frozen IR executables, to pass before artifact approval.",
+    "This completed cumulative CI-only review plus the prior a8 application/UI review establish code-review status only. They do not establish final Windows artifact verification or authorize publication.",
+    "Actual Excel COM and equipment remain unverified. Final control-algorithm approval and real-equipment application remain HOLD; no explicit user hold is lifted."
+  ],
+  "evidence_sha256": {
+    "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-focused.log": "cd5d416043d058ff3b25d245691d727fa544faf55de53278ed3ae35f6b317bc5",
+    "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-cause.log": "3b43ddfa07346e3e9f1c892cba3050a2741368b4a9a6626bc0d58f2e43fc90c9",
+    "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-components.log": "655756fbc31705e16e24fef7310ced2b4bb7ae092bb041f20d398b36ba6a43ef",
+    "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-workflow.log": "861878d3443d69e94eeae2e56914f1fc4827e523b627cf2bbcae0af16ea74a6b",
+    "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-capsule.log": "887cc84f4e34e2ede9306a2b68cde57b16df1dbefb76e6c7153772583acd6253",
+    "/workspace/ir-integration-2026.11.17/windows-CI/sol-fixture-delta-capsule.json": "887cc84f4e34e2ede9306a2b68cde57b16df1dbefb76e6c7153772583acd6253",
+    "/workspace/ir-integration-2026.11.17/windows-CI/diagnostic-44093777026.log": "9594ff21920901bbda35391292a35ad08f0e164a59bd219a8f199c5aa28545d7"
+  }
+}

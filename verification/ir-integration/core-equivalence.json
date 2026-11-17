@@ -1,0 +1,122 @@
+[
+  {
+    "module": "adapter_contracts.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "csv_source.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "excel_async.py",
+    "same_except_import_namespace": false,
+    "intentional_integration_hooks": true
+  },
+  {
+    "module": "excel_calculation.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "excel_test_helpers.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "excel_workbook.py",
+    "same_except_import_namespace": false,
+    "intentional_integration_hooks": true
+  },
+  {
+    "module": "layer_algorithm.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "layer_charts.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "observed_session.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "output_limit.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "plot_archive.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "plot_images.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "replay_workbook.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "resilient_adapter.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "sequence_field_audit.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "sequence_persistence.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "session.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "single_instance.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "slice_data.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "slice_panel.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "slice_workbook.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "standalone_ir.py",
+    "same_except_import_namespace": false,
+    "intentional_integration_hooks": true
+  },
+  {
+    "module": "target_temperature.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  },
+  {
+    "module": "windows_ui_adapter.py",
+    "same_except_import_namespace": true,
+    "intentional_integration_hooks": false
+  }
+]

@@ -1,0 +1,87 @@
+{
+  "run_id": 44096041775,
+  "run_attempt": 1,
+  "workflow_id": 397074012,
+  "workflow_path": ".github/workflows/suite-release.yml",
+  "event": "workflow_dispatch",
+  "head_branch": "feature/ir-image-workbook-1.10.0",
+  "head_sha": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+  "status": "completed",
+  "conclusion": "success",
+  "repository_id": 1433912494,
+  "job_count": 1,
+  "jobs": [
+    {
+      "name": "windows-release",
+      "conclusion": "success",
+      "failed_steps": [],
+      "private_upload_step": "skipped"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14335745446,
+      "node_id": "MDg6QXJ0aWZhY3QxNDMzNTc0NTQ0Ng==",
+      "name": "BJT-native-Windows-evidence-44096041775",
+      "size_in_bytes": 73994,
+      "url": "https://api.github.com/repos/rlaengus444-ui/BJT_Tools_integrated/actions/artifacts/14335745446",
+      "archive_download_url": "https://api.github.com/repos/rlaengus444-ui/BJT_Tools_integrated/actions/artifacts/14335745446/zip",
+      "expired": false,
+      "digest": "sha256:dc4169d8597fef5748b5d3b61b9acad1a0d901cc73798b51bf795aad3b80adc1",
+      "created_at": "2026-11-17T14:00:44Z",
+      "updated_at": "2026-11-17T14:00:44Z",
+      "expires_at": "2026-11-24T14:00:43Z",
+      "workflow_run": {
+        "id": 44096041775,
+        "repository_id": 1433912494,
+        "head_repository_id": 1433912494,
+        "head_branch": "feature/ir-image-workbook-1.10.0",
+        "head_sha": "0a48712576b9b7cbb147c03becd957eb559af4c7"
+      }
+    },
+    {
+      "id": 14335391187,
+      "node_id": "MDg6QXJ0aWZhY3QxNDMzNTM5MTE4Nw==",
+      "name": "BJT-native-Windows-release-44096041775",
+      "size_in_bytes": 460941963,
+      "url": "https://api.github.com/repos/rlaengus444-ui/BJT_Tools_integrated/actions/artifacts/14335391187",
+      "archive_download_url": "https://api.github.com/repos/rlaengus444-ui/BJT_Tools_integrated/actions/artifacts/14335391187/zip",
+      "expired": false,
+      "digest": "sha256:9440c31db55457fc0a6c42c325bdd132a51e2f6bfd479afdfb11f09b361cc28b",
+      "created_at": "2026-11-17T14:00:49Z",
+      "updated_at": "2026-11-17T14:00:49Z",
+      "expires_at": "2026-11-24T14:00:44Z",
+      "workflow_run": {
+        "id": 44096041775,
+        "repository_id": 1433912494,
+        "head_repository_id": 1433912494,
+        "head_branch": "feature/ir-image-workbook-1.10.0",
+        "head_sha": "0a48712576b9b7cbb147c03becd957eb559af4c7"
+      }
+    }
+  ],
+  "assets_from_successful_build_log": {
+    "BJT_1.10.0_manual.zip": {
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_source.zip": {
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "BJT_1.10.0_Windows_x64.zip": {
+      "bytes": 418199737,
+      "sha256": "7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "bbb7ea599fd00dcd5a2236fac9ca32de749b00dc5e34024ea6962b05c9883f7d"
+    }
+  },
+  "raw_count_reports_local_status": "Not downloaded from Azure; awaiting authorized GitHub-owned candidate transfer for actual artifact review",
+  "public_distribution_performed": false
+}
