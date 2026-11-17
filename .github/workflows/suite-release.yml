@@ -73,12 +73,12 @@ jobs:
           import json, os
           from pathlib import Path
           root = Path(os.environ['BJT_CI_REPORTS'])
-          for name in ('native-summary.json', 'ir-upstream-tests.json'):
+          for name in ('native-summary.json', 'ir-upstream-tests.json', 'ir-feedback-exe.json', 'ir-feedback-cli-exe.json'):
               path = root / name
               if not path.is_file():
                   continue
               data = json.loads(path.read_text(encoding='utf-8'))
-              keys = ('passed','version','commit','tests','failures','errors','skips','traceback','runner_error','count_error','failed','errored')
+              keys = ('passed','version','commit','tests','failures','errors','skips','traceback','runner_error','count_error','failed','errored','checks','callback_errors')
               print(name, json.dumps({key: data[key] for key in keys if key in data}, ensure_ascii=False)[:24000])
           for name in ('source-tests.log','ir-upstream-tests.log','source-capsule-tests.log','build-runner.log','ir-feedback-exe-runner.log'):
               path = root / name

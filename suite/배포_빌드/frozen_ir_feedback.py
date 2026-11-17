@@ -21,6 +21,12 @@ WORKBOOK_SHA256 = 'eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941
 BRIDGE_SHA256 = '939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215'
 
 
+def slicing_fixture_config():
+    """Use the same numeric types produced by SlicePanel.read_config()."""
+    from ir_feedback.slice_data import SliceConfig
+    return SliceConfig(radius_mm=1.0)
+
+
 def _exists(root):
     try:
         return bool(root.winfo_exists())
@@ -46,7 +52,7 @@ def run(base, report_path):
     from ir_feedback.excel_workbook import PreparedWorkbook
     from ir_feedback.layer_charts import _write_csv
     from ir_feedback.plot_archive import PlotArchive
-    from ir_feedback.slice_data import SliceConfig, analyze
+    from ir_feedback.slice_data import analyze
     from ir_feedback import excel_workbook, resilient_adapter, session, standalone_ir, windows_ui_adapter
 
     started = time.monotonic()
@@ -148,7 +154,7 @@ def run(base, report_path):
             path = work / f'{layer}.png'
             Image.new('L', (64, 64), value).save(path)
             images.append(str(path))
-        config = SliceConfig(radius_mm=1)
+        config = slicing_fixture_config()
         dataset = analyze(images, config)
         assert [r.center_coverage_pct for r in dataset.records] == [0., 100., 0.]
         assert dataset.features(3)['previous_center_coverage_pct'] == 100.

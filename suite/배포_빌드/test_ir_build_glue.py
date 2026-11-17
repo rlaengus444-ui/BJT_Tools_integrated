@@ -43,6 +43,30 @@ def fixture_report():
 
 
 class IrReleaseEvidenceTests(unittest.TestCase):
+    def test_real_image_fixture_fingerprint_matches_ui_parsed_configuration(self):
+        suite_root = Path(__file__).resolve().parents[1]
+        with mock.patch.object(sys, 'path', [str(suite_root), *sys.path]):
+            from PIL import Image
+            from frozen_ir_feedback import slicing_fixture_config
+            from ir_feedback.slice_data import analyze
+            from ir_feedback.slice_panel import SlicePanel
+        text = {'radius': '1', 'dpi_x': '400', 'dpi_y': '400', 'polarity': '흰색',
+                'threshold': '0', 'first_layer': '1', 'numbering': '파일명 숫자'}
+        panel = SimpleNamespace(**{name: SimpleNamespace(get=lambda value=value: value)
+                                   for name, value in text.items()})
+        parsed = SlicePanel.read_config(panel)
+        expected = slicing_fixture_config()
+        with tempfile.TemporaryDirectory() as directory:
+            paths = []
+            for layer, value in ((1, 0), (2, 255), (3, 0)):
+                path = Path(directory) / f'{layer}.png'
+                Image.new('L', (64, 64), value).save(path)
+                paths.append(str(path))
+            actual_data, expected_data = analyze(paths, parsed), analyze(paths, expected)
+        self.assertEqual(actual_data.records, expected_data.records)
+        # Numeric equality alone misses1 versus1.0 in hashed JSON metadata.
+        self.assertEqual(actual_data.fingerprint, expected_data.fingerprint)
+
     def test_exact_complete_offline_report_is_accepted(self):
         require_ir_check(fixture_report())
 
