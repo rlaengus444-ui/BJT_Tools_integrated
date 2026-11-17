@@ -154,7 +154,11 @@ class CandidateTransferTests(unittest.TestCase):
         return stage.stage(self.evidence, self.assets, self.facts, archives=self.archives)
 
     def test_template_fails_closed(self):
-        with self.assertRaises(ValueError): stage.load_pins()
+        incomplete = copy.deepcopy(self.facts)
+        incomplete['release_id'] = None
+        pinfile = self.root / 'incomplete-facts.json'
+        pinfile.write_text(json.dumps(incomplete))
+        with self.assertRaises(ValueError): stage.load_pins(pinfile)
 
     def test_complete_candidate_transfer_preserves_bytes_and_holds(self):
         before = {p.name: p.read_bytes() for p in self.assets.iterdir()}
@@ -445,6 +449,7 @@ class CandidateTransferTests(unittest.TestCase):
         self.assertEqual(self.mutations, [])
 
     def test_reviewable_facts_schema_rejects_all_unknown_pins(self):
+        self.assertEqual(stage.load_pins(), json.loads(stage.PINS.read_text()))
         pinfile = self.root / 'facts.json'
         pinfile.write_text(json.dumps(self.facts))
         self.assertEqual(stage.load_pins(pinfile), self.facts)
