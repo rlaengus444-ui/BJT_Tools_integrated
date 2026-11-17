@@ -1,4 +1,4 @@
-name: Upload exact verified 1.9.2 assets to existing draft
+name: Offline IR source view preflight
 
 'on':
   workflow_dispatch:
@@ -6,51 +6,38 @@ name: Upload exact verified 1.9.2 assets to existing draft
 permissions:
   contents: read
 
-concurrency:
-  group: publish-verified-suite-1.9.2
-  cancel-in-progress: false
-
 jobs:
-  upload-verified:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      actions: read
-      contents: write
+  source-preflight:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Download pinned verified native assets
-        uses: actions/download-artifact@v4
-        with:
-          name: BJT-native-Windows-release-43852970248
-          run-id: 43852970248
-          repository: ${{ github.repository }}
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/verified-192/assets
-      - name: Download matching verification evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: BJT-native-Windows-evidence-43852970248
-          run-id: 43852970248
-          repository: ${{ github.repository }}
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/verified-192/evidence
-      - name: Verify exact artifacts and upload without replacing files
+          python-version: '3.12.10'
+          architecture: x64
+      - name: Prepare existing pinned image library
+        shell: pwsh
+        run: python -m pip install --only-binary=:all: --no-deps Pillow==12.3.0
+      - name: Exercise isolated source UI and archive flow
+        shell: python
         env:
-          GH_TOKEN: ${{ github.token }}
-          BJT_VERIFIED_ROOT: ${{ runner.temp }}/verified-192
+          IR_REPORT: ${{ runner.temp }}/ir-source-preflight.json
         run: |
-          python release_tools/publish_verified_192.py --evidence "$BJT_VERIFIED_ROOT/evidence" --assets "$BJT_VERIFIED_ROOT/assets" --report "$BJT_VERIFIED_ROOT/publication-report.json" --upload
-      - name: Preserve server digest readback
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: BJT-1.9.2-publication-${{ github.run_id }}
-          path: ${{ runner.temp }}/verified-192/publication-report.json
-          if-no-files-found: warn
-          retention-days: 7
+          import json,os,sys
+          from pathlib import Path
+          base = Path('suite').resolve()
+          sys.path.insert(0, str(base))
+          sys.path.insert(0, str(base / '배포_빌드'))
+          from frozen_ir_feedback import run
+          report = run(base, Path(os.environ['IR_REPORT']))
+          assert report['frozen'] is False
+          print(json.dumps(report, ensure_ascii=False))
+          Path(os.environ['IR_REPORT']).write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+          if not report['passed']:
+              raise SystemExit(1)
