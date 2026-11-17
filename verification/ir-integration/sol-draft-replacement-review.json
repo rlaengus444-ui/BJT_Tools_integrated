@@ -1,0 +1,236 @@
+{
+  "status": "completed_independent_private_draft_replacement_review",
+  "review_completed": true,
+  "created_utc": "2026-11-17T15:01:38.776740+00:00",
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "native collaboration continuation of the existing independent reviewer agent",
+    "original_spawn_route": "collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_integration_post",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "configuration_evidence": "Parent supplied the accepted original native spawn configuration; this formal replacement review remains on that reviewer agent.",
+    "provider_model_identity_independently_attested": false
+  },
+  "scope": {
+    "repository": "/workspace/BJT_Tools_integrated_delivery",
+    "branch": "deliver/ir-suite-1.10.0",
+    "reviewed_revision": "78349f672a00afd467709dc7665b06eede0d2c73",
+    "worktree": "clean at exact reviewed revision",
+    "reviewed_file_sha256": {
+      "release_tools/replace_ir_candidate_qa_log.py": "f104330f211d0999fee1554b7331d38e9cecbcdbd37b056f8f237ed55299499c",
+      "release_tools/replace_ir_candidate_qa_log.json": "374595d0152b40b946f4e46764705821fe6728830b4063566cab97743738afd9",
+      "release_tools/test_replace_ir_candidate_qa_log.py": "8b1c05938dee13df0a02017e26d4ca95a8fd9cc2555373c7ece35e40049767a6",
+      ".github/workflows/publish-verified-suite.yml": "85f645fbeae1b8ed8254f7476c4b09f48db001774879a48b2a626bee20093c77",
+      "release_tools/clean_ir_candidate.py": "52a13ca2861e695b385ba790dd35861a4c7779d2cab0c1e3675dc3a3e704d3c7",
+      "release_tools/stage_verified_ir_110.py": "9c0050339793a413c0727ab32ec2b7eae425dbaadd76cbeaf450e46f46544f84",
+      "release_tools/stage_verified_ir_110.json": "fb2c98a99ed6a3b0cead82c969289ceed72179ffa81db8815ca72b2a5d626df7"
+    },
+    "application_source_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "original_native_run": 44096041775,
+    "postpackager_revision": "6001a003fd9d763aad9b154162b088edbcf61a13",
+    "old_stage_reviewed_revision": "c1fcaea759cb17784ea429a1999b5b5f5188cf79",
+    "workflow_path": ".github/workflows/publish-verified-suite.yml",
+    "actual_registered_workflow_id": 397108467,
+    "clean_artifact_review_path": "verification/ir-integration/sol-clean-artifact-review.json",
+    "clean_artifact_review_sha256": "e2a15e2dbcdf8cad195a4377c4788ed50be8f6154cdeec8204f0e0d8f26c89fe",
+    "excluded": [
+      "reviewer remote DELETE/POST/PATCH",
+      "public publication",
+      "new Windows/native/Excel execution",
+      "equipment operation",
+      "dependency installation",
+      "push or workflow dispatch"
+    ]
+  },
+  "outcome": "accepted_for_the_exact_private_draft_two_asset_replacement_and_body_only_notes_update_after_review_descriptor_binding_and_fresh_checks",
+  "private_draft_replacement_logically_authorized": true,
+  "public_publication_authorized_by_this_review": false,
+  "unresolved_findings": [],
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "high",
+      "status": "resolved_by_corrected_execution_target_acknowledged_before_execution",
+      "title": "The initially named registered workflow ID selected a different publisher.",
+      "observed": "Live GET for417475428 returned .github/workflows/publish-bjt-190-verified.yml, name Publish verified BJT1.9.0 artifacts. It does not identify the reviewed replacement file.",
+      "resolution": "Live GET by the reviewed filename .github/workflows/publish-verified-suite.yml identifies active workflow397108467. Parent explicitly acknowledged that only this reviewed file/ID on the exact delivery branch head will be dispatched, never417475428. No wrong dispatch or remote mutation occurred.",
+      "required_execution_binding": "Freshly verify file/path/id397108467 and exact reviewed delivery-branch commit before dispatch; verify the actual run head SHA; retain the branch head through completion. No workflow/ref guard override."
+    }
+  ],
+  "exact_replacement": {
+    "repository": "rlaengus444-ui/BJT_Tools_integrated",
+    "repository_id": 1433912494,
+    "existing_release_id": 448714553,
+    "required_draft": true,
+    "required_prerelease": true,
+    "required_published_at": null,
+    "tag": "v1.10.0",
+    "source_commit": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "source_run": 44096041775,
+    "old_assets": {
+      "BJT_1.10.0_manual.zip": {
+        "id": 759345381,
+        "bytes": 241422,
+        "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+      },
+      "BJT_1.10.0_source.zip": {
+        "id": 759345454,
+        "bytes": 26398492,
+        "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+      },
+      "BJT_1.10.0_standalone.pyw": {
+        "id": 759345577,
+        "bytes": 16101255,
+        "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+      },
+      "BJT_1.10.0_Windows_x64.zip": {
+        "id": 759344713,
+        "bytes": 418199737,
+        "sha256": "7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243"
+      },
+      "SHA256SUMS.txt": {
+        "id": 759345731,
+        "bytes": 361,
+        "sha256": "bbb7ea599fd00dcd5a2236fac9ca32de749b00dc5e34024ea6962b05c9883f7d"
+      }
+    },
+    "new_assets": {
+      "BJT_1.10.0_Windows_x64.zip": {
+        "bytes": 418199188,
+        "sha256": "e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a"
+      },
+      "BJT_1.10.0_manual.zip": {
+        "bytes": 241422,
+        "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+      },
+      "BJT_1.10.0_source.zip": {
+        "bytes": 26398492,
+        "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+      },
+      "BJT_1.10.0_standalone.pyw": {
+        "bytes": 16101255,
+        "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+      },
+      "SHA256SUMS.txt": {
+        "bytes": 361,
+        "sha256": "f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80"
+      }
+    },
+    "only_deletable_original_ids": [
+      759344713,
+      759345731
+    ],
+    "preserved_original_ids": {
+      "BJT_1.10.0_manual.zip": 759345381,
+      "BJT_1.10.0_source.zip": 759345454,
+      "BJT_1.10.0_standalone.pyw": 759345577
+    },
+    "old_notes_sha256": "78d67ed40521ea627d590bcf5bc95fe6ceec426584b6750be18b8933695cec1a",
+    "new_notes_sha256": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a",
+    "new_notes_utf8_bytes": 2476,
+    "removed_member": {
+      "path": "BJT_통합프로그램_1.10.0_EXE/_internal/logs/errors.log",
+      "bytes": 1626,
+      "sha256": "c06264143b923010383965a790f0561014fa5eecc3908827f81ecea359394df1"
+    },
+    "provenance_sha256": "c4a7dbbb03364e19cbbb6ca5c8830303556f5e5bd8ccc27165d046628948cbbe",
+    "cleaned_facts_sha256": "1489a14d233447c867dd648f477e4a057d3a38c8aa31e9c51a8160393dd59f94"
+  },
+  "assessment": {
+    "cleanup_and_provenance": "Only the pinned1626-byte synthetic QA log c0626414... is removed from a separate fresh copy of the original CI ZIP. The pinned cleanup utility independently compares all3727 retained entries, serialized metadata, raw local records/compressed streams/descriptors and central records with only offset normalization, checks CRC/inventory, and preserves the other3 outer files. It is packaging only and does not run product code.",
+    "actual_clean_artifact_approval": "Read and hash-verified the completed independent e2a15e2d... actual cleaned-artifact review. Its exact five cleaned assets, notes8e7f0b2a..., source0a and postpackager6001 binding match replacement facts. This is separate actual-artifact evidence; it does not certify a remote replacement or a new Windows execution.",
+    "source_and_archive_gates": "Preparation uses the unchanged reviewed exact-artifact-ID downloader with enforced outer sizes/digests, safe pre-extraction inventories and extracted-tree binding. Original current-run source/XML/upstream/frozen/raw gates are checked before cleanup. Deterministic reproduction must then match the reviewed provenance/facts files and exact five cleaned asset hashes before any remote write.",
+    "phase_model": "Only old/old -> absent/old -> new/old -> new/absent -> new/new -> new notes is admitted. Other phase orderings, partial uploads, unknown/duplicate names or IDs, changed preserved IDs/digests, altered target bytes, draft/prerelease/tag/source/notes drift, or changed repository identity/visibility abort. New notes are valid only with both new assets.",
+    "mutation_scope": "DELETE can target only original EXE ID759344713 and original sums ID759345731 after fresh exact state checks. POST addresses fixed uploads.github.com repository/release448714553 and only the two target names. PATCH addresses that fixed release and sends exactly one JSON field, body, with the deterministic approved notes. No public/draft/visibility/prerelease flag is patched and no other3 asset ID is changed.",
+    "ambiguity_and_resume": "Every attempted operation is journaled before its request. Failed/ambiguous DELETE, POST or PATCH stops without an application retry. A later invocation re-reads exact server state: completed deletes resume from absence, exact committed uploads are skipped, and committed notes produce zero writes. Partial or mismatched new assets are never automatically deleted. Digest/size readbacks precede later asset deletion and notes update.",
+    "notes_semantics": "Canonical2476-byte notes8e7f0b2a... replace only the EXE hash line and append the approved synthetic-QA-log-only explanation plus original CI ZIP hash. They keep original Windows CI/source provenance distinct from the cleaned outer ZIP and preserve evaluation labeling, desktop Excel requirement, unverified real Excel/equipment and control/equipment HOLD.",
+    "approval_separation": "This review accepts only private-draft replacement and body update. Public evaluation publication remains a separate action conditioned on fresh successful exact-five/notes/source/tag/draft readback and standing user authority. No new native build is required for identical retained program files; the cleaned ZIP itself was not rerun on Windows."
+  },
+  "reviewer_executed_checks": [
+    {
+      "name": "Instructions, full source, tests and real approval records",
+      "result": "Read current AGENTS.md/CODEX_REVIEW_PROTOCOL.md, complete replacement script/workflow/pins, complete cleanup utility, all28 replacement test methods, actual clean-artifact review and canonical notes/provenance records"
+    },
+    {
+      "name": "Offline regression suites",
+      "command": "PYTHONPATH=release_tools python -m unittest test_clean_ir_candidate test_replace_ir_candidate_qa_log test_stage_verified_ir_110 -v",
+      "tests": 63,
+      "passed": 63,
+      "exit_code": 0,
+      "seconds": 2.438,
+      "breakdown": {
+        "cleanup": 9,
+        "replacement": 28,
+        "original_stage": 26
+      },
+      "remote_operations": "mocked in tests"
+    },
+    {
+      "name": "New local verification path with real files",
+      "result": "Actual new verify_local proof-schema/execution-flags/exact-five-hash/checksum checks pass against the real cleaned files and exact provenance/facts. Only unavailable original archive gates and pending review-admission were isolated as explicit test mocks; no mutator was called.",
+      "seconds": 1.201
+    },
+    {
+      "name": "Fresh deterministic cleanup reproduction",
+      "result": "Ran the pinned cleanup utility on actual original five files into an owned temporary directory. Exact approved cleaned five assets, provenance c4a7dbbb... and facts1489a14d... reproduced; originals preserved. No product/native/network operation.",
+      "seconds": 30.824,
+      "evidence": "/workspace/ir-integration-2026.11.17/publication-draft/sol-replacement-clean-reproduction.json"
+    },
+    {
+      "name": "Live read-only draft/tag/assets preflight",
+      "result": "fresh_state passed phase0 old/old, old notes, source0a/tag, repository public identity, invisible draft/prerelease and all five original IDs/digests. No mutation.",
+      "evidence": "/workspace/ir-integration-2026.11.17/publication-draft/sol-replacement-readonly-preflight.json"
+    },
+    {
+      "name": "Live workflow registration correction",
+      "result": "Actual registered reviewed file is active workflow397108467; initially supplied417475428 is a different old1.9.0 publisher. Parent corrected and acknowledged execution target."
+    },
+    {
+      "name": "Byte identity and fail-closed pending review",
+      "result": "All filled code/proof/review descriptors match actual bytes; cleanup source equals committed6001 blob; original stage code/pins/workflow and suite/capsule/old publisher unchanged from c1fcaea. Current load_pins intentionally rejects the null replacement-review digest. git diff --check passes."
+    }
+  ],
+  "descriptor_binding_after_completed_review": {
+    "permitted": true,
+    "json_file": "release_tools/replace_ir_candidate_qa_log.json",
+    "only_permitted_value_change": "files.replacement_review.sha256: null -> SHA256 of this exact completed review file",
+    "required_review_copy_path": "verification/ir-integration/sol-draft-replacement-review.json",
+    "baseline_pin_file_sha256": "374595d0152b40b946f4e46764705821fe6728830b4063566cab97743738afd9",
+    "normalized_pin_semantic_sha256": "da585bafc69a44755f9d4ead0c45f7ce2da9639e3893738d887269c7c3ce4156",
+    "normalization": "Copy facts, set only files.replacement_review.sha256 to null, serialize UTF8 JSON with sort_keys=True, separators=(comma,colon), ensure_ascii=False; every other field must remain identical.",
+    "required_followup": "After copying this completed record and filling only its digest, recheck actual review bytes/hash, normalized pin semantics, unchanged script/workflow/cleanup/test/provenance bytes, positive load_pins/verify_pinned_files and offline tests; pin the final committed delivery revision and exact workflow registration/ref before execution.",
+    "no_circular_self_reference": "This record pins the prefill/normalized facts, not its own future digest. The sole authorized subsequent descriptor value is computed after this record is complete."
+  },
+  "evidence_notes": [
+    "The external replacement-preparation.json retains an older pin-file SHA ac726... from before the clean artifact review digest was filled. Actual clean committed78349f6 pin-file SHA374595d0... and actual filled e2 approval were inspected and are the review target. The stale external preparation value is not used as an execution authority.",
+    "Actual Actions outer archives/raw CI reports were not locally re-downloaded or personally reopened in this review. The unchanged downloader/current-run raw gates remain mandatory in the actual workflow before any write.",
+    "Live remote reads are pre/post conditions, not an atomic lock against concurrent external publication or edits. Other publication work must wait until this replacement completes and its final server readback passes."
+  ],
+  "execution_conditions": [
+    "Complete the exact descriptor-only binding and followup semantic check above; no substantive code/workflow/asset/notes/source/provenance change is covered without re-review.",
+    "Dispatch only reviewed .github/workflows/publish-verified-suite.yml /active workflow397108467 on the verified exact delivery-branch head. Never dispatch417475428 for this operation; do not override guards or use a tag ref.",
+    "Fresh source, archive, cleanup, exact-five, review-byte and remote state checks must pass without overrides. Preserve original CI artifacts/evidence/candidate bytes and all three untouched server asset IDs.",
+    "Require final readback of exactly five approved cleaned asset hashes/sizes, new notes8e7f0b2a..., source0a/tag and draft=true/prerelease=true before any separately authorized public evaluation publication."
+  ],
+  "execution_performed_by_reviewer": {
+    "remote_mutations": false,
+    "upload": false,
+    "delete": false,
+    "patch": false,
+    "push": false,
+    "dispatch": false,
+    "dependency_installation": false,
+    "product_execution": false,
+    "native_windows_rerun": false,
+    "excel_com": false,
+    "hardware": false,
+    "owned_offline_zip_packaging_reproduction": true
+  },
+  "holds": [
+    "This review performs and certifies no public publication or remote replacement.",
+    "Cleaned ZIP itself has not been rerun on Windows; original CI validates the identical retained program/resource bytes.",
+    "Actual Excel COM, sensors, PLCs and lamp outputs remain unverified.",
+    "Final control-algorithm approval and real-equipment application remain HOLD until explicitly lifted by the user."
+  ]
+}

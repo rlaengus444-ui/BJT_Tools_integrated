@@ -1,5 +1,5 @@
 {
-  "status": "PRIVATE_DRAFT_REPLACEMENT_EXECUTION_DISABLED_PENDING_COMPLETED_REVIEW_BYTE_PINS",
+  "status": "private_draft_replacement_review_completed_pins_bound",
   "repository": "rlaengus444-ui/BJT_Tools_integrated",
   "repository_id": 1433912494,
   "release_id": 448714553,
@@ -84,7 +84,7 @@
     },
     "replacement_review": {
       "path": "verification/ir-integration/sol-draft-replacement-review.json",
-      "sha256": null
+      "sha256": "18d03d5cb1912624ac4fb22dd91631283f75022f18d376aaae6c0fa5803ada68"
     }
   },
   "equipment_application": "HOLD",
