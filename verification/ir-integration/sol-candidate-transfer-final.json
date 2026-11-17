@@ -1,0 +1,184 @@
+{
+  "status": "completed_independent_final_immutable_candidate_transfer_review",
+  "review_completed": true,
+  "created_utc": "2026-11-17T14:18:54.960971+00:00",
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "native collaboration continuation of the existing independent reviewer agent",
+    "original_spawn_route": "collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_integration_post",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "configuration_evidence": "Parent supplied the accepted original native spawn configuration; this formal final-pin review remains on that reviewer agent.",
+    "provider_model_identity_independently_attested": false
+  },
+  "scope": {
+    "repository": "/workspace/BJT_Tools_integrated_delivery",
+    "delivery_branch": "deliver/ir-suite-1.10.0",
+    "reviewed_revision": "c1fcaea759cb17784ea429a1999b5b5f5188cf79",
+    "initial_final_pin_revision": "76b6d4d3eda8916748750995590e87aa11cb528f",
+    "worktree_at_completion": "clean at exact reviewed revision",
+    "reviewed_file_sha256": {
+      "release_tools/stage_verified_ir_110.py": "9c0050339793a413c0727ab32ec2b7eae425dbaadd76cbeaf450e46f46544f84",
+      "release_tools/stage_verified_ir_110.json": "fb2c98a99ed6a3b0cead82c969289ceed72179ffa81db8815ca72b2a5d626df7",
+      "release_tools/test_stage_verified_ir_110.py": "9e1135f2685a8c55288af3f6e12cfbb19be636eda84b38aacdb69067a7cc4526",
+      ".github/workflows/publish-verified-suite-192.yml": "3506ab9cbaaaf1949085dc7cc746757c36351389b8853f56d174e9039f5aa725"
+    },
+    "source_commit": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "source_branch": "feature/ir-image-workbook-1.10.0",
+    "source_run_id": 44096041775,
+    "source_run_attempt": 1,
+    "prior_logic_review": "/workspace/ir-integration-2026.11.17/sol-candidate-transfer-logic.json",
+    "excluded": [
+      "candidate artifact approval",
+      "public publication",
+      "rebuild or program modification",
+      "reviewer upload/push/dispatch",
+      "dependency installation",
+      "Excel COM",
+      "equipment operation"
+    ]
+  },
+  "outcome": "approved_logically_for_transfer_to_the_existing_invisible_draft_only_after_all_fresh_preflights_pass",
+  "candidate_draft_transfer_logically_authorized": true,
+  "candidate_artifact_approved": false,
+  "public_publication_authorized": false,
+  "unresolved_findings": [],
+  "findings": [
+    {
+      "id": "F1",
+      "priority": "medium",
+      "status": "resolved_in_c1fcaea759cb17784ea429a1999b5b5f5188cf79",
+      "title": "Finalized production pins invalidated the old incomplete-template unit test.",
+      "observed": "At 76b6d4d the full suite executed 26 methods with 25 passes and one failure: test_template_fails_closed expected load_pins() to reject the now-complete default file. The isolated case reproduced ValueError not raised.",
+      "resolution": "Test now creates explicit temporary facts with release_id=None for the negative assertion. The schema test separately asserts positive loading of the actual finalized default pins. Only the test file changed from 76b6d4d to the final reviewed revision; script/JSON/workflow hashes stayed unchanged.",
+      "validation": "Reviewer independently reran all 26 methods after the fix: passed, exit0, 2.147 seconds. Parent preserved the earlier failed log and recorded the corrected successful log; no stale pass is used."
+    }
+  ],
+  "immutable_target": {
+    "repository": "rlaengus444-ui/BJT_Tools_integrated",
+    "repository_id": 1433912494,
+    "version": "1.10.0",
+    "source_commit": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "source_run_id": 44096041775,
+    "run_attempt": 1,
+    "workflow_id": 397074012,
+    "workflow_path": ".github/workflows/suite-release.yml",
+    "source_artifacts": {
+      "evidence": {
+        "id": 14335745446,
+        "name": "BJT-native-Windows-evidence-44096041775",
+        "digest": "sha256:dc4169d8597fef5748b5d3b61b9acad1a0d901cc73798b51bf795aad3b80adc1",
+        "bytes": 73994
+      },
+      "release": {
+        "id": 14335391187,
+        "name": "BJT-native-Windows-release-44096041775",
+        "digest": "sha256:9440c31db55457fc0a6c42c325bdd132a51e2f6bfd479afdfb11f09b361cc28b",
+        "bytes": 460941963
+      }
+    },
+    "five_assets": {
+      "BJT_1.10.0_manual.zip": {
+        "bytes": 241422,
+        "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+      },
+      "BJT_1.10.0_source.zip": {
+        "bytes": 26398492,
+        "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+      },
+      "BJT_1.10.0_standalone.pyw": {
+        "bytes": 16101255,
+        "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+      },
+      "BJT_1.10.0_Windows_x64.zip": {
+        "bytes": 418199737,
+        "sha256": "7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243"
+      },
+      "SHA256SUMS.txt": {
+        "bytes": 361,
+        "sha256": "bbb7ea599fd00dcd5a2236fac9ca32de749b00dc5e34024ea6962b05c9883f7d"
+      }
+    },
+    "existing_release_id": 448714553,
+    "existing_tag": "v1.10.0",
+    "release_notes_sha256": "78d67ed40521ea627d590bcf5bc95fe6ceec426584b6750be18b8933695cec1a",
+    "required_release_state": {
+      "draft": true,
+      "prerelease": true,
+      "target_commitish": "0a48712576b9b7cbb147c03becd957eb559af4c7"
+    },
+    "observed_existing_asset_names": []
+  },
+  "assessment": {
+    "logic_delta": "Normalized only COMMIT and RUN_ID back to the previous source/run constants; the resulting script SHA exactly matches the completed logic review target c5338ffb3743eb7a9b871e36e45dce053fbc4f7dcac51e946b086f6a8eba13f5. Workflow is byte-identical to the accepted logic review. The only later change is the reviewed test-only correction.",
+    "filled_pins": "All required immutable facts load successfully. Both artifact IDs, outer ZIP byte counts and SHA256 digests match the individual preserved API objects and original artifact-upload log. Exactly five asset names/sizes/hashes match the single successful completion JSON parsed directly from the original run log, not only a derived summary.",
+    "source_review_chain": "Exact source review a8cc2a7 and actual cumulative CI-only review a8cc2a7..0a48712 are byte-pinned, complete native Sol-requested review records with no findings; verify_source_reviews passes against the committed files. Earlier failed-run evidence remains separately preserved.",
+    "native_run_provenance": "Fresh read-only verify_remote passed for the exact successful workflow-dispatch run 44096041775, source0a48712, attempt1, workflow397074012, one successful windows-release job, successful build/evidence/release-asset steps and skipped automatic private-upload step. Both artifacts are nonexpired and linked to the exact source repository/run/branch/commit.",
+    "draft_destination": "Fresh read-only tag resolution confirms v1.10.0 points to source0a48712. The pinned-ID draft448714553 remains empty, draft=true, prerelease=true, exact source target and exact pinned notes bytes. The notes explicitly keep real Excel COM/equipment unverified and final control/equipment approval HOLD. Draft-by-tag REST404 is not used as a selector or substitute: the actual upload endpoint addresses the pinned release ID.",
+    "archive_and_raw_gate_enforcement": "Before any upload the reviewed code must download the two exact artifact IDs through normal GitHub APIs; enforce actual outer ZIP sizes/digests; validate inventories before extraction; rebind every extracted file to its outer ZIP; then require current raw 499-case source XML with the two allowed skips, eight capsule cases with no skips, 572 upstream cases with zero failures/errors/skips, exact closure, all twenty summary gates and both detailed frozen IR reports. Five final asset hashes/checksums and all fresh remote preflights must also pass. Nothing substitutes earlier-run reports.",
+    "mutation_scope": "Only missing exact candidate assets may be POSTed to the fixed GitHub host/repository/release-ID endpoint. Exact existing uploaded assets may resume; duplicates, unknown assets or mismatched bytes/state abort. The script does not create/edit/publish/delete releases or tags, rebuild assets, clobber files, change visibility or grant artifact approval.",
+    "runtime_preservation": "Delivery changes do not alter the suite/runtime, compressed source capsule or historical 1.9.2 publisher relative to the final source commit."
+  },
+  "reviewer_executed_checks": [
+    {
+      "name": "Exact committed target and logic equivalence",
+      "result": "Verified final clean HEAD, all four final SHA256 values, script equivalence after only source/run constant normalization, unchanged workflow, and test-only 76b6d4d..c1fcaea fix"
+    },
+    {
+      "name": "Filled schema and actual completed source review chain",
+      "result": "load_pins() and verify_source_reviews() succeeded against final committed production files without overrides"
+    },
+    {
+      "name": "Final transfer offline regression suite",
+      "command": "python -m unittest discover -s release_tools -p test_stage_verified_ir_110.py -v",
+      "methods": 26,
+      "passed": 26,
+      "exit_code": 0,
+      "seconds": 2.147,
+      "remote_operations": "mocked in unit tests"
+    },
+    {
+      "name": "Preserved API and original log comparison",
+      "result": "Exact artifact metadata and all five asset facts independently match preserved API objects and completion/upload records parsed from run-44096041775-all.log"
+    },
+    {
+      "name": "Fresh live read-only source/artifact/tag/draft preflight",
+      "result": "Actual verify_remote plus verify_release passed via normal gh GET requests; exact pinned draft remains empty and invisible; no download or mutation was called",
+      "evidence": "/workspace/ir-integration-2026.11.17/publication-draft/sol-final-readonly-preflight.json"
+    },
+    {
+      "name": "Initial live transport failure retained",
+      "result": "First read-only attempt returned HTTP502 at repository GET before any other operation. A later ordinary read-only attempt passed all preflights. No authentication/proxy changes or bypass were used."
+    },
+    {
+      "name": "Whitespace and preservation",
+      "result": "git diff --check passed; current source/runtime/capsule/old publisher remain unchanged"
+    }
+  ],
+  "source_evidence_files": [
+    "/workspace/ir-integration-2026.11.17/windows-CI/run-44096041775.json",
+    "/workspace/ir-integration-2026.11.17/windows-CI/jobs-44096041775.json",
+    "/workspace/ir-integration-2026.11.17/windows-CI/artifact-14335745446.json",
+    "/workspace/ir-integration-2026.11.17/windows-CI/artifact-14335391187.json",
+    "/workspace/ir-integration-2026.11.17/windows-CI/run-44096041775-all.log",
+    "/workspace/ir-integration-2026.11.17/windows-CI/completion-output-44096041775.json",
+    "/workspace/ir-integration-2026.11.17/draft-release.json",
+    "/workspace/ir-integration-2026.11.17/sol-frozen-fixture-delta.json",
+    "/workspace/ir-integration-2026.11.17/publication-draft/final-pin-tests.log",
+    "/workspace/ir-integration-2026.11.17/publication-draft/final-pin-tests-fixed.log"
+  ],
+  "execution_conditions": [
+    "Push and verify the exact reviewed delivery commit c1fcaea759cb17784ea429a1999b5b5f5188cf79; dispatch only the registered workflow using ref deliver/ir-suite-1.10.0. Verify the actual run head SHA and retain that branch head through completion. Current reviewed guards reject tag dispatch and must not be overridden.",
+    "Retain existing source tag v1.10.0 at0a48712576b9b7cbb147c03becd957eb559af4c7 and draft448714553 with the pinned notes/state. Every fresh archive/raw-evidence/local-asset/remote-release gate must pass before each allowed write.",
+    "Any new script/workflow/config pin or source/release-state change requires review; do not skip checks, use stale values, rebuild assets or substitute artifact sources.",
+    "Keep the candidate in the invisible draft. Download candidate files through normal release API/CDN access and complete independent artifact review before considering public publication."
+  ],
+  "limits_and_holds": [
+    "The reviewer has not downloaded or inspected the current two actual Actions ZIPs or candidate EXE bytes; local Azure archive access was unavailable. Current raw count/report contents are mandatory transfer-time preconditions, not locally observed passes in this report.",
+    "Passing live run metadata and successful build completion do not replace artifact review. No upload, push, workflow dispatch, public publication, rebuild or dependency install was performed by reviewer.",
+    "Per-file remote reads are pre/post conditions rather than an atomic lock against another operator publishing concurrently. Publication work remains sequenced after transfer, download and independent artifact review.",
+    "candidate_artifact_approved remains false and public publication is not authorized by this review.",
+    "Actual Microsoft Excel COM and real sensor/PLC/lamp operation remain unverified. Final control-algorithm approval and real-equipment application remain HOLD."
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "files": {
+    "BJT_1.10.0_manual.zip": {
+      "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_manual.zip",
+      "http_status": 200,
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b",
+      "authenticated": false,
+      "full_download": true,
+      "seconds": 0.652
+    },
+    "BJT_1.10.0_source.zip": {
+      "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_source.zip",
+      "http_status": 200,
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7",
+      "authenticated": false,
+      "full_download": true,
+      "seconds": 1.341
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_standalone.pyw",
+      "http_status": 200,
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a",
+      "authenticated": false,
+      "full_download": true,
+      "seconds": 1.356
+    },
+    "BJT_1.10.0_Windows_x64.zip": {
+      "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_Windows_x64.zip",
+      "http_status": 200,
+      "bytes": 418199188,
+      "sha256": "e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a",
+      "authenticated": false,
+      "full_download": true,
+      "seconds": 17.037
+    },
+    "SHA256SUMS.txt": {
+      "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/SHA256SUMS.txt",
+      "http_status": 200,
+      "bytes": 361,
+      "sha256": "f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80",
+      "authenticated": false,
+      "full_download": true,
+      "seconds": 0.751
+    }
+  }
+}

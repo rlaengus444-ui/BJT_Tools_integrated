@@ -1,0 +1,39 @@
+{
+  "preflight_passed": true,
+  "release_id": 448714553,
+  "tag_name": "untagged-955c59fa6cc1127af97f",
+  "source": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+  "draft": true,
+  "prerelease": true,
+  "body_sha256": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a",
+  "asset_ids": {
+    "BJT_1.10.0_manual.zip": 759345381,
+    "BJT_1.10.0_source.zip": 759345454,
+    "BJT_1.10.0_standalone.pyw": 759345577,
+    "BJT_1.10.0_Windows_x64.zip": 759517951,
+    "SHA256SUMS.txt": 759519120
+  },
+  "assets": {
+    "BJT_1.10.0_Windows_x64.zip": {
+      "bytes": 418199188,
+      "sha256": "e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a"
+    },
+    "BJT_1.10.0_manual.zip": {
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_source.zip": {
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80"
+    }
+  },
+  "operation": "proposed explicit metadata PATCH only; not executed"
+}

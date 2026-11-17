@@ -1,0 +1,142 @@
+{
+  "status": "completed_independent_exact_private_tag_metadata_repair_review",
+  "review_completed": true,
+  "created_utc": "2026-11-17T15:14:25.038997+00:00",
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "native collaboration continuation of the existing independent reviewer agent",
+    "original_spawn_route": "collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_integration_post",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "provider_model_identity_independently_attested": false
+  },
+  "decision": "APPROVE_ONE_EXACT_PRIVATE_METADATA_PATCH_AFTER_FRESH_PRECHECKS; ACTUAL_POST_REPAIR_READBACK_REQUIRED",
+  "private_metadata_repair_logically_authorized": true,
+  "unresolved_findings": [],
+  "operation": {
+    "method": "PATCH",
+    "endpoint": "repos/rlaengus444-ui/BJT_Tools_integrated/releases/448714553",
+    "release_id": 448714553,
+    "payload_path": "/workspace/ir-integration-2026.11.17/publication-draft/repair-private-tag-payload.json",
+    "payload_sha256": "077ac116df957a8fdf1efa8072890c53a0798b05a09bd246ac39b1665b41a0ea",
+    "permitted_payload_keys": [
+      "body",
+      "draft",
+      "make_latest",
+      "name",
+      "prerelease",
+      "tag_name",
+      "target_commitish"
+    ],
+    "permitted_tag_change": {
+      "from": "untagged-955c59fa6cc1127af97f",
+      "to": "v1.10.0"
+    },
+    "explicit_preserved_metadata": [
+      "target_commitish",
+      "name",
+      "draft=true",
+      "prerelease=true",
+      "canonical body8e7f0b2a..."
+    ],
+    "make_latest": "false",
+    "asset_operations_permitted": false,
+    "retries_permitted_without_fresh_state_read": false
+  },
+  "actual_state_reviewed": {
+    "review_completed": true,
+    "decision": "APPROVE_ONE_EXPLICIT_PRIVATE_METADATA_REPAIR_PATCH_SUBJECT_TO_FRESH_PRE_AND_POSTCHECKS",
+    "checked_utc": "2026-11-17T15:13:26.229965+00:00",
+    "repair_method": "PATCH",
+    "repair_endpoint": "repos/rlaengus444-ui/BJT_Tools_integrated/releases/448714553",
+    "payload_path": "/workspace/ir-integration-2026.11.17/publication-draft/repair-private-tag-payload.json",
+    "payload_sha256": "077ac116df957a8fdf1efa8072890c53a0798b05a09bd246ac39b1665b41a0ea",
+    "payload_keys": [
+      "body",
+      "draft",
+      "make_latest",
+      "name",
+      "prerelease",
+      "tag_name",
+      "target_commitish"
+    ],
+    "source_commit": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "anomalous_tag": "untagged-955c59fa6cc1127af97f",
+    "required_restored_tag": "v1.10.0",
+    "asset_ids_required_unchanged": {
+      "BJT_1.10.0_manual.zip": 759345381,
+      "BJT_1.10.0_source.zip": 759345454,
+      "BJT_1.10.0_standalone.pyw": 759345577,
+      "BJT_1.10.0_Windows_x64.zip": 759517951,
+      "SHA256SUMS.txt": 759519120
+    },
+    "approved_asset_facts": {
+      "BJT_1.10.0_Windows_x64.zip": {
+        "bytes": 418199188,
+        "sha256": "e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a"
+      },
+      "BJT_1.10.0_manual.zip": {
+        "bytes": 241422,
+        "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+      },
+      "BJT_1.10.0_source.zip": {
+        "bytes": 26398492,
+        "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+      },
+      "BJT_1.10.0_standalone.pyw": {
+        "bytes": 16101255,
+        "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+      },
+      "SHA256SUMS.txt": {
+        "bytes": 361,
+        "sha256": "f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80"
+      }
+    },
+    "body_sha256_required_unchanged": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a",
+    "draft_required": true,
+    "prerelease_required": true,
+    "make_latest": "false",
+    "published_at_required": null,
+    "unmodified_guard_rejects_actual_anomaly": true,
+    "unmodified_guard_accepts_simulated_exact_repair": true,
+    "failed_run": {
+      "id": 44110983133,
+      "head_sha": "5114471bc516fa50b1d5e2590af40785558caa4a",
+      "conclusion": "failure"
+    },
+    "reviewer_remote_mutations": 0
+  },
+  "investigation": {
+    "failed_run": 44110983133,
+    "reviewed_execution_commit": "5114471bc516fa50b1d5e2590af40785558caa4a",
+    "failed_log": "/workspace/ir-integration-2026.11.17/publication-draft/replacement-44110983133-failed.log",
+    "observed": "Code at the exact run commit sends only body in its notes PATCH, then fails the unmodified fresh_state release-identity guard at line292. Fresh API reads confirm all five approved new bytes/IDs and body8e are present, draft/prerelease remain true, published_at is null and source target/gitref are unchanged; only release.tag_name is the exact untagged draft placeholder.",
+    "causal_limit": "The evidence is consistent with GitHub draft update behavior when tag_name is omitted. Internal server cause is not independently proved; offline mocks assumed omitted tag metadata would remain unchanged.",
+    "api_schema_review": "Read public GitHub REST OpenAPI update-release schema. Explicit draft=true preserves a draft; draft=false publishes. make_latest is a string enum and false is valid; drafts/prereleases cannot be latest. Existing tag makes target_commitish unused for creating a tag.",
+    "guard_check": "The unmodified verify_release rejects the actual anomalous snapshot. A copy with exactly the reviewed explicit metadata payload passes as new/new with new_notes=true and all five asset IDs unchanged. No actual PATCH was sent."
+  },
+  "fresh_preconditions": [
+    "Exact repository ID/name/public visibility and release ID448714553.",
+    "Exact anomaly tag_name untagged-955c59fa6cc1127af97f; draft=true, prerelease=true, published_at=null; source target0a48712576b9b7cbb147c03becd957eb559af4c7.",
+    "Exactly the five prechecked new asset IDs, uploaded state, sizes and digests in actual_state_reviewed; preserve every ID including the other three original IDs.",
+    "Canonical body SHA8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a and unchanged release name.",
+    "Git ref tags/v1.10.0 already targets source0a; exact prepared payload SHA077ac116... before one PATCH."
+  ],
+  "required_postconditions": [
+    "Fresh original replacement.fresh_state(facts) must pass unmodified as state new/new and new_notes=true.",
+    "Release tag_name v1.10.0; same source/name/canonical body8e; draft=true/prerelease=true/published_at=null.",
+    "Exactly five same asset IDs and all approved cleaned digests/sizes unchanged; source gitref0a unchanged.",
+    "Keep the existing stable latest release unchanged; no asset upload/deletion, tag force, workflow rerun or public publication as part of repair.",
+    "Record actual repair response and fresh readback separately. Run44110983133 remains failed; successful metadata recovery is not a relabeling of that run."
+  ],
+  "readback_status": "pending actual parent-executed repair; no post-repair success is claimed",
+  "evidence_before_repair": "/workspace/ir-integration-2026.11.17/publication-draft/sol-private-tag-repair-before-release.json",
+  "public_publication_authorized_by_this_review": false,
+  "reviewer_remote_mutations": 0,
+  "holds": [
+    "No public publication until the separate fresh successful repair readback and previously required final checks.",
+    "Original CI remains evidence for identical retained program files; cleaned ZIP itself was not rerun on Windows.",
+    "Actual Excel COM/equipment remain unverified. Final control-algorithm approval and real-equipment application remain HOLD."
+  ]
+}

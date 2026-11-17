@@ -1,0 +1,237 @@
+{
+  "schema": 1,
+  "observed_utc": "2026-11-17T15:23:46.683099+00:00",
+  "application_commit": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+  "build_run": 44096041775,
+  "build_passed": true,
+  "actual_excel_com_verified": false,
+  "equipment_verified": false,
+  "final_control_algorithm_approval": "HOLD",
+  "equipment_application": "HOLD",
+  "clean_artifact_approval_sha256": "e2a15e2dbcdf8cad195a4377c4788ed50be8f6154cdeec8204f0e0d8f26c89fe",
+  "release": {
+    "id": 448714553,
+    "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.10.0",
+    "tag_name": "v1.10.0",
+    "draft": false,
+    "prerelease": true,
+    "target_commitish": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "body_sha256": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a",
+    "assets": {
+      "BJT_1.10.0_manual.zip": {
+        "id": 759345381,
+        "bytes": 241422,
+        "digest": "sha256:2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b",
+        "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_manual.zip"
+      },
+      "BJT_1.10.0_source.zip": {
+        "id": 759345454,
+        "bytes": 26398492,
+        "digest": "sha256:c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7",
+        "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_source.zip"
+      },
+      "BJT_1.10.0_standalone.pyw": {
+        "id": 759345577,
+        "bytes": 16101255,
+        "digest": "sha256:be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a",
+        "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_standalone.pyw"
+      },
+      "BJT_1.10.0_Windows_x64.zip": {
+        "id": 759517951,
+        "bytes": 418199188,
+        "digest": "sha256:e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a",
+        "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_Windows_x64.zip"
+      },
+      "SHA256SUMS.txt": {
+        "id": 759519120,
+        "bytes": 361,
+        "digest": "sha256:f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80",
+        "url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/SHA256SUMS.txt"
+      }
+    }
+  },
+  "stable_latest_retained": "v1.9.2",
+  "replacement_run": {
+    "id": 44110983133,
+    "conclusion": "failure",
+    "reason": "After body-only metadata PATCH, GitHub returned temporary untagged release tag; final exact-tag guard stopped. Both new assets had already uploaded. Failed run preserved; later explicit reviewed metadata repair succeeded separately."
+  },
+  "metadata_repair_passed": true,
+  "anonymous_all_five_download_and_sha256_passed": true,
+  "drive": {
+    "paths": [
+      [
+        "BJT_1.10.0_manual.zip",
+        "/workspace/attachments/3c16b71b-438e-4088-b329-d13ffff67803/BJT_1.10.0_manual.zip"
+      ],
+      [
+        "BJT_1.10.0_standalone.pyw",
+        "/workspace/attachments/66980063-3b3c-4816-af5e-0b77f941ba77/BJT_1.10.0_standalone.pyw.bin"
+      ],
+      [
+        "SHA256SUMS.txt",
+        "/workspace/attachments/c8c420e5-b67d-474d-867b-80eaab146b43/SHA256SUMS.txt"
+      ]
+    ],
+    "records": {
+      "BJT_1.10.0_source.zip": {
+        "upload": {
+          "id": "1J3aWhT3OzF243n6NLtoEY90-Qy8RGdWx",
+          "url": "https://drive.google.com/file/d/1J3aWhT3OzF243n6NLtoEY90-Qy8RGdWx/view?usp=drivesdk"
+        },
+        "metadata": {
+          "id": "1J3aWhT3OzF243n6NLtoEY90-Qy8RGdWx",
+          "title": "BJT_1.10.0_source.zip",
+          "mime_type": null,
+          "size": "26398492",
+          "url": "https://drive.google.com/file/d/1J3aWhT3OzF243n6NLtoEY90-Qy8RGdWx/view?usp=drivesdk",
+          "display_url": "https://drive.google.com/file/d/1J3aWhT3OzF243n6NLtoEY90-Qy8RGdWx/view?usp=drivesdk",
+          "file_or_folder": null,
+          "created_time": null,
+          "modified_time": null,
+          "parent_ids": [
+            "1AC56ut_f27FLw5jp7EQ7hN4xCh9Em8jn"
+          ],
+          "drive_id": "0AOwLpacvsnH-Uk9PVA",
+          "current_user_can_share": null,
+          "has_augmented_permissions": null,
+          "shared": null,
+          "permissions": null,
+          "source_visibility_status": "access_not_verified"
+        }
+      },
+      "BJT_1.10.0_manual.zip": {
+        "upload": {
+          "id": "1RhzqaN_PgW_Es4w1gM1I1dOAR05LeKlA",
+          "url": "https://drive.google.com/file/d/1RhzqaN_PgW_Es4w1gM1I1dOAR05LeKlA/view?usp=drivesdk"
+        },
+        "metadata": {
+          "id": "1RhzqaN_PgW_Es4w1gM1I1dOAR05LeKlA",
+          "title": "BJT_1.10.0_manual.zip",
+          "mime_type": null,
+          "size": "241422",
+          "url": "https://drive.google.com/file/d/1RhzqaN_PgW_Es4w1gM1I1dOAR05LeKlA/view?usp=drivesdk",
+          "display_url": "https://drive.google.com/file/d/1RhzqaN_PgW_Es4w1gM1I1dOAR05LeKlA/view?usp=drivesdk",
+          "file_or_folder": null,
+          "created_time": null,
+          "modified_time": null,
+          "parent_ids": [
+            "1AC56ut_f27FLw5jp7EQ7hN4xCh9Em8jn"
+          ],
+          "drive_id": "0AOwLpacvsnH-Uk9PVA",
+          "current_user_can_share": null,
+          "has_augmented_permissions": null,
+          "shared": null,
+          "permissions": null,
+          "source_visibility_status": "access_not_verified"
+        }
+      },
+      "BJT_1.10.0_standalone.pyw": {
+        "upload": {
+          "id": "1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0",
+          "url": "https://drive.google.com/file/d/1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0/view?usp=drivesdk"
+        },
+        "metadata": {
+          "id": "1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0",
+          "title": "BJT_1.10.0_standalone.pyw",
+          "mime_type": null,
+          "size": "16101255",
+          "url": "https://drive.google.com/file/d/1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0/view?usp=drivesdk",
+          "display_url": "https://drive.google.com/file/d/1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0/view?usp=drivesdk",
+          "file_or_folder": null,
+          "created_time": null,
+          "modified_time": null,
+          "parent_ids": [
+            "1AC56ut_f27FLw5jp7EQ7hN4xCh9Em8jn"
+          ],
+          "drive_id": "0AOwLpacvsnH-Uk9PVA",
+          "current_user_can_share": null,
+          "has_augmented_permissions": null,
+          "shared": null,
+          "permissions": null,
+          "source_visibility_status": "access_not_verified"
+        }
+      },
+      "SHA256SUMS.txt": {
+        "upload": {
+          "id": "1nb5Ckz_OBdZFHyngeyNUWxJqXFUIdznE",
+          "url": "https://drive.google.com/file/d/1nb5Ckz_OBdZFHyngeyNUWxJqXFUIdznE/view?usp=drivesdk"
+        },
+        "metadata": {
+          "id": "1nb5Ckz_OBdZFHyngeyNUWxJqXFUIdznE",
+          "title": "SHA256SUMS.txt",
+          "mime_type": null,
+          "size": "361",
+          "url": "https://drive.google.com/file/d/1nb5Ckz_OBdZFHyngeyNUWxJqXFUIdznE/view?usp=drivesdk",
+          "display_url": "https://drive.google.com/file/d/1nb5Ckz_OBdZFHyngeyNUWxJqXFUIdznE/view?usp=drivesdk",
+          "file_or_folder": null,
+          "created_time": null,
+          "modified_time": null,
+          "parent_ids": [
+            "1AC56ut_f27FLw5jp7EQ7hN4xCh9Em8jn"
+          ],
+          "drive_id": "0AOwLpacvsnH-Uk9PVA",
+          "current_user_can_share": null,
+          "has_augmented_permissions": null,
+          "shared": null,
+          "permissions": null,
+          "source_visibility_status": "access_not_verified"
+        }
+      }
+    },
+    "exe_upload_error": "HTTP error prior to action invocation. HTTPException: 413: File too large to download: 418199188 bytes exceeds the 104857600-byte limit.",
+    "source_raw_block": "HTTPError: 403: Google Drive file download request failed (Response: {'type': 'google_drive_http_error', 'phase': 'file download', 'upstream_status': 403, 'provider': {'error': {'code': 403, 'message': 'This file has been identified as malware or spam and cannot be downloaded.', 'errors': [{'message': 'This file has been identified as malware or spam and cannot be downloaded.', 'domain': 'global', 'reason': 'cannotDownloadAbusiveFile'}]}}})",
+    "exe_shortcut": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1Bbu7cdXX4RaAV7HSFIgE6Tg-MeIcibzh",
+      "title": "전체_EXE_다운로드.url",
+      "file_name": "전체_EXE_다운로드.url",
+      "mime_type": "application/internet-shortcut",
+      "url": "https://drive.google.com/file/d/1Bbu7cdXX4RaAV7HSFIgE6Tg-MeIcibzh/view?usp=drivesdk",
+      "parent_id": "1AC56ut_f27FLw5jp7EQ7hN4xCh9Em8jn",
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1Bbu7cdXX4RaAV7HSFIgE6Tg-MeIcibzh",
+        "title": "전체_EXE_다운로드.url",
+        "file_name": "전체_EXE_다운로드.url",
+        "mime_type": "application/internet-shortcut",
+        "url": "https://drive.google.com/file/d/1Bbu7cdXX4RaAV7HSFIgE6Tg-MeIcibzh/view?usp=drivesdk",
+        "parent_id": "1AC56ut_f27FLw5jp7EQ7hN4xCh9Em8jn"
+      }
+    },
+    "download_verification": {
+      "BJT_1.10.0_manual.zip": {
+        "passed": true,
+        "bytes": 241422,
+        "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b",
+        "full_drive_download": true
+      },
+      "BJT_1.10.0_standalone.pyw": {
+        "passed": true,
+        "bytes": 16101255,
+        "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a",
+        "full_drive_download": true
+      },
+      "SHA256SUMS.txt": {
+        "passed": true,
+        "bytes": 361,
+        "sha256": "f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80",
+        "full_drive_download": true
+      }
+    },
+    "complete": false,
+    "whole_exe_direct_upload": false,
+    "source_drive_download_verified": false,
+    "drive_folder": "https://drive.google.com/drive/folders/1AC56ut_f27FLw5jp7EQ7hN4xCh9Em8jn"
+  },
+  "notion": {
+    "bjt_page": "https://app.notion.com/p/40205e94a22581e3b272ffa8a1de15e7",
+    "ir_page": "https://app.notion.com/p/3f105e94a225801c9cd6c70784c2d9ec",
+    "updates_completed_without_warnings": true,
+    "bjt_previous_1_9_2_folded": true,
+    "native_media_preservation": "Exact targeted edits excluded native media references; BJT41 files/2embeds and IR9files unchanged in write scopes. No redundant post-write fetch claimed."
+  },
+  "overall_drive_direct_delivery_complete": false
+}

@@ -1,0 +1,52 @@
+{
+  "status": "completed_independent_replacement_binding_recheck",
+  "review_completed": true,
+  "decision": "APPROVE_PRIVATE_DRAFT_REPLACEMENT_ONLY",
+  "reviewed_revision": "5114471bc516fa50b1d5e2590af40785558caa4a",
+  "base_reviewed_revision": "78349f672a00afd467709dc7665b06eede0d2c73",
+  "checked_utc": "2026-11-17T15:08:27.880299+00:00",
+  "only_changed_paths": [
+    "release_tools/replace_ir_candidate_qa_log.json",
+    "verification/ir-integration/sol-draft-replacement-review.json"
+  ],
+  "completed_review_sha256": "18d03d5cb1912624ac4fb22dd91631283f75022f18d376aaae6c0fa5803ada68",
+  "bound_pin_file_sha256": "0677b52e2aa7f7eea329ed5156e2282c8cb55515e65efea9da8517fb651b8f1b",
+  "normalized_semantics_match": true,
+  "positive_load_pins_and_review_byte_admission_passed": true,
+  "source_review_chain_passed": true,
+  "executable_and_workflow_changes": false,
+  "status_metadata_delta_independently_accepted": {
+    "old": "PRIVATE_DRAFT_REPLACEMENT_EXECUTION_DISABLED_PENDING_COMPLETED_REVIEW_BYTE_PINS",
+    "new": "private_draft_replacement_review_completed_pins_bound",
+    "reason": "Display-only metadata; not read by execution gates. This semantic review explicitly accepts the metadata correction in addition to the previously authorized digest fill."
+  },
+  "private_draft_replacement_logically_authorized": true,
+  "workflow_id": 397108467,
+  "workflow_path": ".github/workflows/publish-verified-suite.yml",
+  "release_id": 448714553,
+  "unresolved_findings": [],
+  "public_publication_authorized": false,
+  "equipment_application": "HOLD",
+  "final_control_algorithm_approval": "HOLD",
+  "conditions": [
+    "Dispatch only exact reviewed delivery branch head; verify workflow file/path/id397108467 and actual run SHA5114471.",
+    "All fresh source/archive/reproduction/local/remote gates and per-operation readbacks remain mandatory without overrides.",
+    "Only exact two old IDs may be replaced; preserve other3 IDs and require notes8e7f0b2a and exact five cleaned asset hashes before any separate public publication."
+  ],
+  "reviewer_remote_mutations": false,
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "native collaboration continuation of the existing independent reviewer agent",
+    "original_spawn_route": "collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_integration_post",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "provider_model_identity_independently_attested": false
+  },
+  "prior_complete_logic_review": "/workspace/ir-integration-2026.11.17/sol-draft-replacement-review.json",
+  "verification_limits": [
+    "This recheck inspected the exact two-file binding diff, all executable/workflow hashes, actual review bytes and positive pin/review/source-chain gates. The earlier independent63-test result applies to unchanged executable/test bytes; no full-suite rerun was needed here.",
+    "No reviewer network mutation, push, dispatch, upload, deletion, PATCH, dependency install or product/native/hardware execution.",
+    "Public publication is a separate action after successful replacement readback; Excel COM/equipment/final-control HOLD remains unchanged."
+  ]
+}

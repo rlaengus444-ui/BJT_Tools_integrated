@@ -1,0 +1,356 @@
+{
+  "status": "original_candidate_review_completed_requested_packaging_hygiene_fix_pending",
+  "review_completed": true,
+  "final_cleaned_candidate_review_completed": false,
+  "created_utc": "2026-11-17T14:32:54.010952+00:00",
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "native collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_final_artifact",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "configuration_evidence": "Parent supplied accepted native invocation route/model/effort in the task. This report records actual independent review activity.",
+    "provider_model_identity_independently_attested": false
+  },
+  "scope": {
+    "source_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "base_revision": "a1c78e2113bbd7c5014bc5041a19c519bcbd1023",
+    "original_native_run": 44096041775,
+    "candidate_transfer_run": 44101935576,
+    "candidate_transfer_revision": "c1fcaea759cb17784ea429a1999b5b5f5188cf79",
+    "candidate_directory": "/workspace/ir-integration-2026.11.17/candidate-download",
+    "release_id": 448714553,
+    "tag": "v1.10.0",
+    "instructions_read": [
+      "/workspace/BJT_Tools_integrated/AGENTS.md",
+      "/workspace/BJT_Tools_integrated/CODEX_REVIEW_PROTOCOL.md"
+    ],
+    "source_design_and_implementation_reviews_are_prior_separate_evidence": true
+  },
+  "outcome": "HOLD_original_archive_pending_requested_exact_stale_log_removal_and_review_of_new_bytes",
+  "candidate_artifact_approved": false,
+  "public_evaluation_publication_acceptable": false,
+  "equipment_application": "HOLD",
+  "final_control_algorithm_approval": "HOLD",
+  "excel_com_verified": false,
+  "equipment_verified": false,
+  "original_assets": {
+    "BJT_1.10.0_source.zip": {
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "bbb7ea599fd00dcd5a2236fac9ca32de749b00dc5e34024ea6962b05c9883f7d"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "BJT_1.10.0_manual.zip": {
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_Windows_x64.zip": {
+      "bytes": 418199737,
+      "sha256": "7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243"
+    }
+  },
+  "actual_independent_checks": {
+    "five_asset_hashes_from_original_ci_log": true,
+    "exact_clean_source_revision": true,
+    "all_91_registry_entries_match_source_and_frozen": true,
+    "source_archive_git_tracked_files_match": 371,
+    "production_source_frozen_identical_files": 136,
+    "13_manuals_and_index_match": true,
+    "capsule_app_source_zip_exact_parity": {
+      "files": 374,
+      "payload_sha256": "58424a7fd9604649823f54f8fc79e991bd87cab74a49c57057fc981c68381adc",
+      "launcher_behavior_matches_git": true,
+      "executed": false
+    },
+    "zip_safety_crc_counts": {
+      "windows": 3728,
+      "source": 377,
+      "manual": 28,
+      "capsule": 374
+    },
+    "full_expected_per_file_release_manifest": {
+      "available": false,
+      "verified": false,
+      "all_actual_members_inventoried": true
+    },
+    "preserved_server_readback_matches_download_and_notes": true
+  },
+  "actual_pe_checks": {
+    "BJT_통합프로그램.exe": {
+      "machine": "AMD64",
+      "versions": [
+        {
+          "file": [
+            1,
+            10,
+            0,
+            0
+          ],
+          "product": [
+            1,
+            10,
+            0,
+            0
+          ]
+        }
+      ],
+      "sections": 7,
+      "bytes": 32860194,
+      "sha256": "e68cdde3fa8c05545c139708becce461d084dd7e2299079286da526de3548201"
+    },
+    "BJT_명령줄.exe": {
+      "machine": "AMD64",
+      "versions": [
+        {
+          "file": [
+            1,
+            10,
+            0,
+            0
+          ],
+          "product": [
+            1,
+            10,
+            0,
+            0
+          ]
+        }
+      ],
+      "sections": 7,
+      "bytes": 32863778,
+      "sha256": "906fc62f3e6399e5aabcd8229b5f74d049bae9b2e8899fde27335a5d05829fcf"
+    }
+  },
+  "source_preservation": {
+    "original_candidate_review": true,
+    "python_ir_modules": [
+      {
+        "path": "adapter_contracts.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "csv_source.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "excel_async.py",
+        "ast_equal_except_package_imports": false
+      },
+      {
+        "path": "excel_calculation.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "excel_test_helpers.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "excel_workbook.py",
+        "ast_equal_except_package_imports": false
+      },
+      {
+        "path": "layer_algorithm.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "layer_charts.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "observed_session.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "output_limit.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "plot_archive.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "plot_images.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "replay_workbook.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "resilient_adapter.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "sequence_field_audit.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "sequence_persistence.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "session.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "single_instance.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "slice_data.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "slice_panel.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "slice_workbook.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "standalone_ir.py",
+        "ast_equal_except_package_imports": false
+      },
+      {
+        "path": "target_temperature.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "windows_ui_adapter.py",
+        "ast_equal_except_package_imports": true
+      }
+    ],
+    "unchanged_import_normalized_modules": 21,
+    "narrow_hook_modules": [
+      "excel_async.py",
+      "excel_workbook.py",
+      "standalone_ir.py"
+    ],
+    "upstream_byte_hashes_verified": 37,
+    "old_twelve_tool_sources_byte_identical": [
+      "bjt",
+      "arrange",
+      "overlay",
+      "exchanger",
+      "alignment",
+      "thermal",
+      "compare",
+      "number_tools",
+      "sequence_z",
+      "m2_converter",
+      "chitu_checker",
+      "nesting"
+    ]
+  },
+  "findings": [
+    {
+      "id": "A1",
+      "priority": "medium",
+      "status": "requested_packaging_hygiene_fix_pending",
+      "title": "The exact Windows archive includes stale synthetic thermal-test teardown error output.",
+      "path": "BJT_통합프로그램_1.10.0_EXE/_internal/logs/errors.log",
+      "bytes": 1626,
+      "sha256": "c06264143b923010383965a790f0561014fa5eecc3908827f81ecea359394df1",
+      "assessment": "Not evidence of an IR control/equipment failure; contains two synthetic TclError traces and no observed user/device data or secrets. Root requires clean packaging before public evaluation publication. The original helper failure is preserved.",
+      "causal_evidence": {
+        "frozen_fixture_sha256": "ffc1d041bb75ff84bab0fe79f3365a551661d0a1e523f8bd87e7cc7f35beb9b1",
+        "fixture_byte_identical_to_1_9_2": true,
+        "capture_before_close_ast_unchanged": true,
+        "generic_capture_body_after_ir_special_case_unchanged": true,
+        "input_widget_walker_ast_unchanged": true,
+        "static_trace": [
+          "test_closing_cancels_both_playback_timers calls self.app._on_close(), destroying its thermal widget",
+          "OvenPlaybackControlsTests.tearDown then calls self.suite.request_close(confirm=False)",
+          "SuiteApp._persist_before_close captures every controller and records TclError for the already-destroyed thermal widget",
+          "Native runner executes frozen_fixtures once for GUI EXE and once for CLI EXE, consistent with exactly two stacks"
+        ],
+        "observed_log_bytes": 1626,
+        "observed_log_sha256": "c06264143b923010383965a790f0561014fa5eecc3908827f81ecea359394df1",
+        "actual_tk_reproduction_run": false,
+        "classification": "stale synthetic QA teardown residue; no observed product-control or equipment failure; packaging hygiene issue"
+      },
+      "accepted_fix_design": "Create a separate new candidate; remove only this exact pinned member. Preserve the original candidate and its CI hashes. Independently prove all remaining uncompressed members, executable/source/resource bytes and metadata unchanged, with only ZIP bookkeeping offsets permitted to change. Keep manual/source/launcher identical, recalculate EXE outer SHA and SHA256SUMS, retain explicit provenance. Review replacement logic and new actual candidate bytes before public publication. Native CI evidence remains for the original container and identical remaining program files; do not claim a Windows execution of the cleaned outer ZIP."
+    }
+  ],
+  "unresolved_findings": [
+    "A1 exact packaging cleanup/new candidate review pending"
+  ],
+  "limits": [
+    {
+      "item": "Complete independent expected per-file runtime manifest",
+      "available": false,
+      "verified": false,
+      "explanation": "The actual release recipe writes full file checksums outside the five release assets and does not embed release_manifest.json. Every actual member is inventoried and CRC/SHA checked, complete original archive SHA is pinned to CI, and all 91 core/136 production resources match exact source. No expected hash is invented for every third-party runtime member."
+    },
+    {
+      "item": "Raw native CI reports locally opened",
+      "verified": false,
+      "explanation": "This reviewer read original successful run/job/artifact metadata/log, transfer workflow log and actual strict transfer checker. The successful normal Actions transfer enforces raw499 cases with exactly2 permitted skips, upstream572 with0failures/errors/skips, capsule8, all20gates, and both frozen IR reports. Those raw reports are not locally downloadable through blocked Azure here and were not falsely claimed as personally rerun or opened."
+    },
+    {
+      "item": "Execution scope",
+      "application_executed": false,
+      "capsule_executed": false,
+      "windows_runtime_rerun": false,
+      "excel_com_rerun": false,
+      "hardware_rerun": false,
+      "network_used": false,
+      "dependencies_installed": false,
+      "explanation": "Actual downloaded files were read directly with standard-library code; no application/bootstrap/payload/DLL/Excel/device process was executed. Workbook formula strings and structural cells were inspected without calculation."
+    }
+  ],
+  "evidence": {
+    "artifact-review/sol-independent-facts.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-independent-facts.json",
+      "sha256": "ece512da1bd804ff54398c237b93cf5538d2d121512661d96a0a0b05751ee7b2"
+    },
+    "artifact-review/sol-source-and-residue-cause.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-source-and-residue-cause.json",
+      "sha256": "3e57f9c471247904ac6974c08f24339ef7d08d3cec1457c5af0a7195555671f7"
+    },
+    "artifact-review/candidate-verification.original-ci.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/candidate-verification.original-ci.json",
+      "sha256": "02252563e23d805ab8cb62384a41ac083c353f99c2793963d6c74098e655648a"
+    },
+    "windows-CI/run-44096041775-all.log": {
+      "path": "/workspace/ir-integration-2026.11.17/windows-CI/run-44096041775-all.log",
+      "sha256": "15c16e8a5486752051fb16dce277b8f7bfb65691c4e1602f8221137d374fa88f"
+    },
+    "windows-CI/successful-build-pins-44096041775.json": {
+      "path": "/workspace/ir-integration-2026.11.17/windows-CI/successful-build-pins-44096041775.json",
+      "sha256": "9d7e745d799842dbaff16d00a10d2ce7d61185dbd497840445caa4e4c5542f34"
+    },
+    "candidate-stage-run.log": {
+      "path": "/workspace/ir-integration-2026.11.17/candidate-stage-run.log",
+      "sha256": "08550664a7a1db04cac8f43d2dd103e5ddfda6dc1b13bbbcc269d07c3ca54f52"
+    },
+    "candidate-release-staged.json": {
+      "path": "/workspace/ir-integration-2026.11.17/candidate-release-staged.json",
+      "sha256": "6bec0f0ddfb0438a0633d201d397660b9cedf173b31482024277768612c23800"
+    },
+    "release-notes.txt": {
+      "path": "/workspace/ir-integration-2026.11.17/release-notes.txt",
+      "sha256": "78d67ed40521ea627d590bcf5bc95fe6ceec426584b6750be18b8933695cec1a"
+    },
+    "sol-code-post.json": {
+      "path": "/workspace/ir-integration-2026.11.17/sol-code-post.json",
+      "sha256": "e153b764302b72c57c2216eddee8b25dd392c249f667d2f67ea9fac31e6d6e28"
+    },
+    "sol-frozen-fixture-delta.json": {
+      "path": "/workspace/ir-integration-2026.11.17/sol-frozen-fixture-delta.json",
+      "sha256": "fb92ffa5df975567b5fccb0a2e62d39a4af9bfb649d1673c67325ee9b317dfa2"
+    },
+    "sol-candidate-transfer-final.json": {
+      "path": "/workspace/ir-integration-2026.11.17/sol-candidate-transfer-final.json",
+      "sha256": "395b045ecd6d3d6778ac53cb516347af30fcc907cc0a3438a9d95f5d7d29c154"
+    }
+  }
+}
