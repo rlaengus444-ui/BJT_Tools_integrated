@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.9.2",
+  "suite_version": "1.10.0",
   "tools": [
     {
       "id": "bjt",
@@ -151,6 +151,17 @@
       "bytes": 33170,
       "controller": "PackingApp",
       "embedded_base": false
+    },
+    {
+      "id": "ir_feedback",
+      "label": "IR 피드백 제어",
+      "description": "이미지 회복제어 Excel 내장 · 층별 IR 제어·그래프·기록 저장",
+      "source": "ir_feedback_tool.py",
+      "original_path": "IR_feedback@2372c296 + integrated adapter",
+      "sha256": "3e0c9c6ded316e08ed3cd72a20cd3b3dfda5541094ede3529b09449c2ef06bf6",
+      "bytes": 9762,
+      "controller": "App",
+      "embedded_base": false
     }
   ],
   "dependencies": [
@@ -222,7 +233,7 @@
     {
       "path": "suite_state.py",
       "purpose": "사용자별 전체 도구 입력값 저장 및 복원",
-      "sha256": "516d8d28834c72cd2cccaf3291b4af0662518311bc771a1030c2fa7e4d6b33a3"
+      "sha256": "f247bafe161e1c8c0c7b758402379f7b885fd601291e3af4fe2957bf046ca0fe"
     },
     {
       "path": "oven_i18n.py",
@@ -409,6 +420,326 @@
       "sha256": "588c0b5c41a26618d968ed21e667a98d163429081404a222820199cbf9fbc1f5",
       "tools": [
         "nesting"
+      ]
+    },
+    {
+      "path": "ir_feedback/UiaBridge.cs",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "314b4e646d81160eae9be839eda7201a76fb99d6ab939363589f940e796d5013",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/UiaBridge.dll",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/UiaBridge.fields.part.cs",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "e595c2dc7528d0712eb57d912cb56bcffc5a6711eec267788bbc23c75f6e147f",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/UiaBridge.metadata.part.cs",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "3fc5bd3a4c42f3c36fbd0a707de5a7aa29a2399a976cd1a903dfbd1373208f97",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/UiaBridge.navigation.part.cs",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "8224937800f3aa7dd8a53fbeaa56e2afa1e3c41f8d4620d017ea36668cdf7a0b",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/UiaBridge.process.part.cs",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "d57ba84055445b3e02c9c3fd79f6a0aa54089284a0d071f952f6660e71ca080b",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/__init__.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "0efef799f86deab91b54a41b10dc2f08131b63b058da9fc927b83364a220c0ee",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/adapter_contracts.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "29d5605cce7d75e81fbba304794f0a313bb96772caba82bd636fb5205a2df2fe",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/build_uia_bridge.ps1",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "38822a0856b26f32a905ccfebc0bfe3b2e512541f2856febda5a38b0a3e4e07b",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/csv_source.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "477ee425a4d219820bd351c7f6cdada7d5c013621f795de65b784f53bfc4c289",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/excel_async.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "e5adc668252bf477950e6230ecdf34eb4fab54d3b7b25a1cead91e839023a53e",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/excel_calculation.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "b2edac4f820cb09e162e90ab9959e9d3c10b69cd3e29c82a4b5aba561ad9af0e",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/excel_test_helpers.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "51f57bf46e7ff07d29e1e794bf39f3131cfa830bc29b96a72aa167661a4bb7a9",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/excel_workbook.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "d1ca2f123b75cac8852f55a62897a063a3b5cedc1de04cf7b66dcd48806e20a1",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/excel_worker.ps1",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "0723acfefd61f979503096f703c5405fb11a1fb1bf318742ec00061b9c4e0279",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/input_example_validation.json",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "48a8318183f2e92c33b720bb2157d0c5fde6df099065d0598dc991bc343059e1",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/layer_algorithm.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "14f3ebcba7716269fe02b100c6d1248d0e0070ea434bd7d966b74c5a1ec5d005",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/layer_charts.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "479980069281bff52ff33c8657234c03237f20523de2cee65d650f5cff98d942",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/native_helper.ps1",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "ba8d45748872182b61627285338efb44fc2400557ead387ad668ad864cd0c0c4",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/observed_session.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "9243fb3419972c820febcf246ea94ffe60318555812b5408d96e05c498ef3f10",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/output_limit.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "b6aaaa870393fc228b953402810aa08712a1a279d6c056918531057df4552697",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/plot_archive.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "e648f9ef7aed026a0c9990da9a602ab835eb1e42afb16ea7ed9a9f48ef00f20a",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/plot_images.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "b50c114f565a917c81cf20bbad5f13cb3c259d8d38b43d29474b5464b48a4e9c",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/provenance.json",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "4f15a97421379c4d25e07109620dc35198bd3ba62d25333451b75776431652e3",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/random80_validation.json",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "4597b3491d14ad813db64ad390e8fb110d523cb92e6d6f680f53987560dba66f",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/replay_workbook.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "b43914db46f530b782374883c60f6bced4182f6b8874111c24da13f35df89d73",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/resilient_adapter.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "602ebdbb8c8f77c27da8b8ef6290aa6794d749bde96af4fb69e1be1860b91ac3",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/sequence_field_audit.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "7baf56ded63c10d0ed07ef266aac9597835ecc92a13ca78f54de7ffc90372d42",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/sequence_persistence.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "0fed8134015b4652d40136fce7f23af4c7a098e8715a3924258802b980d013c0",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/session.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "c5c74ac1fc4a487220de1b31a6b86b21fc68be90739cd714a168233b7630d2c3",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/single_instance.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "28e6a4ef8d95d026b22d3d7e082b8d330b1a69a37f0f88b97605e9b857c3828f",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/slice_data.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "c9e16e8f95be8bdee1742910bf2d9fd3dd4f90d9460e3a4765714d60cff8f652",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/slice_panel.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "610b30f4a9017a6a5f7cc45b8c8bcaf651cd582782d44ab18c302096fe8cdde3",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/slice_workbook.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "7f0cfe0dbaec85a0418fa57327aad919b2f02da4046d06426806d4ece7dac66a",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/standalone_ir.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "991a6b9e5d34fbc4cb531054e85ea3565cbd67fb6934e50d262f76bd692fb1d6",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/target_temperature.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "dc022fb1ff0a996609ae7937954a1c3b3e27ff1949e2557b720601979d46a8df",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/templates/IR_슬라이싱_수동계산.xlsx",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "7d870e35c7c288573bf5ab279ede6eaab8fe37633cd0afbcc2c389bcdd79c8b3",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/windows_ui_adapter.py",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "f88af55db9c74948e7c5e6f8541ca312cd720af1777240402f725ab77cbe9b3d",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/workbook-replay.settings.json",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "3453c5f1911f484ced847505ce30c5f94367eb168f8f5402f5ec96ac31d3a8e6",
+      "tools": [
+        "ir_feedback"
+      ]
+    },
+    {
+      "path": "ir_feedback/workbooks/01_IR_이미지기반_회복제어_2026.10.28.xlsx",
+      "purpose": "IR 피드백 · 이미지 회복제어 원본 및 격리 런타임",
+      "sha256": "eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20",
+      "tools": [
+        "ir_feedback"
       ]
     }
   ]

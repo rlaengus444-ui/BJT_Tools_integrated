@@ -158,6 +158,12 @@ def _seed_inputs(app, work):
         getattr(converter, field).set(value)
     c['chitu_checker'].gap_var.set('1.5')
     c['chitu_checker'].show_all_var.set(True)
+    ir = c['ir_feedback']
+    ir.target_temperature.set('71.25')
+    ir.maximum_ir_percent.set('78.5')
+    ir.slice_panel.radius.set('1.25')
+    ir.slice_panel.dpi_x.set('450')
+    ir.slice_panel.dpi_y.set('500')
 
 
 def run(mode, directory):
@@ -183,12 +189,12 @@ def run(mode, directory):
         for key in app.specs:
             app.mount_tool(key, app.loader.load(key))
         root.update_idletasks()
-        assert len(app.controllers) == 12
+        assert len(app.controllers) == len(app.specs) == 13
         assert app.specs['m2_converter']['label'] == '이미지 변환'
         assert app.specs['thermal']['label'] == '오븐 열확산 시뮬레이터'
         assert not any('하나의 공간' in text or '11가지 작업 도구' in text
                        for text in _captions(app.home))
-        checks['all_12_tools_and_simple_titles'] = {'passed': True}
+        checks['all_13_tools_and_simple_titles'] = {'passed': True}
         if mode == 'save':
             from frozen_packing_gui import verify as verify_packing
             app.select_tool('nesting')
@@ -211,12 +217,23 @@ def run(mode, directory):
             assert not mismatches, 'Input restore mismatch: ' + repr(mismatches)
             assert app.controllers['thermal'].language_var.get() == 'en'
             assert app.controllers['thermal'].run_btn.cget('text') == 'Run simulation'
-            checks['fresh_process_all_12_inputs_restored'] = {'passed': True,
+            checks['fresh_process_all_13_inputs_restored'] = {'passed': True,
                 'tools': sorted(actual), 'oven_language': 'en'}
         else:
             raise ValueError('Unknown feature verification phase: ' + mode)
         assert not app.settings_warnings, app.settings_warnings
         app.request_close(confirm=False)
+        deadline = time.monotonic() + 15
+        while time.monotonic() < deadline:
+            try:
+                if not root.winfo_exists():
+                    break
+                root.update()
+            except tk.TclError:
+                break
+            time.sleep(.01)
+        else:
+            raise AssertionError('Asynchronous tool cleanup did not complete')
         assert not app.close_errors, app.close_errors
         assert settings.is_file(), 'Normal close did not save the input profile'
         checks['normal_close_persisted'] = {'passed': True}

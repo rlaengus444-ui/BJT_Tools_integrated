@@ -1,0 +1,278 @@
+{
+  "upstream_repository": "https://github.com/rlaengus444-ui/IR_feedback",
+  "upstream_commit": "2372c29602a9538f78593699c5e34c0485373524",
+  "upstream_version": "2026.11.12-layer-validity.1",
+  "adaptation": "Local Python imports changed to explicit package-relative imports. Narrow GUI selection/shutdown hooks, optional workbook byte pin and read-only retirement accessor are recorded separately; control law/CSV/Save semantics unchanged.",
+  "files": [
+    {
+      "path": "UiaBridge.cs",
+      "upstream_sha256": "314b4e646d81160eae9be839eda7201a76fb99d6ab939363589f940e796d5013",
+      "namespace_sha256": "314b4e646d81160eae9be839eda7201a76fb99d6ab939363589f940e796d5013",
+      "bytes": 398,
+      "integrated_sha256": "314b4e646d81160eae9be839eda7201a76fb99d6ab939363589f940e796d5013"
+    },
+    {
+      "path": "UiaBridge.dll",
+      "upstream_sha256": "939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215",
+      "namespace_sha256": "939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215",
+      "bytes": 26624,
+      "integrated_sha256": "939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215"
+    },
+    {
+      "path": "UiaBridge.fields.part.cs",
+      "upstream_sha256": "e595c2dc7528d0712eb57d912cb56bcffc5a6711eec267788bbc23c75f6e147f",
+      "namespace_sha256": "e595c2dc7528d0712eb57d912cb56bcffc5a6711eec267788bbc23c75f6e147f",
+      "bytes": 10005,
+      "integrated_sha256": "e595c2dc7528d0712eb57d912cb56bcffc5a6711eec267788bbc23c75f6e147f"
+    },
+    {
+      "path": "UiaBridge.metadata.part.cs",
+      "upstream_sha256": "3fc5bd3a4c42f3c36fbd0a707de5a7aa29a2399a976cd1a903dfbd1373208f97",
+      "namespace_sha256": "3fc5bd3a4c42f3c36fbd0a707de5a7aa29a2399a976cd1a903dfbd1373208f97",
+      "bytes": 12390,
+      "integrated_sha256": "3fc5bd3a4c42f3c36fbd0a707de5a7aa29a2399a976cd1a903dfbd1373208f97"
+    },
+    {
+      "path": "UiaBridge.navigation.part.cs",
+      "upstream_sha256": "8224937800f3aa7dd8a53fbeaa56e2afa1e3c41f8d4620d017ea36668cdf7a0b",
+      "namespace_sha256": "8224937800f3aa7dd8a53fbeaa56e2afa1e3c41f8d4620d017ea36668cdf7a0b",
+      "bytes": 6810,
+      "integrated_sha256": "8224937800f3aa7dd8a53fbeaa56e2afa1e3c41f8d4620d017ea36668cdf7a0b"
+    },
+    {
+      "path": "UiaBridge.process.part.cs",
+      "upstream_sha256": "d57ba84055445b3e02c9c3fd79f6a0aa54089284a0d071f952f6660e71ca080b",
+      "namespace_sha256": "d57ba84055445b3e02c9c3fd79f6a0aa54089284a0d071f952f6660e71ca080b",
+      "bytes": 14547,
+      "integrated_sha256": "d57ba84055445b3e02c9c3fd79f6a0aa54089284a0d071f952f6660e71ca080b"
+    },
+    {
+      "path": "adapter_contracts.py",
+      "upstream_sha256": "29d5605cce7d75e81fbba304794f0a313bb96772caba82bd636fb5205a2df2fe",
+      "namespace_sha256": "29d5605cce7d75e81fbba304794f0a313bb96772caba82bd636fb5205a2df2fe",
+      "bytes": 3945,
+      "integrated_sha256": "29d5605cce7d75e81fbba304794f0a313bb96772caba82bd636fb5205a2df2fe"
+    },
+    {
+      "path": "build_uia_bridge.ps1",
+      "upstream_sha256": "38822a0856b26f32a905ccfebc0bfe3b2e512541f2856febda5a38b0a3e4e07b",
+      "namespace_sha256": "38822a0856b26f32a905ccfebc0bfe3b2e512541f2856febda5a38b0a3e4e07b",
+      "bytes": 2279,
+      "integrated_sha256": "38822a0856b26f32a905ccfebc0bfe3b2e512541f2856febda5a38b0a3e4e07b"
+    },
+    {
+      "path": "csv_source.py",
+      "upstream_sha256": "2059aec43e6045434361b816f644781e64a6f032083c96708e08bd022707b2af",
+      "namespace_sha256": "477ee425a4d219820bd351c7f6cdada7d5c013621f795de65b784f53bfc4c289",
+      "bytes": 31857,
+      "integrated_sha256": "477ee425a4d219820bd351c7f6cdada7d5c013621f795de65b784f53bfc4c289"
+    },
+    {
+      "path": "excel_async.py",
+      "upstream_sha256": "6a955853a712401bd8bd2cf37663de771d0045d60a1c146048e2ca9c644393e7",
+      "namespace_sha256": "a61e9e600feaa69e4c75fb4c4ba25739b020ed74728175a065bc3895c257915d",
+      "bytes": 17549,
+      "integrated_sha256": "e5adc668252bf477950e6230ecdf34eb4fab54d3b7b25a1cead91e839023a53e"
+    },
+    {
+      "path": "excel_calculation.py",
+      "upstream_sha256": "e21b11319c1961f51a6d0d79405ad8545bfe1818a19ee0fa3538a16f064a0109",
+      "namespace_sha256": "b2edac4f820cb09e162e90ab9959e9d3c10b69cd3e29c82a4b5aba561ad9af0e",
+      "bytes": 18096,
+      "integrated_sha256": "b2edac4f820cb09e162e90ab9959e9d3c10b69cd3e29c82a4b5aba561ad9af0e"
+    },
+    {
+      "path": "excel_test_helpers.py",
+      "upstream_sha256": "51f57bf46e7ff07d29e1e794bf39f3131cfa830bc29b96a72aa167661a4bb7a9",
+      "namespace_sha256": "51f57bf46e7ff07d29e1e794bf39f3131cfa830bc29b96a72aa167661a4bb7a9",
+      "bytes": 2582,
+      "integrated_sha256": "51f57bf46e7ff07d29e1e794bf39f3131cfa830bc29b96a72aa167661a4bb7a9"
+    },
+    {
+      "path": "excel_workbook.py",
+      "upstream_sha256": "05a8f20f2b57a47fb1f3a7a7dce6ef77696284b6cd6a30b26c3a0aad57c89830",
+      "namespace_sha256": "19040c1bd3e943fdfbe8a312df2a3851dd150574630289750f1866f68d8955f0",
+      "bytes": 36752,
+      "integrated_sha256": "d1ca2f123b75cac8852f55a62897a063a3b5cedc1de04cf7b66dcd48806e20a1"
+    },
+    {
+      "path": "excel_worker.ps1",
+      "upstream_sha256": "0723acfefd61f979503096f703c5405fb11a1fb1bf318742ec00061b9c4e0279",
+      "namespace_sha256": "0723acfefd61f979503096f703c5405fb11a1fb1bf318742ec00061b9c4e0279",
+      "bytes": 8409,
+      "integrated_sha256": "0723acfefd61f979503096f703c5405fb11a1fb1bf318742ec00061b9c4e0279"
+    },
+    {
+      "path": "input_example_validation.json",
+      "upstream_sha256": "48a8318183f2e92c33b720bb2157d0c5fde6df099065d0598dc991bc343059e1",
+      "namespace_sha256": "48a8318183f2e92c33b720bb2157d0c5fde6df099065d0598dc991bc343059e1",
+      "bytes": 62830,
+      "integrated_sha256": "48a8318183f2e92c33b720bb2157d0c5fde6df099065d0598dc991bc343059e1"
+    },
+    {
+      "path": "layer_algorithm.py",
+      "upstream_sha256": "8e854d30314d0d8d99b8e39b6870f48a95a224ff2f56df7348ead8b5966a9e2d",
+      "namespace_sha256": "14f3ebcba7716269fe02b100c6d1248d0e0070ea434bd7d966b74c5a1ec5d005",
+      "bytes": 15004,
+      "integrated_sha256": "14f3ebcba7716269fe02b100c6d1248d0e0070ea434bd7d966b74c5a1ec5d005"
+    },
+    {
+      "path": "layer_charts.py",
+      "upstream_sha256": "479980069281bff52ff33c8657234c03237f20523de2cee65d650f5cff98d942",
+      "namespace_sha256": "479980069281bff52ff33c8657234c03237f20523de2cee65d650f5cff98d942",
+      "bytes": 18568,
+      "integrated_sha256": "479980069281bff52ff33c8657234c03237f20523de2cee65d650f5cff98d942"
+    },
+    {
+      "path": "native_helper.ps1",
+      "upstream_sha256": "ba8d45748872182b61627285338efb44fc2400557ead387ad668ad864cd0c0c4",
+      "namespace_sha256": "ba8d45748872182b61627285338efb44fc2400557ead387ad668ad864cd0c0c4",
+      "bytes": 48826,
+      "integrated_sha256": "ba8d45748872182b61627285338efb44fc2400557ead387ad668ad864cd0c0c4"
+    },
+    {
+      "path": "observed_session.py",
+      "upstream_sha256": "f46f8f7bd8c5eec54c79dee69e1b57b37aa1b4b2d4c4d594ab199153352103fc",
+      "namespace_sha256": "9243fb3419972c820febcf246ea94ffe60318555812b5408d96e05c498ef3f10",
+      "bytes": 2691,
+      "integrated_sha256": "9243fb3419972c820febcf246ea94ffe60318555812b5408d96e05c498ef3f10"
+    },
+    {
+      "path": "output_limit.py",
+      "upstream_sha256": "e27b0bf4a5f43ac4099d601b10abd484af7d64c22da27c1d143cf24adde350be",
+      "namespace_sha256": "b6aaaa870393fc228b953402810aa08712a1a279d6c056918531057df4552697",
+      "bytes": 8414,
+      "integrated_sha256": "b6aaaa870393fc228b953402810aa08712a1a279d6c056918531057df4552697"
+    },
+    {
+      "path": "plot_archive.py",
+      "upstream_sha256": "47bf60771feeaec4f57e76a2f7027a437ddc5a652b09905ac6330022e56ccdd5",
+      "namespace_sha256": "e648f9ef7aed026a0c9990da9a602ab835eb1e42afb16ea7ed9a9f48ef00f20a",
+      "bytes": 8175,
+      "integrated_sha256": "e648f9ef7aed026a0c9990da9a602ab835eb1e42afb16ea7ed9a9f48ef00f20a"
+    },
+    {
+      "path": "plot_images.py",
+      "upstream_sha256": "b50c114f565a917c81cf20bbad5f13cb3c259d8d38b43d29474b5464b48a4e9c",
+      "namespace_sha256": "b50c114f565a917c81cf20bbad5f13cb3c259d8d38b43d29474b5464b48a4e9c",
+      "bytes": 4748,
+      "integrated_sha256": "b50c114f565a917c81cf20bbad5f13cb3c259d8d38b43d29474b5464b48a4e9c"
+    },
+    {
+      "path": "random80_validation.json",
+      "upstream_sha256": "4597b3491d14ad813db64ad390e8fb110d523cb92e6d6f680f53987560dba66f",
+      "namespace_sha256": "4597b3491d14ad813db64ad390e8fb110d523cb92e6d6f680f53987560dba66f",
+      "bytes": 86997,
+      "integrated_sha256": "4597b3491d14ad813db64ad390e8fb110d523cb92e6d6f680f53987560dba66f"
+    },
+    {
+      "path": "replay_workbook.py",
+      "upstream_sha256": "d360f31105b8ff5cbcf9dd3ae58421394db916dd6d309ca786591485525f51b4",
+      "namespace_sha256": "b43914db46f530b782374883c60f6bced4182f6b8874111c24da13f35df89d73",
+      "bytes": 2962,
+      "integrated_sha256": "b43914db46f530b782374883c60f6bced4182f6b8874111c24da13f35df89d73"
+    },
+    {
+      "path": "resilient_adapter.py",
+      "upstream_sha256": "fd9995fc6574d5437623620c002612a5b89cab142f5eed3d67d36efc9e0a9f92",
+      "namespace_sha256": "602ebdbb8c8f77c27da8b8ef6290aa6794d749bde96af4fb69e1be1860b91ac3",
+      "bytes": 30238,
+      "integrated_sha256": "602ebdbb8c8f77c27da8b8ef6290aa6794d749bde96af4fb69e1be1860b91ac3"
+    },
+    {
+      "path": "sequence_field_audit.py",
+      "upstream_sha256": "7baf56ded63c10d0ed07ef266aac9597835ecc92a13ca78f54de7ffc90372d42",
+      "namespace_sha256": "7baf56ded63c10d0ed07ef266aac9597835ecc92a13ca78f54de7ffc90372d42",
+      "bytes": 12461,
+      "integrated_sha256": "7baf56ded63c10d0ed07ef266aac9597835ecc92a13ca78f54de7ffc90372d42"
+    },
+    {
+      "path": "sequence_persistence.py",
+      "upstream_sha256": "0fed8134015b4652d40136fce7f23af4c7a098e8715a3924258802b980d013c0",
+      "namespace_sha256": "0fed8134015b4652d40136fce7f23af4c7a098e8715a3924258802b980d013c0",
+      "bytes": 10651,
+      "integrated_sha256": "0fed8134015b4652d40136fce7f23af4c7a098e8715a3924258802b980d013c0"
+    },
+    {
+      "path": "session.py",
+      "upstream_sha256": "772628e8b0eb2f07bd345860affbf5956f2a0c3c9fd4cb79e5c056ecf90eedd6",
+      "namespace_sha256": "c5c74ac1fc4a487220de1b31a6b86b21fc68be90739cd714a168233b7630d2c3",
+      "bytes": 53047,
+      "integrated_sha256": "c5c74ac1fc4a487220de1b31a6b86b21fc68be90739cd714a168233b7630d2c3"
+    },
+    {
+      "path": "single_instance.py",
+      "upstream_sha256": "28e6a4ef8d95d026b22d3d7e082b8d330b1a69a37f0f88b97605e9b857c3828f",
+      "namespace_sha256": "28e6a4ef8d95d026b22d3d7e082b8d330b1a69a37f0f88b97605e9b857c3828f",
+      "bytes": 1372,
+      "integrated_sha256": "28e6a4ef8d95d026b22d3d7e082b8d330b1a69a37f0f88b97605e9b857c3828f"
+    },
+    {
+      "path": "slice_data.py",
+      "upstream_sha256": "c9e16e8f95be8bdee1742910bf2d9fd3dd4f90d9460e3a4765714d60cff8f652",
+      "namespace_sha256": "c9e16e8f95be8bdee1742910bf2d9fd3dd4f90d9460e3a4765714d60cff8f652",
+      "bytes": 13164,
+      "integrated_sha256": "c9e16e8f95be8bdee1742910bf2d9fd3dd4f90d9460e3a4765714d60cff8f652"
+    },
+    {
+      "path": "slice_panel.py",
+      "upstream_sha256": "cd6bf26cef0fb8feed70aedd8bd202cf8cfd51c4368eeaf8a8ecc1bfc491f718",
+      "namespace_sha256": "610b30f4a9017a6a5f7cc45b8c8bcaf651cd582782d44ab18c302096fe8cdde3",
+      "bytes": 13140,
+      "integrated_sha256": "610b30f4a9017a6a5f7cc45b8c8bcaf651cd582782d44ab18c302096fe8cdde3"
+    },
+    {
+      "path": "slice_workbook.py",
+      "upstream_sha256": "cc6246687a3f2c3180fb9dd7cb8eaf2bbd030051e79e57fb0cf37243640c4273",
+      "namespace_sha256": "7f0cfe0dbaec85a0418fa57327aad919b2f02da4046d06426806d4ece7dac66a",
+      "bytes": 3035,
+      "integrated_sha256": "7f0cfe0dbaec85a0418fa57327aad919b2f02da4046d06426806d4ece7dac66a"
+    },
+    {
+      "path": "standalone_ir.py",
+      "upstream_sha256": "cc6abfd6bd26858e2d21713689b1972219f1c224ac8b0df9569bfa7674b58bd3",
+      "namespace_sha256": "aec926cf0f2a98742a0c2a8b256747de5b7a4887ba78ed789fecac6dfc5a8967",
+      "bytes": 38074,
+      "integrated_sha256": "991a6b9e5d34fbc4cb531054e85ea3565cbd67fb6934e50d262f76bd692fb1d6"
+    },
+    {
+      "path": "target_temperature.py",
+      "upstream_sha256": "dc022fb1ff0a996609ae7937954a1c3b3e27ff1949e2557b720601979d46a8df",
+      "namespace_sha256": "dc022fb1ff0a996609ae7937954a1c3b3e27ff1949e2557b720601979d46a8df",
+      "bytes": 2217,
+      "integrated_sha256": "dc022fb1ff0a996609ae7937954a1c3b3e27ff1949e2557b720601979d46a8df"
+    },
+    {
+      "path": "windows_ui_adapter.py",
+      "upstream_sha256": "5bc8fbf6a88d7f03701c487b93986dbb2e5a73022b388bb405dd43247392db1f",
+      "namespace_sha256": "f88af55db9c74948e7c5e6f8541ca312cd720af1777240402f725ab77cbe9b3d",
+      "bytes": 53798,
+      "integrated_sha256": "f88af55db9c74948e7c5e6f8541ca312cd720af1777240402f725ab77cbe9b3d"
+    },
+    {
+      "path": "workbook-replay.settings.json",
+      "upstream_sha256": "3453c5f1911f484ced847505ce30c5f94367eb168f8f5402f5ec96ac31d3a8e6",
+      "namespace_sha256": "3453c5f1911f484ced847505ce30c5f94367eb168f8f5402f5ec96ac31d3a8e6",
+      "bytes": 957,
+      "integrated_sha256": "3453c5f1911f484ced847505ce30c5f94367eb168f8f5402f5ec96ac31d3a8e6"
+    },
+    {
+      "path": "templates/IR_슬라이싱_수동계산.xlsx",
+      "upstream_sha256": "7d870e35c7c288573bf5ab279ede6eaab8fe37633cd0afbcc2c389bcdd79c8b3",
+      "namespace_sha256": "7d870e35c7c288573bf5ab279ede6eaab8fe37633cd0afbcc2c389bcdd79c8b3",
+      "bytes": 4299152,
+      "integrated_sha256": "7d870e35c7c288573bf5ab279ede6eaab8fe37633cd0afbcc2c389bcdd79c8b3"
+    }
+  ],
+  "workbook": {
+    "name": "01_IR_이미지기반_회복제어_2026.10.28.xlsx",
+    "bytes": 11523470,
+    "sha256": "eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20",
+    "reference": "notion-file-block://6eee3819-4363-4d5a-b6e6-f0cf2f7e4f63/22109972-b8f7-45b4-8509-bac7afa49e1a?space_id=e8806794-8a30-4daa-bf95-6989c59faf8c&name=01_IR_%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B8%B0%EB%B0%98_%ED%9A%8C%EB%B3%B5%EC%A0%9C%EC%96%B4_2026.10.28.xlsx"
+  },
+  "integration_changes": {
+    "excel_workbook.py": "Optional exact-byte expected_sha256 pin; custom Excel default unchanged.",
+    "excel_async.py": "Read-only ExcelGroupFence.retirement_status accessor.",
+    "standalone_ir.py": "Workbook/settings selection and close-worker readiness hooks; original defaults preserved."
+  }
+}

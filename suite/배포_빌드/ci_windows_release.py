@@ -266,12 +266,25 @@ def main():
         if any(not allowed_source_skip(item) for item in xml.iter('testcase') if item.find('skipped') is not None):
             raise RuntimeError('Unexpected native Windows test skip; see source-tests.xml')
         summary['checks']['full_source_suite'] = {'passed': True, 'skips': skips}
+        upstream_report = reports / 'ir-upstream-tests.json'
+        run([sys.executable, REPOSITORY / 'verification/ir-integration/run_upstream_tests.py',
+             '--output', upstream_report], REPOSITORY, environment,
+            reports / 'ir-upstream-tests.log')
+        upstream = json.loads(upstream_report.read_text(encoding='utf-8'))
+        if upstream.get('passed') is not True:
+            raise RuntimeError('Isolated upstream IR regression tests did not pass')
+        summary['checks']['ir_upstream_regressions'] = upstream
+        run([sys.executable, '-m', 'unittest', 'discover', '-s', HERE,
+             '-p', 'test_ir_build_glue.py', '-v'], HERE, environment,
+            reports / 'ir-build-gates.log')
+        summary['checks']['ir_build_gates'] = {'passed': True}
         run([sys.executable, build / 'prepare_build.py'], build, environment, reports / 'prepare.log')
         write(build / 'build-provenance.json', {'commit': summary['commit'],
             'source_manifest_sha256': digest(SOURCE / 'source_manifest.json'),
             'native': summary['checks']['native_rust_build']['native']})
         for action in ('build', 'diagnose-exe', 'smoke-exe', 'smoke-gui-exe',
-                       'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe'):
+                       'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe',
+                       'ir-feedback-exe', 'ir-feedback-cli-exe'):
             run([sys.executable, build / 'run_build.py', action], build, environment,
                 reports / (action + '-runner.log'))
             if action=='build':

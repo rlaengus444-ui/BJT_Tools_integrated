@@ -193,12 +193,17 @@ def gui_smoke():
         checks['python_errors'] = errors
         checks['load_failures'] = app.failures
         app.request_close(confirm=False)
-        for _ in range(20):
+        deadline = time.monotonic() + 15
+        while time.monotonic() < deadline:
             try:
+                if not root.winfo_exists():
+                    break
                 root.update()
             except tk.TclError:
                 break
             time.sleep(.01)
+        else:
+            raise RuntimeError('Asynchronous tool cleanup did not complete')
         checks['close_errors'] = app.close_errors
         checks['tcl_bgerrors'] = list(root.tk.splitlist(root.tk.eval('set bjtFrozenBgErrors')))
         return {'passed': checks['tkdnd_available'] and not errors and not app.failures and not app.close_errors and not checks['tcl_bgerrors'],
@@ -240,6 +245,18 @@ def tool_dispatch(arguments):
 def main():
     _patch_runtime()
     arguments = sys.argv[1:]
+    if arguments[:1] == ['--frozen-ir-feedback']:
+        path = arguments[1] if len(arguments) > 1 else str(STATE / 'ir-feedback.json')
+        try:
+            embedded_runtime_check()
+            from frozen_ir_feedback import run as run_ir_feedback
+            report = run_ir_feedback(BASE, path)
+            _write(path, report)
+            return 0 if report['passed'] else 2
+        except Exception:
+            _write(path, {'passed': False, 'frozen': bool(getattr(sys, 'frozen', False)),
+                          'traceback': traceback.format_exc()})
+            return 2
     if arguments[:1] == ['--frozen-rust-probe']:
         path = arguments[1] if len(arguments) > 1 else str(STATE / 'rust-probe.json')
         try:

@@ -1,0 +1,228 @@
+{
+  "status": "completed_design_critique",
+  "decision": "Proceed with source implementation using the accepted constraints; resolve and verify them in the mandatory independent postimplementation review before release approval.",
+  "review_phase": "before_implementation",
+  "reviewer_role": "independent sol_reviewer",
+  "created_utc": "2026-11-17T12:37:08.126383+00:00",
+  "invocation": {
+    "route": "native collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_integration_design",
+    "fork_turns": "none",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "evidence": "Parent supplied actual accepted spawn_agent arguments in a collaboration message; this report and the final response are the reviewer result.",
+    "provider_model_identity_independently_attested": false,
+    "cli_authentication_diagnosis": "not attempted"
+  },
+  "scope": {
+    "integrated_repository": "/workspace/BJT_Tools_integrated",
+    "integrated_base_commit": "a1c78e2113bbd7c5014bc5041a19c519bcbd1023",
+    "integrated_branch": "feature/ir-image-workbook-1.10.0",
+    "integrated_worktree_at_start": "clean",
+    "standalone_repository": "/workspace/IR_feedback",
+    "standalone_commit": "2372c29602a9538f78593699c5e34c0485373524",
+    "standalone_worktree_at_start": "clean",
+    "diff_reviewed": null,
+    "proposal": "13th tool via ThermalFeedbackWindow hosted on ToolRoot; isolated vendored ir_feedback package; original image-recovery workbook selected by default; preserve original control and Save semantics.",
+    "excluded": [
+      "source implementation",
+      "hardware access or actuation",
+      "native GUI automation",
+      "build/release commands",
+      "uploads",
+      "dependency installation"
+    ]
+  },
+  "instructions_read": [
+    "/workspace/BJT_Tools_integrated/AGENTS.md",
+    "/workspace/BJT_Tools_integrated/CODEX_REVIEW_PROTOCOL.md",
+    "/workspace/IR_feedback/AGENTS.md",
+    "/workspace/IR_feedback/CODEX_REVIEW_PROTOCOL.md",
+    "/workspace/IR_feedback/README.md",
+    "/workspace/IR_feedback/app/README.ko.md",
+    "/workspace/IR_feedback/docs/VALIDATION.ko.md"
+  ],
+  "accepted_architecture": [
+    "Use explicit local package-relative imports without sys.path insertion or top-level module aliases; retain original provenance and byte-identical historical snapshots.",
+    "Prefer narrow _selected_workbook_spec() and _selected_settings_path() GUI hooks with default behavior identical to upstream. The integration wrapper selects the built-in workbook without temporarily swapping Tk StringVars or rewriting the control algorithm.",
+    "Keep separate stable algorithm identifiers for built-in image recovery, custom Excel, and existing basic mode. Built-in cell mappings are fixed; custom values remain independently editable and persisted.",
+    "Never fall back from a missing, altered, invalid or unavailable built-in workbook/Excel engine to the basic algorithm. Leave Connect explicitly user initiated.",
+    "Keep the owner-worker model: validate exact immutable bytes off the Tk thread, open the private read-only workbook once per existing heater topology, and reuse it for subsequent layers. Preserve existing caps, raw-result bounds, maximum step, history, PID, layer-validity, invalid-sensor and ambiguous-Save protection."
+  ],
+  "findings": [
+    {
+      "id": "D1",
+      "priority": "high",
+      "title": "Suite shutdown requires an asynchronous retirement contract, not a one-shot callback.",
+      "evidence": [
+        "suite/suite_ui.py:543-581 waits for busy work before invoking close callbacks, then immediately destroys the root.",
+        "app/standalone_ir.py:527-560 completes close on later pump ticks and can cancel close to preserve failed archive data.",
+        "app/standalone_ir.py:535-540 may finalize charts after the four-second deadline even if the session worker is still alive."
+      ],
+      "required_design": [
+        "At suite shutdown initiation, invoke IR close exactly once and mark its host pending; do not first wait for the live IR session to become idle, which would deadlock without a stop request.",
+        "Keep the Tk interpreter, IR pump and archive recovery UI alive until controller, discovery and actual slice-analysis threads have stopped, remaining chart events are captured and CSV plus both PNGs have completed.",
+        "A canceled archive folder dialog must put suite shutdown into an explicit canceled/recovery state. Keep memory and UI available, avoid repeatedly invoking close or reopening dialogs, and allow a later user close attempt.",
+        "Do not treat an elapsed grace period, running=False, controller.closed=True or an exception in a close callback as successful retirement. Track which hosts were closed once, then finalize shared bindings and root destruction only after pending hosts are genuinely retired.",
+        "Ensure a canceled suite close can persist later preference edits on the next successful close; the existing one-shot _settings_closed_saved flag otherwise keeps stale values."
+      ],
+      "validation_required": [
+        "Mocked long running IR worker, discovery, slice worker and archive each delay destruction while Tk remains responsive.",
+        "Archive partial failure/cancel preserves host and data, retry closes once and saved inputs reflect final edits.",
+        "Stop-current disconnects IR without heater restoration or forced root destruction; existing 12 tools keep their original shutdown behavior."
+      ]
+    },
+    {
+      "id": "D2",
+      "priority": "high",
+      "title": "Session worker exit does not prove Excel helper/COM retirement.",
+      "evidence": [
+        "app/session.py:683-696 calls ExcelCalculation.close() in finally.",
+        "app/excel_calculation.py:323-325 calls AsyncWorkbookGroup.close(), which is asynchronous.",
+        "app/excel_async.py:189-245 independently retires controllers and already exposes retirement_status(); ExcelGroupFence retains its prior owner until verified.",
+        "app/session.py:892-894 worker_alive only checks the session thread."
+      ],
+      "required_design": [
+        "Include read-only verified group/fence retirement evidence in the integrated close contract, including partial constructor and Excel-starting states; retain references until confirmed.",
+        "Preserve the existing fence across failures/reconnects. A dead session worker alone must not release the single-instance lease or discard owned Excel/helper cleanup.",
+        "If ownership/exit cannot be verified, keep a visible pending/recovery state. Kill only owned helper/COM processes using the existing ownership checks; never kill BinderJet or unrelated Excel."
+      ],
+      "validation_required": [
+        "Mock session exits before the excel-abort worker: host and lease remain pending until retirement_status().verified.",
+        "Exercise close during workbook inspection, partial Excel creation, hung transport, and failed cleanup; no second Excel owner or replacement control session is admitted prematurely."
+      ]
+    },
+    {
+      "id": "D3",
+      "priority": "high",
+      "title": "Acquire the existing standalone lease before any control connection and retain it through retirement.",
+      "evidence": [
+        "app/single_instance.py:8-41 uses Local\\MADDE.IRFeedback.Standalone.",
+        "The original lease is owned by standalone_ir.main(), which an embedded constructor will bypass."
+      ],
+      "required_design": [
+        "The integration adapter must use the exact same named lease before its first explicit Connect; failed acquisition starts no controller or control adapter work and leaves offline configuration available.",
+        "Retain the lease across disconnect/reconnect, PID rebound, archive-recovery cancellation and suite-close attempts; release it exactly once only after successful host/resource retirement.",
+        "Initialize cleanup ownership before fallible GUI construction, so failed mount does not leak a mutex or destroy an active controller. Other suite tools must remain usable if IR is already leased.",
+        "Use injected dummy lease, discovery and controller implementations in test_mode, with fail-fast defaults for real adapter access."
+      ],
+      "validation_required": [
+        "Windows two-process fixture checks standalone-first and suite-first contention; second instance never calls connect/Save.",
+        "Mock constructor failure, repeated close, canceled close and long cleanup verify balanced acquire/release without overlapping ownership."
+      ]
+    },
+    {
+      "id": "D4",
+      "priority": "high",
+      "title": "Use an explicit persistence allowlist on both capture and restore; restore image paths without analysis or authority.",
+      "evidence": [
+        "suite/suite_state.py:106-124 reflects Tk variables from controller attributes; the current OUTPUT_VARIABLES excludes only some IR statuses.",
+        "app/standalone_ir.py:79-101 has HWND/PID host label and many runtime status variables that generic capture would serialize.",
+        "app/slice_panel.py:104-115 set_paths() calls _changed(), which schedules analysis after 450 ms when paths exist.",
+        "app/output_limit.py:31-56 intentionally rejects invalid stored caps instead of silently widening them to 100%."
+      ],
+      "required_design": [
+        "Intercept IR capture and restore before generic variable traversal; whitelist machine, target, cap, stable algorithm ID, separate custom JSON/Excel path and cell mappings, and slice parameters only.",
+        "Ignore unknown/legacy injected runtime fields on restore, including host, HWND/PID, status, layer, recommendations, session IDs, run keys, pending generations and image datasets/active authority.",
+        "Manual path lists may be restored only as plainly labeled unanalysed selections. Do not call set_paths/_changed or leave debounce timers; dataset and active/pending authority must remain empty until a fresh manual analysis and applicable current-job confirmation.",
+        "Define precedence for the suite cap preference and original MaximumIrPreference without allowing missing/corrupt central state to widen a previously restrictive cap. Do not let integrated close write an unrelated real profile in test_mode.",
+        "Restoring values updates only configuration UI; it must not connect, search devices in test_mode, publish images or start Excel."
+      ],
+      "validation_required": [
+        "Round trip all allowed inputs while malicious saved host/status/session fields are ignored.",
+        "Restored image paths plus elapsed Tk pump time cause zero analyze/publish/control calls.",
+        "Invalid persisted cap remains a visible input error and cannot silently become 100%; custom paths/mappings survive algorithm switching."
+      ]
+    },
+    {
+      "id": "D5",
+      "priority": "high",
+      "title": "Pin the exact built-in workbook bytes and preserve asynchronous bounded inspection.",
+      "evidence": [
+        "Original workbook SHA-256 eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20; 11,523,470 bytes.",
+        "Existing PreparedWorkbook.from_file accepts the original mappings; inspected metadata first_row=13, last_row=3012, max_column=123.",
+        "Independent inspection under CPython 3.12.14 took 26.893 seconds in this environment.",
+        "app/excel_async.py:317-330 already performs initial preparation on its owner worker; app/excel_workbook.py:167-298 enforces existing XML/formula and archive limits."
+      ],
+      "required_design": [
+        "Verify the built-in expected SHA against the exact bytes that will be passed to PreparedWorkbook/Excel; a self-consistent metadata hash alone is not the published workbook pin. Preserve immutable prepared bytes across reopen/recovery.",
+        "Keep sheet 수동 테스트 and B13/D13/C13/B5/A13/BL13 fixed for built-in mode. Do not rewrite workbook formulas, change guards or clear extra cells to make the original pass.",
+        "Leave custom Excel on its existing validation rules. A missing/corrupt built-in is an actionable error with no algorithm fallback.",
+        "Do not hash, parse the 101 MB XML payload, validate all formulas or probe Excel COM synchronously on Tk. Display preparation progress, allow cancellation and permit realistic startup latency without repeatedly reopening Excel."
+      ],
+      "validation_required": [
+        "Original byte hash/mappings/6-sheet formula structure survive source and frozen packaging; a one-byte mutation is rejected before COM.",
+        "Fake worker fixture verifies one initialization per heater topology and continued per-layer processing/recovery reuse; no GUI-side preparation call.",
+        "Native Excel test using an offline fixture is required before claiming genuine Excel execution; absent desktop Excel fails clearly without fallback."
+      ]
+    },
+    {
+      "id": "D6",
+      "priority": "medium",
+      "title": "Update staging and frozen import coverage for a real package, not only source-tree imports.",
+      "evidence": [
+        "suite/배포_빌드/prepare_build.py:73-79 copies only fixed package directories; ir_feedback is currently absent.",
+        "suite/배포_빌드/prepare_build.py:203-223 scans only root/sources/chitu_overlap/powdernest and excludes relative imports from inferred imports.",
+        "app/windows_ui_adapter.py:739,790 resolves UiaBridge.dll/native_helper.ps1 beside __file__; app/excel_workbook.py:372 resolves excel_worker.ps1 similarly.",
+        "app/native_helper.ps1:328-331 pins UiaBridge.dll to 939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215, matching the independently hashed source binary."
+      ],
+      "required_design": [
+        "Stage the entire intended IR runtime subtree and add explicit package import coverage/collection for the AST-loaded wrapper. Keep scripts, approved DLL, workbook-replay.settings.json, and workbook/template assets at the same expected relative locations.",
+        "Record vendored module and resource provenance/hashes, preserving the DLL pin and using the suite manifest verification path for the new dependency owner.",
+        "Ensure source-launcher, source archive and PyInstaller paths all load the same namespaced package without relying on current directory, standalone app paths or global aliases.",
+        "In test_mode disable auto-discovery and inject a controller factory/discoverer/lease/preference/archive using temporary or in-memory state. Disabling only auto_discover is insufficient because clicking Connect can otherwise instantiate the real adapter.",
+        "Run the upstream offline suite in an isolated process, then run tests against the vendored package as well; standalone tests alone do not exercise rewritten relative imports or the wrapper."
+      ],
+      "validation_required": [
+        "Native Windows frozen fixture imports and constructs the 13th tool with fake adapters from an arbitrary cwd and non-ASCII path; verifies exact packaged resource paths and bridge/workbook hashes.",
+        "Source and frozen fixtures load IR plus another existing tool in both orders with no top-level module alias leakage or Tk default-root misbinding.",
+        "Targeted lifecycle/persistence tests, upstream IR regression suite, suite regressions, native Windows package tests and independent postimplementation diff-and-test review."
+      ]
+    }
+  ],
+  "reviewer_executed_checks": [
+    {
+      "name": "Repository baseline and rules",
+      "result": "Both repositories clean at the inspected base commits; all listed instructions and relevant source files read."
+    },
+    {
+      "name": "Original workbook archive and byte identity",
+      "result": "SHA matched supplied provenance; 14 ZIP members, 101607110 uncompressed bytes, 6 sheets, 323139 formula elements counted."
+    },
+    {
+      "name": "Existing offline workbook inspection",
+      "runtime": "CPython 3.12.14 on Linux",
+      "result": "PreparedWorkbook.from_file succeeded for fixed mappings; 26.893 seconds; source hash unchanged; no COM launched."
+    },
+    {
+      "name": "Python 3.12 grammar compatibility",
+      "result": "24 non-test app/*.py source files parsed with ast feature_version=(3,12), no SyntaxError. This is syntax evidence, not full runtime compatibility."
+    },
+    {
+      "name": "Reviewed bridge hash",
+      "result": "Source UiaBridge.dll SHA matched native_helper.ps1 hard-coded pin."
+    }
+  ],
+  "not_executed": [
+    "No integration implementation or diff exists in this design review.",
+    "No upstream/suite regression test suite was run by this reviewer in the design phase.",
+    "No actual Windows Tk embedding, OS mutex contention, frozen executable or Microsoft Excel COM execution.",
+    "No S3/M1 sensor, PLC, lamp output, real controller window or long-duration control experiment.",
+    "No hardware writes, dependency installs, build/release commands or external uploads."
+  ],
+  "holds": [
+    "Independent implementation diff-and-test review must finish and findings must be resolved before treating mandatory-review integration as release-approved.",
+    "Final control-algorithm approval and real-equipment application remain HOLD; this design critique does not lift the explicit user hold.",
+    "Linux workbook inspection does not establish actual Excel results, physical sensor freshness or heater behavior."
+  ],
+  "accepted_design_refinement": {
+    "result": "Accepted for implementation, subject to tests and actual diff review.",
+    "details": [
+      "Keep upstream standalone default close semantics via a narrow _close_workers_ready() GUI hook; wrapper disables time-based retirement by using an infinite grace and requires actual session, discovery and slice worker completion plus verified Excel fence retirement.",
+      "Read-only ExcelGroupFence.retirement_status() must snapshot the owner under the fence lock, then query the owner after releasing that lock. Never claim, clear, replace or wait for cleanup while holding the fence lock.",
+      "Suite captures inputs and initiates IR.close before busy waiting, then waits for host disposal while preserving Tk pumps; archive-cancel aborts suite close and retains recovery UI.",
+      "Both capture and restore use a strict IR allowlist; restored image paths remain unanalysed with no debounce/start/publish authority.",
+      "Production code keeps local package imports and fixed built-in selection hooks; no control or physics rewrite."
+    ]
+  }
+}

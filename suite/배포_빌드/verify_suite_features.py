@@ -47,7 +47,7 @@ def main():
                 break
     report = {'passed': len(checks) == 2 and all(item['passed'] for item in checks),
         'frozen': True, 'python_removed_from_child_path': True,
-        'scope': 'GUI EXE verifies packing and saves real controller inputs; separate CLI EXE process restores all 12 tool inputs',
+        'scope': 'GUI EXE verifies packing and saves real controller inputs; separate CLI EXE process restores all 13 tool inputs',
         'checks': checks}
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps({'passed': report['passed'], 'phases': len(checks)}))

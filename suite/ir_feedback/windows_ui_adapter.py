@@ -1,0 +1,884 @@
+"""Standalone Windows UI Automation reader for an unchanged BinderJet process.
+
+Every provider operation runs in a disposable, time-bounded helper. Explicit
+control mode uses the user's existing Sequence IR textbox and Save procedure.
+The adapter never injects code, toggles a heater, or opens a communication port.
+"""
+from __future__ import annotations
+
+import base64
+import hashlib
+import json
+import itertools
+import math
+import os
+import re
+import subprocess
+import tempfile
+import threading
+import time
+import uuid
+from pathlib import Path
+from typing import Callable
+
+try:
+    from .adapter_contracts import AdapterError, AmbiguousWriteError, SaveConfirmationPending, ControlUnavailable, ControlSuspended, ObservationSuspended, ObservationExpired, TargetIdentityError, UiReadTimeout, ReadTransportError, ProtocolError, MachineWindow, UiSnapshot
+    from . import sequence_persistence
+    from .sequence_field_audit import assert_fields_match_persisted, SequenceFieldAuditError
+    from .csv_source import MonitoringCsvReader
+except ImportError:
+    from .adapter_contracts import AdapterError, AmbiguousWriteError, SaveConfirmationPending, ControlUnavailable, ControlSuspended, ObservationSuspended, ObservationExpired, TargetIdentityError, UiReadTimeout, ReadTransportError, ProtocolError, MachineWindow, UiSnapshot
+    from . import sequence_persistence
+    from .sequence_field_audit import assert_fields_match_persisted, SequenceFieldAuditError
+    from .csv_source import MonitoringCsvReader
+
+
+_NON_IR_OPERATIONS = frozenset({"discover", "validate", "read_status", "metadata",
+    "verify_control", "recover_control", "prepare_control", "enter_sequence"})
+
+CONTROL_REASON = "기존 Sequence IR 입력·Save 경로와 저장 파일을 아직 확인하지 못했습니다."
+
+# Tests can inject a synthetic-only helper. Production uses the adjacent
+# native dispatcher; its sole UIA operation is isolated leaf-ID metadata.
+_HELPER = ""
+
+
+
+def _number(value: object) -> float | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    text = str(value).strip().replace("°C", "").replace("℃", "").strip()
+    if not re.fullmatch(r"[-+]?\d+(?:[.,]\d+)?", text):
+        return None
+    result = float(text.replace(",", "."))
+    return result if math.isfinite(result) else None
+
+
+def _log_layer_hint(target: MachineWindow) -> tuple[int | None, str | None]:
+    """Read an existing log tail only; it supplies coordinates, never temperature."""
+    if target.machine not in {"M1", "S3"} or not target.image_path:
+        return None, None
+    directory = Path(target.image_path).parent / "Logs"
+    try:
+        with os.scandir(directory) as entries:
+            candidates = [Path(entry.path) for entry in itertools.islice(entries, 4096)
+                          if entry.is_file() and entry.name.lower().endswith("_" + target.machine.lower() + ".log")]
+        if not candidates:
+            return None, None
+        path = max(candidates, key=lambda item: item.stat().st_mtime_ns)
+        stat = path.stat()
+        age = time.time() - stat.st_mtime
+        if age < -5 or age > 15:
+            return None, None
+        with path.open("rb") as stream:
+            stream.seek(max(0, stat.st_size - 262144))
+            tail = stream.read(262144).decode("utf-8", errors="replace")
+        layer = None
+        run = None
+        for line in tail.splitlines():
+            if "AUTO" not in line:
+                continue
+            if "AutoPrint started!" in line:
+                run = hashlib.sha256((str(path) + "\0" + line).encode()).hexdigest()
+                layer = None
+            match = re.search(r"\bLayer:\s*(\d+)\s*->\s*Current Z\s*=", line)
+            if match:
+                layer = int(match.group(1))
+            if any(terminal in line for terminal in ("AutoPrint finished!", "AutoPrint cancelled.", "Stopping printing as requested.")):
+                layer = None
+        return layer, run
+    except (OSError, ValueError):
+        return None, None
+
+
+class WindowsUiAdapter:
+    supports_apply_admission = True
+    _process_fence = threading.Lock()
+    _unretired_helper = None
+    _unretired_directory = None
+    _save_barrier = None
+    MINIMUM_POLL_SECONDS = 0.25
+    RECOVERY_INTERVAL_SECONDS = 1.0
+
+    def __init__(self, helper_timeout: float = 3.0, *, runner: Callable | None = None, source_factory=MonitoringCsvReader):
+        if not 0.1 <= helper_timeout <= 10:
+            raise ValueError("UI helper timeout must be in 0.1..10 seconds.")
+        self.helper_timeout = float(helper_timeout)
+        self._runner = runner
+        self._apply_admission_gate = None
+        self._source_factory = source_factory
+        self._csv = None
+        self._csv_token = None
+        self._new_sample_key = None
+        self._baseline_sample_key = None
+        self._status_at = 0.0
+        self._machine_state = "unknown"
+        self._last_applied_key = None
+        self._settings_at = 0.0
+        self._lock = threading.Lock()
+        self._helper_lock = WindowsUiAdapter._process_fence
+        self._active_helper: subprocess.Popen | None = None
+        self._target: MachineWindow | None = None
+        self._generation = 0
+        self._last_read = 0.0
+        self._last_snapshot: UiSnapshot | None = None
+        self._last_settings: list[int | float | None] = [None, None]
+        self._mode = "monitor"
+        self._control_baseline: dict | None = None
+        self._persisted_baseline = None
+        self._expected_ir: str | None = None
+        self._observation_row: dict | None = None
+        self._control_fault: str | None = None
+        self._control_hold_reason: str | None = None
+        self._control_epoch = 0
+        self._recovery_at = 0.0
+        self._recovery_candidate = None
+        self._run_key: str | None = None
+        self._layer_hint: int | None = None
+        self._native_handles: dict = {}
+        self._native_fields: dict = {}
+        self._retained_log_hint: int | None = None
+        self._log_run_key: str | None = None
+        self._dispatch_transaction = None
+        self._pending_save = None
+        self._reconciled_save = None
+
+    def set_apply_admission_gate(self, callback) -> None:
+        if callback is not None and not callable(callback):
+            raise TypeError("Apply admission gate must be callable or None.")
+        with self._lock:
+            self._apply_admission_gate = callback
+
+    def _admit_apply(self) -> None:
+        with self._lock:
+            callback = self._apply_admission_gate
+        if callback is not None:
+            callback()
+
+    def discover_matching(self, target) -> list[MachineWindow]:
+        return self.discover(target)
+
+    def discover(self, target_filter=None) -> list[MachineWindow]:
+        request = {"operation": "discover"}
+        if target_filter is not None:
+            request.update(expected_image_path=target_filter.image_path, expected_machine=target_filter.machine)
+        response = self._request(request, None)
+        if response.get('complete') is not True:
+            raise ReadTransportError('discover', '동일 장비 창 검색이 불완전합니다. 다시 검색합니다. ' + str(response.get('discovery_reason', '')))
+        result: list[MachineWindow] = []
+        for row in response.get("windows", []):
+            try:
+                machine = str(row.get("machine", "unknown")).upper()
+                result.append(MachineWindow(machine if machine in {"M1", "S3"} else "unknown", int(row["pid"]), int(row["hwnd"]), str(row.get("title", "")), str(row.get("image_path", ""))))
+            except (KeyError, TypeError, ValueError):
+                continue
+        return result
+
+    def connect(self, target: MachineWindow, stop_event) -> None:
+        self._check_stopped(stop_event)
+        if target.pid <= 0 or target.hwnd <= 0:
+            raise AdapterError("유효한 원본 프로그램 창을 선택해야 합니다.")
+        response = self._request({"operation": "validate", "pid": target.pid, "hwnd": target.hwnd, "machine": target.machine}, stop_event)
+        reported = str(response.get("machine", "unknown")).upper()
+        if target.machine in {"M1", "S3"} and reported in {"M1", "S3"} and reported != target.machine:
+            raise TargetIdentityError("선택한 창의 장비 종류가 변경되었습니다. 다시 검색하세요.")
+        with self._lock:
+            self._generation += 1
+            self._target = target
+            self._last_read = 0
+            self._last_snapshot = None
+            self._last_settings = [None, None]
+            self._control_baseline = None
+            self._persisted_baseline = None
+            self._control_fault = None
+            self._control_hold_reason = None
+            self._control_epoch = 0
+            self._recovery_at = 0.0
+            self._recovery_candidate = None
+            self._run_key = None
+            self._native_handles = dict(response.get("handles") or {})
+            self._native_fields = {}
+            self._retained_log_hint = None
+            self._log_run_key = None
+            self._update_settings_locked(response)
+            self._csv = self._source_factory(target)
+            self._csv_token = None
+            self._new_sample_key = None
+            self._baseline_sample_key = None
+            self._status_at = 0.0
+            self._last_applied_key = None
+
+    def prepare_mode(self, mode: str, stop_event) -> None:
+        self._check_stopped(stop_event)
+        if mode not in {"monitor", "preview", "control"}:
+            raise ValueError("Unknown UI mode.")
+        with self._lock:
+            target, generation = self._target, self._generation
+            self._mode = mode
+            handles = dict(self._native_handles)
+        if target is None:
+            raise AdapterError("먼저 원본 프로그램 창에 연결하세요.")
+        if mode != "control":
+            return
+        if target.machine not in {"M1", "S3"}:
+            raise ControlUnavailable("M1/S3 장비 종류가 확인된 창에서만 자동 적용할 수 있습니다.")
+        before = sequence_persistence.capture(target)
+        if before is None:
+            raise ControlUnavailable("기존 IR 저장 파일을 찾을 수 없어 Save 결과를 확인할 수 없습니다.")
+        common = {"pid": target.pid, "hwnd": target.hwnd, "machine": target.machine, "image_path": target.image_path, "_generation": generation}
+        entered = self._request(dict(common, operation="enter_sequence", handles=handles), stop_event)
+        metadata = self._request(dict(common, operation="metadata"), stop_event)
+        if not entered.get("entered", False):
+            present = {str(item.get("id")) for item in metadata.get("records", [])
+                       if isinstance(item, dict) and item.get("visible") and item.get("id") in {"textBoxHeatingOutput", "btnSave"}}
+            if present and present != {"textBoxHeatingOutput", "btnSave"}:
+                raise ControlUnavailable("Sequence 입력 화면이 불완전하여 재입장하거나 저장하지 않고 중단했습니다.")
+            if not present:
+                self._request(dict(common, operation="enter_sequence", handles=handles, force_sequence=True), stop_event)
+                metadata = self._request(dict(common, operation="metadata"), stop_event)
+        # The metadata client must exit before native field operations or
+        # showing the large virtual Process table again.
+        response = self._request(dict(common, operation="prepare_control", metadata=metadata.get("records", []), handles=handles), stop_event)
+        fields = response.get("fields")
+        displayed = _number(response.get("setting"))
+        if not isinstance(fields, dict) or "textBoxHeatingOutput" not in fields or displayed is None or not math.isclose(displayed, before.power, rel_tol=0, abs_tol=1e-9):
+            raise ControlUnavailable("Sequence IR 표시값과 기존 저장값이 일치하지 않아 자동 적용을 보류했습니다.")
+        try:
+            assert_fields_match_persisted(fields, before, target.machine)
+        except ValueError as exc:
+            raise ControlUnavailable("연결 전 미저장/다른 Sequence 설정을 확인해야 합니다. " + str(exc)) from exc
+        after = sequence_persistence.capture(target)
+        if after is None or after.sha256 != before.sha256 or after.non_ir != before.non_ir:
+            raise ControlUnavailable("연결 준비 중 기존 설정 파일이 변경되었습니다. 다시 연결하세요.")
+        handles = dict(response.get("handles") or {})
+        native_fields = dict(response.get("field_map") or {})
+        with self._lock:
+            if self._generation != generation or self._target != target:
+                raise AdapterError("연결 준비 중 대상이 변경되거나 연결이 해제되었습니다.")
+            self._control_baseline = fields
+            self._persisted_baseline = after
+            self._expected_ir = str(fields["textBoxHeatingOutput"])
+            self._native_handles = handles
+            self._native_fields = native_fields
+            self._last_settings = [before.power, before.power]
+            self._last_snapshot = None
+
+    def suspend_control(self, reason: str) -> None:
+        """Enter connected HOLD. Never edit, Save, navigate or erase chart data."""
+        with self._lock:
+            self._reconciled_save = None
+            if self._control_hold_reason is None:
+                self._recovery_candidate = None
+                self._recovery_at = 0.0
+            self._control_hold_reason = str(reason)
+            self._last_snapshot = None
+
+    def validate_control_epoch(self, expected: int) -> None:
+        with self._lock:
+            if self._target is None or self._control_fault is not None:
+                raise ControlUnavailable(self._control_fault or "연결된 제어 대상이 없습니다.")
+            if self._control_hold_reason is not None or expected != self._control_epoch:
+                raise ControlSuspended(self._control_hold_reason or "계산 후 제어 설정이 변경되어 적용을 대기합니다.")
+
+    def _recover_control(self, target, generation, stop_event):
+        now = time.monotonic()
+        if now - self._recovery_at < self.RECOVERY_INTERVAL_SECONDS:
+            return
+        self._recovery_at = now
+        try:
+            before = sequence_persistence.capture(target)
+            if before is None:
+                raise ControlSuspended("저장 설정을 확인할 수 없어 IR 적용을 대기합니다.")
+            with self._lock:
+                handles, fields = dict(self._native_handles), dict(self._native_fields)
+            response = self._request({"operation": "recover_control", "pid": target.pid,
+                "hwnd": target.hwnd, "machine": target.machine, "image_path": target.image_path,
+                "handles": handles, "field_map": fields, "_generation": generation}, stop_event)
+            if str(response.get("machine", "unknown")).upper() != target.machine:
+                raise TargetIdentityError("설정 확인 중 장비 식별값이 변경되었습니다.")
+            if str(response.get("state", "unknown")).upper() not in {"AUTO", "RUNNING"}:
+                raise ControlSuspended("AUTO/RUNNING 상태를 확인할 때까지 IR 적용을 대기합니다.")
+            values, mapping = response.get("fields"), response.get("field_map")
+            new_handles = response.get("handles")
+            if not isinstance(values, dict) or not isinstance(mapping, dict) or not mapping or not isinstance(new_handles, dict):
+                raise ControlSuspended("Sequence 입력 전체와 저장 경로를 다시 확인하는 중입니다.")
+            displayed = _number(response.get("setting"))
+            if displayed is None or not math.isclose(displayed, before.power, rel_tol=0, abs_tol=1e-9):
+                raise ControlSuspended("화면 IR 값과 저장 설정이 일치할 때까지 대기합니다.")
+            assert_fields_match_persisted(values, before, target.machine)
+            after = sequence_persistence.capture(target)
+            if (after is None or before.path != after.path or before.sha256 != after.sha256
+                    or before.non_ir != after.non_ir or before.power != after.power):
+                raise ControlSuspended("설정이 저장 중입니다. 일치하는 설정을 다시 확인합니다.")
+            self._check_stopped(stop_event)
+            signature = json.dumps({"identity": [target.machine, target.pid, target.hwnd, target.image_path],
+                "settings_path": after.path, "power": after.power, "non_ir": dict(after.non_ir), "fields": values,
+                "handles": new_handles, "field_map": mapping}, sort_keys=True, allow_nan=False)
+            transaction = self._pending_save
+            if transaction is not None:
+                if (not transaction['completed'] or after.path != transaction['original'].path
+                        or after.non_ir != transaction['original'].non_ir
+                        or not math.isclose(after.power, float(transaction['power']), abs_tol=1e-9, rel_tol=0)):
+                    raise ControlSuspended("이전 Save의 실제 저장값과 다른 설정을 확인 중입니다.")
+            with self._lock:
+                if self._generation != generation or self._target != target:
+                    raise TargetIdentityError("설정 확인 중 연결 대상이 변경되었습니다.")
+                previous = self._recovery_candidate
+                if previous is None or previous[0] != signature:
+                    self._recovery_candidate = (signature, time.monotonic())
+                    self._control_hold_reason = "새 설정 확인 중 · 안정된 설정을 한 번 더 확인합니다."
+                    return
+                if time.monotonic() - previous[1] < self.RECOVERY_INTERVAL_SECONDS:
+                    return
+                self._control_baseline = dict(values)
+                self._persisted_baseline = after
+                self._expected_ir = str(values["textBoxHeatingOutput"])
+                self._native_handles, self._native_fields = dict(new_handles), dict(mapping)
+                self._last_settings = [after.power, after.power]
+                self._machine_state = str(response["state"])
+                self._control_epoch += 1
+                self._control_hold_reason = None
+                self._recovery_candidate = None
+                self._last_snapshot = None
+                if transaction is not None:
+                    self._reconciled_save = (transaction['nonce'], transaction['run_key'], transaction['layer'])
+                    self._pending_save = None
+                    if WindowsUiAdapter._save_barrier is transaction:
+                        WindowsUiAdapter._save_barrier = None
+                    transaction['directory'].cleanup()
+        except (ControlSuspended, UiReadTimeout, sequence_persistence.PersistenceUnavailable, SequenceFieldAuditError) as error:
+            self._check_stopped(stop_event)
+            self._recovery_candidate = None
+            self.suspend_control(str(error))
+
+    def _poll_save_completion(self, target, generation, stop_event):
+        transaction = self._pending_save
+        if transaction is None:
+            return False
+        self._check_stopped(stop_event)
+        if transaction['target'] != target or transaction['generation'] != generation:
+            raise AmbiguousWriteError("Save 결과 확인 중 원본 연결이 변경되었습니다.")
+        helper = transaction['helper']
+        if helper is not None and helper.poll() is None:
+            return True
+        if not transaction['completed']:
+            try:
+                receipt = json.loads(transaction['receipt'].read_text(encoding='utf-8-sig'))
+                expected = dict(transaction_id=transaction['nonce'], pid=target.pid,
+                    hwnd=target.hwnd, power=transaction['power'], completed=True)
+                if (not isinstance(receipt, dict) or receipt != expected
+                        or type(receipt.get('completed')) is not bool
+                        or type(receipt.get('pid')) is not int or type(receipt.get('hwnd')) is not int
+                        or type(receipt.get('power')) is not str
+                        or (helper is not None and helper.returncode != 0)):
+                    raise ValueError('Completion receipt does not match the owned transaction.')
+            except (OSError, ValueError) as exc:
+                raise AmbiguousWriteError("이전 Save의 처리 종료 증거를 확인하지 못했습니다.") from exc
+            if helper is not None:
+                stdout, stderr = helper.communicate(timeout=0.5)
+                try:
+                    response = json.loads(stdout.lstrip('\ufeff').strip())
+                    if (not isinstance(response, dict) or response.get('success') is not True
+                            or response.get('save_invoked') is not True
+                            or _number(response.get('setting')) != float(transaction['power'])):
+                        raise ValueError('Invalid completion response.')
+                except (ValueError, TypeError) as exc:
+                    raise AmbiguousWriteError("Save 종료 응답의 무결성을 확인하지 못했습니다.") from exc
+                with self._lock:
+                    if self._active_helper is helper:
+                        self._active_helper = None
+            transaction['completed'] = True
+            self._recovery_candidate = None
+            self._recovery_at = 0
+        return False
+
+    def _update_settings_locked(self, response: dict) -> None:
+        displayed = _number(response.get("setting"))
+        if displayed is not None and 0 <= displayed <= 100:
+            self._last_settings = [displayed, displayed]
+        powers = response.get("status_powers", {})
+        if isinstance(powers, dict):
+            for heater in (1, 2):
+                power = _number(powers.get(str(heater)))
+                # An OFF status is not a recipe change. Preserve the last known
+                # command setting across the normal production off window.
+                if power is not None and 0 < power <= 100:
+                    self._last_settings[heater - 1] = power
+
+    def read_native_state(self, stop_event) -> str:
+        """Read native machine state without navigating or editing the UI."""
+        with self._lock:
+            target, generation = self._target, self._generation
+            handles = dict(self._native_handles)
+        if target is None:
+            raise TargetIdentityError("원본 프로그램에 연결되어 있지 않습니다.")
+        response = self._request({"operation": "read_status", "pid": target.pid,
+            "hwnd": target.hwnd, "machine": target.machine, "handles": handles,
+            "bootstrap_status": not bool(handles.get('state')),
+            "_generation": generation}, stop_event)
+        with self._lock:
+            if self._generation != generation or self._target != target:
+                raise TargetIdentityError('운전 상태 확인 중 연결 대상이 변경되었습니다.')
+            if not handles.get('state') and response.get('handles'):
+                self._native_handles.update(response['handles'])
+        return str(response.get("state", "unknown"))
+
+    def read_snapshot(self, stop_event) -> UiSnapshot:
+        self._check_stopped(stop_event)
+        with self._lock:
+            target, generation = self._target, self._generation
+            handles = dict(self._native_handles)
+            if target is None or self._csv is None:
+                raise AdapterError("원본 프로그램에 연결되어 있지 않습니다.")
+            if self._last_snapshot is not None and time.monotonic() - self._last_read < self.MINIMUM_POLL_SECONDS:
+                return self._last_snapshot
+        source = self._csv.read()
+        sample = source.sample
+        pending = self._poll_save_completion(target, generation, stop_event)
+        if self._mode == "control" and not pending and time.monotonic() - self._status_at >= 1.0:
+            try:
+                status = self._request({"operation": "read_status", "pid": target.pid, "hwnd": target.hwnd,
+                                        "machine": target.machine, "handles": handles, "_generation": generation}, stop_event)
+                self._machine_state = str(status.get("state", "unknown"))
+            except ControlSuspended as error:
+                self._check_stopped(stop_event)
+                self.suspend_control(str(error))
+                self._machine_state = "unknown"
+            except ReadTransportError:
+                raise
+            except AdapterError as error:
+                self._check_stopped(stop_event)
+                if not any(text in str(error) for text in ("WM_GETTEXT", "UI 응답 제한", "not responding")):
+                    raise
+                # This request contains no edit or Save. Keep reading the CSV,
+                # but UNKNOWN makes the worker reset learning and suspend IR.
+                self._machine_state = "unknown"
+            self._status_at = time.monotonic()
+        machine_state = self._machine_state if self._mode == "control" else source.context.state
+        persisted = None
+        if source.is_new or time.monotonic() - self._settings_at >= 1.0:
+            try:
+                persisted = sequence_persistence.capture(target)
+                if self._mode == "control" and self._persisted_baseline is not None:
+                    expected = _number(self._expected_ir)
+                    if (persisted is None or expected is None
+                            or not math.isclose(persisted.power, expected, rel_tol=0, abs_tol=1e-9)
+                            or persisted.non_ir != self._persisted_baseline.non_ir):
+                        self.suspend_control("BJT 저장 설정 변경 · 새 설정을 확인할 때까지 IR 적용 대기")
+            except sequence_persistence.PersistenceUnavailable as error:
+                if self._mode != "control" or self._persisted_baseline is None:
+                    raise
+                self.suspend_control(str(error))
+            self._settings_at = time.monotonic()
+        if self._mode == "control" and not pending and self._control_hold_reason is not None and self._control_fault is None:
+            with self._lock:
+                self._last_settings = [persisted.power, persisted.power] if persisted is not None else [None, None]
+            self._recover_control(target, generation, stop_event)
+            persisted = None  # Do not overwrite an adopted baseline with the earlier read.
+            machine_state = self._machine_state
+        with self._lock:
+            if self._generation != generation or self._target != target:
+                raise AdapterError("관측 중 연결이 해제되거나 변경되었습니다.")
+            if persisted is not None:
+                self._last_settings = [persisted.power, persisted.power]
+            if self._run_key != source.context.run_key:
+                self._baseline_sample_key = None
+                self._new_sample_key = None
+            self._run_key = source.context.run_key
+            if sample and source.token:
+                if self._baseline_sample_key is None:
+                    self._baseline_sample_key = sample.key
+                if source.is_new:
+                    self._new_sample_key = sample.key
+            age = time.time() - sample.finished.timestamp() if sample and sample.finished is not None else None
+            fresh = bool(age is not None and age >= -2 and source.token is not None
+                and getattr(sample, 'measurement_valid', True) and source.context.state == 'AUTO'
+                and source.context.current_layer is not None
+                and sample.layer_index <= source.context.current_layer <= sample.layer_index + 1)
+            key = sample.key if sample and source.token and fresh and (
+                sample.key == self._baseline_sample_key or sample.key == self._new_sample_key) else None
+            expired_key = None  # Decisions are invalidated by evidence changes, not elapsed time.
+            details = source.details
+            if self._mode == "control" and machine_state == "unknown":
+                details += " 원본 UI 응답 대기 · CSV 조회만 계속하며 IR 적용은 정지합니다."
+            if sample and sample.delay_seconds is not None:
+                details += f" 리코팅 완료→인쇄 완료 기록 차이 {sample.delay_seconds:.1f}초."
+            ready = self._mode == "control" and self._control_baseline is not None and self._control_fault is None and self._control_hold_reason is None
+            snapshot = UiSnapshot(target=target, layer_index=sample.layer_index if sample else None,
+                t_recoating_c=sample.temperature if sample else None, observation_key=key,
+                heater1_setting_percent=self._last_settings[0], heater2_setting_percent=self._last_settings[1],
+                machine_state=machine_state, control_available=ready,
+                control_unavailable_reason=self._control_fault or self._control_hold_reason or CONTROL_REASON,
+                details=details, coupled_output=True, minimum_poll_seconds=self.MINIMUM_POLL_SECONDS,
+                run_key=self._run_key,
+                job_first_layer=source.context.first_layer,
+                job_first_started=source.context.first_started.timestamp() if source.context.first_started else None,
+                job_auto_started=source.context.auto_started.timestamp() if source.context.auto_started else None,
+                job_current_layer=source.context.current_layer,
+                job_start_offset=source.context.auto_position,
+                job_log_identity=source.context.log_identity,
+                observation_is_new=bool(sample and sample.key == self._new_sample_key and fresh),
+                control_recoverable=self._control_hold_reason is not None and self._control_fault is None,
+                control_epoch=self._control_epoch,
+                slicing_image_path=getattr(sample, 'slicing_image_path', ''),
+                recoating_finished=getattr(sample, 'recoating_finished', None),
+                slice_lineage=getattr(sample, 'slice_lineage', ''),
+                csv_generation=getattr(sample, 'source_generation', ''),
+                observation_fresh=bool(fresh and sample and sample.key == self._new_sample_key), measurement_valid=getattr(sample, 'measurement_valid', True),
+                invalid_reason=getattr(sample, 'invalid_reason', ''), actual_target=target,
+                expired_observation_key=expired_key,
+                save_reconciliation=self._reconciled_save if ready else None)
+            self._csv_token = source.token
+            self._layer_hint = source.context.current_layer
+            self._observation_row = {"row_index": sample.layer_index, "temperature": sample.temperature,
+                                     "start": sample.start} if sample else None
+            self._last_snapshot, self._last_read = snapshot, time.monotonic()
+            return snapshot
+
+    def _verify_csv_observation(self, expected_key):
+        with self._lock:
+            reader, generation = self._csv, self._generation
+        if reader is None:
+            raise AdapterError("연결이 해제되어 CSV 검증을 중단했습니다.")
+        source = reader.read()
+        with self._lock:
+            if generation != self._generation:
+                raise AdapterError("연결이 변경되어 CSV 검증을 중단했습니다.")
+            if source.is_new and source.sample is not None and source.context.run_key == self._run_key:
+                self._new_sample_key = source.sample.key
+        sample = source.sample
+        if source.context.run_key != self._run_key:
+            raise ControlUnavailable("CSV의 작업이 변경되어 이전 작업의 계산값을 저장하지 않았습니다.")
+        if source.token is None:
+            raise ObservationSuspended("CSV 기록 중 · 이번 계산을 취소하고 완전한 완료 행을 기다립니다.")
+        if (sample is None or not getattr(sample, "measurement_valid", True)
+                or sample.finished is None or sample.key != expected_key):
+            raise ObservationSuspended("CSV 완료 층 갱신 · 이전 계산을 취소하고 새 관찰을 확인합니다.")
+        hint = source.context.current_layer
+        if source.context.state != 'AUTO' or hint is None or not sample.layer_index <= hint <= sample.layer_index + 1:
+            raise ControlUnavailable("CSV 완료 층과 현재 운전 로그의 상태·층이 일치하지 않습니다.")
+        age = time.time() - sample.finished.timestamp()
+        if sample.key != self._new_sample_key:
+            raise ControlUnavailable("기존 기준 관찰은 새 제어 명령에 재사용하지 않습니다.")
+        if age < -2:
+            raise ObservationSuspended("CSV 시각이 현재 시각보다 앞서 있어 새 측정을 기다립니다.")
+        return source.token
+
+    def apply_ir_power(self, heater: int, power_percent: int | float, expected_observation_key: str, stop_event) -> None:
+        try:
+            return self._apply_ir_power(heater, power_percent, expected_observation_key, stop_event)
+        except ObservationSuspended:
+            with self._lock:
+                self._last_snapshot = None
+                self._last_read = 0
+            raise
+        except ControlSuspended as error:
+            self.suspend_control(str(error))
+            raise
+
+    def _apply_ir_power(self, heater: int, power_percent: int | float, expected_observation_key: str, stop_event) -> None:
+        self._check_stopped(stop_event)
+        if heater not in (1, 2) or isinstance(power_percent, bool) or not isinstance(power_percent, (int, float)) or not math.isfinite(power_percent) or not 0 <= power_percent <= 100:
+            raise ValueError("Heater must be 1 or 2 and power must be finite in 0..100.")
+        power_text = format(power_percent, ".17g")
+        with self._lock:
+            target, snapshot = self._target, self._last_snapshot
+            baseline, persisted = self._control_baseline, self._persisted_baseline
+            expected_ir, observation = self._expected_ir, self._observation_row
+            generation = self._generation
+            handles = dict(self._native_handles)
+            if self._mode != "control" or self._control_fault or baseline is None or persisted is None or target is None:
+                raise ControlUnavailable(self._control_fault or CONTROL_REASON)
+            if self._control_hold_reason is not None:
+                raise ControlSuspended(self._control_hold_reason)
+            if snapshot is None or snapshot.observation_key != expected_observation_key or observation is None:
+                raise ControlUnavailable("최신 T_recoating 관측값을 다시 확인해야 합니다.")
+            if self._last_applied_key == expected_observation_key:
+                raise ControlUnavailable("같은 CSV 행에는 IR을 두 번 저장하지 않습니다.")
+            if not snapshot.control_available or self._layer_hint is None or not self._layer_hint - 1 <= observation["row_index"] <= self._layer_hint:
+                raise ControlUnavailable("현재 생산 층과 일치하는 최신 관측값이 필요합니다.")
+            layer_hint = self._layer_hint
+        current_hint, _ = _log_layer_hint(target)
+        if current_hint is not None:
+            if not current_hint - 1 <= observation["row_index"] <= current_hint:
+                raise ControlUnavailable("계산 이후 생산 층이 진행되어 이전 관측값의 적용을 중단했습니다.")
+            layer_hint = current_hint
+        try:
+            current = sequence_persistence.capture(target)
+        except sequence_persistence.PersistenceUnavailable as error:
+            raise ControlSuspended("설정 저장 중 · IR 입력 전 새 설정 확인 대기: " + str(error)) from error
+        expected_number = _number(expected_ir)
+        if current is None or expected_number is None or not math.isclose(current.power, expected_number, rel_tol=0, abs_tol=1e-9) or current.non_ir != persisted.non_ir:
+            raise ControlSuspended("기존 IR 또는 다른 저장 설정이 변경되어 자동 적용을 중단했습니다.")
+        common = {"pid": target.pid, "hwnd": target.hwnd, "machine": target.machine, "image_path": target.image_path, "_generation": generation}
+        csv_token = self._verify_csv_observation(expected_observation_key)
+        fresh = self._request(dict(common, operation="verify_control", handles=handles,
+                                   field_map=self._native_fields, observation=observation, layer_hint=layer_hint,
+                                   csv_token=csv_token), stop_event)
+        fresh_fields = fresh.get("fields")
+        if not isinstance(fresh_fields, dict) or fresh_fields != dict(baseline, textBoxHeatingOutput=expected_ir):
+            raise ControlSuspended("IR 또는 다른 Sequence 입력값이 변경되어 자동 저장을 중단했습니다.")
+        try:
+            current = sequence_persistence.capture(target)
+        except sequence_persistence.PersistenceUnavailable as error:
+            raise ControlSuspended("설정 저장 중 · IR 입력 전 새 설정 확인 대기: " + str(error)) from error
+        if current is None or current.non_ir != persisted.non_ir or not math.isclose(current.power, expected_number, rel_tol=0, abs_tol=1e-9):
+            raise ControlSuspended("IR 입력 전 기존 저장 설정이 변경되었습니다.")
+        try:
+            assert_fields_match_persisted(fresh_fields, current, target.machine)
+        except SequenceFieldAuditError as exc:
+            raise ControlSuspended("IR 입력 전에 다른 설정의 미저장 변경을 발견했습니다. " + str(exc)) from exc
+        handles = dict(fresh.get("handles") or handles)
+        native_fields = dict(fresh.get("field_map") or self._native_fields)
+        csv_token = self._verify_csv_observation(expected_observation_key)
+        transaction_directory = tempfile.TemporaryDirectory(prefix="binderjet-save-")
+        transaction = dict(directory=transaction_directory, nonce=uuid.uuid4().hex,
+            target=target, generation=generation, run_key=snapshot.run_key,
+            layer=snapshot.layer_index, key=expected_observation_key, power=power_text,
+            original=current, helper=None, completed=False)
+        directory = transaction_directory.name
+        receipt = Path(directory) / "dispatch-completed.json"
+        transaction['receipt'] = receipt
+        self._dispatch_transaction = transaction
+        try:
+            marker = Path(directory) / "save-started.txt"
+            edit_marker = Path(directory) / "edit-started.txt"
+            try:
+                response = self._request({"operation": "apply", "pid": target.pid, "hwnd": target.hwnd, "machine": target.machine, "image_path": target.image_path,
+                                          "_generation": generation,
+                                          "baseline": baseline, "expected_ir": expected_ir, "observation": observation,
+                                          "handles": handles, "field_map": native_fields,
+                                          "csv_token": csv_token,
+                                          "layer_hint": layer_hint,
+                                          "power": power_text,
+                                          "transaction_id": transaction["nonce"], "dispatch_receipt": str(receipt),
+                                          "save_marker": str(marker), "edit_marker": str(edit_marker)}, stop_event)
+                readback = _number(response.get("setting"))
+                if not response.get("save_invoked") or readback is None or not math.isclose(readback, power_percent, rel_tol=0, abs_tol=1e-9):
+                    raise AdapterError("IR Save 확인 응답이 일치하지 않습니다.")
+                verified = sequence_persistence.verify_after(current, power_percent, timeout=1.0)
+                if verified is None:
+                    raise sequence_persistence.PersistenceVerificationTimeout("IR 저장 결과를 확인할 수 없습니다.")
+            except Exception as exc:
+                # Only a known retained synchronous dispatch or a completed
+                # dispatch with delayed persistence may enter reconciliation.
+                pending = isinstance(exc, SaveConfirmationPending)
+                completed = receipt.exists() and isinstance(exc, sequence_persistence.PersistenceVerificationTimeout)
+                if (pending or completed) and not (stop_event is not None and stop_event.is_set()):
+                    transaction['helper'] = self._active_helper if pending else None
+                    transaction['owner'] = self
+                    self._pending_save = transaction
+                    WindowsUiAdapter._save_barrier = transaction
+                    self._last_applied_key = expected_observation_key
+                    self.suspend_control("Save 처리 확인 중 · 연결 유지, 완료 확인 후 새 층에서 자동 재개")
+                    raise SaveConfirmationPending(self._control_hold_reason) from exc
+                if marker.exists() or edit_marker.exists():
+                    with self._lock:
+                        self._control_fault = "자동 적용 결과를 확인할 수 없습니다. 다시 연결하기 전에 원본 설정을 확인하세요."
+                    raise AmbiguousWriteError("IR 입력값이 수정되었거나 Save가 실행되었을 수 있으나 완료 여부를 확인하지 못했습니다. 같은 명령을 자동 재시도하지 않습니다. " + str(exc)) from exc
+                if not isinstance(exc, (ControlSuspended, ObservationSuspended)):
+                    with self._lock:
+                        self._control_fault = "자동 적용을 중단했습니다. 결과를 확인한 뒤 다시 연결하세요."
+                raise
+        finally:
+            self._dispatch_transaction = None
+            if self._pending_save is not transaction:
+                transaction_directory.cleanup()
+        with self._lock:
+            if self._generation != generation or self._target != target:
+                raise AmbiguousWriteError("IR 저장 확인 중 연결이 변경되었습니다. 같은 명령을 자동 재시도하지 않습니다.")
+            self._persisted_baseline = verified
+            self._native_handles = handles
+            self._native_fields = native_fields
+            self._control_baseline = dict(fresh_fields, textBoxHeatingOutput=str(response["setting"]))
+            self._expected_ir = str(response["setting"])
+            self._last_settings = [power_percent, power_percent]
+            self._last_applied_key = expected_observation_key
+            self._last_snapshot = None
+            self._last_read = 0
+
+    def disconnect(self) -> None:
+        with self._lock:
+            self._generation += 1
+            self._target = None
+            self._last_snapshot = None
+            self._control_baseline = None
+            self._persisted_baseline = None
+            self._native_handles = {}
+            self._native_fields = {}
+            self._csv = None
+            self._csv_token = None
+            helper = self._active_helper
+        if helper is not None and helper.poll() is None:
+            try:
+                helper.kill()  # Only the helper process created by this adapter.
+            except OSError:
+                pass
+
+    @staticmethod
+    def _check_stopped(stop_event) -> None:
+        if stop_event is not None and stop_event.is_set():
+            raise AdapterError("관측이 중지되었습니다.")
+
+    @staticmethod
+    def _response_error(request, response, fallback):
+        response = response if isinstance(response, dict) else {}
+        kind = response.get("error_kind")
+        if kind == 'deadline_wait':
+            return ObservationExpired(str(response.get('error') or fallback))
+        if kind == 'observation_wait':
+            return ObservationSuspended(str(response.get('error') or fallback))
+        error_type = ControlSuspended if kind == "control_wait" else TargetIdentityError if kind == "identity" else AdapterError
+        return error_type("[" + str(request.get("operation", "unknown")) + "] " + str(response.get("error", fallback)))
+
+    def _request(self, request: dict, stop_event) -> dict:
+        self._check_stopped(stop_event)
+        barrier = WindowsUiAdapter._save_barrier
+        if barrier is not None and barrier is not self._pending_save:
+            raise AmbiguousWriteError("다른 연결의 Save 종료 확인이 남아 있어 원본 UI 요청을 보류합니다.")
+        request = dict(request, bridge_path=str(Path(__file__).with_name("UiaBridge.dll")))
+        expected_generation = request.get("_generation")
+        with self._lock:
+            if expected_generation is not None and expected_generation != self._generation:
+                raise AdapterError("연결이 변경되어 이전 작업을 중단했습니다.")
+        if self._runner is not None:
+            try:
+                if request.get("operation") == "apply":
+                    self._admit_apply()
+                response = self._runner(request, stop_event)
+            except (OSError, TimeoutError) as exc:
+                operation = request.get("operation", "unknown")
+                if operation in _NON_IR_OPERATIONS:
+                    raise ReadTransportError(operation, str(exc)) from exc
+                raise
+            if not isinstance(response, dict):
+                raise ProtocolError("UI 읽기 도우미가 올바른 응답을 반환하지 않았습니다.")
+            if not response.get("success", False):
+                raise self._response_error(request, response, "UI 읽기에 실패했습니다.")
+            return response
+        if os.name != "nt":
+            raise AdapterError("기존 프로그램 화면 연결은 Windows에서만 지원합니다.")
+        deadline_seconds = max(self.helper_timeout, 5.0) if request.get("operation") in {"prepare_control", "apply"} else self.helper_timeout
+        if not self._helper_lock.acquire(timeout=deadline_seconds):
+            raise AdapterError("이전 UI 읽기가 아직 종료되지 않았습니다.")
+        process = None
+        delivery_possible = False
+        retained_save = False
+        try:
+            barrier = WindowsUiAdapter._save_barrier
+            if barrier is not None and barrier is not self._pending_save:
+                raise AmbiguousWriteError("다른 연결의 Save 종료 확인이 남아 있습니다.")
+            previous = WindowsUiAdapter._unretired_helper
+            if previous is not None:
+                try:
+                    retired = previous.poll() is not None
+                except OSError:
+                    retired = False
+                if not retired:
+                    raise ReadTransportError(request.get("operation", "unknown"),
+                        "이전 UI 도우미의 종료를 확인할 수 없습니다.", helper_retired=False)
+                WindowsUiAdapter._unretired_helper = None
+                directory = WindowsUiAdapter._unretired_directory
+                WindowsUiAdapter._unretired_directory = None
+                if directory is not None:
+                    try:
+                        directory.cleanup()
+                    except OSError:
+                        pass
+            helper_directory = tempfile.TemporaryDirectory(prefix="binderjet-uia-")
+            helper_path = Path(helper_directory.name) / "reader.ps1"
+            helper_source = _HELPER or Path(__file__).with_name("native_helper.ps1").read_text(encoding="utf-8-sig")
+            helper_path.write_text(helper_source, encoding="utf-8-sig")
+            powershell = str(Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32/WindowsPowerShell/v1.0/powershell.exe")
+            loader = "& ([scriptblock]::Create([IO.File]::ReadAllText('" + str(helper_path).replace("'", "''") + "')))"
+            encoded_loader = base64.b64encode(loader.encode("utf-16-le")).decode("ascii")
+            process = subprocess.Popen([powershell, "-NoLogo", "-NoProfile", "-NonInteractive", "-Mta", "-EncodedCommand", encoded_loader],
+                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                       text=True, encoding="utf-8", errors="replace", creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+            with self._lock:
+                connection_changed = expected_generation is not None and expected_generation != self._generation
+                if not connection_changed:
+                    self._active_helper = process
+            if connection_changed:
+                # The child is still waiting for stdin: no UI operation has
+                # received a request, so disconnect cannot start a late Save.
+                raise AdapterError("연결이 해제되어 이전 UI 작업을 취소했습니다.")
+            deadline = time.monotonic() + deadline_seconds
+            payload: str | None = json.dumps(request, ensure_ascii=False)
+            admitted = False
+            while True:
+                self._check_stopped(stop_event)
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise UiReadTimeout(f"원본 UI 응답 제한 시간({deadline_seconds:g}초)을 초과했습니다.", request.get("operation", "unknown"), request.get("operation") not in _NON_IR_OPERATIONS)
+                try:
+                    if request.get("operation") == "apply" and not admitted:
+                        self._admit_apply()
+                        admitted = True
+                    if payload is not None:
+                        delivery_possible = True
+                    stdout, stderr = process.communicate(payload, timeout=min(0.05, remaining))
+                    break
+                except subprocess.TimeoutExpired:
+                    payload = None
+            try:
+                response = json.loads(stdout.lstrip("\ufeff").strip())
+            except (json.JSONDecodeError, TypeError) as exc:
+                raise ProtocolError("Windows UI 읽기 도우미가 올바른 응답을 반환하지 않았습니다. " + stderr[-300:]) from exc
+            if not isinstance(response, dict) or not response.get("success", False):
+                raise self._response_error(request, response, "Windows UI 읽기에 실패했습니다.")
+            return response
+        except UiReadTimeout as exc:
+            if (request.get('operation') == 'apply' and delivery_possible and process is not None
+                    and request.get('dispatch_receipt') and Path(request['save_marker']).exists()
+                    and not (stop_event is not None and stop_event.is_set())):
+                transaction = self._dispatch_transaction
+                if transaction is None or transaction['target'] != self._target:
+                    raise AmbiguousWriteError("Save 요청의 소유권을 확인할 수 없습니다.") from exc
+                transaction['helper'] = process
+                transaction['owner'] = self
+                self._pending_save = transaction
+                WindowsUiAdapter._save_barrier = transaction
+                retained_save = True
+                raise SaveConfirmationPending("Save 응답 대기 · 요청을 반복하지 않고 처리 종료를 추적합니다.") from exc
+            raise
+        except OSError as exc:
+            operation = request.get("operation", "unknown")
+            if operation in _NON_IR_OPERATIONS:
+                raise ReadTransportError(operation, str(exc)) from exc
+            raise
+        finally:
+            retired = True
+            if process is not None and not retained_save:
+                try:
+                    if process.poll() is None:
+                        try:
+                            process.kill()
+                        except OSError:
+                            pass
+                    try:
+                        process.communicate(timeout=0.5)
+                    except (OSError, subprocess.TimeoutExpired):
+                        pass
+                    retired = process.poll() is not None
+                except OSError:
+                    retired = False
+            if retained_save:
+                retired = False
+            with self._lock:
+                if self._active_helper is process and retired:
+                    self._active_helper = None
+            if not retired:
+                WindowsUiAdapter._unretired_helper = process
+                WindowsUiAdapter._unretired_directory = locals().get("helper_directory")
+            elif "helper_directory" in locals():
+                try:
+                    helper_directory.cleanup()
+                except OSError:
+                    pass
+            self._helper_lock.release()
+            if not retired and not retained_save:
+                operation = request.get("operation", "unknown")
+                if operation not in _NON_IR_OPERATIONS and delivery_possible:
+                    raise AmbiguousWriteError("UI 도우미의 종료를 확인할 수 없어 입력 또는 Save 결과가 불확실합니다.")
+                raise ReadTransportError(operation, "UI 도우미의 종료를 확인할 수 없습니다.", helper_retired=False)

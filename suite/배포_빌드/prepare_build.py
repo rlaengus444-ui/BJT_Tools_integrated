@@ -74,7 +74,7 @@ for path in SOURCE.iterdir():
     if path.is_file() and (path.suffix.lower() in ('.py', '.pyw', '.json') or
                            path.name in PRODUCT_DOCUMENTS):
         shutil.copy2(path, STAGE / path.name)
-for name in ('sources', 'manuals', 'chitu_overlap', 'powdernest', 'powdernest_native'):
+for name in ('sources', 'manuals', 'chitu_overlap', 'powdernest', 'powdernest_native', 'ir_feedback'):
     shutil.copytree(SOURCE / name, STAGE / name, dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.nbi', '*.nbc'))
 # Development-only, opt-in frozen verification. These fixtures create files in
@@ -212,12 +212,19 @@ def inspect(tree):
             if node.args and isinstance(node.args[0], ast.Constant) and isinstance(node.args[0].value, str):
                 imports.add(node.args[0].value)
 
-for path in list(STAGE.glob('*.py')) + list((STAGE / 'sources').glob('*.py')) + list((STAGE / 'chitu_overlap').rglob('*.py')) + list((STAGE / 'powdernest').rglob('*.py')):
+for path in list(STAGE.glob('*.py')) + list((STAGE / 'sources').glob('*.py')) + list((STAGE / 'chitu_overlap').rglob('*.py')) + list((STAGE / 'powdernest').rglob('*.py')) + list((STAGE / 'ir_feedback').rglob('*.py')):
     tree = ast.parse(path.read_text(encoding='utf-8-sig'))
     inspect(tree)
     for node in tree.body:
         if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name) and node.targets[0].id in ('_LATTICE_CORE_B64', '_RECON_CORE_B64'):
             inspect(ast.parse(zlib.decompress(base64.b64decode(ast.literal_eval(node.value))).decode('utf-8')))
+# IR is loaded through the tool manifest. Its relative imports do not appear in
+# the absolute-import scan above; register every production package module so a
+# frozen loader never falls back to a developer's Python installation.
+for path in (STAGE / 'ir_feedback').rglob('*.py'):
+    relative = path.relative_to(STAGE).with_suffix('')
+    parts = relative.parts[:-1] if relative.name == '__init__' else relative.parts
+    imports.add('.'.join(parts))
 # Tool sources are executed as data, so their standard-library imports are also
 # hidden from PyInstaller's normal module graph (e.g. M1's decimal support).
 imports = sorted(name for name in imports if name != '__future__')

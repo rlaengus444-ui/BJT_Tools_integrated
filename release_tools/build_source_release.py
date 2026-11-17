@@ -66,8 +66,9 @@ def main():
     end = original.index('"""', start + len('PAYLOAD = b"""')) + 3
     encoded = '\n'.join(textwrap.wrap(base64.b85encode(payload).decode('ascii'), 110))
     original = original[:start] + 'PAYLOAD = b"""' + encoded + '"""' + original[end:]
-    original = re.sub(r'workbench \d+\.\d+(?:\.\d+)?: (?:ten|eleven|twelve) tools',
-                      f'workbench {version}: twelve tools', original)
+    tool_count = len(json.loads((app / 'source_manifest.json').read_text(encoding='utf-8'))['tools'])
+    original = re.sub(r'workbench \d+\.\d+(?:\.\d+)?: (?:ten|eleven|twelve|thirteen|\d+) tools',
+                      f'workbench {version}: {tool_count} tools', original)
     launcher.parent.mkdir(parents=True, exist_ok=True)
     launcher.write_text(original, encoding='utf-8')
     tree = ast.parse(original)

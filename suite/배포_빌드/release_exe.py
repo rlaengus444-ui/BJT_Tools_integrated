@@ -56,6 +56,41 @@ def require_packing_check(report):
         raise RuntimeError('Native packing software OpenGL loaded-DLL verification is required')
 
 
+def require_ir_check(report):
+    """Require the exact workbook and real frozen offline lifecycle evidence."""
+    checks = report.get('checks', {})
+    required = ('strict_manifest_resources', 'test_mode_initialization_has_no_native_process',
+                'authentic_builtin_workbook_and_worker_assets',
+                'production_parser_accepts_pinned_original', 'manual_images_and_previous_layer_features',
+                'offline_connect_tab_resize_preserves_session',
+                'asynchronous_close_preserves_csv_and_two_plots', 'callback_errors')
+    if (report.get('passed') is not True or report.get('frozen') is not True
+            or report.get('excel_com_verified') is not False or report.get('equipment_verified') is not False
+            or any(checks.get(name, {}).get('passed') is not True for name in required)):
+        raise RuntimeError('Complete frozen offline IR integration evidence is required')
+    assets = checks['authentic_builtin_workbook_and_worker_assets']
+    workbook_sha256 = 'eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20'
+    mapping = {'sheet': '수동 테스트', 'temperature_cell': 'B13', 'actual_power_cell': 'C13',
+               'recommendation_cell': 'D13', 'target_cell': 'B5', 'layer_cell': 'A13',
+               'slice_start_cell': 'BL13'}
+    if (assets.get('workbook_sha256') != workbook_sha256 or assets.get('workbook_bytes') != 11523470
+            or assets.get('bridge_sha256') != '939c65d211ff9d144e956eb7b2bae26c4cfab80437c2f0a6c60efa70f4c1b215'
+            or assets.get('mapping') != mapping):
+        raise RuntimeError('Authentic recovery workbook, bridge and cell mapping are required')
+    metadata = checks['production_parser_accepts_pinned_original'].get('metadata', {})
+    if (metadata.get('sha256') != workbook_sha256 or metadata.get('sheet') != '수동 테스트'
+            or metadata.get('first_row') != 13 or checks['production_parser_accepts_pinned_original'].get('background_thread') is not True
+            or checks['production_parser_accepts_pinned_original'].get('excel_calculated') is not False):
+        raise RuntimeError('Production workbook structural parser evidence is required')
+    session = checks['offline_connect_tab_resize_preserves_session']
+    archive = checks['asynchronous_close_preserves_csv_and_two_plots']
+    if (session.get('observed_layers') != 3 or session.get('save_calls') != 0
+            or session.get('real_adapters_created') != 0 or archive.get('rows') != 3
+            or archive.get('writer_pending_keeps_suite_alive') is not True
+            or archive.get('worker_retired') is not True or len(archive.get('files', [])) != 3):
+        raise RuntimeError('Owned offline IR session and loss-free archive shutdown are required')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path,
@@ -71,16 +106,20 @@ def main():
     archive_path = output_root / (NAME + '.zip')
     checksums_path = output_root / (NAME + '_SHA256SUMS.txt')
     required = ('diagnose-exe', 'smoke-exe', 'smoke-gui-exe',
-                'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe', 'cli-exe')
+                'fixtures-exe', 'fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe',
+                'ir-feedback-exe', 'ir-feedback-cli-exe', 'cli-exe')
     reports = {}
     for name in required:
         report = json.loads((HERE / (name + '.json')).read_text(encoding='utf-8'))
         if not report.get('passed') or (name != 'cli-exe' and not report.get('frozen')):
             raise RuntimeError('Frozen verification did not pass: ' + name)
         reports[name] = report
-    if reports['smoke-exe'].get('tool_count') != 12:
-        raise RuntimeError('Expected all 12 registered tools')
+    expected_tools = len(json.loads((source / 'source_manifest.json').read_text(encoding='utf-8'))['tools'])
+    if expected_tools != 13 or reports['smoke-exe'].get('tool_count') != expected_tools:
+        raise RuntimeError('Expected all 13 registered tools, including IR feedback')
     require_packing_check(reports['features-exe'])
+    for name in ('ir-feedback-exe', 'ir-feedback-cli-exe'):
+        require_ir_check(reports[name])
     from mesa_runtime import verify_install
     verify_install(build)
     latest_exe = max((build / name).stat().st_mtime for name in
@@ -144,7 +183,10 @@ def main():
 
 ZIP을 모두 풀고 BJT_통합프로그램.exe를 실행하세요.
 Python과 .NET 설치가 필요하지 않습니다. _internal 폴더를 함께 보관하세요.
-12개 도구 중 치투 배치 검사에서 겹침·표면 접촉·최소 간격을 검사합니다.
+13개 도구 중 치투 배치 검사에서 겹침·표면 접촉·최소 간격을 검사합니다.
+IR 피드백 제어에는 이미지 회복제어 Excel 계산시트가 포함됩니다.
+이미지 회복제어와 사용자 Excel 수식에는 설치된 Microsoft Excel 데스크톱이 필요합니다.
+IR 지원 장비는 M1·S3이며 연결 버튼을 눌러야 시작합니다. M2는 지원하지 않습니다.
 기본 간격은 0mm이며 표면 접촉은 항상 FAIL입니다. 입력 파일은 변경하지 않습니다.
 검사된 원본 형상을 그대로 유지하는 연결면 정리 결과는 화면·JSON·HTML에 표시합니다.
 명령줄은 BJT_명령줄.exe --tool chitu_checker 작업.chitubox --min-gap-mm 1 --json 결과.json --html 결과.html

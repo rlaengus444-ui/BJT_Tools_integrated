@@ -45,7 +45,7 @@ hiddenimports += ['vtk', 'vtkmodules.all', 'matplotlib.backends.backend_tkagg', 
                   'numba.typed', 'numba.core.typing', 'scipy.optimize', 'scipy.ndimage',
                   'unittest.mock', 'frozen_fixtures', 'frozen_chitu_gui', 'frozen_large_chitu_gui',
                   'frozen_camera_chitu_gui', 'frozen_suite_features', 'frozen_oven_playback', 'frozen_packing_gui',
-                  'frozen_rust_probe', 'release_native', 'mesa_runtime']
+                  'frozen_rust_probe', 'frozen_ir_feedback', 'release_native', 'mesa_runtime']
 hiddenimports += ['manifold3d', 'fcl', 'fcl.fcl', 'plotly', 'plotly.offline',
                   'chitu_overlap', 'chitu_overlap.geometry', 'chitu_overlap.chitubox',
                   'chitu_overlap.inputs', 'chitu_overlap.cli', 'chitu_overlap.viewer', 'chitu_overlap.seams']

@@ -187,6 +187,7 @@ class SuiteApp:
         self.failures = {}
         self.events = queue.Queue()
         self.closing = False
+        self._pending_tool_closes = set()
         self.close_errors = []
         self._poll_id = None
         self.loader = ToolLoader(self._base_factory)
@@ -226,13 +227,22 @@ class SuiteApp:
         self.notebook.pack(fill='both', expand=True, padx=16, pady=(12, 0))
         self.home = ttk.Frame(self.notebook, padding=(20, 18), style='Suite.Tool.TFrame')
         self.notebook.add(self.home, text='시작')
+        home_canvas = tk.Canvas(self.home, highlightthickness=0, background=COLORS['background'])
+        home_scroll = ttk.Scrollbar(self.home, orient='vertical', command=home_canvas.yview)
+        home_scroll.pack(side='right', fill='y')
+        home_canvas.pack(side='left', fill='both', expand=True)
+        home_canvas.configure(yscrollcommand=home_scroll.set)
+        home_body = ttk.Frame(home_canvas, style='Suite.Tool.TFrame')
+        home_window = home_canvas.create_window((0, 0), window=home_body, anchor='nw')
+        home_body.bind('<Configure>', lambda _event: home_canvas.configure(scrollregion=home_canvas.bbox('all')))
+        home_canvas.bind('<Configure>', lambda event: home_canvas.itemconfigure(home_window, width=event.width))
         columns = 3 if len(self.specs) > 8 else 2
-        hero = ttk.Frame(self.home, style='Suite.Hero.TFrame', padding=(20, 14))
+        hero = ttk.Frame(home_body, style='Suite.Hero.TFrame', padding=(20, 14))
         hero.grid(row=0, column=0, columnspan=columns, sticky='ew', pady=(0, 16))
         ttk.Label(hero, text='도구 선택',
                   style='Suite.HeroTitle.TLabel').pack(anchor='w')
         for index, (key, spec) in enumerate(self.specs.items()):
-            card = ttk.Frame(self.home, style='Suite.Card.TFrame', padding=(16, 12))
+            card = ttk.Frame(home_body, style='Suite.Card.TFrame', padding=(16, 12))
             column = index % columns
             card.grid(row=1 + index // columns, column=column, sticky='nsew',
                       padx=(0 if column == 0 else 7, 0 if column == columns - 1 else 7), pady=(0, 12))
@@ -263,7 +273,7 @@ class SuiteApp:
             self.tool_contents[key] = content
             ttk.Label(content, text=spec['description'], padding=24).pack(anchor='w')
         for column in range(columns):
-            self.home.columnconfigure(column, weight=1, uniform='tool-cards')
+            home_body.columnconfigure(column, weight=1, uniform='tool-cards')
         self.status = tk.StringVar(value='도구를 선택하세요.')
         ttk.Label(self.root, textvariable=self.status, style='Suite.Status.TLabel',
                   padding=(20, 8)).pack(side='bottom', fill='x', before=self.notebook)
@@ -331,7 +341,7 @@ class SuiteApp:
             host = controller
         else:
             host = ToolRoot(page, self, key)
-            controller = constructor(host)
+            controller = constructor(host, test_mode=self.test_mode) if key == 'ir_feedback' else constructor(host)
         host.pack(fill='both', expand=True)
         self.hosts[key] = host
         self.controllers[key] = controller
@@ -503,7 +513,7 @@ class SuiteApp:
 
     @staticmethod
     def busy(key, controller):
-        if key == 'nesting':
+        if key in ('nesting', 'ir_feedback'):
             return controller.is_busy
         for name in ('worker', 'worker_thread', '_suite_export_worker'):
             worker = getattr(controller, name, None)
@@ -537,6 +547,10 @@ class SuiteApp:
     def stop_current(self):
         key = self.active_tool()
         controller = self.controllers.get(key)
+        if key == 'ir_feedback' and controller is not None:
+            controller.disconnect()
+            self.status.set('IR 피드백 연결 해제 요청 · CSV·플롯을 저장합니다.')
+            return
         if controller is not None and self.signal_stop(controller):
             self.status.set(self.specs[key]['label'] + ' · 중단을 요청했습니다. 현재 처리와 정리가 끝날 때까지 기다립니다.')
 
@@ -550,11 +564,49 @@ class SuiteApp:
             return
         self.closing = True
         self.stop_button.configure(state='disabled')
+        self._persist_before_close()
+        self._pending_tool_closes = set()
+        if not self._start_ir_close():
+            return
         for controller in self.controllers.values():
             self.signal_stop(controller)
         self._finish_close()
 
+    def _start_ir_close(self):
+        key = 'ir_feedback'
+        if key not in self.controllers or key in self._pending_tool_closes or self.hosts[key]._disposed:
+            return True
+        # A lazy load can finish after the initial window-close request.
+        self._settings_closed_saved = False
+        self._persist_before_close()
+        self._pending_tool_closes.add(key)
+        try:
+            self.controllers[key].request_suite_close()
+        except Exception:
+            self.closing = False
+            self._settings_closed_saved = False
+            self._pending_tool_closes.discard(key)
+            self.close_errors.append(traceback.format_exc())
+            self._write_error(self.close_errors[-1])
+            self.status.set('IR 종료 정리 실패 · 기록과 창을 유지합니다. 오류 기록을 확인하세요.')
+            self.stop_button.configure(state='normal')
+            return False
+        return True
+
     def _finish_close(self):
+        if not self._start_ir_close():
+            return
+        for key in self._pending_tool_closes:
+            if not self.hosts[key]._disposed and self.controllers[key].suite_close_cancelled:
+                self.closing = False
+                self._settings_closed_saved = False
+                self.status.set('종료 취소 · IR 기록 저장 미완료. 기록을 보존하고 있습니다.')
+                self.stop_button.configure(state='normal')
+                return
+        if any(not self.hosts[key]._disposed for key in self._pending_tool_closes):
+            self.status.set('IR 연결·Excel 정리 및 CSV·플롯 저장을 기다리고 있습니다.')
+            self.root.after(100, self._finish_close)
+            return
         if self.loading or any(self.busy(key, item) for key, item in self.controllers.items()):
             self.status.set('작업 중단·파일 정리를 기다리고 있습니다. 완료되면 자동으로 종료합니다.')
             self.root.after(100, self._finish_close)

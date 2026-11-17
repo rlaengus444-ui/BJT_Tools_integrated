@@ -30,7 +30,7 @@ elif action == 'features-exe':
     command = [str(PYTHON), str(HERE / 'verify_suite_features.py'),
                '--folder', str(dist / f'BJT_통합프로그램_{VERSION}_EXE'),
                '--output', str(HERE / (action + '.json'))]
-elif action in ('diagnose-exe', 'smoke-exe', 'smoke-gui-exe', 'fixtures-exe', 'fixtures-gui-exe', 'product-fixtures-exe', 'product-fixtures-gui-exe', 'oven-playback-exe', 'rust-probe-exe'):
+elif action in ('diagnose-exe', 'smoke-exe', 'smoke-gui-exe', 'fixtures-exe', 'fixtures-gui-exe', 'product-fixtures-exe', 'product-fixtures-gui-exe', 'oven-playback-exe', 'rust-probe-exe', 'ir-feedback-exe', 'ir-feedback-cli-exe'):
     # Reproduce a machine without Python/Conda on PATH. A bundled DLL must not
     # silently resolve from either development environment during verification.
     environment = os.environ.copy()
@@ -45,8 +45,8 @@ elif action in ('diagnose-exe', 'smoke-exe', 'smoke-gui-exe', 'fixtures-exe', 'f
     profile_root = Path(os.environ.get('BJT_TEST_PROFILE', str(HERE / 'test-profile'))).resolve()
     environment['LOCALAPPDATA'] = str(profile_root / 'Local')
     environment['APPDATA'] = str(profile_root / 'Roaming')
-    executable = dist / f'BJT_통합프로그램_{VERSION}_EXE' / ('BJT_통합프로그램.exe' if action in ('smoke-gui-exe', 'fixtures-gui-exe', 'product-fixtures-gui-exe', 'oven-playback-exe') else 'BJT_명령줄.exe')
-    flag = {'diagnose-exe': '--frozen-diagnose', 'smoke-exe': '--frozen-smoke', 'smoke-gui-exe': '--frozen-smoke', 'fixtures-exe': '--frozen-fixtures', 'fixtures-gui-exe': '--frozen-fixtures', 'product-fixtures-exe': '--frozen-product-fixtures', 'product-fixtures-gui-exe': '--frozen-product-fixtures', 'oven-playback-exe': '--frozen-oven-playback', 'rust-probe-exe': '--frozen-rust-probe'}[action]
+    executable = dist / f'BJT_통합프로그램_{VERSION}_EXE' / ('BJT_통합프로그램.exe' if action in ('smoke-gui-exe', 'fixtures-gui-exe', 'product-fixtures-gui-exe', 'oven-playback-exe', 'ir-feedback-exe') else 'BJT_명령줄.exe')
+    flag = {'diagnose-exe': '--frozen-diagnose', 'smoke-exe': '--frozen-smoke', 'smoke-gui-exe': '--frozen-smoke', 'fixtures-exe': '--frozen-fixtures', 'fixtures-gui-exe': '--frozen-fixtures', 'product-fixtures-exe': '--frozen-product-fixtures', 'product-fixtures-gui-exe': '--frozen-product-fixtures', 'oven-playback-exe': '--frozen-oven-playback', 'rust-probe-exe': '--frozen-rust-probe', 'ir-feedback-exe': '--frozen-ir-feedback', 'ir-feedback-cli-exe': '--frozen-ir-feedback'}[action]
     command = [str(executable), flag, str(HERE / (action + '.json'))]
 else:
     raise SystemExit('Unknown action: ' + action)
@@ -55,7 +55,7 @@ with log_path.open('w', encoding='utf-8') as log:
     result = subprocess.run(command, cwd=HERE, env=environment, stdout=log, stderr=subprocess.STDOUT,
                             creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
 exit_code = result.returncode
-if action in ('diagnose-exe', 'smoke-exe', 'smoke-gui-exe', 'fixtures-exe', 'fixtures-gui-exe', 'product-fixtures-exe', 'product-fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe'):
+if action in ('diagnose-exe', 'smoke-exe', 'smoke-gui-exe', 'fixtures-exe', 'fixtures-gui-exe', 'product-fixtures-exe', 'product-fixtures-gui-exe', 'features-exe', 'oven-playback-exe', 'rust-probe-exe', 'ir-feedback-exe', 'ir-feedback-cli-exe'):
     report_path = HERE / (action + '.json')
     if not report_path.is_file() or not json.loads(report_path.read_text(encoding='utf-8')).get('passed'):
         exit_code = exit_code or 2

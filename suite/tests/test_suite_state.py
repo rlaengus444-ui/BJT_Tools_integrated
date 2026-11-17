@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+import time
 import tkinter as tk
 from types import SimpleNamespace
 import unittest
@@ -210,7 +211,7 @@ class AllToolCloseReopenTests(unittest.TestCase):
             except tk.TclError:
                 pass
 
-    def test_all_twelve_controllers_close_and_reopen_with_input_collections(self):
+    def test_all_thirteen_controllers_close_and_reopen_with_input_collections(self):
         from suite_ui import SuiteApp, create_root
         from PIL import Image
         import numpy as np
@@ -233,8 +234,21 @@ class AllToolCloseReopenTests(unittest.TestCase):
                     root.update_idletasks()
                     return root, app
 
+                def close_suite(root, app):
+                    app.request_close(confirm=False)
+                    deadline = time.monotonic() + 10
+                    while time.monotonic() < deadline:
+                        try:
+                            if not root.winfo_exists():
+                                return
+                            root.update()
+                        except tk.TclError:
+                            return
+                        time.sleep(.01)
+                    self.fail('Suite did not finish asynchronous IR archive/worker shutdown')
+
                 root, first = open_suite()
-                self.assertEqual(len(first.controllers), 12)
+                self.assertEqual(len(first.controllers), 13)
                 c = first.controllers
                 c['bjt'].input_var.set(str(base / '새 모델.stl'))
                 c['bjt'].output_var.set(str(base / '별도 출력.stl'))
@@ -292,8 +306,12 @@ class AllToolCloseReopenTests(unittest.TestCase):
                 c['chitu_checker'].set_inputs([str(base / '카메라.chitubox')])
                 c['chitu_checker'].gap_var.set('1.5')
                 c['chitu_checker'].show_all_var.set(True)
+                c['ir_feedback'].target_temperature.set('71.25')
+                c['ir_feedback'].maximum_ir_percent.set('79')
+                c['ir_feedback'].slice_panel.radius.set('4.5')
+                c['ir_feedback'].slice_panel.paths = (str(image),)
                 expected = {key: capture_inputs(key, value) for key, value in c.items()}
-                first.request_close(confirm=False)
+                close_suite(root, first)
                 self.assertFalse(first.close_errors)
                 self.assertTrue(path.exists())
                 root, second = open_suite()
@@ -302,7 +320,7 @@ class AllToolCloseReopenTests(unittest.TestCase):
                     with self.subTest(tool=key):
                         self.assertEqual(actual, expected[key])
                 self.assertFalse(second.settings_warnings)
-                second.request_close(confirm=False)
+                close_suite(root, second)
                 self.assertFalse(second.close_errors)
                 self.assertFalse(callback_errors)
                 report_path = os.environ.get('BJT_STATE_TEST_REPORT')
