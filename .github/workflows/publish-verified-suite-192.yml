@@ -1,4 +1,4 @@
-name: Read owned IR test failure evidence
+name: Read owned frozen IR failure evidence
 
 'on':
   workflow_dispatch:
@@ -15,8 +15,8 @@ jobs:
       - name: Download exact owned failed-run evidence
         uses: actions/download-artifact@v4
         with:
-          name: BJT-native-Windows-evidence-44089070866
-          run-id: 44089070866
+          name: BJT-native-Windows-evidence-44091377811
+          run-id: 44091377811
           repository: ${{ github.repository }}
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/ir-failure
@@ -30,7 +30,7 @@ jobs:
           import xml.etree.ElementTree as ET
           root=Path(os.environ['IR_EVIDENCE'])
           print('FILES:', ', '.join(sorted(p.name for p in root.iterdir())))
-          for name in ('native-summary.json','ir-upstream-tests.json'):
+          for name in ('native-summary.json','ir-upstream-tests.json','ir-feedback-exe.json','ir-feedback-cli-exe.json'):
               p=root/name
               if not p.exists():
                   print('MISSING',name)
@@ -40,7 +40,7 @@ jobs:
               if name=='native-summary.json':
                   print(json.dumps({k:data.get(k) for k in ('passed','commit','version','checks','traceback')},ensure_ascii=False)[:18000])
               else:
-                  print(json.dumps({k:data.get(k) for k in ('passed','tests','failures','errors','skips','runner_error','count_error','failed','errored','skipped')},ensure_ascii=False)[:24000])
+                  print(json.dumps({k:data.get(k) for k in ('passed','tests','failures','errors','skips','runner_error','count_error','failed','errored','skipped','checks','traceback','callback_errors')},ensure_ascii=False)[:24000])
           for p in root.glob('*tests.xml'):
               suites=ET.parse(p)
               cases=list(suites.iter('testcase'))
