@@ -1,56 +1,52 @@
-name: Upload exact verified 1.9.2 assets to existing draft
+name: Read owned IR test failure evidence
 
 'on':
   workflow_dispatch:
 
 permissions:
   contents: read
-
-concurrency:
-  group: publish-verified-suite-1.9.2
-  cancel-in-progress: false
+  actions: read
 
 jobs:
-  upload-verified:
+  diagnostic:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      actions: read
-      contents: write
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Download pinned verified native assets
+      - name: Download exact owned failed-run evidence
         uses: actions/download-artifact@v4
         with:
-          name: BJT-native-Windows-release-43852970248
-          run-id: 43852970248
+          name: BJT-native-Windows-evidence-44089070866
+          run-id: 44089070866
           repository: ${{ github.repository }}
           github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/verified-192/assets
-      - name: Download matching verification evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: BJT-native-Windows-evidence-43852970248
-          run-id: 43852970248
-          repository: ${{ github.repository }}
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/verified-192/evidence
-      - name: Verify exact artifacts and upload without replacing files
+          path: ${{ runner.temp }}/ir-failure
+      - name: Print original test failure and counts
         env:
-          GH_TOKEN: ${{ github.token }}
-          BJT_VERIFIED_ROOT: ${{ runner.temp }}/verified-192
+          IR_EVIDENCE: ${{ runner.temp }}/ir-failure
         run: |
-          python release_tools/publish_verified_192.py --evidence "$BJT_VERIFIED_ROOT/evidence" --assets "$BJT_VERIFIED_ROOT/assets" --report "$BJT_VERIFIED_ROOT/publication-report.json" --upload
-      - name: Preserve server digest readback
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: BJT-1.9.2-publication-${{ github.run_id }}
-          path: ${{ runner.temp }}/verified-192/publication-report.json
-          if-no-files-found: warn
-          retention-days: 7
+          python - <<'PYCODE'
+          import json,os
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          root=Path(os.environ['IR_EVIDENCE'])
+          print('FILES:', ', '.join(sorted(p.name for p in root.iterdir())))
+          for name in ('native-summary.json','ir-upstream-tests.json'):
+              p=root/name
+              if not p.exists():
+                  print('MISSING',name)
+                  continue
+              data=json.loads(p.read_text(encoding='utf-8'))
+              print('REPORT',name)
+              if name=='native-summary.json':
+                  print(json.dumps({k:data.get(k) for k in ('passed','commit','version','checks','traceback')},ensure_ascii=False)[:18000])
+              else:
+                  print(json.dumps({k:data.get(k) for k in ('passed','tests','failures','errors','skips','runner_error','count_error','failed','errored','skipped')},ensure_ascii=False)[:24000])
+          for p in root.glob('*tests.xml'):
+              suites=ET.parse(p)
+              cases=list(suites.iter('testcase'))
+              print('XML',p.name,json.dumps({'tests':len(cases),'failures':sum(c.find('failure') is not None for c in cases),'errors':sum(c.find('error') is not None for c in cases),'skips':sum(c.find('skipped') is not None for c in cases)}))
+          p=root/'ir-upstream-tests.log'
+          if p.exists():
+              print('ORIGINAL IR LOG TAIL')
+              print('\n'.join(p.read_text(encoding='utf-8',errors='replace').splitlines()[-200:])[-24000:])
+          PYCODE
