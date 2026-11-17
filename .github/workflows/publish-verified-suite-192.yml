@@ -23,7 +23,8 @@ jobs:
           architecture: x64
       - name: Prepare existing pinned image library
         shell: pwsh
-        run: python -m pip install --only-binary=:all: --no-deps Pillow==12.3.0
+        run: |
+          python -m pip install --only-binary=:all: --no-deps Pillow==12.3.0
       - name: Exercise isolated source UI and archive flow
         shell: python
         env:
