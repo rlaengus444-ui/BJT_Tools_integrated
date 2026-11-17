@@ -64,6 +64,7 @@ _BUTTON_ROLES = {
     'sequence_z': {'primary': ('calculate_button',), 'danger': ('stop_button',)},
     'm2_converter': {'primary': ('run_button',), 'danger': ('stop_button',)},
     'nesting': {'primary': ('run_button',), 'danger': ('stop_button',)},
+    'ir_feedback': {'primary': ('connect_button',), 'danger': ('disconnect_button',)},
 }
 
 
@@ -187,6 +188,8 @@ class ThemeManager:
             ('Suite.Muted.TLabel', c['background'], c['muted'], FONTS['small']),
             ('Suite.Subtitle.TLabel', c['background'], c['muted'], FONTS['text']),
             ('Suite.Title.TLabel', c['background'], c['ink'], FONTS['title']),
+            ('Suite.IR.Metric.TLabel', c['background'], c['ink'], (FONTS['body'][0], 22, 'bold')),
+            ('Suite.IR.Status.TLabel', c['background'], c['ink'], FONTS['heading']),
             ('Suite.Status.TLabel', c['surface'], c['muted'], FONTS['small']),
             ('Suite.Status.Success.TLabel', c['success_background'], c['success'], FONTS['bold']),
             ('Suite.Status.Warning.TLabel', c['warning_background'], c['warning'], FONTS['bold']),

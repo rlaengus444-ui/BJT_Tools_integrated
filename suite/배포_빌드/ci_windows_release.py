@@ -277,7 +277,19 @@ def main():
         run([sys.executable, '-m', 'unittest', 'discover', '-s', HERE,
              '-p', 'test_ir_build_glue.py', '-v'], HERE, environment,
             reports / 'ir-build-gates.log')
-        summary['checks']['ir_build_gates'] = {'passed': True}
+        capsule_environment = environment.copy()
+        capsule_environment['PYTHONPATH'] = os.pathsep.join((str(HERE), str(REPOSITORY / 'release_tools')))
+        run([sys.executable, '-m', 'pytest',
+             REPOSITORY / 'release_tools/test_integrated_packing_capsule.py',
+             REPOSITORY / 'release_tools/test_source_release_native.py',
+             REPOSITORY / 'release_tools/test_ci_asset_staging.py',
+             '-p', 'no:cacheprovider', '-q', '--junitxml=' + str(reports / 'source-capsule-tests.xml')],
+            REPOSITORY, capsule_environment, reports / 'source-capsule-tests.log')
+        capsule_xml = ET.parse(reports / 'source-capsule-tests.xml')
+        if any(item.find('skipped') is not None for item in capsule_xml.iter('testcase')):
+            raise RuntimeError('Source capsule regression tests must run without skips')
+        summary['checks']['ir_build_gates'] = {'passed': True, 'source_capsule_regressions': True,
+                                              'capsule_tests': len(list(capsule_xml.iter('testcase')))}
         run([sys.executable, build / 'prepare_build.py'], build, environment, reports / 'prepare.log')
         write(build / 'build-provenance.json', {'commit': summary['commit'],
             'source_manifest_sha256': digest(SOURCE / 'source_manifest.json'),

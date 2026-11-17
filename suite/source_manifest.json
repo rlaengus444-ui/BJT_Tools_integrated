@@ -158,8 +158,8 @@
       "description": "이미지 회복제어 Excel 내장 · 층별 IR 제어·그래프·기록 저장",
       "source": "ir_feedback_tool.py",
       "original_path": "IR_feedback@2372c296 + integrated adapter",
-      "sha256": "3e0c9c6ded316e08ed3cd72a20cd3b3dfda5541094ede3529b09449c2ef06bf6",
-      "bytes": 9762,
+      "sha256": "8e95081b6d395e08edbf26e38b631358135785cd1dea2d7912ad907f97ae328c",
+      "bytes": 11147,
       "controller": "App",
       "embedded_base": false
     }
@@ -177,7 +177,7 @@
     },
     {
       "path": "suite_theme.py",
-      "sha256": "5fbd82eb413adcd006c8da7161a6462e33ea49fee0a7ef9d5960cf007f3408e5",
+      "sha256": "08ab5d6baad1436189d3b7b66eb5bd66e44ec2c6cb4168eb411a68dfdeddc389",
       "purpose": "10개 탭 공통 디자인과 외관 전용 어댑터"
     },
     {

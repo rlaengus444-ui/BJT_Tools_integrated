@@ -1,6 +1,8 @@
 """Integrated IR view; the upstream control/session/Save path stays isolated."""
 from pathlib import Path
 import tkinter as tk
+from tkinter import ttk
+from suite_theme import COLORS, FONTS, ThemeManager
 
 from ir_feedback.standalone_ir import ThermalFeedbackWindow, write_error_log
 from ir_feedback.session import SessionController
@@ -43,8 +45,27 @@ class App(ThermalFeedbackWindow):
     # The suite keeps pumping until owned workers/helpers and archives retire.
     CLOSE_GRACE_SECONDS = float('inf')
 
+    def _build(self):
+        super()._build()
+        main = self.root.winfo_children()[0]
+        title, self._algorithm_notice = main.winfo_children()[:2]
+        if hasattr(self.root, 'suite'):
+            title.pack_forget()
+        else:
+            title.configure(text='IR 피드백 제어', style='Suite.Title.TLabel')
+        self._algorithm_notice.configure(style='Suite.Muted.TLabel', foreground=COLORS['muted'])
+        aliases = {'Metric.TLabel': 'Suite.IR.Metric.TLabel', 'Status.TLabel': 'Suite.IR.Status.TLabel'}
+        def apply(widget):
+            if isinstance(widget, ttk.Label) and str(widget.cget('style')) in aliases:
+                widget.configure(style=aliases[str(widget.cget('style'))])
+            for child in widget.winfo_children(): apply(child)
+        apply(main)
+        self.log.configure(font=FONTS['text'])
+
     def __init__(self, root, *, test_mode=False, controller=None, discoverer=None,
                  archive=None, maximum_ir_preference=None, lease_factory=None):
+        if not hasattr(root, 'suite'):
+            ThemeManager(root).apply()
         self._lease = None
         self._lease_factory = lease_factory or (_OfflineLease if test_mode else SingleInstance)
         self._suite_close_requested = False
@@ -79,15 +100,18 @@ class App(ThermalFeedbackWindow):
         self._selected_mode = mode
         self.algorithm_type.set(ALGORITHMS[mode])
         if mode == 'image_recovery':
+            self._algorithm_notice.configure(text='내장 이미지 회복제어 · Excel 데스크톱이 필요합니다.')
             self.settings_path.set('내장 원본 시트 · Excel 데스크톱 필요')
             self.algorithm_path_label.set('계산시트')
             self.excel_fields.grid_remove()
         elif mode == 'custom_excel':
+            self._algorithm_notice.configure(text='사용자 계산시트 · Excel 파일과 셀 주소를 확인하세요.')
             self.settings_path.set(self._custom_excel_path)
             self.algorithm_path_label.set('Excel 파일')
             for name, value in self._custom_cells.items(): getattr(self, name).set(value)
             self.excel_fields.grid()
         else:
+            self._algorithm_notice.configure(text='기본 알고리즘 · 목표 온도와 최대 IR 출력을 확인하세요.')
             self.settings_path.set(self._custom_json_path)
             self.algorithm_path_label.set('설정 JSON(선택)')
             self.excel_fields.grid_remove()

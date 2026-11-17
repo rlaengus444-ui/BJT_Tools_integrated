@@ -13,7 +13,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def test_empty_template_checksum_is_replaced_and_standalone_is_in_source_zip(tmp_path,monkeypatch):
     app=tmp_path/'suite';app.mkdir();output=tmp_path/'release'
-    (app/'source_manifest.json').write_text('{"suite_version":"1.9.0"}')
+    (app/'source_manifest.json').write_text('{"suite_version":"1.9.0","tools":[]}')
     (app/'run_suite.py').write_text('def start():\n    return 0\n')
     manuals=app/'manuals';manuals.mkdir();(manuals/'index.html').write_text('manual')
     separate=tmp_path/'standalone';separate.mkdir();(separate/'PowderNest.py').write_text('# separate reference\n')

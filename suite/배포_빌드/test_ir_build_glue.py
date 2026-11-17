@@ -18,7 +18,8 @@ def fixture_report():
              'authentic_builtin_workbook_and_worker_assets',
              'production_parser_accepts_pinned_original', 'manual_images_and_previous_layer_features',
              'offline_connect_tab_resize_preserves_session',
-             'asynchronous_close_preserves_csv_and_two_plots', 'callback_errors')
+             'asynchronous_close_preserves_csv_and_two_plots', 'suite_button_fonts_and_single_title',
+             'whole_flow_has_no_native_or_com_attempts', 'callback_errors')
     checks = {name: {'passed': True} for name in names}
     checks['authentic_builtin_workbook_and_worker_assets'].update(
         workbook_sha256=sha, workbook_bytes=11523470,
@@ -34,8 +35,11 @@ def fixture_report():
     checks['asynchronous_close_preserves_csv_and_two_plots'].update(
         rows=3, writer_pending_keeps_suite_alive=True, worker_retired=True,
         files=['test.csv', 'test_온도.png', 'test_IR.png'])
+    measured = {'native_processes': 0, 'adapter_factories': 0, 'adapter_constructors': 0,
+                'excel_controllers': 0, 'save_calls': 0}
+    checks['whole_flow_has_no_native_or_com_attempts']['measured_attempts'] = dict(measured)
     return {'passed': True, 'frozen': True, 'excel_com_verified': False,
-            'equipment_verified': False, 'checks': checks}
+            'equipment_verified': False, 'checks': checks, 'native_operation_attempts': measured}
 
 
 class IrReleaseEvidenceTests(unittest.TestCase):
@@ -67,6 +71,15 @@ class IrReleaseEvidenceTests(unittest.TestCase):
             bad[key] = True
             with self.subTest(key=key), self.assertRaises(RuntimeError):
                 require_ir_check(bad)
+
+    def test_native_attempt_anywhere_in_offline_flow_is_rejected(self):
+        for name in fixture_report()['native_operation_attempts']:
+            for location in ('native_operation_attempts', 'whole_flow_has_no_native_or_com_attempts'):
+                bad = fixture_report()
+                counter = bad[location] if location == 'native_operation_attempts' else bad['checks'][location]['measured_attempts']
+                counter[name] = 1
+                with self.subTest(name=name, location=location), self.assertRaises(RuntimeError):
+                    require_ir_check(bad)
 
     def test_lost_rows_missing_plot_and_early_worker_exit_are_rejected(self):
         for key, wrong in (('rows', 2), ('writer_pending_keeps_suite_alive', False),

@@ -63,11 +63,17 @@ def require_ir_check(report):
                 'authentic_builtin_workbook_and_worker_assets',
                 'production_parser_accepts_pinned_original', 'manual_images_and_previous_layer_features',
                 'offline_connect_tab_resize_preserves_session',
-                'asynchronous_close_preserves_csv_and_two_plots', 'callback_errors')
+                'asynchronous_close_preserves_csv_and_two_plots', 'suite_button_fonts_and_single_title',
+                'whole_flow_has_no_native_or_com_attempts', 'callback_errors')
     if (report.get('passed') is not True or report.get('frozen') is not True
             or report.get('excel_com_verified') is not False or report.get('equipment_verified') is not False
             or any(checks.get(name, {}).get('passed') is not True for name in required)):
         raise RuntimeError('Complete frozen offline IR integration evidence is required')
+    zero_attempts = {'native_processes': 0, 'adapter_factories': 0, 'adapter_constructors': 0,
+                     'excel_controllers': 0, 'save_calls': 0}
+    if (report.get('native_operation_attempts') != zero_attempts
+            or checks['whole_flow_has_no_native_or_com_attempts'].get('measured_attempts') != zero_attempts):
+        raise RuntimeError('Measured zero native/COM/Save attempts are required for the entire offline fixture')
     assets = checks['authentic_builtin_workbook_and_worker_assets']
     workbook_sha256 = 'eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20'
     mapping = {'sheet': '수동 테스트', 'temperature_cell': 'B13', 'actual_power_cell': 'C13',

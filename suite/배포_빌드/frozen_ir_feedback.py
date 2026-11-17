@@ -6,6 +6,7 @@ Connect. No Windows discovery, printer process, Excel COM or heater is used.
 from __future__ import annotations
 
 import csv
+from contextlib import ExitStack
 from dataclasses import asdict
 import hashlib
 from pathlib import Path
@@ -46,6 +47,7 @@ def run(base, report_path):
     from ir_feedback.layer_charts import _write_csv
     from ir_feedback.plot_archive import PlotArchive
     from ir_feedback.slice_data import SliceConfig, analyze
+    from ir_feedback import excel_workbook, resilient_adapter, session, standalone_ir, windows_ui_adapter
 
     started = time.monotonic()
     base = Path(base).resolve()
@@ -61,7 +63,26 @@ def run(base, report_path):
     app = None
     archive_gate = threading.Event()
     archive_started = threading.Event()
+    guards = ExitStack()
+    attempts = {'native_processes': 0, 'adapter_factories': 0, 'adapter_constructors': 0,
+                'excel_controllers': 0, 'save_calls': 0}
+    def forbid(kind):
+        def blocked(*args, **kwargs):
+            attempts[kind] += 1
+            raise AssertionError('Forbidden real/native operation in owned offline fixture: ' + kind)
+        return blocked
     try:
+        # Keep guards active through mount, Connect, UI work and final cleanup.
+        # Patching class constructors also covers factories captured as default
+        # arguments before this fixture imported them.
+        guards.enter_context(patch('subprocess.Popen', side_effect=forbid('native_processes')))
+        for owner in (session, standalone_ir):
+            guards.enter_context(patch.object(owner, 'default_adapter_factory', side_effect=forbid('adapter_factories')))
+        for cls in (windows_ui_adapter.WindowsUiAdapter, resilient_adapter.ResilientUiAdapter):
+            guards.enter_context(patch.object(cls, '__init__', side_effect=forbid('adapter_constructors')))
+            guards.enter_context(patch.object(cls, 'apply_ir_power', side_effect=forbid('save_calls')))
+        guards.enter_context(patch.object(excel_workbook.WorkbookController, '__init__',
+                                         side_effect=forbid('excel_controllers')))
         app = SuiteApp(root, test_mode=True)
         root.report_callback_exception = lambda typ, value, tb: report['callback_errors'].append(
             ''.join(traceback.format_exception(typ, value, tb)))
@@ -69,19 +90,14 @@ def run(base, report_path):
         assert strict and all(item['valid'] for item in strict)
         checks['strict_manifest_resources'] = {'passed': True, 'checks': len(strict)}
         module = app.loader.load('ir_feedback')
-        native_attempts = []
-        def forbid_native(*args, **kwargs):
-            native_attempts.append('native subprocess attempted during test-mode initialization')
-            raise AssertionError(native_attempts[-1])
-        with patch('subprocess.Popen', side_effect=forbid_native):
-            ir = app.mount_tool('ir_feedback', module)
-            app.select_tool('ir_feedback')
-            root.update()
-        assert not native_attempts, native_attempts
+        ir = app.mount_tool('ir_feedback', module)
+        app.select_tool('ir_feedback')
+        root.update()
+        assert not any(attempts.values()), attempts
         assert ir.controller.thread is None
         assert not ir.searching and ir.discovery_thread is None
         checks['test_mode_initialization_has_no_native_process'] = {'passed': True,
-            'native_process_attempts': len(native_attempts), 'auto_discovery_started': False}
+            'native_process_attempts': attempts['native_processes'], 'auto_discovery_started': False}
         assert ir.algorithm_type.get() == module.BUILTIN_LABEL
         spec = module.builtin_workbook_spec()
         spec.validate()
@@ -175,7 +191,25 @@ def run(base, report_path):
         root.update()
         assert ir.controller.state == 'connected' and len(ir.charts.history.points) == 3
         checks['offline_connect_tab_resize_preserves_session'] = {'passed': True,
-            'observed_layers': 3, 'save_calls': 0, 'real_adapters_created': 0}
+            'observed_layers': 3, 'save_calls': attempts['save_calls'],
+            'real_adapters_created': attempts['adapter_constructors']}
+        from tkinter import font as tkfont, ttk
+        from suite_theme import FONTS
+        assert str(ir.connect_button.cget('style')) == 'Suite.Primary.TButton'
+        assert str(ir.disconnect_button.cget('style')) == 'Suite.Danger.TButton'
+        main = ir.root.winfo_children()[0]
+        assert main.winfo_children()[0].winfo_manager() == '', 'Duplicate tool title is visible'
+        style = ttk.Style(root)
+        metric = tkfont.Font(root=root, font=style.lookup('Suite.IR.Metric.TLabel', 'font')).actual()
+        status = tkfont.Font(root=root, font=style.lookup('Suite.IR.Status.TLabel', 'font')).actual()
+        expected_font = tkfont.Font(root=root, font=FONTS['body']).actual()['family']
+        assert metric['family'] == status['family'] == expected_font
+        assert metric['size'] == 22 and metric['weight'] == 'bold'
+        assert status['weight'] == 'bold'
+        checks['suite_button_fonts_and_single_title'] = {'passed': True,
+            'connect_style': str(ir.connect_button.cget('style')),
+            'disconnect_style': str(ir.disconnect_button.cget('style')),
+            'metric_font': metric, 'status_font': status, 'duplicate_title_hidden': True}
 
         # Make archive completion observable: suite root must stay alive while
         # the owned writer is still working, then close only after all3 files.
@@ -206,6 +240,9 @@ def run(base, report_path):
         checks['asynchronous_close_preserves_csv_and_two_plots'] = {'passed': True,
             'rows': len(rows) - 1, 'files': [p.name for p in csv_files + png_files],
             'writer_pending_keeps_suite_alive': True, 'worker_retired': True}
+        assert not any(attempts.values()), attempts
+        checks['whole_flow_has_no_native_or_com_attempts'] = {'passed': True,
+            'measured_attempts': dict(attempts), 'scope': 'mount, Connect, tab/resize and asynchronous close'}
         checks['callback_errors'] = {'passed': not report['callback_errors']}
         report['passed'] = all(item['passed'] for item in checks.values())
     except Exception:
@@ -222,5 +259,9 @@ def run(base, report_path):
                     root.destroy()
         elif _exists(root):
             root.destroy()
+        guards.close()
+        report['native_operation_attempts'] = dict(attempts)
+        if any(attempts.values()):
+            report['passed'] = False
         report['seconds'] = round(time.monotonic() - started, 3)
     return report
