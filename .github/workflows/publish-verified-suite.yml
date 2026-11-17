@@ -1,4 +1,4 @@
-name: Publish verified native suite 1.7.0 assets
+name: Replace exact QA-log-only candidate in existing invisible draft
 
 'on':
   workflow_dispatch:
@@ -7,13 +7,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: publish-verified-suite-1.7.0
+  group: replace-private-candidate-suite-1.10.0
   cancel-in-progress: false
 
 jobs:
-  publish-verified:
-    runs-on: windows-2022
-    timeout-minutes: 15
+  replace-private-candidate:
+    if: github.repository == 'rlaengus444-ui/BJT_Tools_integrated' && github.ref == 'refs/heads/deliver/ir-suite-1.10.0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       actions: read
       contents: write
@@ -26,36 +27,30 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12.10'
-          architecture: x64
-      - name: Download original verified native release artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: BJT-native-Windows-release-40330519907
-          run-id: 40330519907
-          repository: ${{ github.repository }}
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}\verified-suite\assets
-      - name: Download corresponding native verification evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: BJT-native-Windows-evidence-40330519907
-          run-id: 40330519907
-          repository: ${{ github.repository }}
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}\verified-suite\evidence
-      - name: Verify bytes and upload distinct ASCII assets sequentially
+          python-version: '3.12'
+      - name: Require all reviewed cleanup and replacement pins
+        run: python -c "from release_tools.replace_ir_candidate_qa_log import load_pins; load_pins()"
+      - name: Reproduce approved log-only cleanup from exact original CI archives
         env:
           GH_TOKEN: ${{ github.token }}
-          BJT_VERIFIED_ROOT: ${{ runner.temp }}\verified-suite
-        shell: pwsh
+          BJT_REPLACEMENT_ROOT: ${{ runner.temp }}/replace-qa-log-110
         run: |
-          python release_tools/publish_verified_suite.py --evidence "$env:BJT_VERIFIED_ROOT\evidence" --assets "$env:BJT_VERIFIED_ROOT\assets" --output "$env:BJT_VERIFIED_ROOT\upload" --report "$env:BJT_VERIFIED_ROOT\publication-report.json" --upload
-      - name: Preserve publication digest readback
+          python release_tools/replace_ir_candidate_qa_log.py --archives "$BJT_REPLACEMENT_ROOT/archives" --evidence "$BJT_REPLACEMENT_ROOT/evidence" --old-assets "$BJT_REPLACEMENT_ROOT/original-assets" --new-assets "$BJT_REPLACEMENT_ROOT/cleaned-assets" --provenance "$BJT_REPLACEMENT_ROOT/clean-repack-provenance.json" --cleaned-facts "$BJT_REPLACEMENT_ROOT/cleaned-asset-facts.json" --report "$BJT_REPLACEMENT_ROOT/reproduction-report.json" --prepare
+      - name: Replace only the two pinned original assets and update draft notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BJT_REPLACEMENT_ROOT: ${{ runner.temp }}/replace-qa-log-110
+        run: |
+          python release_tools/replace_ir_candidate_qa_log.py --archives "$BJT_REPLACEMENT_ROOT/archives" --evidence "$BJT_REPLACEMENT_ROOT/evidence" --old-assets "$BJT_REPLACEMENT_ROOT/original-assets" --new-assets "$BJT_REPLACEMENT_ROOT/cleaned-assets" --provenance "$BJT_REPLACEMENT_ROOT/clean-repack-provenance.json" --cleaned-facts "$BJT_REPLACEMENT_ROOT/cleaned-asset-facts.json" --report "$BJT_REPLACEMENT_ROOT/replacement-report.json" --replace
+      - name: Preserve cleanup proof and private-draft server readback
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: BJT-suite-1.7.0-publication-${{ github.run_id }}
-          path: ${{ runner.temp }}\verified-suite\publication-report.json
+          name: BJT-1.10.0-private-cleanup-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/replace-qa-log-110/clean-repack-provenance.json
+            ${{ runner.temp }}/replace-qa-log-110/cleaned-asset-facts.json
+            ${{ runner.temp }}/replace-qa-log-110/reproduction-report.json
+            ${{ runner.temp }}/replace-qa-log-110/replacement-report.json
           if-no-files-found: warn
-          retention-days: 7
+          retention-days: 90

@@ -1,0 +1,92 @@
+{
+  "status": "PRIVATE_DRAFT_REPLACEMENT_EXECUTION_DISABLED_PENDING_COMPLETED_REVIEW_BYTE_PINS",
+  "repository": "rlaengus444-ui/BJT_Tools_integrated",
+  "repository_id": 1433912494,
+  "release_id": 448714553,
+  "source_commit": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+  "source_run": 44096041775,
+  "old_assets": {
+    "BJT_1.10.0_manual.zip": {
+      "id": 759345381,
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_source.zip": {
+      "id": 759345454,
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "id": 759345577,
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "BJT_1.10.0_Windows_x64.zip": {
+      "id": 759344713,
+      "bytes": 418199737,
+      "sha256": "7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243"
+    },
+    "SHA256SUMS.txt": {
+      "id": 759345731,
+      "bytes": 361,
+      "sha256": "bbb7ea599fd00dcd5a2236fac9ca32de749b00dc5e34024ea6962b05c9883f7d"
+    }
+  },
+  "new_assets": {
+    "BJT_1.10.0_Windows_x64.zip": {
+      "bytes": 418199188,
+      "sha256": "e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a"
+    },
+    "BJT_1.10.0_manual.zip": {
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_source.zip": {
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80"
+    }
+  },
+  "old_notes_body": "기존 BJT 통합프로그램 1.9.2에 최신 IR 피드백 모듈과 이미지 회복제어 원본 Excel을 통합한 1.10.0 평가판입니다.\n\n전체 Windows EXE ZIP을 새 폴더에 모두 압축 해제하고 BJT_통합프로그램.exe를 실행하세요. _internal 폴더를 함께 유지합니다. 기존 12개 도구와 IR 피드백 제어 도구를 제공합니다.\n\n- IR 기본 선택은 이미지 회복제어 (내장 Excel)입니다. 별도 시트 선택 없이 원본 수식을 사용하며 Microsoft Excel 데스크톱이 필요합니다.\n- 수동 슬라이싱 ZIP/이미지 전체 선택, 반경·DPI 변경, 이미지 교체, 최대 IR 출력, 최근100층/전체 그래프, CSV·온도PNG·IRPNG 저장을 제공합니다.\n- IR의 연결 유지·자동복구·PID 재검색·작업/층 유효성·Save 확인 절차는 최신 외부 모듈 2026.11.12-layer-validity.1을 유지합니다. M1·S3 지원, M2 미지원입니다.\n- 기존 통합 테마의 버튼·색상·한국어 글꼴을 적용하고 중복 제목을 줄였습니다. 시작 화면은 세로 스크롤을 지원합니다.\n- 입력값을 저장하지만 이전 연결·PID·이미지 분석 결과와 작업 권한은 복원하지 않습니다. 통합 창 종료는 작업 정리와 CSV/PNG 저장이 끝날 때까지 기다립니다.\n\n실제 Excel COM·센서·PLC·램프 출력은 미검증이며 최종 제어 알고리즘 승인과 실제 장비 적용은 보류 상태입니다. Windows 모의 검증과 독립 코드 검토를 장비 검증으로 해석하지 않습니다.\n\nWindows 전체 소스·IR 회귀·EXE 실행·패키징 검증을 통과한 빌드입니다.\n검증 실행: https://github.com/rlaengus444-ui/BJT_Tools_integrated/actions/runs/44096041775\n빌드 소스: 0a48712576b9b7cbb147c03becd957eb559af4c7\n내장 원본 시트 SHA-256: eb34cd39d364011015bee1a03cc1c024a1bb41911df35ed5aeac41b299941c20\nEXE ZIP SHA-256: 7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243\n\n전체 EXE는 BJT_1.10.0_Windows_x64.zip 한 파일입니다. SHA256SUMS.txt로 다운로드 바이트를 확인할 수 있습니다.\n독립 검토 기록: verification/ir-integration (소스 저장소).\n",
+  "old_notes_sha256": "78d67ed40521ea627d590bcf5bc95fe6ceec426584b6750be18b8933695cec1a",
+  "new_notes_sha256": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a",
+  "files": {
+    "stage_code": {
+      "path": "release_tools/stage_verified_ir_110.py",
+      "sha256": "9c0050339793a413c0727ab32ec2b7eae425dbaadd76cbeaf450e46f46544f84"
+    },
+    "stage_pins": {
+      "path": "release_tools/stage_verified_ir_110.json",
+      "sha256": "fb2c98a99ed6a3b0cead82c969289ceed72179ffa81db8815ca72b2a5d626df7"
+    },
+    "cleanup_code": {
+      "path": "release_tools/clean_ir_candidate.py",
+      "sha256": "52a13ca2861e695b385ba790dd35861a4c7779d2cab0c1e3675dc3a3e704d3c7"
+    },
+    "provenance": {
+      "path": "verification/ir-integration/clean-repack-provenance.json",
+      "sha256": "c4a7dbbb03364e19cbbb6ca5c8830303556f5e5bd8ccc27165d046628948cbbe"
+    },
+    "cleaned_facts": {
+      "path": "verification/ir-integration/cleaned-asset-facts.json",
+      "sha256": "1489a14d233447c867dd648f477e4a057d3a38c8aa31e9c51a8160393dd59f94"
+    },
+    "clean_artifact_review": {
+      "path": "verification/ir-integration/sol-clean-artifact-review.json",
+      "sha256": "e2a15e2dbcdf8cad195a4377c4788ed50be8f6154cdeec8204f0e0d8f26c89fe"
+    },
+    "replacement_review": {
+      "path": "verification/ir-integration/sol-draft-replacement-review.json",
+      "sha256": null
+    }
+  },
+  "equipment_application": "HOLD",
+  "final_control_algorithm_approval": "HOLD"
+}

@@ -1,0 +1,573 @@
+{
+  "status": "completed_independent_final_cleaned_artifact_review",
+  "review_completed": true,
+  "final_cleaned_candidate_review_completed": true,
+  "created_utc": "2026-11-17T14:46:30.322302+00:00",
+  "reviewer_role": "independent sol_reviewer",
+  "invocation": {
+    "route": "native collaboration.spawn_agent",
+    "task_name": "/root/sol_reviewer_ir_final_artifact",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "max",
+    "configuration_evidence": "Parent supplied accepted native invocation route/model/effort in the task. This report records actual independent review activity.",
+    "provider_model_identity_independently_attested": false
+  },
+  "scope": {
+    "source_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "base_revision": "a1c78e2113bbd7c5014bc5041a19c519bcbd1023",
+    "original_native_run": 44096041775,
+    "candidate_transfer_run": 44101935576,
+    "candidate_transfer_revision": "c1fcaea759cb17784ea429a1999b5b5f5188cf79",
+    "candidate_directory": "/workspace/ir-integration-2026.11.17/clean-candidate-download",
+    "release_id": 448714553,
+    "tag": "v1.10.0",
+    "instructions_read": [
+      "/workspace/BJT_Tools_integrated/AGENTS.md",
+      "/workspace/BJT_Tools_integrated/CODEX_REVIEW_PROTOCOL.md"
+    ],
+    "source_design_and_implementation_reviews_are_prior_separate_evidence": true,
+    "original_candidate_directory": "/workspace/ir-integration-2026.11.17/candidate-download",
+    "postpackager_revision": "6001a003fd9d763aad9b154162b088edbcf61a13",
+    "postpackager_script_sha256": "52a13ca2861e695b385ba790dd35861a4c7779d2cab0c1e3675dc3a3e704d3c7",
+    "application_source_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "cleanup_code_identity_binding_sha256": "102f565748dbf27c14e6999cf49df9e3257d8ec7c858882c0f9df5dd0a9d52e1",
+    "original_repack_provenance_sha256": "c4a7dbbb03364e19cbbb6ca5c8830303556f5e5bd8ccc27165d046628948cbbe"
+  },
+  "outcome": "approved_exact_cleaned_artifacts_for_public_evaluation_subject_to_guarded_draft_replacement_and_fresh_server_readback",
+  "candidate_artifact_approved": true,
+  "public_evaluation_publication_acceptable": true,
+  "equipment_application": "HOLD",
+  "final_control_algorithm_approval": "HOLD",
+  "excel_com_verified": false,
+  "equipment_verified": false,
+  "original_assets": {
+    "BJT_1.10.0_source.zip": {
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "bbb7ea599fd00dcd5a2236fac9ca32de749b00dc5e34024ea6962b05c9883f7d"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "BJT_1.10.0_manual.zip": {
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_Windows_x64.zip": {
+      "bytes": 418199737,
+      "sha256": "7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243"
+    }
+  },
+  "actual_independent_checks": {
+    "five_asset_hashes_from_original_ci_log": true,
+    "exact_clean_source_revision": true,
+    "all_91_registry_entries_match_source_and_frozen": true,
+    "source_archive_git_tracked_files_match": 371,
+    "production_source_frozen_identical_files": 136,
+    "13_manuals_and_index_match": true,
+    "capsule_app_source_zip_exact_parity": {
+      "files": 374,
+      "payload_sha256": "58424a7fd9604649823f54f8fc79e991bd87cab74a49c57057fc981c68381adc",
+      "launcher_behavior_matches_git": true,
+      "executed": false
+    },
+    "zip_safety_crc_counts": {
+      "windows": 3728,
+      "source": 377,
+      "manual": 28,
+      "capsule": 374
+    },
+    "full_expected_per_file_release_manifest": {
+      "available": false,
+      "verified": false,
+      "all_actual_members_inventoried": true
+    },
+    "preserved_server_readback_matches_download_and_notes": true
+  },
+  "actual_pe_checks": {
+    "BJT_통합프로그램.exe": {
+      "machine": "AMD64",
+      "versions": [
+        {
+          "file": [
+            1,
+            10,
+            0,
+            0
+          ],
+          "product": [
+            1,
+            10,
+            0,
+            0
+          ]
+        }
+      ],
+      "sections": 7,
+      "bytes": 32860194,
+      "sha256": "e68cdde3fa8c05545c139708becce461d084dd7e2299079286da526de3548201"
+    },
+    "BJT_명령줄.exe": {
+      "machine": "AMD64",
+      "versions": [
+        {
+          "file": [
+            1,
+            10,
+            0,
+            0
+          ],
+          "product": [
+            1,
+            10,
+            0,
+            0
+          ]
+        }
+      ],
+      "sections": 7,
+      "bytes": 32863778,
+      "sha256": "906fc62f3e6399e5aabcd8229b5f74d049bae9b2e8899fde27335a5d05829fcf"
+    }
+  },
+  "source_preservation": {
+    "original_candidate_review": true,
+    "python_ir_modules": [
+      {
+        "path": "adapter_contracts.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "csv_source.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "excel_async.py",
+        "ast_equal_except_package_imports": false
+      },
+      {
+        "path": "excel_calculation.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "excel_test_helpers.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "excel_workbook.py",
+        "ast_equal_except_package_imports": false
+      },
+      {
+        "path": "layer_algorithm.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "layer_charts.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "observed_session.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "output_limit.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "plot_archive.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "plot_images.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "replay_workbook.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "resilient_adapter.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "sequence_field_audit.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "sequence_persistence.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "session.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "single_instance.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "slice_data.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "slice_panel.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "slice_workbook.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "standalone_ir.py",
+        "ast_equal_except_package_imports": false
+      },
+      {
+        "path": "target_temperature.py",
+        "ast_equal_except_package_imports": true
+      },
+      {
+        "path": "windows_ui_adapter.py",
+        "ast_equal_except_package_imports": true
+      }
+    ],
+    "unchanged_import_normalized_modules": 21,
+    "narrow_hook_modules": [
+      "excel_async.py",
+      "excel_workbook.py",
+      "standalone_ir.py"
+    ],
+    "upstream_byte_hashes_verified": 37,
+    "old_twelve_tool_sources_byte_identical": [
+      "bjt",
+      "arrange",
+      "overlay",
+      "exchanger",
+      "alignment",
+      "thermal",
+      "compare",
+      "number_tools",
+      "sequence_z",
+      "m2_converter",
+      "chitu_checker",
+      "nesting"
+    ]
+  },
+  "findings": [
+    {
+      "id": "A1",
+      "priority": "medium",
+      "status": "resolved_in_actual_cleaned_candidate",
+      "title": "The exact Windows archive includes stale synthetic thermal-test teardown error output.",
+      "path": "BJT_통합프로그램_1.10.0_EXE/_internal/logs/errors.log",
+      "bytes": 1626,
+      "sha256": "c06264143b923010383965a790f0561014fa5eecc3908827f81ecea359394df1",
+      "assessment": "Not evidence of an IR control/equipment failure; contains two synthetic TclError traces and no observed user/device data or secrets. Root requires clean packaging before public evaluation publication. The original helper failure is preserved.",
+      "causal_evidence": {
+        "frozen_fixture_sha256": "ffc1d041bb75ff84bab0fe79f3365a551661d0a1e523f8bd87e7cc7f35beb9b1",
+        "fixture_byte_identical_to_1_9_2": true,
+        "capture_before_close_ast_unchanged": true,
+        "generic_capture_body_after_ir_special_case_unchanged": true,
+        "input_widget_walker_ast_unchanged": true,
+        "static_trace": [
+          "test_closing_cancels_both_playback_timers calls self.app._on_close(), destroying its thermal widget",
+          "OvenPlaybackControlsTests.tearDown then calls self.suite.request_close(confirm=False)",
+          "SuiteApp._persist_before_close captures every controller and records TclError for the already-destroyed thermal widget",
+          "Native runner executes frozen_fixtures once for GUI EXE and once for CLI EXE, consistent with exactly two stacks"
+        ],
+        "observed_log_bytes": 1626,
+        "observed_log_sha256": "c06264143b923010383965a790f0561014fa5eecc3908827f81ecea359394df1",
+        "actual_tk_reproduction_run": false,
+        "classification": "stale synthetic QA teardown residue; no observed product-control or equipment failure; packaging hygiene issue"
+      },
+      "accepted_fix_design": "Create a separate new candidate; remove only this exact pinned member. Preserve the original candidate and its CI hashes. Independently prove all remaining uncompressed members, executable/source/resource bytes and metadata unchanged, with only ZIP bookkeeping offsets permitted to change. Keep manual/source/launcher identical, recalculate EXE outer SHA and SHA256SUMS, retain explicit provenance. Review replacement logic and new actual candidate bytes before public publication. Native CI evidence remains for the original container and identical remaining program files; do not claim a Windows execution of the cleaned outer ZIP.",
+      "resolution": "Only the exact 1,626-byte pinned synthetic QA log is absent. All 3,727 other entries have identical uncompressed bytes, metadata, raw local records/compressed streams/descriptors, and central records after only offset normalization. Original five files and failed evidence are retained. Source/manual/standalone outer hashes are unchanged; only EXE ZIP and checksum text outer hashes changed.",
+      "independent_resolution_proof": {
+        "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-cleaned-candidate-facts.json",
+        "sha256": "eba2ad06cc71abbce881b658ef7027d800b82f076f4a65eee4434c7a3d0c925a"
+      }
+    }
+  ],
+  "unresolved_findings": [],
+  "limits": [
+    {
+      "item": "Complete independent expected per-file runtime manifest",
+      "available": false,
+      "verified": false,
+      "explanation": "The actual release recipe emits complete runtime per-file checksums outside the five published assets and does not embed a full release_manifest.json. All actual archive members are inventoried, CRC/SHA checked, and 91 core/136 production resources match exact source. Original CI outer SHA7a is pinned; cleaned outer SHAe0ad differs and is bound only through the independently verified exact-log-only raw/member preservation proof. No independent expected SHA is invented for each third-party runtime file.",
+      "original_ci_archive_sha256_verified": true,
+      "candidate_outer_archive_is_original_ci_archive": false,
+      "cleaned_archive_bound_via_exact_log_only_repack_provenance": true
+    },
+    {
+      "item": "Raw native CI reports locally opened",
+      "verified": false,
+      "explanation": "This reviewer read original successful run/job/artifact metadata/log, transfer workflow log and actual strict transfer checker. The successful normal Actions transfer enforces raw499 cases with exactly2 permitted skips, upstream572 with0failures/errors/skips, capsule8, all20gates, and both frozen IR reports. Those raw reports are not locally downloadable through blocked Azure here and were not falsely claimed as personally rerun or opened."
+    },
+    {
+      "item": "Execution scope",
+      "application_executed": false,
+      "capsule_executed": false,
+      "windows_runtime_rerun": false,
+      "excel_com_rerun": false,
+      "hardware_rerun": false,
+      "network_used": false,
+      "dependencies_installed": false,
+      "explanation": "Actual downloaded files were read directly with standard-library code; no application/bootstrap/payload/DLL/Excel/device process was executed. Workbook formula strings and structural cells were inspected without calculation."
+    }
+  ],
+  "evidence": {
+    "artifact-review/sol-independent-facts.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-independent-facts.json",
+      "sha256": "ece512da1bd804ff54398c237b93cf5538d2d121512661d96a0a0b05751ee7b2"
+    },
+    "artifact-review/sol-source-and-residue-cause.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-source-and-residue-cause.json",
+      "sha256": "3e57f9c471247904ac6974c08f24339ef7d08d3cec1457c5af0a7195555671f7"
+    },
+    "artifact-review/candidate-verification.original-ci.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/candidate-verification.original-ci.json",
+      "sha256": "02252563e23d805ab8cb62384a41ac083c353f99c2793963d6c74098e655648a"
+    },
+    "windows-CI/run-44096041775-all.log": {
+      "path": "/workspace/ir-integration-2026.11.17/windows-CI/run-44096041775-all.log",
+      "sha256": "15c16e8a5486752051fb16dce277b8f7bfb65691c4e1602f8221137d374fa88f"
+    },
+    "windows-CI/successful-build-pins-44096041775.json": {
+      "path": "/workspace/ir-integration-2026.11.17/windows-CI/successful-build-pins-44096041775.json",
+      "sha256": "9d7e745d799842dbaff16d00a10d2ce7d61185dbd497840445caa4e4c5542f34"
+    },
+    "candidate-stage-run.log": {
+      "path": "/workspace/ir-integration-2026.11.17/candidate-stage-run.log",
+      "sha256": "08550664a7a1db04cac8f43d2dd103e5ddfda6dc1b13bbbcc269d07c3ca54f52"
+    },
+    "candidate-release-staged.json": {
+      "path": "/workspace/ir-integration-2026.11.17/candidate-release-staged.json",
+      "sha256": "6bec0f0ddfb0438a0633d201d397660b9cedf173b31482024277768612c23800"
+    },
+    "release-notes.txt": {
+      "path": "/workspace/ir-integration-2026.11.17/release-notes.txt",
+      "sha256": "78d67ed40521ea627d590bcf5bc95fe6ceec426584b6750be18b8933695cec1a"
+    },
+    "sol-code-post.json": {
+      "path": "/workspace/ir-integration-2026.11.17/sol-code-post.json",
+      "sha256": "e153b764302b72c57c2216eddee8b25dd392c249f667d2f67ea9fac31e6d6e28"
+    },
+    "sol-frozen-fixture-delta.json": {
+      "path": "/workspace/ir-integration-2026.11.17/sol-frozen-fixture-delta.json",
+      "sha256": "fb92ffa5df975567b5fccb0a2e62d39a4af9bfb649d1673c67325ee9b317dfa2"
+    },
+    "sol-candidate-transfer-final.json": {
+      "path": "/workspace/ir-integration-2026.11.17/sol-candidate-transfer-final.json",
+      "sha256": "395b045ecd6d3d6778ac53cb516347af30fcc907cc0a3438a9d95f5d7d29c154"
+    },
+    "artifact-review/sol-cleaned-candidate-facts.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-cleaned-candidate-facts.json",
+      "sha256": "eba2ad06cc71abbce881b658ef7027d800b82f076f4a65eee4434c7a3d0c925a"
+    },
+    "artifact-review/sol-cleaned-candidate-check.log": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-cleaned-candidate-check.log",
+      "sha256": "004b509c8838fcd9a99e8aec32bf13f8e7a088bac6b789e86f971ac90ee75c80"
+    },
+    "artifact-review/sol_verify_cleaned_candidate.py": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol_verify_cleaned_candidate.py",
+      "sha256": "34474c3d17a5e7a9544a3d215c5cd056e70cf941257ff5c7237b0672956e15fb"
+    },
+    "artifact-review/sol_independent_check.py": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol_independent_check.py",
+      "sha256": "6e611ea38fd1835083c1847b5d86ba386c0c062da73ce0097ac670db97b30457"
+    },
+    "artifact-review/sol-cleanup-self-tests.log": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-cleanup-self-tests.log",
+      "sha256": "fc4105bc8455517173b0f2e7c0d8566d043ccc5b8776c83cc005a84609a03a03"
+    },
+    "artifact-review/sol-verifier-self-tests.log": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-verifier-self-tests.log",
+      "sha256": "bd092458be3ced445dc4ef9625d0373501249430afb2abec2f2dba7adb457380"
+    },
+    "artifact-review/clean-repack-provenance.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/clean-repack-provenance.json",
+      "sha256": "c4a7dbbb03364e19cbbb6ca5c8830303556f5e5bd8ccc27165d046628948cbbe"
+    },
+    "artifact-review/cleaned-asset-facts.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/cleaned-asset-facts.json",
+      "sha256": "1489a14d233447c867dd648f477e4a057d3a38c8aa31e9c51a8160393dd59f94"
+    },
+    "artifact-review/clean-code-identity-binding.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/clean-code-identity-binding.json",
+      "sha256": "102f565748dbf27c14e6999cf49df9e3257d8ec7c858882c0f9df5dd0a9d52e1"
+    },
+    "artifact-review/candidate-verification.clean.r2.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/candidate-verification.clean.r2.json",
+      "sha256": "25b194e267dff03af4f20eb042f1d080fb864d37defbdf20091d233b57aaad15"
+    },
+    "artifact-review/sol-final-artifact-review.original-ci-hold.json": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-final-artifact-review.original-ci-hold.json",
+      "sha256": "5ebced030285efe95ec63cfa87ca5661a2eceefa197bb5098af618829c9a0f86"
+    },
+    "release-notes-clean.txt": {
+      "path": "/workspace/ir-integration-2026.11.17/release-notes-clean.txt",
+      "sha256": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a"
+    },
+    "artifact-review/sol-reviewed-replacement-note-body.txt": {
+      "path": "/workspace/ir-integration-2026.11.17/artifact-review/sol-reviewed-replacement-note-body.txt",
+      "sha256": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a"
+    },
+    "original-final-artifact-review": {
+      "path": "/workspace/ir-integration-2026.11.17/sol-final-artifact-review.json",
+      "sha256": "5ebced030285efe95ec63cfa87ca5661a2eceefa197bb5098af618829c9a0f86"
+    }
+  },
+  "public_publication_performed": false,
+  "decision": "The exact five local cleaned artifacts are acceptable for the evaluation-only public prerelease. The one-log hygiene finding is resolved. Before the parent publishes, complete the separately reviewed draft replacement, retain the exact five approved hashes and chosen reviewed notes bytes, and confirm fresh server/tag/source/draft/prerelease state. This review itself neither performs nor certifies those later remote operations. No new product build is required: all retained program/resource and compressed member bytes are identical to the genuine successful Windows CI candidate.",
+  "approved_assets": {
+    "BJT_1.10.0_source.zip": {
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "BJT_1.10.0_manual.zip": {
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_Windows_x64.zip": {
+      "bytes": 418199188,
+      "sha256": "e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a"
+    }
+  },
+  "original_ci_windows_archive": {
+    "bytes": 418199737,
+    "sha256": "7a2bcc5e23ea7ae4ab5f34d72bf901ca9d3892ffe73ba6a9e9456133336a5243"
+  },
+  "final_cleaned_archive_checks": {
+    "unchanged_source_manual_launcher_and_updated_exact_checksums": true,
+    "all_3727_remaining_uncompressed_members_byte_identical": true,
+    "all_remaining_zip_metadata_identical_except_header_offsets": true,
+    "all_remaining_raw_local_records_compressed_payloads_and_descriptors_byte_identical": true,
+    "all_remaining_raw_central_records_byte_identical_except_header_offsets": true,
+    "full_archive_inventory_crc_and_no_runtime_logs_caches_records": true
+  },
+  "cleanup_identity_binding": {
+    "application_source_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+    "postpackager_revision": "6001a003fd9d763aad9b154162b088edbcf61a13",
+    "cleanup_script_path": "release_tools/clean_ir_candidate.py",
+    "cleanup_script_sha256": "52a13ca2861e695b385ba790dd35861a4c7779d2cab0c1e3675dc3a3e704d3c7",
+    "original_provenance_sha256": "c4a7dbbb03364e19cbbb6ca5c8830303556f5e5bd8ccc27165d046628948cbbe",
+    "identity_recorded_after_cleanup": true,
+    "identity_note": "The cleanup code bytes were committed after the local cleanup; they match the committed blob exactly. This does not claim the commit already existed at cleanup time.",
+    "original_ci_program_files_reused_byte_identically": true,
+    "native_runtime_rerun_performed": false,
+    "excel_com_verified": false,
+    "equipment_verified": false,
+    "path": "/workspace/ir-integration-2026.11.17/artifact-review/clean-code-identity-binding.json",
+    "sha256": "102f565748dbf27c14e6999cf49df9e3257d8ec7c858882c0f9df5dd0a9d52e1",
+    "committed_blob_and_current_script_byte_identity_independently_verified": true,
+    "postpackager_commit_contains_only_cleanup_script_and_tests": true
+  },
+  "reviewer_executed_checks": [
+    {
+      "name": "Original actual five-file independent stdlib audit",
+      "result": "passed with declared stale test-log finding",
+      "scope": "Parsed the original CI completion object directly from its run log; rehashed all actual original assets and every ZIP/capsule member; checked safe paths/CRC, 371 Git tracked source files, all 91 core registry entries, 136 production files and JSON resources, 13 manuals, 374 capsule app members and launcher AST, genuine workbook/bridge, both AMD64 PE versions, and preserved server readback."
+    },
+    {
+      "name": "Source preservation and static residue cause analysis",
+      "result": "passed",
+      "scope": "Read actual archive/upstream bytes and all seven text diffs that differ under simple import normalization; verified 37 upstream/integrated provenance hashes, 21 unchanged ASTs except package imports, exactly 3 expected narrow hook modules, and 12 old tool source bytes unchanged. Actual embedded thermal fixture is byte-identical to base1.9.2; capture path unchanged except IR special case. Static teardown trace explains the two stacks; real Tk causal rerun not performed."
+    },
+    {
+      "name": "Independent actual cleaned five-file audit",
+      "command": "python artifact-review/sol_verify_cleaned_candidate.py clean-candidate-download --output artifact-review/sol-cleaned-candidate-facts.json",
+      "result": "passed, exit0",
+      "seconds": 8.1745,
+      "scope": "Rehashed original and cleaned five assets; exact changed hashes and checksum text; all 3,727 retained file hashes/lengths/CRC, serialized metadata, raw local record/compressed bytes, normalized raw central bytes; no log/cache/record residue."
+    },
+    {
+      "name": "Independent cleanup proof regression execution",
+      "command": "python -m unittest discover -s release_tools -p test_clean_ir_candidate.py -v",
+      "result": "passed",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.042,
+      "scope": "Owned synthetic archives only; includes negative mutations for wrong old/log pins, missing or additional deletions, changed resource/metadata, unsafe/colliding paths, symlink, Unicode/extra/comment preservation."
+    },
+    {
+      "name": "Independent artifact verifier self-test execution",
+      "command": "python artifact-review/verify_candidate.py --self-test",
+      "result": "passed, exit0",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "scope": "Owned synthetic CRC/path/capsule/PE/export/version fixtures; no application or native DLL executed."
+    },
+    {
+      "name": "Cleanup code identity and provenance binding",
+      "result": "passed",
+      "scope": "git show6001a003 committed cleanup blob exactly matches SHA52a13... and current code; commit changes only cleanup script/tests. Binding explicitly records that this code commit followed cleanup, retaining c4a7... initial provenance. Application source remains clean exact0a."
+    }
+  ],
+  "release_notes_review": {
+    "semantic_result": "acceptable evaluation labeling, desktop Excel requirement, genuine workbook pin, correct source/native CI run, explicit unverified real Excel/equipment and final control/equipment HOLD, exact QA-log-only cleanup explanation, explicit original CI ZIP SHA7a distinct from cleaned EXE ZIP SHAe0ad",
+    "final_canonical_notes_bytes": 2476,
+    "final_canonical_notes_sha256": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a",
+    "canonical_notes_path": "/workspace/ir-integration-2026.11.17/release-notes-clean.txt",
+    "exact_canonical_notes_must_match_replacement_pins_and_fresh_server_readback": true
+  },
+  "remaining_release_operations": [
+    "Complete mandatory independent review of the exact final guarded two-asset draft-replacement implementation/pins. This artifact review does not replace that code review.",
+    "Use the reviewed replacement to change only EXE ZIP and SHA256SUMS on existing draft448714553, retaining the three original asset IDs/digests and source0a/tagv1.10.0. No extra assets or product changes.",
+    "Fresh readback must confirm exactly these five approved name/size/SHA facts, the chosen reviewed notes body, target/source/tag, draft=true/prerelease=true before the separately authorized public evaluation publication step.",
+    "Retain the original CI archive/hash, original failed audit, exact log-removal proof, cleanup code identity and this completed review; never label cleaned outer ZIP as directly executed in original Windows CI."
+  ],
+  "execution": {
+    "application_executed": false,
+    "capsule_executed": false,
+    "bootstrap_executed": false,
+    "windows_runtime_rerun": false,
+    "excel_com_rerun": false,
+    "hardware_rerun": false,
+    "network_used": false,
+    "dependencies_installed": false,
+    "owned_synthetic_zip_utility_executed_for_unit_tests": true
+  },
+  "cleaned_assets": {
+    "BJT_1.10.0_source.zip": {
+      "bytes": 26398492,
+      "sha256": "c324e834521f6efff320a71d662ca3fbfef4a414ff259754b23064e3015d8ba7"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "f6c084a84dff73daa607886dda3a64e9d1d17c27beb1f87b8c7fd90ee3463d80"
+    },
+    "BJT_1.10.0_standalone.pyw": {
+      "bytes": 16101255,
+      "sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a"
+    },
+    "BJT_1.10.0_manual.zip": {
+      "bytes": 241422,
+      "sha256": "2e7cec3aa47df43130ba2cd1202da5a9f16a2e298487fa15f3d36aecb445993b"
+    },
+    "BJT_1.10.0_Windows_x64.zip": {
+      "bytes": 418199188,
+      "sha256": "e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a"
+    }
+  },
+  "review_phase": "actual_local_cleaned_artifacts_before_separately_reviewed_private_draft_replacement",
+  "public_transport_readback_verified": false,
+  "private_draft_replacement_verified": false,
+  "publication_scope": "EVALUATION_ONLY; exact approved local bytes. Guarded two-asset replacement and fresh exact-five server digest/notes readback remain conditions before public publication.",
+  "release_notes_sha256": "8e7f0b2a69d56812fcd41ead182cb6a4af9f9f17afafef71ca7e49593fbe435a"
+}

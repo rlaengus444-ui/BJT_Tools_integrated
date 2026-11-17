@@ -1,0 +1,13 @@
+{
+  "application_source_revision": "0a48712576b9b7cbb147c03becd957eb559af4c7",
+  "postpackager_revision": "6001a003fd9d763aad9b154162b088edbcf61a13",
+  "cleanup_script_path": "release_tools/clean_ir_candidate.py",
+  "cleanup_script_sha256": "52a13ca2861e695b385ba790dd35861a4c7779d2cab0c1e3675dc3a3e704d3c7",
+  "original_provenance_sha256": "c4a7dbbb03364e19cbbb6ca5c8830303556f5e5bd8ccc27165d046628948cbbe",
+  "identity_recorded_after_cleanup": true,
+  "identity_note": "The cleanup code bytes were committed after the local cleanup; they match the committed blob exactly. This does not claim the commit already existed at cleanup time.",
+  "original_ci_program_files_reused_byte_identically": true,
+  "native_runtime_rerun_performed": false,
+  "excel_com_verified": false,
+  "equipment_verified": false
+}
