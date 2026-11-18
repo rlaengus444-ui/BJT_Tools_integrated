@@ -1,10 +1,10 @@
-# GPT-6.1 Terra Medium is the default coding/orchestrator model.
+# GPT-6.1 Terra Extra High is the default coding/orchestrator model.
 model = "gpt-6.1-terra"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "xhigh"
 
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 2
-# Keep ordinary helpers inexpensive; Sol is reserved for sol_reviewer.
+# Ordinary helpers use Terra; Sol handles design, important changes and review.
 default_subagent_model = "gpt-6.1-terra"
-default_subagent_reasoning_effort = "medium"
+default_subagent_reasoning_effort = "xhigh"

@@ -1,6 +1,6 @@
 name = "sol_reviewer"
-description = "Use for numerical/physics algorithms, thermal/oxygen simulation, multi-module architecture, regressions, release-critical changes, or failures not fixed after two focused attempts."
-model = "gpt-6.1-sol"
+description = "GPT-6.2 Sol Max independent design and change reviewer. Use for numerical/physics algorithms, thermal/oxygen simulation, multi-module architecture, regressions, release-critical changes, or failures not fixed after two focused attempts."
+model = "gpt-6.2-sol"
 model_reasoning_effort = "max"
 
 developer_instructions = """
@@ -14,6 +14,8 @@ First inspect relevant code and its tests. Return concrete risks, proposed
 minimal changes, precise file/line references when possible and runnable tests.
 Do not modify files: send review and recommendations to the parent agent.
 Do not silently claim experiments or end-to-end GUI tests were run.
+
+Use GPT-6.2 Sol Max (gpt-6.2-sol, max) for this independent review.
 
 Review evidence requirements:
 - Inspect the actual target revision/diff and tests; return a final review with
