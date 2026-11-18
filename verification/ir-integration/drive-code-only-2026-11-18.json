@@ -1,0 +1,64 @@
+{
+  "date_seoul": "2026-11-18",
+  "user_request": "Drive에는 코드 파일만 올려",
+  "folder_url": "https://drive.google.com/drive/folders/1AC56ut_f27FLw5jp7EQ7hN4xCh9Em8jn",
+  "retained_files": [
+    {
+      "id": "1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0",
+      "name": "BJT_1.10.0_standalone.pyw",
+      "bytes": 16101255,
+      "url": "https://drive.google.com/file/d/1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0/view?usp=drivesdk"
+    },
+    {
+      "id": "1J3aWhT3OzF243n6NLtoEY90-Qy8RGdWx",
+      "name": "BJT_1.10.0_source.zip",
+      "bytes": 26398492,
+      "url": "https://drive.google.com/file/d/1J3aWhT3OzF243n6NLtoEY90-Qy8RGdWx/view?usp=drivesdk"
+    }
+  ],
+  "python_source_full_download_sha256": "be921bc2625d5adb24aae61f9c7e7ebe52a127280c9e081e7e0560cb5e9e9d7a",
+  "python_source_download_verified": true,
+  "python_source_bundle_contents": "13 tool sources with required original Excel/runtime resources; not a Windows EXE",
+  "source_zip_raw_download_verified": false,
+  "source_zip_block": "Google Drive403 cannotDownloadAbusiveFile; no override attempted",
+  "removed_current_non_code_files": [
+    "BJT_1.10.0_manual.zip",
+    "SHA256SUMS.txt",
+    "전체_EXE_다운로드.url"
+  ],
+  "removed_old_version_folders": [
+    {
+      "name": "1.9.0",
+      "id": "1w6VaXAUxXUmnt2mQatuR1P2-bQRiFVbx"
+    },
+    {
+      "name": "1.8.2",
+      "id": "1DW5HOg1Kjr6VOkiOWwy0uuvvyblk3lWL"
+    },
+    {
+      "name": "1.8.1",
+      "id": "14SoaXuRo0GQgcBdbT3yzU54QdIRUYNxZ"
+    },
+    {
+      "name": "1.8.0",
+      "id": "1Jt_cYIvHGEkhFMPPDF7oReWtSuSSa28x"
+    },
+    {
+      "name": "1.7.1",
+      "id": "10hO6BJxlWqzORBEw8iTGxoWc3owvG9li"
+    }
+  ],
+  "preserved_unrelated_items": [
+    {
+      "id": "1Fd_1vA4HLd2NpzHmsO7KMK1lrk5Dx3_5",
+      "name": "IR 피드백 외부 모듈 (2026-10-27)"
+    },
+    {
+      "id": "15evjVEKFOzKtWqAYTiZOyupNDovySmdQ",
+      "name": "BJT_1.6.2_카메라모듈_2mm_3D예시.html"
+    }
+  ],
+  "notion_update_completed": true,
+  "application_code_changed": false,
+  "exe_delivery": "GitHub release v1.10.0 remains available; wholeEXE Drive upload no longer requested"
+}

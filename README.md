@@ -12,7 +12,7 @@ EXE ZIP은 **418,199,188바이트**, SHA-256은 `e0ad1de632989578fc360bd07df3ad8
 
 Windows 전체 소스·IR 572개 회귀·소스 캡슐 8개·EXE 모의 실행과 패키징 검증을 통과한 빌드입니다. 배포 ZIP은 합성 QA 시험 로그 한 개만 제외했으며 나머지 3,727개 파일 바이트와 ZIP 메타데이터·압축 기록을 원본과 대조했습니다. 프로그램 재빌드나 정리 후 Windows 재실행은 하지 않았습니다. [검증·게시 기록과 한계](verification/ir-integration/DELIVERY_1.10.0.md)를 확인하세요. 실제 Excel COM·센서·PLC·램프는 미검증이며 최종 제어 알고리즘 승인과 실제 장비 적용은 **보류** 상태입니다.
 
-Google Drive의 [EXE 바로가기](https://drive.google.com/file/d/1Bbu7cdXX4RaAV7HSFIgE6Tg-MeIcibzh/view)는 위 GitHub 파일로 연결됩니다. 현재 전송 경로의 크기 제한으로 Drive에 전체 EXE 파일을 올리지 못했습니다. 보조 파일의 전송·재검증 범위도 [배포 기록](verification/ir-integration/DELIVERY_1.10.0.md#배포-채널)에 구분했습니다.
+팀드라이브에는 [단일 Python 실행 소스](https://drive.google.com/file/d/1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0/view)와 소스 ZIP만 보관합니다. 단일 실행 소스는 Drive에서 전체 다운로드해 SHA-256을 확인했습니다. Drive의 소스 ZIP은 다운로드 차단 상태이므로 전체 소스 ZIP과 EXE는 위 GitHub 링크를 사용하세요. [보관 방식과 검증 기록](verification/ir-integration/DELIVERY_1.10.0.md#배포-채널)을 확인할 수 있습니다.
 
 소스 실행: `python suite/run_suite.py`. 필요한 Python 환경과 패키지는 [suite/suite_runtime.py](suite/suite_runtime.py)와 [빌드 안내](suite/배포_빌드/재빌드_안내.txt)를 참고하세요.
 
