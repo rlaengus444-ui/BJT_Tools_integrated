@@ -26,7 +26,7 @@ from ir_feedback.session import SessionController
 from suite_loader import read_manifest, verify_sources
 
 
-ORIGINAL_SOURCES = {
+NON_IR_SOURCE_HASHES = {
     'bjt': 'ab9bdb6771c8c42752e38280df87b97edc76884e53644ab212467247b8099372',
     'arrange': 'e642a123eeba3a8664d79a1167883f4561f181496e2f1767fccdf3274c69ea8d',
     'overlay': '5455ce414fdfe390c8244a61de6c2cbbf65117567e9fcbb14cef5de3b0dd8264',
@@ -38,15 +38,16 @@ ORIGINAL_SOURCES = {
     'sequence_z': '3ad9c345ba2a5758107c29dd3aad125fad91b26d96ba6fe3eeda9aa9dd5c4bd8',
     'm2_converter': '856efcb9b94846719c7261991c3964c45418463c122999ed8398c13b41faf7da',
     'chitu_checker': 'bb5c6845a4727ab49fc4dc8fc9c913bb0e16248aba896e849d0c76cc82088fe0',
-    'nesting': 'a01ebdf1e812a38793a134eabb8a61cbd1fae7a0f9d91d03a4396a9e1ef2ea2e',
+    # v1.10.1 intentionally changes the packing tab layout for CHITUBOX export.
+    'nesting': 'd8c89fc11b746428f3031f1a42024597c40b32421d06b5e40c36b3c27fa770f0',
 }
 
 
 class ResourceAndNamespaceTests(unittest.TestCase):
-    def test_original_twelve_sources_are_byte_preserved(self):
+    def test_non_ir_sources_match_reviewed_hashes(self):
         tools = {item['id']: item for item in read_manifest()['tools']}
-        self.assertEqual(set(tools), set(ORIGINAL_SOURCES) | {'ir_feedback'})
-        for key, checksum in ORIGINAL_SOURCES.items():
+        self.assertEqual(set(tools), set(NON_IR_SOURCE_HASHES) | {'ir_feedback'})
+        for key, checksum in NON_IR_SOURCE_HASHES.items():
             with self.subTest(tool=key):
                 path = ROOT / tools[key]['source']
                 self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), checksum)
