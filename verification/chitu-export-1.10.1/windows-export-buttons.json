@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "requested_window_size": [
+    1120,
+    780
+  ],
+  "window_size": [
+    1100,
+    760
+  ],
+  "host_size": [
+    1048,
+    545
+  ],
+  "calculate_button_invoked": true,
+  "save_buttons_invoked": 2,
+  "object_count": 2,
+  "plate_bounds_mm": [
+    [
+      [
+        -4.0,
+        -4.0,
+        0.0
+      ],
+      [
+        4.0,
+        4.0,
+        8.0
+      ]
+    ],
+    [
+      [
+        -4.0,
+        -4.0,
+        9.0
+      ],
+      [
+        4.0,
+        4.0,
+        17.0
+      ]
+    ]
+  ],
+  "unicode_output": true
+}

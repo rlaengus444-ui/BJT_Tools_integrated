@@ -1,0 +1,33 @@
+{
+  "release_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.10.1",
+  "release_id": 455156378,
+  "release_is_prerelease": true,
+  "source": "0c0d46ffe91638ed879aea423e4ce9fbdf946fc9",
+  "windows_run": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/actions/runs/45142307534",
+  "windows_run_passed": true,
+  "earlier_run_failures": [
+    {
+      "id": 45139447425,
+      "reason": "Stale exact hash for the intentionally changed model packing tab."
+    },
+    {
+      "id": 45140359226,
+      "reason": "Immediate exact client size assertion failed after requesting a compact window. The revised fixture waits for the actual compact geometry."
+    }
+  ],
+  "actual_chitubox_application_used": false,
+  "actual_ir_equipment_used": false,
+  "windows_evidence_artifact": {
+    "id": 14802927699,
+    "sha256": "e07d81824fc8058453dc43de8427ad77829e1be6d70db5b56fee8232381fbcbc"
+  },
+  "windows_gates": 20,
+  "windows_source_tests": 499,
+  "windows_source_allowed_skips": 2,
+  "ir_upstream_tests": 572,
+  "source_capsule_tests": 8,
+  "notion_page": "https://app.notion.com/p/40205e94a22581e3b272ffa8a1de15e7",
+  "previous_notion_release_folded": "1.10.0",
+  "older_team_drive_package_removed": "1.10.0",
+  "drive_latest_source_only": true
+}

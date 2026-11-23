@@ -1,18 +1,20 @@
 # BJT 통합도구
 
-13개 도구를 한 창에서 실행하는 Windows 10·11 64비트 프로그램입니다. IR 피드백을 포함한 [1.10.0 평가용 사전 릴리스](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.10.0)를 제공합니다. 최신 안정판은 [1.9.2](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.9.2)이며, 최신 통합판 소스는 [suite](suite/)에 있습니다.
+13개 도구를 한 창에서 실행하는 Windows 10·11 64비트 프로그램입니다. IR 피드백을 포함한 [1.10.1 평가용 사전 릴리스](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.10.1)를 제공합니다. 최신 안정판은 [1.9.2](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.9.2)이며, 최신 통합판 소스는 [suite](suite/)에 있습니다.
 
 ## 실행
 
-[Windows EXE ZIP · 1.10.0 평가판 다운로드](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_Windows_x64.zip)을 새 폴더에 모두 압축 해제한 뒤 `BJT_통합프로그램.exe`를 실행하세요. Python은 따로 설치하지 않아도 됩니다. 같은 위치의 파일과 `_internal` 폴더를 모두 유지합니다. 이미지 회복제어 내장 Excel 모드에는 **Microsoft Excel 데스크톱**이 필요합니다.
+[Windows EXE ZIP · 1.10.1 평가판 다운로드](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.1/BJT_1.10.1_Windows_x64.zip)을 새 폴더에 모두 압축 해제한 뒤 `BJT_통합프로그램.exe`를 실행하세요. Python은 따로 설치하지 않아도 됩니다. 같은 위치의 파일과 `_internal` 폴더를 모두 유지합니다. 이미지 회복제어 내장 Excel 모드에는 **Microsoft Excel 데스크톱**이 필요합니다.
 
-EXE ZIP은 **418,199,188바이트**, SHA-256은 `e0ad1de632989578fc360bd07df3ad8d060487872f6fadbb452852a6fbcc015a`입니다. [SHA256SUMS.txt](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/SHA256SUMS.txt)로 다운로드 파일을 확인할 수 있습니다. 게시 후 다섯 파일 모두 비로그인 전체 다운로드와 크기·SHA-256 대조를 통과했습니다.
+EXE ZIP은 **418,243,619바이트**, SHA-256은 `6ab2bcf2db9518be69cd559e346fa027c0b5d33849356bb836194a2a3e32ce83`입니다. [SHA256SUMS.txt](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.1/SHA256SUMS.txt)로 다운로드 파일을 확인할 수 있습니다. 게시 후 다섯 파일 모두 비로그인 전체 다운로드와 크기·SHA-256 대조를 통과했습니다.
 
-1.10.0 통합 소스판은 [BJT_통합프로그램.py](BJT_통합프로그램.py)를 PyCharm에서 실행하세요. Python 3.12 x64를 선택하며 첫 실행에 고정 패키지를 설치합니다. [전체 소스 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_source.zip), [단일 소스 실행기](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_standalone.pyw), [설명서 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.0/BJT_1.10.0_manual.zip)도 제공합니다. 단독 배치 참고본은 [standalone](standalone/)에 별도로 보관합니다.
+1.10.1 통합 소스판은 [BJT_통합프로그램.py](BJT_통합프로그램.py)를 PyCharm에서 실행하세요. Python 3.12 x64를 선택하며 첫 실행에 고정 패키지를 설치합니다. [전체 소스 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.1/BJT_1.10.1_source.zip), [단일 소스 실행기](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.1/BJT_1.10.1_standalone.pyw), [설명서 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.10.1/BJT_1.10.1_manual.zip)도 제공합니다. 단독 배치 참고본은 [standalone](standalone/)에 별도로 보관합니다.
 
-Windows 전체 소스·IR 572개 회귀·소스 캡슐 8개·EXE 모의 실행과 패키징 검증을 통과한 빌드입니다. 배포 ZIP은 합성 QA 시험 로그 한 개만 제외했으며 나머지 3,727개 파일 바이트와 ZIP 메타데이터·압축 기록을 원본과 대조했습니다. 프로그램 재빌드나 정리 후 Windows 재실행은 하지 않았습니다. [검증·게시 기록과 한계](verification/ir-integration/DELIVERY_1.10.0.md)를 확인하세요. 실제 Excel COM·센서·PLC·램프는 미검증이며 최종 제어 알고리즘 승인과 실제 장비 적용은 **보류** 상태입니다.
+모델 자동 배치에서 계산과 검증이 끝나면 탭 하단의 **CHITUBOX 프로젝트 저장**을 누르세요. 작은 창에서도 계산·검사·저장 버튼을 사용할 수 있습니다. CHITUBOX에서 배치 계산과 동일한 빌드박스 크기를 선택하세요. Windows EXE에서 1100 × 760 창의 실제 버튼으로 계산하고 두 저장 형식을 시험했습니다. .chitubox를 다시 읽어 객체 2개와 배치 좌표를 확인했습니다. [Windows 검증 기록](https://github.com/rlaengus444-ui/BJT_Tools_integrated/actions/runs/45142307534)
 
-팀드라이브에는 [단일 Python 실행 소스](https://drive.google.com/file/d/1qOaqGNx8HKHZ3IAbUjuLQ3oLuKJrdU_0/view)와 소스 ZIP만 보관합니다. 단일 실행 소스는 Drive에서 전체 다운로드해 SHA-256을 확인했습니다. Drive의 소스 ZIP은 다운로드 차단 상태이므로 전체 소스 ZIP과 EXE는 위 GitHub 링크를 사용하세요. [보관 방식과 검증 기록](verification/ir-integration/DELIVERY_1.10.0.md#배포-채널)을 확인할 수 있습니다.
+IR의 실제 장비 적용과 최종 제어 알고리즘 승인은 보류 상태입니다.
+
+팀드라이브에는 단일 Python 실행 소스를 보관합니다. [팀드라이브 코드 폴더](https://drive.google.com/drive/folders/1GRmQZVCA-2bLhcqsj8QoK3fgLma1siqo)
 
 소스 실행: `python suite/run_suite.py`. 필요한 Python 환경과 패키지는 [suite/suite_runtime.py](suite/suite_runtime.py)와 [빌드 안내](suite/배포_빌드/재빌드_안내.txt)를 참고하세요.
 

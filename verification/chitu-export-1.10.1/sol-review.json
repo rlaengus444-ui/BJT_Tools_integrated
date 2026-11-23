@@ -1,0 +1,33 @@
+{
+  "review_completed": true,
+  "route": "native collaboration.spawn_agent and followup_task",
+  "review_agent": "sol_reviewer_chitu_export",
+  "requested_model": "gpt-6.2-sol",
+  "requested_reasoning_effort": "max",
+  "provider_model_identity_independently_attested": false,
+  "base": "5da2257321ce1f6e7a52838d2d2e853af863b517",
+  "layout_and_release_revision": "0da963477e1a6fe7d6f4ab3b2b53ed641be3ec5a",
+  "final_revision": "0c0d46ffe91638ed879aea423e4ce9fbdf946fc9",
+  "checks": [
+    "Actual SuiteApp Tk/VTK with synthetic packing snapshot and stubbed service: baseline lost Calculate and CHITUBOX buttons at 1120x780, revised layout fully maps Calculate, Cancel, Inspection, STL export and CHITUBOX export at 1400x950, 1120x780 and 1100x760",
+    "Release packing gate rejects eight malformed reports",
+    "Mock draft staging verified five server digests, exact byte-identical re-run and six invalid state rejections",
+    "After initial Windows failure, checked that test-only revision preserves eleven pins and updates only the exact reviewed nesting SHA; full manifest verification retained",
+    "Five ResourceAndNamespaceTests passed and 371 source capsule members match the final commit",
+    "Second Windows-run failure readback located the immediate exact client-size check before Calculate",
+    "Delayed native geometry, compact bounds and timeout mock passed. Packaging accepts observed compact size and rejects ten invalid proofs",
+    "Final regeneration matched all 371 capsule members to the exact commit"
+  ],
+  "resolved_findings": [
+    "Compact layout needed visible Calculate for the full path",
+    "Model inspection button and hint needed space ahead of the flexible model table",
+    "Packaging now requires proof of the actual compact-window button path",
+    "Historical nesting source pin updated to the reviewed layout hash",
+    "Wait for native compact geometry and report requested and measured dimensions while retaining exact button, save and object readback requirements"
+  ],
+  "unresolved_findings": [],
+  "independently_run_native_windows": false,
+  "actual_chitubox_application_verified": false,
+  "equipment_application": "HOLD",
+  "resource_pin_revision": "b6c1b1788122225d1f2147a8d278e2d18423aba1"
+}
