@@ -147,8 +147,8 @@
       "description": "STEP/STL 수량·24개 직교 자세·내장 정책으로 분말 베드 3D 자동 배치",
       "source": "sources/powdernest_tool.py",
       "original_path": "BJT integrated native Tk adapter for PowderNest",
-      "sha256": "545bf4d70061c18994ca5a27bcb377e0820a22072991ff2212a92b2bb50acc8b",
-      "bytes": 33586,
+      "sha256": "d8c89fc11b746428f3031f1a42024597c40b32421d06b5e40c36b3c27fa770f0",
+      "bytes": 33694,
       "controller": "PackingApp",
       "embedded_base": false
     },

@@ -117,6 +117,7 @@ def verify(root, controller, directory):
     try:
         assert (root.winfo_width(), root.winfo_height()) == (1120, 780)
         _require_visible_button(controller.run_button, controller.root)
+        _require_visible_button(controller.inspection_button, controller.root)
         assert controller.chitubox_button.instate(['disabled'])
         controller.run_button.invoke()
         _wait(root, controller)

@@ -115,11 +115,13 @@ class PackingApp:
         self.table=ttk.Treeview(inputs,columns=('name','quantity','unit','state'),show='headings',height=12)
         for key,title,width in (('name','모델',155),('quantity','수량',48),('unit','단위',45),('state','상태',110)):
             self.table.heading(key,text=title);self.table.column(key,width=width,minwidth=35,stretch=key in ('name','state'))
-        self.table.pack(fill='both',expand=True)
         self.table.bind('<Double-1>',self.edit_quantity)
         self.table.bind('<<TreeviewSelect>>',lambda event:self.redraw())
-        ttk.Label(inputs,text='수량 칸을 두 번 눌러 수정합니다. STEP 단위는 자동 확인합니다.',wraplength=390).pack(anchor='w',pady=6)
-        self._button(inputs,'선택 모델 검사 정보',self.inspection_info).pack(anchor='w')
+        self.inspection_button = self._button(inputs, '선택 모델 검사 정보', self.inspection_info)
+        self.inspection_button.pack(side='bottom', anchor='w')
+        ttk.Label(inputs,text='수량 칸을 두 번 눌러 수정합니다. STEP 단위는 자동 확인합니다.',
+                  wraplength=390).pack(side='bottom', anchor='w', pady=6)
+        self.table.pack(fill='both',expand=True)
         form=ttk.Frame(options);form.pack(fill='x')
         fields=(('size_x','빌드 X (mm)'),('size_y','빌드 Y (mm)'),('size_z','최대 Z (mm)'),
                 ('gap','모델 간격 (mm)'),('wall','X·Y 벽 간격 (mm)'),('seconds','계산 제한 (초)'),('seed','난수 시드'))
