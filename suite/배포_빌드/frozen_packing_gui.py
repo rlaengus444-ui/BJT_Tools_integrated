@@ -24,6 +24,22 @@ def _require_visible_button(button, host):
     assert button.winfo_height() >= button.winfo_reqheight()
 
 
+def _resize_compact(root):
+    root.geometry('1120x780+0+0')
+    deadline = time.monotonic() + 5
+    while True:
+        root.update()
+        width, height = root.winfo_width(), root.winfo_height()
+        # The native window manager may apply the resize asynchronously and
+        # round or constrain its requested client size.
+        if 1000 <= width <= 1140 and 700 <= height <= 800:
+            return
+        if time.monotonic() >= deadline:
+            raise AssertionError(f'Compact resize did not settle: {width}x{height}, '
+                                 f'geometry={root.geometry()}, minimum={root.minsize()}')
+        time.sleep(.02)
+
+
 def _verify_export_buttons(root, controller, directory, snapshot):
     from tkinter import filedialog
 
@@ -53,7 +69,8 @@ def _verify_export_buttons(root, controller, directory, snapshot):
         bounds = sorted((obj.mesh.bounds for obj in objects), key=lambda bounds: bounds[0, 2])
         np.testing.assert_allclose(bounds, [((-4, -4, 0), (4, 4, 8)),
                                             ((-4, -4, 9), (4, 4, 17))], atol=0.01, rtol=0)
-        return {'passed': True, 'window_size': [root.winfo_width(), root.winfo_height()],
+        return {'passed': True, 'requested_window_size': [1120, 780],
+                'window_size': [root.winfo_width(), root.winfo_height()],
                 'host_size': [controller.root.winfo_width(), controller.root.winfo_height()],
                 'calculate_button_invoked': True, 'save_buttons_invoked': 2, 'object_count': len(objects),
                 'plate_bounds_mm': [value.tolist() for value in bounds], 'unicode_output': True}
@@ -112,10 +129,8 @@ def verify(root, controller, directory):
     # Exercise the same calculate-to-save path at the compact integrated size.
     # Only the native save dialogs are stubbed by the export check.
     full_size = root.geometry()
-    root.geometry('1120x780+0+0')
-    root.update()
     try:
-        assert (root.winfo_width(), root.winfo_height()) == (1120, 780)
+        _resize_compact(root)
         _require_visible_button(controller.run_button, controller.root)
         _require_visible_button(controller.inspection_button, controller.root)
         assert controller.chitubox_button.instate(['disabled'])

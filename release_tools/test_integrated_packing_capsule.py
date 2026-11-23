@@ -67,7 +67,7 @@ def test_native_release_cannot_pass_by_changing_tool_count_alone():
            'step_material_union':{'passed':True,'source_solids':6,'material_solids':1,
                                   'volume_mm3':512.,'unicode_path':True,'gui_import':True},
            'new_training_updates':0,'preview_and_exports':True,
-           'export_buttons':{'passed':True,'window_size':[1120,780],'calculate_button_invoked':True,
+           'export_buttons':{'passed':True,'requested_window_size':[1120,780],'window_size':[1120,778],'calculate_button_invoked':True,
                              'save_buttons_invoked':2,'object_count':2,'unicode_output':True},
            'depth_buffer_preview':{'size':[640,480],'bore_rgb':[255,255,255],'wall_rgb':[90,100,130]},
            'software_opengl':{'passed':True,'dll_sha256':__import__('mesa_runtime').DLL_SHA256,

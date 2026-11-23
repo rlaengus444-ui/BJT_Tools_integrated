@@ -42,8 +42,11 @@ def require_packing_check(report):
             or not _valid_preview_pixels(checks[0].get('depth_buffer_preview'))):
         raise RuntimeError('Native packing STEP/preview/export verification is required')
     exports = checks[0].get('export_buttons')
+    size = exports.get('window_size') if isinstance(exports, dict) else None
     if (not isinstance(exports, dict) or exports.get('passed') is not True
-            or exports.get('window_size') != [1120, 780]
+            or exports.get('requested_window_size') != [1120, 780]
+            or not isinstance(size, list) or len(size) != 2 or any(type(value) is not int for value in size)
+            or not (1000 <= size[0] <= 1140 and 700 <= size[1] <= 800)
             or exports.get('calculate_button_invoked') is not True
             or exports.get('save_buttons_invoked') != 2 or exports.get('object_count') != 2
             or exports.get('unicode_output') is not True):

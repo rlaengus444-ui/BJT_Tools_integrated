@@ -77,7 +77,7 @@ jobs:
           import json, os
           from pathlib import Path
           root = Path(os.environ['BJT_CI_REPORTS'])
-          for name in ('native-summary.json', 'ir-upstream-tests.json', 'ir-feedback-exe.json', 'ir-feedback-cli-exe.json'):
+          for name in ('native-summary.json', 'ir-upstream-tests.json', 'features-exe-save.json', 'ir-feedback-exe.json', 'ir-feedback-cli-exe.json'):
               path = root / name
               if not path.is_file():
                   continue
