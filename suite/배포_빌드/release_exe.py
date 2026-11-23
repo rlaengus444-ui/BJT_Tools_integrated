@@ -41,6 +41,13 @@ def require_packing_check(report):
             or checks[0].get('preview_and_exports') is not True
             or not _valid_preview_pixels(checks[0].get('depth_buffer_preview'))):
         raise RuntimeError('Native packing STEP/preview/export verification is required')
+    exports = checks[0].get('export_buttons')
+    if (not isinstance(exports, dict) or exports.get('passed') is not True
+            or exports.get('window_size') != [1120, 780]
+            or exports.get('calculate_button_invoked') is not True
+            or exports.get('save_buttons_invoked') != 2 or exports.get('object_count') != 2
+            or exports.get('unicode_output') is not True):
+        raise RuntimeError('Compact-window CHITUBOX export button verification is required')
     union = checks[0].get('step_material_union')
     volume = union.get('volume_mm3') if isinstance(union, dict) else None
     if (not isinstance(union, dict) or union.get('passed') is not True or union.get('source_solids') != 6
@@ -172,7 +179,7 @@ def main():
     output_root.mkdir(parents=True, exist_ok=True)
     cache_ignore = shutil.ignore_patterns('__pycache__', '*.pyc', '*.nbi', '*.nbc')
     qa_report_names = {
-        '검증_결과', '통합_검증_보고서.txt', '치투검사_실제파일_검증.md',
+        'logs', '검증_결과', '통합_검증_보고서.txt', '치투검사_실제파일_검증.md',
         '1.6_최종_배포_검증.txt', '1.6.1_최종_배포_검증.txt', '1.6.2_최종_배포_검증.txt',
         f'{version}_최종_배포_검증.txt',
     }

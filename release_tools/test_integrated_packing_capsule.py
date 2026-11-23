@@ -67,10 +67,18 @@ def test_native_release_cannot_pass_by_changing_tool_count_alone():
            'step_material_union':{'passed':True,'source_solids':6,'material_solids':1,
                                   'volume_mm3':512.,'unicode_path':True,'gui_import':True},
            'new_training_updates':0,'preview_and_exports':True,
+           'export_buttons':{'passed':True,'window_size':[1120,780],'calculate_button_invoked':True,
+                             'save_buttons_invoked':2,'object_count':2,'unicode_output':True},
            'depth_buffer_preview':{'size':[640,480],'bore_rgb':[255,255,255],'wall_rgb':[90,100,130]},
            'software_opengl':{'passed':True,'dll_sha256':__import__('mesa_runtime').DLL_SHA256,
                               'capabilities':['OpenGL renderer string: llvmpipe']}}
     require_packing_check({'checks':[{'phase':'save','report':{'checks':{'packing_inference_and_exports':proof}}}]})
+    for exports in (None, dict(proof['export_buttons'], window_size=[1400,950]),
+                    dict(proof['export_buttons'], calculate_button_invoked=False),
+                    dict(proof['export_buttons'], object_count=1)):
+        with pytest.raises(RuntimeError,match='CHITUBOX export button'):
+            require_packing_check({'checks':[{'phase':'save','report':{'checks':{
+                'packing_inference_and_exports':dict(proof,export_buttons=exports)}}}]})
     for union in (None, {}, 'invalid', dict(proof['step_material_union'],gui_import=False),
                   dict(proof['step_material_union'],material_solids=6),
                   *[dict(proof['step_material_union'],volume_mm3=value)

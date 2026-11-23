@@ -14,6 +14,54 @@ def _wait(root, controller, seconds=60):
     root.update()
 
 
+def _require_visible_button(button, host):
+    assert button.winfo_viewable() and str(button.cget('state')) == 'normal'
+    x = button.winfo_rootx() - host.winfo_rootx()
+    y = button.winfo_rooty() - host.winfo_rooty()
+    assert 0 <= x and x + button.winfo_width() <= host.winfo_width()
+    assert 0 <= y and y + button.winfo_height() <= host.winfo_height()
+    assert button.winfo_width() >= button.winfo_reqwidth()
+    assert button.winfo_height() >= button.winfo_reqheight()
+
+
+def _verify_export_buttons(root, controller, directory, snapshot):
+    from tkinter import filedialog
+
+    import numpy as np
+    from chitu_overlap import read_chitubox
+
+    standard = directory / 'packing-export'
+    project = directory / '배치 결과.chitubox'
+    original_directory = filedialog.askdirectory
+    original_filename = filedialog.asksaveasfilename
+    try:
+        for button in (controller.export_button, controller.chitubox_button):
+            _require_visible_button(button, controller.root)
+
+        filedialog.askdirectory = lambda **options: str(standard)
+        filedialog.asksaveasfilename = lambda **options: str(project)
+        controller.export_button.invoke()
+        _wait(root, controller)
+        assert (standard / 'layout.stl').is_file() and (standard / 'placements.json').is_file()
+        controller.chitubox_button.invoke()
+        _wait(root, controller)
+        assert controller.snapshot is snapshot
+        encoded = json.loads(project.with_suffix('.chitubox.json').read_text(encoding='utf-8'))
+        assert encoded['encoded_geometry_validation']['valid']
+        objects = read_chitubox(project)
+        assert len(objects) == 2 and len({obj.name for obj in objects}) == 2
+        bounds = sorted((obj.mesh.bounds for obj in objects), key=lambda bounds: bounds[0, 2])
+        np.testing.assert_allclose(bounds, [((-4, -4, 0), (4, 4, 8)),
+                                            ((-4, -4, 9), (4, 4, 17))], atol=0.01, rtol=0)
+        return {'passed': True, 'window_size': [root.winfo_width(), root.winfo_height()],
+                'host_size': [controller.root.winfo_width(), controller.root.winfo_height()],
+                'calculate_button_invoked': True, 'save_buttons_invoked': 2, 'object_count': len(objects),
+                'plate_bounds_mm': [value.tolist() for value in bounds], 'unicode_output': True}
+    finally:
+        filedialog.askdirectory = original_directory
+        filedialog.asksaveasfilename = original_filename
+
+
 def verify(root, controller, directory):
     import numpy as np
     import trimesh
@@ -27,7 +75,6 @@ def verify(root, controller, directory):
     from powdernest.rl import default_policy
     from powdernest.rotations import ROTATIONS
     from powdernest.types import Placement, matrix_for
-    from packing_service import save_snapshot
     directory=Path(directory);directory.mkdir(exist_ok=True)
     assert controller.preview.widget.winfo_ismapped(), 'Packing preview must be visible'
     assert controller.preview.widget.winfo_width()>=320 and controller.preview.widget.winfo_height()>=240
@@ -62,17 +109,27 @@ def verify(root, controller, directory):
     controller.rows[0]['quantity']=2;controller._changed();controller._refresh_table()
     for name,value in (('size_x',10),('size_y',10),('size_z',17),('gap',1),('wall',1),('seconds',2),('balance_seconds',0)):
         getattr(controller,name+'_var').set(value)
-    controller.start();_wait(root,controller)
-    snapshot=controller.snapshot
-    assert snapshot is not None and snapshot.result.validation['complete']
-    assert snapshot.result.height==17 and len(snapshot.result.placements)==2
-    assert sorted(p.position[2] for p in snapshot.result.placements)==[0.,9.]
+    # Exercise the same calculate-to-save path at the compact integrated size.
+    # Only the native save dialogs are stubbed by the export check.
+    full_size = root.geometry()
+    root.geometry('1120x780+0+0')
+    root.update()
+    try:
+        assert (root.winfo_width(), root.winfo_height()) == (1120, 780)
+        _require_visible_button(controller.run_button, controller.root)
+        assert controller.chitubox_button.instate(['disabled'])
+        controller.run_button.invoke()
+        _wait(root, controller)
+        snapshot = controller.snapshot
+        assert snapshot is not None and snapshot.result.validation['complete']
+        assert snapshot.result.height == 17 and len(snapshot.result.placements) == 2
+        assert sorted(p.position[2] for p in snapshot.result.placements) == [0., 9.]
+        export_proof = _verify_export_buttons(root, controller, directory, snapshot)
+    finally:
+        root.geometry(full_size)
+        root.update()
     for view in ('origin','fit','x+','x-','y+','y-','z+','z-'):controller.preview.align(view)
     controller.preview.save_image(directory/'packing-preview.png')
-    save_snapshot(snapshot,directory/'packing-export')
-    save_snapshot(snapshot,directory/'packing.chitubox','chitubox')
-    encoded=json.loads((directory/'packing.chitubox.json').read_text(encoding='utf-8'))
-    assert encoded['encoded_geometry_validation']['valid']
     # Check actual pixels from the frozen renderer, including the hollow bore.
     tube=model_from_mesh(trimesh.creation.annulus(r_min=10,r_max=12,height=20,sections=128),'frozen-hollow')
     rotation=next(i for i,value in enumerate(ROTATIONS) if np.array_equal(value,np.eye(3)))
@@ -109,4 +166,5 @@ def verify(root, controller, directory):
     return {'passed':True,'step_native_import':True,'placed':2,'height_mm':17,
             'step_material_union':union_proof,
             'policy_digest':default_policy().digest,'new_training_updates':0,'preview_and_exports':True,
-            'depth_buffer_preview':pixels,'software_opengl':software,'preview_benchmark':benchmark}
+            'export_buttons': export_proof, 'depth_buffer_preview':pixels,
+            'software_opengl':software,'preview_benchmark':benchmark}

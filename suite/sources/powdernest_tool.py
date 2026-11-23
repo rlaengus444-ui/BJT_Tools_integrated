@@ -78,10 +78,20 @@ class PackingApp:
         return widget
 
     def _build(self):
+        # Reserve the save row before the flexible panes request window space.
+        # Keep it outside the sash so narrowing the controls cannot hide it.
+        exports = ttk.Frame(self.root)
+        exports.pack(side='bottom', fill='x', pady=(6, 0))
+        self.export_button = ttk.Button(exports, text='STL·좌표·보고서 저장',
+                                        command=lambda: self.export('standard'), state='disabled')
+        self.export_button.pack(side='left')
+        self.chitubox_button = ttk.Button(exports, text='CHITUBOX 프로젝트 저장',
+                                          command=lambda: self.export('chitubox'), state='disabled')
+        self.chitubox_button.pack(side='left', padx=(5, 0))
         panes=ttk.Panedwindow(self.root,orient='horizontal');panes.pack(fill='both',expand=True)
         left=ttk.Frame(panes,width=435);right=ttk.Frame(panes)
         panes.add(left,weight=0);panes.add(right,weight=1)
-        notebook=ttk.Notebook(left);notebook.pack(fill='both',expand=True,padx=(0,10))
+        notebook=ttk.Notebook(left)
         self.control_notebook=notebook
         inputs=ttk.Frame(notebook,padding=8);option_page=ttk.Frame(notebook)
         notebook.add(inputs,text='모델·수량');notebook.add(option_page,text='배치 설정')
@@ -140,21 +150,20 @@ class PackingApp:
                              ('가져오기',self.import_profiles),('내보내기',self.export_profiles)):
             self._button(row,text,command).pack(side='left',padx=(0,2))
         self._refresh_profiles()
-        actions=ttk.Frame(left);actions.pack(fill='x',padx=(0,10),pady=6)
+        # Give calculation and its status priority over the flexible notebook.
+        results = ttk.Frame(left)
+        results.pack(side='bottom', fill='x', padx=(0,10))
+        notebook.pack(fill='both', expand=True, padx=(0,10))
+        actions=ttk.Frame(results);actions.pack(fill='x',pady=6)
         self.run_button=self._button(actions,'배치 계산',self.start)
         self.run_button.pack(side='left',fill='x',expand=True)
         self.stop_button=ttk.Button(actions,text='계산 취소',command=self.stop,state='disabled')
         self.stop_button.pack(side='left',padx=(5,0))
-        ttk.Label(left,textvariable=self.status_var,wraplength=405).pack(fill='x',padx=(0,10))
-        self.progress_bar=ttk.Progressbar(left,maximum=100,mode='determinate')
-        self.progress_bar.pack(fill='x',padx=(0,10),pady=(5,2))
-        ttk.Label(left,textvariable=self.progress_var,wraplength=405).pack(fill='x',padx=(0,10))
-        self.details=tk.Text(left,height=8,wrap='word',state='disabled');self.details.pack(fill='x',padx=(0,10),pady=6)
-        row=ttk.Frame(left);row.pack(fill='x',padx=(0,10),pady=(0,5))
-        self.export_button=ttk.Button(row,text='STL·좌표·보고서 저장',command=lambda:self.export('standard'),state='disabled')
-        self.export_button.pack(side='left',fill='x',expand=True)
-        self.chitubox_button=ttk.Button(row,text='.chitubox 저장',command=lambda:self.export('chitubox'),state='disabled')
-        self.chitubox_button.pack(side='left',padx=(5,0))
+        ttk.Label(results,textvariable=self.status_var,wraplength=405).pack(fill='x')
+        self.progress_bar=ttk.Progressbar(results,maximum=100,mode='determinate')
+        self.progress_bar.pack(fill='x',pady=(5,2))
+        ttk.Label(results,textvariable=self.progress_var,wraplength=405).pack(fill='x')
+        self.details=tk.Text(results,height=8,wrap='word',state='disabled');self.details.pack(fill='x',pady=6)
         camera=ttk.Frame(right);camera.pack(fill='x')
         for key,label in (('origin','원점'),('fit','전체'),('x+','X+'),('x-','X−'),('y+','Y+'),('y-','Y−'),('z+','Z+'),('z-','Z−')):
             ttk.Button(camera,text=label,width=5,command=lambda value=key:self.preview.align(value)).pack(side='left',padx=2)
