@@ -1,0 +1,35 @@
+{
+  "release_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.12.0",
+  "release_id": 458039726,
+  "source": "877443f4b95748e7a99688218d2c3f21351b931d",
+  "windows_run": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/actions/runs/45609232396",
+  "windows_run_passed": true,
+  "windows_evidence": {
+    "evidence_artifact_id": 15020466257,
+    "evidence_artifact_sha256": "7edd7bf727068195051a2efbf287b93da5d33aac483121732744bd8810ece16a",
+    "windows_source_tests": 529,
+    "windows_source_allowed_skips": 2,
+    "source_capsule_tests": 8,
+    "ir_upstream_tests": 572,
+    "gates": 20
+  },
+  "notion_page": "https://app.notion.com/p/40205e94a22581e3b272ffa8a1de15e7",
+  "previous_notion_release_folded": "1.11.0",
+  "drive_latest_source_only": true,
+  "physical_recoating_verified": false,
+  "actual_ir_equipment_used": false,
+  "roller_order_mm": {
+    "rear_to_front": {
+      "turn": 250.0,
+      "spreader_enters": 265.0,
+      "compactor_enters": 311.0,
+      "bed_length": 250
+    },
+    "front_to_rear": {
+      "turn": null,
+      "spreader_enters": 15.0,
+      "compactor_enters": 61.0,
+      "bed_length": 250
+    }
+  }
+}

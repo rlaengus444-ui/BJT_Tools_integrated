@@ -1,0 +1,74 @@
+{
+  "role": "sol_reviewer",
+  "tool_route": "native collaboration /root/sol_reviewer_aor",
+  "requested_model": "gpt-6.2-sol",
+  "requested_reasoning_effort": "max",
+  "independent_provider_identity_attested": false,
+  "baseline": "e615d78162f93175d98b348e483de07e125390e4",
+  "commit": "877443f4b95748e7a99688218d2c3f21351b931d",
+  "preimplementation_review": true,
+  "phase_amendment_reviewed_before_implementation": true,
+  "scope": [
+    "AOR waveform and tray calibration",
+    "both feed directions with fixed front-to-rear compaction",
+    "time-referenced grain rendering",
+    "graph coordinate transforms and hover",
+    "restoring process inputs",
+    "native UI and source packaging"
+  ],
+  "resolved": true,
+  "addressed": [
+    "Literal pointer y and a horizontal crosshair alongside exact curve readings and units.",
+    "Grains fall in steady and dense flow on a deterministic modeled clock.",
+    "Compact readouts fit all graphs, including 150×75, 180×85 and 190×90.",
+    "Native dark section, stage and legend contrast, pinned recipe settings and Korean layout reviewed."
+  ],
+  "reviewer_checks": {
+    "focused_linux_tk": 30,
+    "skips": 0,
+    "js_comparison_cases": 56,
+    "js_values": 20440,
+    "independent_stage_mass_states": 4824,
+    "stage_ledger_max_abs_residual_mm2": 2.99e-12,
+    "separate_process_save_restore": true,
+    "local_staging_tests": 4,
+    "local_release_gates": 8
+  },
+  "local_source_capsule": {
+    "version": "1.12.0",
+    "embedded_file_count": 383,
+    "payload_sha256": "7026b59fc0718fe111b35291803fd6ad31840d454626703001f30af1a20f3699",
+    "embedded_bytes_match": true,
+    "archives": {
+      "BJT_통합프로그램_1.12.0_전체소스.zip": {
+        "bytes": 26202951,
+        "sha256": "6b895b5c3fa122020fee6b8b00a44143ca34afd9cec99c79ca100fa6ddd6a6dc"
+      },
+      "BJT_통합프로그램_1.12.0_사용설명서.zip": {
+        "bytes": 248092,
+        "sha256": "e4302e3eb6405c88208df6582aebb60277d7628e25e669f4bf08da87ef893c96"
+      }
+    }
+  },
+  "limitations": [
+    "Powder transport and grain animation are simulations. No physical printer or material validation.",
+    "The existing IR evaluation does not grant final control approval or new machine authorization."
+  ],
+  "product_code_reviewed_at": "463c2e75f80174025447ae8cdd84bed11cc14cd4",
+  "final_test_harness_review": {
+    "reviewed_commit": "877443f4b95748e7a99688218d2c3f21351b931d",
+    "first_windows_run": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/actions/runs/45607800167",
+    "first_windows_source_summary": {
+      "passed": 527,
+      "failed": 1,
+      "skipped": 2
+    },
+    "finding": "A native event dispatched after a synthetic Motion could clear the tooltip before the test asserted the Motion result.",
+    "fix": "Use synchronous Tk Motion and assert mapped child canvas dimensions in a fixed toplevel. Production sources are unchanged.",
+    "real_tk_linux_tests": 30,
+    "skipped": 0,
+    "compact_pointer_cases": 36,
+    "matching_source_members": 383,
+    "independently_reviewed": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "source_html_sha256": "cb081ebe5a75fce005513bc37d081fbef622865488c8511e061ec288908790ab",
+  "input_cases": 56,
+  "values": 20440,
+  "states": 1680,
+  "forward_states": 840,
+  "return_states": 840,
+  "max_absolute_error_scaled_by_max_1_abs_reference": 2.556226778971378e-13,
+  "max_return_mass_balance_error_mm2": 1.3514522834157106e-11
+}

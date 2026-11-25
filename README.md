@@ -1,20 +1,20 @@
 # BJT 통합도구
 
-14개 도구를 한 창에서 실행하는 Windows 10·11 64비트 프로그램입니다. IR 피드백을 포함한 [1.11.0 평가용 사전 릴리스](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.11.0)를 제공합니다. 최신 안정판은 [1.9.2](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.9.2)이며, 최신 통합판 소스는 [suite](suite/)에 있습니다.
+14개 도구를 한 창에서 실행하는 Windows 10·11 64비트 프로그램입니다. IR 피드백을 포함한 [1.12.0 평가용 사전 릴리스](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.12.0)를 제공합니다. 최신 안정판은 [1.9.2](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.9.2)이며, 최신 통합판 소스는 [suite](suite/)에 있습니다.
 
 ## 실행
 
-[Windows EXE ZIP · 1.11.0 평가판 다운로드](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.11.0/BJT_1.11.0_Windows_x64.zip)을 새 폴더에 모두 압축 해제한 뒤 `BJT_통합프로그램.exe`를 실행하세요. Python은 따로 설치하지 않아도 됩니다. 같은 위치의 파일과 `_internal` 폴더를 모두 유지합니다. 이미지 회복제어 내장 Excel 모드에는 **Microsoft Excel 데스크톱**이 필요합니다.
+[Windows EXE ZIP · 1.12.0 평가판 다운로드](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.12.0/BJT_1.12.0_Windows_x64.zip)을 새 폴더에 모두 압축 해제한 뒤 `BJT_통합프로그램.exe`를 실행하세요. Python은 따로 설치하지 않아도 됩니다. 같은 위치의 파일과 `_internal` 폴더를 모두 유지합니다. 이미지 회복제어 내장 Excel 모드에는 **Microsoft Excel 데스크톱**이 필요합니다.
 
-EXE ZIP은 **418,311,085바이트**, SHA-256은 `80c2c9a9fd4311271cd1ed944d9313348adb3e77d4e96b38feb1c9f685d5f61a`입니다. [SHA256SUMS.txt](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.11.0/SHA256SUMS.txt)로 다운로드 파일을 확인할 수 있습니다. 게시 후 다섯 파일 모두 비로그인 전체 다운로드와 크기·SHA-256 대조를 통과했습니다.
+EXE ZIP은 **418,480,079바이트**, SHA-256은 `c6c55c7b8e76ca92b9a011bb3a650290ab4af906f2f970fb8e49685d3775f27f`입니다. [SHA256SUMS.txt](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.12.0/SHA256SUMS.txt)로 다운로드 파일을 확인할 수 있습니다. 게시 후 다섯 파일 모두 비로그인 전체 다운로드와 크기·SHA-256 대조를 통과했습니다.
 
-1.11.0 통합 소스판은 [BJT_통합프로그램.py](BJT_통합프로그램.py)를 PyCharm에서 실행하세요. Python 3.12 x64를 선택하며 첫 실행에 고정 패키지를 설치합니다. [전체 소스 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.11.0/BJT_1.11.0_source.zip), [단일 소스 실행기](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.11.0/BJT_1.11.0_standalone.pyw), [설명서 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.11.0/BJT_1.11.0_manual.zip)도 제공합니다. 단독 배치 참고본은 [standalone](standalone/)에 별도로 보관합니다.
+1.12.0 통합 소스판은 [BJT_통합프로그램.py](BJT_통합프로그램.py)를 PyCharm에서 실행하세요. Python 3.12 x64를 선택하며 첫 실행에 고정 패키지를 설치합니다. [전체 소스 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.12.0/BJT_1.12.0_source.zip), [단일 소스 실행기](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.12.0/BJT_1.12.0_standalone.pyw), [설명서 ZIP](https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/download/v1.12.0/BJT_1.12.0_manual.zip)도 제공합니다. 단독 배치 참고본은 [standalone](standalone/)에 별도로 보관합니다.
 
-리코터 시뮬레이터 탭에서 원형 롤러 예시 또는 시트 기본값을 선택하세요. 이동 단면과 높이 그래프에서 두 롤러 앞의 파우더를 확인할 수 있습니다. 진행 바와 그래프 클릭으로 이동하고, 최초 접촉으로 바로 이동할 수 있습니다. 원본 JavaScript와 389개 입력을 대조했고 Windows EXE 재생·이동·입력 복원 검증을 통과했습니다. [Windows 검증 기록](https://github.com/rlaengus444-ui/BJT_Tools_integrated/actions/runs/45586875333)
+리코터 시뮬레이터에서 피딩 방향을 고릅니다. 뒤 → 앞 피딩을 마치면 앞 → 뒤 복귀 중에 스프래딩롤러가 먼저 분말을 펴고 컴팩팅롤러가 뒤따라 누릅니다. 앞 → 뒤 피딩은 한 번의 주행에서 토출·스프래딩·컴팩팅을 순서대로 진행합니다. AOR 시험·운전 속도 220 mm/s, 토출 두께 2 mm, 분말 안식각 45°, 두 롤러 지름 20 mm, 축 간격 46 mm가 기본값입니다. 세 그래프에서 커서 좌표와 곡선값을 확인할 수 있습니다. 프로그램을 다시 열면 마지막 입력과 그래프 설정이 복원됩니다. 화면 예시는 파형을 보기 쉽게 피딩롤러를 2 RPM으로 설정했습니다. [화면 예시](verification/recoater-1.12.0/recoater-preview.png) · [Windows 검증 기록](https://github.com/rlaengus444-ui/BJT_Tools_integrated/actions/runs/45609232396)
 
 IR의 실제 장비 적용과 최종 제어 알고리즘 승인은 보류 상태입니다.
 
-팀드라이브에는 단일 Python 실행 소스를 보관합니다. [팀드라이브 코드 폴더](https://drive.google.com/drive/folders/1hkapKUVYK5MvzUgziJGVpe9WwZltY66t)
+팀드라이브에는 단일 Python 실행 소스를 보관합니다. [팀드라이브 코드 폴더](https://drive.google.com/drive/folders/1ffXj9JWRcAyPcOwZdqnlgoKYIwc7ZDvp)
 
 소스 실행: `python suite/run_suite.py`. 필요한 Python 환경과 패키지는 [suite/suite_runtime.py](suite/suite_runtime.py)와 [빌드 안내](suite/배포_빌드/재빌드_안내.txt)를 참고하세요.
 
@@ -34,7 +34,7 @@ IR의 실제 장비 적용과 최종 제어 알고리즘 승인은 보류 상태
 | 이미지 변환 | 출력 픽셀·X/Y DPI 설정, 4비트 반전 TIFF 변환 |
 | 모델 자동 배치 | STEP/STL 수량·24개 자세·내장 정책으로 3D 배치, 검증·CHITUBOX 저장 |
 | 치투 오브젝트 검사 | 파일 끌어놓기, 겹침·접촉·최소 간격 검사, 문제 쌍 3D 확인 |
-| 리코터 시뮬레이터 | 두 롤러 앞 파우더 단면, 높이 그래프, 재생·거리 이동, 최초 접촉 |
+| 리코터 시뮬레이터 | 피딩 방향 선택, 파형에 따른 분말 공급, 토출·더미·연속피딩 비교 그래프와 커서 좌표 |
 | IR 피드백 제어 | 이미지 회복제어 Excel 내장, 수동 이미지 분석, 층별 IR 제어·그래프·CSV/PNG 저장 |
 
 입력값과 입력 목록은 종료할 때 사용자별로 저장되고 다음 실행에서 복원됩니다. 도구별 조작법은 프로그램의 사용설명서 또는 [오프라인 설명서](suite/manuals/index.html)를 확인하세요.
