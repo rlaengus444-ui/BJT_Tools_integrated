@@ -125,8 +125,10 @@ class RecoaterCanvasTests(unittest.TestCase):
         return tuple(item for item in self.canvas.find_withtag(tag) if self.canvas.type(item) == kind)
 
     def _hover(self, x, y):
-        self.canvas.event_generate('<Motion>', x=x, y=y)
-        self.root.update()
+        # The binding creates the tooltip synchronously. A native pointer event
+        # delivered by a later update() would describe a different mouse move.
+        self.canvas.event_generate('<Motion>', x=x, y=y, when='now')
+        self.assertEqual(self.canvas._recoater_pointer, (x, y))
         labels = self._items('recoater-hover', 'text')
         self.assertEqual(len(labels), 1)
         return self.canvas.itemcget(labels[0], 'text')
@@ -206,9 +208,14 @@ class RecoaterCanvasTests(unittest.TestCase):
             *((view, lambda view=view: draw_comparison_chart(self.canvas, comparison, comparison.at_state(state), view))
               for view in ('overlay', 'percent', 'difference')),
         )
+        # Change only the chart size, as the app does inside its normal window.
+        self.root.geometry('620x230')
+        self.canvas.pack_forget()
         for width, height in ((150, 75), (180, 85), (190, 90)):
-            self.canvas.configure(width=width, height=height)
-            self.root.update()
+            self.canvas.place(x=0, y=0, width=width, height=height)
+            self.root.update_idletasks()
+            self.assertTrue(self.canvas.winfo_ismapped())
+            self.assertEqual((self.canvas.winfo_width(), self.canvas.winfo_height()), (width, height))
             for mode, draw in charts:
                 with self.subTest(width=width, height=height, chart=mode):
                     draw()
