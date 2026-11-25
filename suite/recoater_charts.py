@@ -20,6 +20,7 @@ _COMPACT_HOVER_LABELS = {
     '피딩 직후 두께': '두께',
     '주기 평균': '평균',
     '연속피딩 기준': '기준',
+    '연속피딩': '연속',
 }
 
 
@@ -145,17 +146,19 @@ def _draw_hover(canvas):
     label = _text(canvas, 0, 0, '\n'.join(rows), anchor='nw', color=COLORS['ink'],
                   width=width - 18, tags=_HOVER_TAG)
     a, b, c, d = canvas.bbox(label)
-    size = FONTS['small'][1]
-    while d - b + 12 > height and size > 6:
-        size -= 1
-        canvas.itemconfigure(label, font=(FONTS['small'][0], size))
-        a, b, c, d = canvas.bbox(label)
     if d - b + 12 > height:
-        short_rows = [f'x  {pointer_x}', f'y  {pointer_y}']
+        short_rows = [f'x  {pointer_x}  ·  y  {pointer_y}']
         short_rows.extend(f'{_COMPACT_HOVER_LABELS.get(name, name)}  {_quantity(value, unit)}'
                           for name, unit, value, _ in series)
         canvas.itemconfigure(label, text='\n'.join(short_rows))
         a, b, c, d = canvas.bbox(label)
+        # The native family can resolve to a fixed bitmap font. Measure the text
+        # again with a scalable family before positioning a very short tooltip.
+        for pixels in (10, 9, 8, 7, 6):
+            if d - b + 12 <= height:
+                break
+            canvas.itemconfigure(label, font=('Arial', -pixels))
+            a, b, c, d = canvas.bbox(label)
     box_w, box_h = min(width - 4, c - a + 12), min(height - 4, d - b + 8)
     left = x + 11 if x + 11 + box_w < width else x - box_w - 10
     top = y - box_h - 8 if y - box_h - 8 > 0 else y + 10

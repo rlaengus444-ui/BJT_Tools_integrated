@@ -15,7 +15,8 @@ from recoater_charts import (
 )
 from recoater_model import Parameters, ROLLER_EXAMPLE, SHEET_EXAMPLE, build_curve, make_model
 from recoater_views import (
-    CONTACT, DEPOSIT, FEED, PASS, PLOT, POWDER, SPREAD, chart_x_bounds, draw_height_chart,
+    STAGE_BG, SPREAD, STAGE_AOR, STAGE_COMPACT, STAGE_SPREAD, STAGE_FORMED, STAGE_PASSED, STAGE_FEED,
+    chart_x_bounds, draw_height_chart,
     draw_section, empty, format_number,
 )
 from suite_theme import COLORS, FONTS, ThemeManager
@@ -123,6 +124,19 @@ class RecoaterApp:
         style.configure('Recoater.Value.TLabel', background=COLORS['surface'],
                         foreground=COLORS['ink'], font=('Consolas', 10, 'bold'))
         style.configure('Recoater.Card.TCheckbutton', background=COLORS['surface'])
+        style.configure('Recoater.View.TButton', background=COLORS['surface'], foreground=COLORS['muted'],
+                        padding=(9, 3), borderwidth=0, font=FONTS['body'])
+        style.configure('Recoater.ViewOn.TButton', background='#dfebf8', foreground='#20486c',
+                        padding=(9, 3), borderwidth=0, font=FONTS['bold'])
+        for name in ('Recoater.View.TButton', 'Recoater.ViewOn.TButton'):
+            style.map(name, background=[('active', '#d9e8f8')])
+        style.configure('Recoater.Graph.TNotebook', background=COLORS['surface'], borderwidth=0)
+        style.configure('Recoater.Graph.TNotebook.Tab', padding=(11, 3), font=FONTS['body'])
+        style.map('Recoater.Graph.TNotebook.Tab', background=[('selected', '#253e58'), ('active', '#e4edf8')],
+                  foreground=[('selected', '#ffffff'), ('disabled', COLORS['disabled_ink'])])
+        style.configure('Recoater.Progress.TLabel', background=COLORS['surface'],
+                        foreground='#17395d', font=('Consolas', 12, 'bold'))
+
         style.configure('Recoater.Compact.TLabel', background=COLORS['surface'],
                         foreground='#855508', font=FONTS['bold'])
         style.configure('Recoater.Spread.TLabel', background=COLORS['surface'],
@@ -153,7 +167,7 @@ class RecoaterApp:
         scene_card.grid(row=0, column=0, sticky='nsew', pady=(0, 8))
         heading = ttk.Frame(scene_card, style='Suite.Surface.TFrame')
         heading.pack(fill='x', pady=(0, 7))
-        self._label(heading, '이동 단면', style='Suite.CardTitle.TLabel').pack(side='left')
+        self._label(heading, '리코터 단면', style='Suite.CardTitle.TLabel').pack(side='left')
         self.view_buttons = {}
         for key, caption in (('full', '베드 전체'), ('follow', '롤러 확대')):
             button = ttk.Button(heading, text=caption, command=lambda mode=key: self._set_camera(mode))
@@ -163,17 +177,20 @@ class RecoaterApp:
         legend.pack(side='bottom', fill='x', pady=(6, 0))
         self.spread_keys = []
         for column, (color, label, spread_only) in enumerate((
-            (POWDER, '컴팩팅 앞', False), (SPREAD, '스프래딩 앞', True),
-            (DEPOSIT, '형성층', False), (PASS, '통과층', True), (FEED, '피딩층', False),
+            (STAGE_AOR, 'AOR 토출', False), (STAGE_FEED, '피딩층', False),
+            (STAGE_SPREAD, '스프래딩 앞', True), (STAGE_COMPACT, '컴팩팅 앞', False),
+            (STAGE_PASSED, '통과층', True), (STAGE_FORMED, '형성층', False),
         )):
             item = ttk.Frame(legend, style='Suite.Surface.TFrame')
             item.grid(row=0, column=column, padx=(0, 11))
             tk.Canvas(item, width=9, height=9, highlightthickness=0, background=color).pack(
                 side='left', padx=(0, 4))
             self._label(item, label).pack(side='left')
+            if label == 'AOR 토출':
+                self.aor_key = item
             if spread_only:
                 self.spread_keys.append(item)
-        self.scene = tk.Canvas(scene_card, width=1, height=1, background=PLOT, highlightthickness=0)
+        self.scene = tk.Canvas(scene_card, width=1, height=1, background=STAGE_BG, highlightthickness=0)
         self.scene.pack(fill='both', expand=True)
 
         transport = self._card(work, (10, 6))
@@ -182,7 +199,7 @@ class RecoaterApp:
 
         plot_card = self._card(work, (8, 4))
         plot_card.grid(row=2, column=0, sticky='nsew')
-        self.plots = ttk.Notebook(plot_card)
+        self.plots = ttk.Notebook(plot_card, style='Recoater.Graph.TNotebook')
         self.plots.pack(fill='both', expand=True)
         self.plot_pages, self.canvases = {}, {}
         for key, caption in (('flow', '토출 파형'), ('height', '더미 높이'), ('compare', '연속피딩 대비')):
@@ -273,7 +290,7 @@ class RecoaterApp:
 
         seek_row = ttk.Frame(panel, style='Suite.Surface.TFrame')
         seek_row.pack(fill='x', pady=(5, 3))
-        self._label(seek_row, value=self.readout, style='Recoater.Value.TLabel', width=24).pack(side='left')
+        self._label(seek_row, value=self.readout, style='Recoater.Progress.TLabel', width=17).pack(side='left')
         self.distance_entry = ttk.Entry(seek_row, textvariable=self.distance_text, width=8, justify='right')
         self.distance_entry.pack(side='right', padx=(6, 0))
         self.distance_entry.bind('<Return>', self._commit_distance)
@@ -295,6 +312,16 @@ class RecoaterApp:
         combo.pack(side='right')
         combo.bind('<<ComboboxSelected>>', lambda _event: self._load_preset(PRESETS[self.preset.get()]))
 
+        recipe = ttk.Frame(panel, style='Suite.Surface.TFrame')
+        recipe.pack(fill='x', pady=(0, 2))
+        for col, (caption, var, choices) in enumerate((
+                ('피딩 방식', self.feed_mode, FEED_MODES), ('피딩 방향', self.direction, DIRECTIONS))):
+            recipe.columnconfigure(col, weight=1, uniform='recipe')
+            self._label(recipe, caption).grid(row=0, column=col, sticky='w')
+            self._choice(recipe, var, choices, 9).grid(row=1, column=col, sticky='ew', padx=(0, 5) if col==0 else 0)
+        self.sequence = tk.StringVar(self.root)
+        self._label(panel, value=self.sequence, wraplength=280, justify='left').pack(fill='x', pady=(1, 6))
+        ttk.Separator(panel).pack(fill='x', pady=(0, 4))
         summaries = ttk.Frame(panel, style='Suite.Surface.TFrame')
         summaries.pack(fill='x', pady=(0, 6))
         for column, caption in enumerate(('더미 위치', '높이 mm', '상승고 mm', '면적 mm²')):
@@ -322,14 +349,6 @@ class RecoaterApp:
         self.sidebar.bind('<Configure>', lambda event: self.sidebar.itemconfigure(window, width=event.width))
         settings.bind('<Configure>', lambda _event: self.sidebar.configure(scrollregion=self.sidebar.bbox(window)))
 
-        for label, variable, choices in (('피딩 방식', self.feed_mode, FEED_MODES),
-                                          ('피딩 방향', self.direction, DIRECTIONS)):
-            row = ttk.Frame(settings, style='Suite.Surface.TFrame')
-            row.pack(fill='x', pady=(0, 3))
-            self._label(row, label).pack(side='left')
-            self._choice(row, variable, choices, 14).pack(side='right')
-        self.sequence = tk.StringVar(self.root)
-        self._label(settings, value=self.sequence, wraplength=265, justify='left').pack(fill='x', pady=(1, 6))
         self._label(settings, '파우더와 베드', style='Suite.CardTitle.TLabel').pack(anchor='w')
         self._field_grid(settings, POWDER_FIELDS)
         self.aor_panel = AorPanel(self, settings)
@@ -499,14 +518,16 @@ class RecoaterApp:
                 self._derived_rows[key].pack(fill='x', pady=2)
         aor = self.feed_mode.get() == 'aor'
         if aor:
+            self.aor_key.grid()
             self.aor_panel.frame.pack(fill='x', before=self._roller_heading)
         else:
+            self.aor_key.grid_remove()
             self.aor_panel.frame.pack_forget()
             self.plots.select(self.plot_pages['height'])
         for key in ('flow', 'compare'):
             self.plots.tab(self.plot_pages[key], state='normal' if aor else 'disabled')
-        self.sequence.set('뒤 → 앞 피딩  /  앞 → 뒤 스프래딩·컴팩팅' if
-                          self.direction.get() == 'rear_to_front' else '앞 → 뒤 한 번에 피딩 → 스프래딩 → 컴팩팅')
+        self.sequence.set('피딩 후 앞 → 뒤로 복귀하며 스프래딩·컴팩팅' if
+                          self.direction.get() == 'rear_to_front' else '같은 주행에서 피딩 → 스프래딩 → 컴팩팅')
         if not spread:
             self.sequence.set(self.sequence.get().replace('스프래딩·', '').replace('스프래딩 → ', ''))
             if self.compare_metric.get() == 'spread':
@@ -642,7 +663,7 @@ class RecoaterApp:
         in_bed = model is not None and model.contact_x <= model.travel_end
         self.contact_button.state(['!disabled'] if ready and in_bed else ['disabled'])
         for key, button in self.view_buttons.items():
-            button.configure(style='Suite.Primary.TButton' if self.camera.get() == key else 'Suite.Secondary.TButton')
+            button.configure(style='Recoater.ViewOn.TButton' if self.camera.get() == key else 'Recoater.View.TButton')
         if model is None:
             self.readout.set('—')
             self.status.set(self.problem)

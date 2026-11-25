@@ -5,7 +5,7 @@ from bisect import bisect_left, bisect_right
 import math
 
 from recoater_charts import (
-    AOR, ChartBounds, clear_plot, draw_series, sample_plot_points, set_chart_hover, waveform_samples,
+    ChartBounds, clear_plot, draw_series, sample_plot_points, set_chart_hover, waveform_samples,
 )
 from suite_theme import COLORS, FONTS
 
@@ -21,6 +21,16 @@ STEEL = '#46566e'
 BED = '#dce5f0'
 GRID = '#dde6f1'
 PLOT = '#f8faff'
+STAGE_BG = '#172b3c'
+STAGE_GRID = '#2d4557'
+STAGE_TEXT = '#e5eff5'
+STAGE_TICK = '#a9c0d0'
+STAGE_AOR = '#d1b3ff'
+STAGE_COMPACT = '#f6bb64'
+STAGE_SPREAD = '#75cee9'
+STAGE_FORMED = '#5cceb0'
+STAGE_PASSED = '#d5a578'
+STAGE_FEED = '#afc0d0'
 
 
 def format_number(value, digits=3):
@@ -54,7 +64,8 @@ def _marker(canvas, x, y, color, *, diamond=False, size=4, **options):
 
 def empty(canvas, message):
     clear_plot(canvas, forget_pointer=True)
-    _label(canvas, canvas.winfo_width() / 2, canvas.winfo_height() / 2, message)
+    _label(canvas, canvas.winfo_width() / 2, canvas.winfo_height() / 2, message,
+           color=STAGE_TICK if canvas.cget('background') == STAGE_BG else COLORS['muted'])
 
 
 def _draw_pile(canvas, px, py, offset, base, profile, wall, fill, edge, *, direction=1):
@@ -68,20 +79,24 @@ def _draw_pile(canvas, px, py, offset, base, profile, wall, fill, edge, *, direc
     canvas.create_polygon(*shape, *toe, fill=fill, outline=edge, width=1)
 
 
-def _draw_roller(canvas, x, py, bottom, radius, scale, blade_top, *, tags=()):
+def _draw_roller(canvas, x, py, bottom, radius, scale, blade_top, *, tags=(), accent=None):
     y = py(bottom + radius)
     r = radius * scale
+    edge = accent or STEEL
     if radius == 0:
         ceiling = py(blade_top)
-        _line(canvas, x, ceiling, x, py(bottom), color=STEEL, width=2, dash=(4, 3), tags=tags)
+        _line(canvas, x, ceiling, x, py(bottom), color=edge, width=2, dash=(4, 3), tags=tags)
     else:
         ceiling = y - r
-        canvas.create_oval(x-r, y-r, x+r, y+r, fill='#cbd6e4', outline=STEEL, width=1.4, tags=tags)
+        canvas.create_oval(x-r, y-r, x+r, y+r, fill='#728b9d' if accent else '#cbd6e4', outline=edge, width=1.5, tags=tags)
         if r > 6:
             inner = .82 * r
             canvas.create_oval(x-inner, y-inner, x+inner, y+inner,
-                               fill='#edf3fa', outline='#a5b5c9', tags=tags)
-            _marker(canvas, x, y, STEEL, size=min(7, max(2, r*.17)), tags=tags)
+                               fill='#354e62' if accent else '#edf3fa', outline='#90a7b7', tags=tags)
+            if accent and r >= 12:
+                canvas.create_arc(x-inner, y-inner, x+inner, y+inner, start=30, extent=85,
+                                  style='arc', outline=accent, width=2, tags=tags)
+            _marker(canvas, x, y, edge, size=min(7, max(2, r*.17)), tags=tags)
     return ceiling
 
 
@@ -227,26 +242,26 @@ def _draw_stream(canvas, x, y, landing, run, feed_time, radius, knot_values):
         grain_phase = (issued % .618) / .618
         center = x + math.sin(grain_phase * math.tau + depth * 3) * min(1., spread / 3)
         _line(canvas, center - spread, at_y, center + spread, at_y,
-              color='#c9b4e7', width=min(3.4, .7 + intensity),
+              color='#9d8fc0', width=min(3.4, .7 + intensity),
               tags=('aor-stream', 'aor-stream-band'))
         for grain in range(min(6, 1 + int(intensity * 1.8))):
             fraction = ((grain_phase + grain * .382) % 1) * 2 - 1
             grain_x = center + fraction * spread
             grain_radius = min(1.4, .50 + intensity * .23)
             canvas.create_oval(grain_x - grain_radius, at_y - grain_radius, grain_x + grain_radius, at_y + grain_radius,
-                               outline='', fill=AOR, tags=('aor-stream', 'aor-stream-grain'))
+                               outline='', fill=STAGE_AOR, tags=('aor-stream', 'aor-stream-grain'))
 
 
 def _draw_feeder(canvas, wx, py, scale, outlet_z, landing_z, model, state, direction, follow, knot_values):
     x, y = wx(state.outlet_world_x), py(outlet_z)
     width = canvas.winfo_width()
     if model.aor is None:
-        canvas.create_rectangle(x - 5, y - 7, x + 5, y, fill=FEED, outline=STEEL,
+        canvas.create_rectangle(x - 5, y - 7, x + 5, y, fill=STAGE_FEED, outline=STAGE_TICK,
                                 tags=('recoater-feeder', 'recoater-outlet'))
         if state.feeding:
-            _line(canvas, x, y, x, py(landing_z), color=FEED, width=2, tags='recoater-uniform-feed')
+            _line(canvas, x, y, x, py(landing_z), color=STAGE_FEED, width=2, tags='recoater-uniform-feed')
         if follow:
-            _label(canvas, min(width-38, max(38, x)), max(12, y-16), '균일 피딩', color=STEEL)
+            _label(canvas, min(width-38, max(38, x)), max(12, y-16), '균일 피딩', color=STAGE_TICK)
         return
 
     run = model.aor.run
@@ -258,19 +273,25 @@ def _draw_feeder(canvas, wx, py, scale, outlet_z, landing_z, model, state, direc
     tags = ('recoater-feeder', 'aor-feeder')
     canvas.create_polygon(left, top, right, top, right, shoulder, lip_x, cy - .34 * radius,
                           cx - direction * .88 * radius, cy - .45 * radius, left, shoulder,
-                          fill='#e9ddf5', outline=STEEL, width=1, tags=tags)
+                          fill='#4e466c', outline=STAGE_AOR, width=1.2, tags=tags)
+    # The powder's free surface locates the material inside the hopper.
+    surface = top + radius * .36
+    canvas.create_polygon(left, surface, right, surface, right, shoulder, lip_x, cy - .34 * radius,
+                          cx - direction * .88 * radius, cy - .45 * radius, left, shoulder,
+                          fill='#786497', outline='', tags=tags)
+    _line(canvas, left, surface, right, surface, color=STAGE_AOR, tags=tags)
     canvas.create_oval(cx-radius, cy-radius, cx+radius, cy+radius,
-                       fill='#cbd6e4', outline=STEEL, width=1.3, tags=tags)
+                       fill='#61597c', outline=STAGE_AOR, width=1.3, tags=tags)
     if run.rpm > 0:
         revolution = 60. / run.rpm
         angle = math.tau * ((state.feed_time % revolution) / revolution) if math.isfinite(revolution) else 0.
         _line(canvas, cx, cy, cx + direction * .72 * radius * math.cos(angle),
-              cy + .72 * radius * math.sin(angle), color=STEEL, width=1.2, tags=tags)
-    _marker(canvas, x, y, AOR, size=2.5, tags=('recoater-outlet', 'aor-outlet'))
+              cy + .72 * radius * math.sin(angle), color='#f0e5ff', width=1.6, tags=tags)
+    _marker(canvas, x, y, STAGE_AOR, size=2.5, tags=('recoater-outlet', 'aor-outlet'))
     if state.feeding:
         _draw_stream(canvas, x, y, py(landing_z), run, state.feed_time, radius, knot_values)
     if follow:
-        _label(canvas, min(width-42, max(42, cx)), max(25, top-9), 'AOR 피더', color=AOR, tags=tags)
+        _label(canvas, min(width-42, max(42, cx)), max(25, top-9), 'AOR 피더', color=STAGE_AOR, tags=tags)
 
 
 def _sequence_caption(model, state):
@@ -287,6 +308,7 @@ def _sequence_caption(model, state):
 
 
 def _draw_sequenced_section(canvas, model, state, follow, width, height):
+    canvas.create_rectangle(0, 0, width, height, outline='', fill=STAGE_BG)
     p = model.parameters
     aor = model.aor
     length = p.bed_length
@@ -336,32 +358,32 @@ def _draw_sequenced_section(canvas, model, state, follow, width, height):
         return floor - z * scale
 
     band_left, band_right = max(0., wx(0.)), min(width, wx(length))
-    _line(canvas, 0, floor, width, floor)
+    _line(canvas, 0, floor, width, floor, color=STAGE_GRID)
     if band_left < band_right:
-        canvas.create_rectangle(band_left, floor, band_right, floor + 8, fill=BED, outline='')
+        canvas.create_rectangle(band_left, floor, band_right, floor + 8, fill='#314d60', outline='')
         for x in range(int(band_left)+7, int(band_right), 11):
-            _line(canvas, x-5, floor+7, x, floor+2, color='#c1cedf')
-        _line(canvas, band_left, floor, band_right, floor, color=STEEL)
+            _line(canvas, x-5, floor+7, x, floor+2, color='#567387')
+        _line(canvas, band_left, floor, band_right, floor, color=STAGE_TICK)
         for x, edge, tag in ((0., '후면', 'recoater-bed-rear'), (length, '전면', 'recoater-bed-front')):
             screen = wx(x)
             if 2 < screen < width - 2:
-                _line(canvas, screen, floor + 1, screen, floor + 9, color=STEEL, tags=tag)
+                _line(canvas, screen, floor + 1, screen, floor + 9, color=STAGE_TICK, tags=tag)
                 align = 'w' if x == 0 else 'e'
-                _label(canvas, screen, floor + 19, f'{edge} {format_number(x, 1)}', anchor=align, tags=tag)
+                _label(canvas, screen, floor + 19, f'{edge} {format_number(x, 1)}', anchor=align, color=STAGE_TICK, tags=tag)
         divisions = max(3, min(8, int((band_right - band_left) / 64)))
         for i in range(1, divisions):
             screen = band_left + (band_right - band_left) * i / divisions
             world = origin + middle + (screen - width / 2) / scale
-            _line(canvas, screen, 20, screen, floor, color=GRID)
-            _label(canvas, screen, floor + 19, f'{world:.4g}')
+            _line(canvas, screen, 20, screen, floor, color=STAGE_GRID)
+            _label(canvas, screen, floor + 19, f'{world:.4g}', color=STAGE_TICK)
     _label(canvas, width-47, 11, _sequence_caption(model, state), anchor='e',
-           color=COLORS['ink'], tags='recoater-stage')
+           color=STAGE_TEXT, tags='recoater-stage')
     arrow_start, arrow_end = width - 37, width - 12
     if feed_direction < 0:
         arrow_start, arrow_end = arrow_end, arrow_start
-    _line(canvas, arrow_start, 11, arrow_end, 11, color=STEEL, arrow='last',
+    _line(canvas, arrow_start, 11, arrow_end, 11, color=STAGE_TICK, arrow='last',
           arrowshape=(5, 7, 2), tags=('recoater-stage', 'recoater-stage-direction'))
-    _label(canvas, 11, 11, '베드 좌표 (mm)', anchor='w')
+    _label(canvas, 11, 11, '베드 좌표 (mm)', anchor='w', color=STAGE_TICK)
 
     knot_values = None
     if run is not None and not run.stopped and run.mean > 0:
@@ -376,26 +398,26 @@ def _draw_sequenced_section(canvas, model, state, follow, width, height):
         if profile is not None:
             _draw_pile(canvas, wx, py, x, profile.height - profile.rise, profile, wall, fill, color, direction=-1)
         screen = wx(x)
-        ceiling = _draw_roller(canvas, screen, py, bottom, radius, scale, roller_top * .75, tags=tag)
+        ceiling = _draw_roller(canvas, screen, py, bottom, radius, scale, roller_top * .75, tags=tag, accent=color)
         if follow:
             leading_gap = p.spacing * scale if p.spread_on else 0.
             place_left = screen > width - 97 or (diamond and leading_gap < 97)
             anchor = 'e' if place_left else 'w'
             label_x = min(width-9, max(9, screen + (-5 if place_left else 5)))
-            _label(canvas, label_x, max(25, ceiling - 10), caption, anchor=anchor, color=COLORS['ink'], tags=tag)
+            _label(canvas, label_x, max(25, ceiling - 10), caption, anchor=anchor, color=color, tags=tag)
         if profile is not None and profile.rise > 0:
             _marker(canvas, wx(x - profile.peak_x), py(profile.height), color,
                     diamond=diamond, size=4 if follow else 2.8, tags=tag)
 
     if show_rollers:
         if p.spread_on:
-            roll(state.spread_world_x, p.clearance, model.rs, state.spreader, SPREAD, SPREAD_FILL,
+            roll(state.spread_world_x, p.clearance, model.rs, state.spreader, STAGE_SPREAD, '#4a96af',
                  model.spread_wall, '스프래딩롤러', 'recoater-spreader', diamond=True)
-        roll(state.compact_world_x, p.layer, model.rc, state if state.compact_started else None, POWDER, POWDER_FILL,
+        roll(state.compact_world_x, p.layer, model.rc, state if state.compact_started else None, STAGE_COMPACT, '#c5904b',
              model.compact_wall, '컴팩팅롤러', 'recoater-compactor')
         if state.contacted:
             _marker(canvas, wx(state.compact_world_x - model.tangent_x), py(model.tangent_z),
-                    CONTACT, size=5, tags='recoater-contact')
+                    '#ff9eb7', size=5, tags='recoater-contact')
     if show_feeder:
         def pile_surface(x, profile):
             if profile is None:
@@ -421,8 +443,8 @@ def _draw_swept_layers(canvas, model, state, wx, py, width, origin, middle, scal
     bed_inlet = model.feed_world(0.)
     bed_fed = model.feed_world(state.fed_distance)
     raw_left, raw_right = sorted((bed_inlet, bed_fed))
-    intervals = ((compact_edge, length, 'formed', DEPOSIT), (spread_edge, compact_edge, 'passed', PASS),
-                 (raw_left, min(raw_right, spread_edge), 'raw', FEED))
+    intervals = ((compact_edge, length, 'formed', STAGE_FORMED), (spread_edge, compact_edge, 'passed', STAGE_PASSED),
+                 (raw_left, min(raw_right, spread_edge), 'raw', STAGE_FEED))
     for left, right, kind, color in intervals:
         left, right = max(left, view_left), min(right, view_right)
         if left >= right:
@@ -446,7 +468,7 @@ def _draw_swept_layers(canvas, model, state, wx, py, width, origin, middle, scal
             points = _swept_cell_points(model, left, right, kind, columns)
         if dense:
             band = model.aor.run.mean * model.aor.run.wave.max
-            canvas.create_rectangle(wx(left), py(band), wx(right), py(0), fill='#e6e0ed',
+            canvas.create_rectangle(wx(left), py(band), wx(right), py(0), fill='#4f4e6b',
                                     outline='', tags='aor-layer-raw-envelope')
         if not points or not any(thickness > 0 for _, thickness in points):
             continue

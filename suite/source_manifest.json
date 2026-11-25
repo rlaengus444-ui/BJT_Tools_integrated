@@ -171,8 +171,8 @@
       "original_path": "User-supplied recoater_simulator.html (AOR waveform and tray model, native machine sequences)",
       "controller": "RecoaterApp",
       "embedded_base": false,
-      "sha256": "475c86cc4c283b1a36917aadf8a9a8ffd7ab977fea4cc47406849b6d10725f94",
-      "bytes": 40896
+      "sha256": "0e2a25658b80d00c55de4f9f556e6cd5c2d97046fd88a629c753077995ee0ad0",
+      "bytes": 42434
     }
   ],
   "dependencies": [
@@ -765,7 +765,7 @@
       "tools": [
         "recoater"
       ],
-      "sha256": "cf54242ae268425e06018bc50a47627fd41498ecc496db8f17e39a98c3751ae3"
+      "sha256": "a5d8d23b1711c672b442433d56288e657a14cc599ce87bfebcbba820d29142bb"
     },
     {
       "path": "recoater_aor.py",
@@ -779,7 +779,7 @@
       "tools": [
         "recoater"
       ],
-      "sha256": "e2cc2bcedca2e6e1ab6d1190a05d0847803842e9729f6c0ec392f89c2ef61e70"
+      "sha256": "956c89fd1eb05168c2b533a88d488ec2de3fe8d945ef1af794a483fe59a2823d"
     },
     {
       "path": "recoater_controls.py",

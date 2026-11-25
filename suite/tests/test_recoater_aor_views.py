@@ -194,14 +194,38 @@ class RecoaterCanvasTests(unittest.TestCase):
         empty(self.canvas, '')
         self.assertFalse(self.canvas.find_withtag('recoater-hover'))
 
-        self.canvas.configure(width=190, height=90)
-        self.root.update()
-        draw_height_chart(self.canvas, model, state, build_curve(model))
-        axes = self.canvas._recoater_hover_plot.bounds
-        self._hover(int(axes.right) - 1, int(axes.top) + 1)
-        a, b, c, d = self.canvas.bbox('recoater-hover')
-        self.assertTrue(0 <= a < c <= self.canvas.winfo_width())
-        self.assertTrue(0 <= b < d <= self.canvas.winfo_height())
+    def test_compact_tooltips_retain_coordinates_and_all_series_inside_canvas(self):
+        bind_chart_hover(self.canvas)
+        model, reference = _models('front_to_rear')
+        state, curve = model.at(150.), build_curve(model)
+        comparison = prepare_comparison(model, reference, 'flow')
+        charts = (
+            ('height', lambda: draw_height_chart(self.canvas, model, state, curve)),
+            ('time', lambda: draw_discharge_chart(self.canvas, model, state, 'time')),
+            ('distance', lambda: draw_discharge_chart(self.canvas, model, state, 'distance')),
+            *((view, lambda view=view: draw_comparison_chart(self.canvas, comparison, comparison.at_state(state), view))
+              for view in ('overlay', 'percent', 'difference')),
+        )
+        for width, height in ((150, 75), (180, 85), (190, 90)):
+            self.canvas.configure(width=width, height=height)
+            self.root.update()
+            for mode, draw in charts:
+                with self.subTest(width=width, height=height, chart=mode):
+                    draw()
+                    plot = self.canvas._recoater_hover_plot
+                    axes = plot.bounds
+                    for x in (int((axes.left + axes.right) / 2), int(axes.right) - 1):
+                        y = int(axes.top) + 1
+                        text = self._hover(x, y)
+                        pos = axes.x_at(x)
+                        self.assertIn(f'{pos:.5g} {plot.x_unit}', text)
+                        self.assertIn(f'y  {axes.y_at(y):.5g} {plot.y_unit}', text)
+                        for _name, unit, value, color in plot.values_at(pos):
+                            if color:
+                                self.assertIn(f'{value:.5g} {unit}', text)
+                        a, b, c, d = self.canvas.bbox('recoater-hover')
+                        self.assertTrue(0 <= a < c <= width, (a, c))
+                        self.assertTrue(0 <= b < d <= height, (b, d))
 
     def test_sections_keep_fixed_world_edges_and_show_stream_only_with_active_feed(self):
         for direction in ('rear_to_front', 'front_to_rear'):
