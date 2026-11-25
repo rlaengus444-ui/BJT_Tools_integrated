@@ -9,13 +9,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from recoater_model import ROLLER_EXAMPLE, SHEET_EXAMPLE, build_curve, make_model
 
 
+REFERENCE_SHEETS = replace(SHEET_EXAMPLE, angle=35)
+REFERENCE_ROLLERS = replace(ROLLER_EXAMPLE, angle=35, compact_diameter=10, spread_diameter=6, spacing=9)
+
+
 class RecoaterModelTests(unittest.TestCase):
     def assert_close(self, actual, expected):
         self.assertTrue(math.isclose(actual, expected, rel_tol=2e-12, abs_tol=1e-13),
                         f'{actual!r} != {expected!r}')
 
     def test_sheet_piles_follow_analytic_triangle_and_contact(self):
-        p = SHEET_EXAMPLE
+        p = REFERENCE_SHEETS
         model = make_model(p)
         slope = math.tan(math.radians(p.angle))
         feed = p.layer * p.feed_ratio
@@ -39,7 +43,7 @@ class RecoaterModelTests(unittest.TestCase):
 
     def test_roller_preset_matches_original_javascript_outputs(self):
         # Values evaluated with the uploaded simulator's makeModel in Node.
-        model = make_model(ROLLER_EXAMPLE)
+        model = make_model(REFERENCE_ROLLERS)
         self.assert_close(model.contact_x, 118.66044510913807)
         self.assert_close(model.contact_height, 2.734935543259514)
         self.assert_close(model.capacity, 7.697315715632244)
@@ -65,7 +69,7 @@ class RecoaterModelTests(unittest.TestCase):
         self.assert_close(model.end.diverted_area, 8.519789547525647)
 
     def test_contact_is_inclusive_and_spreader_holds_its_profile_after_exit(self):
-        model = make_model(ROLLER_EXAMPLE)
+        model = make_model(REFERENCE_ROLLERS)
         self.assertFalse(model.at(math.nextafter(model.contact_x, 0)).contacted)
         contact = model.at(model.contact_x)
         self.assertTrue(contact.contacted)
@@ -83,27 +87,27 @@ class RecoaterModelTests(unittest.TestCase):
         self.assertIs(model.end, model.end)
 
     def test_contact_at_zero_at_endpoint_and_beyond_short_bed(self):
-        immediate = make_model(replace(SHEET_EXAMPLE, spacing=0))
+        immediate = make_model(replace(REFERENCE_SHEETS, spacing=0))
         self.assertEqual(immediate.contact_x, 0)
         self.assertTrue(immediate.at(0).contacted)
         self.assertEqual(immediate.end.pile_area, 0)
-        self.assert_close(immediate.end.diverted_area, immediate.excess * SHEET_EXAMPLE.bed_length)
+        self.assert_close(immediate.end.diverted_area, immediate.excess * REFERENCE_SHEETS.bed_length)
 
-        contact_x = make_model(ROLLER_EXAMPLE).contact_x
-        at_end = make_model(replace(ROLLER_EXAMPLE, bed_length=contact_x))
+        contact_x = make_model(REFERENCE_ROLLERS).contact_x
+        at_end = make_model(replace(REFERENCE_ROLLERS, bed_length=contact_x))
         self.assertEqual(at_end.contact_x, at_end.end.x)
         self.assertTrue(at_end.end.contacted)
         self.assertEqual(build_curve(at_end)[-1][0], at_end.end.x)
 
-        short = make_model(replace(ROLLER_EXAMPLE, bed_length=4))
+        short = make_model(replace(REFERENCE_ROLLERS, bed_length=4))
         self.assertGreater(short.contact_x, short.end.x)
         self.assertFalse(short.end.contacted)
         self.assertEqual(short.at(0).spreader, short.end.spreader)
         self.assertEqual(short.at(0).spread_distance, short.end.x)
 
     def test_mass_balance_with_and_without_spreader_and_with_insufficient_feed(self):
-        for p in (ROLLER_EXAMPLE, replace(ROLLER_EXAMPLE, feed_ratio=0.5),
-                  replace(ROLLER_EXAMPLE, clearance=0), replace(ROLLER_EXAMPLE, spread_on=False)):
+        for p in (REFERENCE_ROLLERS, replace(REFERENCE_ROLLERS, feed_ratio=0.5),
+                  replace(REFERENCE_ROLLERS, clearance=0), replace(REFERENCE_ROLLERS, spread_on=False)):
             model = make_model(p)
             if model.balance < 0:
                 self.assertLess(model.deposit, p.layer)
@@ -123,7 +127,7 @@ class RecoaterModelTests(unittest.TestCase):
                     self.assert_close(accounted_mass, fed_mass)
 
     def test_curve_contains_uniform_grid_contact_and_spreader_exit(self):
-        model = make_model(ROLLER_EXAMPLE)
+        model = make_model(REFERENCE_ROLLERS)
         curve = build_curve(model)
         distances = {250 * i / 240 for i in range(241)} | {model.contact_x, 241}
         self.assertEqual(tuple(x for x, _, _ in curve), tuple(sorted(distances)))
@@ -132,13 +136,13 @@ class RecoaterModelTests(unittest.TestCase):
             self.assertEqual(compact_height, state.height)
             self.assertEqual(spread_height, state.spreader.height)
 
-        no_spread = make_model(replace(ROLLER_EXAMPLE, spread_on=False))
+        no_spread = make_model(replace(REFERENCE_ROLLERS, spread_on=False))
         no_spread_curve = build_curve(no_spread)
         self.assertEqual(len(no_spread_curve), 241)
         self.assertTrue(all(height is None for _, _, height in no_spread_curve))
 
     def test_spreader_disabled_ignores_spreader_settings(self):
-        p = replace(ROLLER_EXAMPLE, spread_on=False, spread_diameter=math.nan,
+        p = replace(REFERENCE_ROLLERS, spread_on=False, spread_diameter=math.nan,
                     spacing=math.inf, clearance=-1)
         model = make_model(p)
         self.assertEqual(model.feed, model.base)
@@ -160,23 +164,23 @@ class RecoaterModelTests(unittest.TestCase):
             ('clearance', -1, '스프래딩 하단 간극'), ('angle', 0, '안식각'), ('angle', 90, '안식각'),
         ):
             with self.subTest(field=field, value=value), self.assertRaisesRegex(ValueError, label):
-                make_model(replace(ROLLER_EXAMPLE, **{field: value}))
+                make_model(replace(REFERENCE_ROLLERS, **{field: value}))
         for p, label in (
-            (replace(ROLLER_EXAMPLE, spacing=1), '외경이 겹칩니다'),
-            (replace(ROLLER_EXAMPLE, compact_diameter=0, spacing=0), '스프래딩 접점'),
-            (replace(ROLLER_EXAMPLE, angle=math.ulp(0.0)), '단위와 크기'),
-            (replace(ROLLER_EXAMPLE, layer=2, feed_ratio=1e308), '단위와 크기'),
-            (replace(ROLLER_EXAMPLE, layer=1e-300, bed_density=1e-100), '단위와 크기'),
+            (replace(REFERENCE_ROLLERS, spacing=1), '외경이 겹칩니다'),
+            (replace(REFERENCE_ROLLERS, compact_diameter=0, spacing=0), '스프래딩 접점'),
+            (replace(REFERENCE_ROLLERS, angle=math.ulp(0.0)), '단위와 크기'),
+            (replace(REFERENCE_ROLLERS, layer=2, feed_ratio=1e308), '단위와 크기'),
+            (replace(REFERENCE_ROLLERS, layer=1e-300, bed_density=1e-100), '단위와 크기'),
         ):
             with self.subTest(parameters=p), self.assertRaisesRegex(ValueError, label):
                 make_model(p)
-        model = make_model(ROLLER_EXAMPLE)
+        model = make_model(REFERENCE_ROLLERS)
         for distance in (math.nan, math.inf, -math.inf):
             with self.subTest(distance=distance), self.assertRaisesRegex(ValueError, '컴팩팅 진행거리'):
                 model.at(distance)
 
     def test_no_feed_and_large_finite_bed_keep_actual_curve_endpoints(self):
-        p = replace(SHEET_EXAMPLE, spread_on=False, bed_length=1e308, feed_ratio=0)
+        p = replace(REFERENCE_SHEETS, spread_on=False, bed_length=1e308, feed_ratio=0)
         model = make_model(p)
         self.assertEqual(model.deposit, 0)
         self.assertEqual(model.end.height, 0)

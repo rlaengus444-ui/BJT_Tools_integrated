@@ -113,7 +113,7 @@ jobs:
         run: |
           python 'suite/배포_빌드/ci_windows_release.py' --output "$env:BJT_CI_OUTPUT" --publish-only
       - name: Stage verified Windows assets in the prepared evaluation draft
-        if: github.repository == 'rlaengus444-ui/BJT_Tools_integrated' && github.ref == 'refs/heads/feature/recoater-simulator-1.11.0' && inputs.public_draft_id != ''
+        if: github.repository == 'rlaengus444-ui/BJT_Tools_integrated' && (github.ref == 'refs/heads/feature/recoater-simulator-1.11.0' || github.ref == 'refs/heads/feature/recoater-aor-1.12.0') && inputs.public_draft_id != ''
         env:
           GH_TOKEN: ${{ github.token }}
           BJT_CI_OUTPUT: ${{ runner.temp }}\bjt-suite-native

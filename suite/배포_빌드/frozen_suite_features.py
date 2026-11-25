@@ -112,18 +112,57 @@ def _recoater_check(root, app):
         _resize_compact(root)
         root.update()
         tool = app.controllers['recoater']
-        assert tool.scene.winfo_viewable() and tool.chart.winfo_viewable()
-        assert tool.scene.winfo_height() >= 110 and tool.chart.winfo_height() >= 80
-        assert tool.scene.find_all() and tool.chart.find_all()
+        def await_gui(predicate):
+            deadline = time.monotonic() + 12
+            while not predicate() and time.monotonic() < deadline:
+                root.update()
+                time.sleep(.01)
+            assert predicate(), (tool.status.get(), tool.problem)
+
+        await_gui(lambda: tool.model is not None)
         assert not tool.is_playing and tool.distance == 0
-        tool.contact_button.invoke()
-        contact = tool.distance
-        assert abs(contact - 118.66044510913807) < 1e-9
+        assert tool.model.parameters.angle == 45
+        assert [tool.aor_panel.fields[k].get() for k in ('test_speed','run_speed','test_outlet','run_outlet')] == ['220','220','2','2']
+        assert tool.scene.winfo_viewable() and tool.scene.find_all()
+        assert tool.scene.winfo_height() >= 110
+        first = tool.model
+        tool.seek(first.turn_progress)
+        turn = first.at(tool.distance)
+        assert turn.fed_distance == first.parameters.bed_length and not turn.feeding and not turn.compact_started
+        assert [tool.fields[k].get() for k in ('spread_diameter','compact_diameter','spacing')] == ['20','20','46']
+        assert first.aor.lead == 61 and first.contact_x > first.travel_end and tool.contact_button.instate(['disabled'])
+        tool.direction.set('front_to_rear')
+        await_gui(lambda: tool.model is not None and tool.model is not first)
+        second = tool.model
+        assert second.turn_progress is None
+        tool.seek(second.compact_start + 10)
+        during = second.at(tool.distance)
+        assert during.phase == 'combined' and during.feeding and during.compact_started
+        assert tool.scene.find_withtag('aor-stream')
+        tool.seek(second.feed_end)
+        assert not tool.scene.find_withtag('aor-stream')
+        assert second.at(second.travel_end).compact_world_x == 0
+        hovered = []
+        for key, unit in (('flow','g/s'),('compare','%'),('height','mm')):
+            tool.plots.select(tool.plot_pages[key])
+            root.update()
+            canvas = tool.canvases[key]
+            await_gui(lambda: canvas.winfo_viewable() and getattr(canvas, '_recoater_hover_plot', None))
+            bounds = canvas._recoater_hover_plot.bounds
+            canvas.event_generate('<Motion>', x=int((bounds.left+bounds.right)/2), y=int((bounds.top+bounds.bottom)/2))
+            root.update()
+            labels = [canvas.itemcget(i, 'text') for i in canvas.find_withtag('recoater-hover') if canvas.type(i)=='text']
+            assert len(labels) == 1 and unit in labels[0], (key,labels)
+            canvas.event_generate('<Leave>')
+            root.update()
+            assert not canvas.find_withtag('recoater-hover')
+            hovered.append(key)
+        assert tool.chart.winfo_height() >= 80
         left, right = chart_x_bounds(tool.chart.winfo_width())
         x = (left + right) // 2
         tool.chart.event_generate('<Button-1>', x=x, y=40)
         root.update()
-        assert abs(tool.distance - ((x-left)/(right-left))*250) < 1e-8
+        assert abs(tool.distance - ((x-left)/(right-left))*second.travel_end) < 1e-8
         tool.play_button.invoke()
         start = tool.distance
         deadline = time.monotonic() + 4
@@ -137,8 +176,18 @@ def _recoater_check(root, app):
         app.notebook.select(app.home)
         root.update()
         assert not tool.is_playing and tool._anim is None
+        app.select_tool('recoater')
+        for key, value in (('compact_diameter','10'), ('spread_diameter','6'), ('spacing','9')):
+            tool.fields[key].set(value)
+        await_gui(lambda: tool.model is not None and tool.model.contact_x <= tool.model.travel_end)
+        tool.contact_button.invoke()
+        assert tool.distance == tool.model.contact_x and tool.model.at(tool.distance).contacted
         return {'passed': True, 'compact_size': [root.winfo_width(), root.winfo_height()],
-                'default_contact_mm': contact, 'chart_seek': True, 'animation_advanced': True,
+                'default_roller_diameters_mm': [20,20], 'default_axis_spacing_mm': 46,
+                'default_aor_lead_mm': 61, 'default_has_no_contact': True,
+                'narrow_fixture_contact_travel_mm': tool.distance, 'chart_seek': True,
+                'rear_to_front_return_compaction': True, 'front_to_rear_inline': True,
+                'stream_stops_at_bed_edge': True, 'hovered_plots': hovered, 'animation_advanced': True,
                 'suite_stop': True, 'tab_pause': True}
     finally:
         root.geometry(full_size)
@@ -209,6 +258,17 @@ def _seed_inputs(app, work):
     ir.slice_panel.dpi_y.set('500')
     recoater = c['recoater']
     recoater.fields['layer'].set('0.125')
+    recoater.fields['angle'].set('47.25')
+    recoater.aor_panel.fields['test_speed'].set('215')
+    recoater.aor_panel.fields['run_speed'].set('205.5')
+    recoater.aor_panel.fields['run_outlet'].set('2.25')
+    recoater.aor_panel.fields['period_variation'].set('29')
+    recoater.aor_panel.set_calibration_open(True)
+    recoater.direction.set('front_to_rear')
+    recoater.plots.select(recoater.plot_pages['compare'])
+    recoater.flow_view.set('distance')
+    recoater.compare_metric.set('formed')
+    recoater.compare_view.set('overlay')
     recoater.speed.set('12.5')
     recoater.camera.set('full')
 
@@ -267,6 +327,10 @@ def run(mode, directory):
             assert app.controllers['thermal'].run_btn.cget('text') == 'Run simulation'
             recoater = app.controllers['recoater']
             assert recoater.distance == 0. and not recoater.is_playing
+            assert recoater.fields['angle'].get() == '47.25'
+            assert recoater.aor_panel.fields['run_speed'].get() == '205.5'
+            assert recoater.direction.get() == 'front_to_rear' and recoater.compare_view.get() == 'overlay'
+            assert recoater.aor_panel.calibration_open.get()
             checks['fresh_process_all_14_inputs_restored'] = {'passed': True,
                 'tools': sorted(actual), 'oven_language': 'en'}
         else:

@@ -10,7 +10,10 @@ import subprocess
 
 
 REPOSITORY = 'rlaengus444-ui/BJT_Tools_integrated'
-RELEASE_REFS = {'refs/heads/feature/recoater-simulator-1.11.0': '1.11.0'}
+RELEASE_REFS = {
+    'refs/heads/feature/recoater-simulator-1.11.0': '1.11.0',
+    'refs/heads/feature/recoater-aor-1.12.0': '1.12.0',
+}
 
 
 def api(endpoint, *args):

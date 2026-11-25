@@ -1,12 +1,18 @@
 """Native interactive side-section simulator for the BJT recoater."""
 from __future__ import annotations
 
-from dataclasses import asdict
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import asdict, replace
 import math
 import time
 import tkinter as tk
 from tkinter import ttk
 
+from recoater_aor import AorParameters
+from recoater_controls import AorPanel, quantity
+from recoater_charts import (
+    bind_chart_hover, discharge_readings, draw_comparison_chart, draw_discharge_chart, prepare_comparison,
+)
 from recoater_model import Parameters, ROLLER_EXAMPLE, SHEET_EXAMPLE, build_curve, make_model
 from recoater_views import (
     CONTACT, DEPOSIT, FEED, PASS, PLOT, POWDER, SPREAD, chart_x_bounds, draw_height_chart,
@@ -26,10 +32,35 @@ ROLLERS = (
 SPREAD_FIELDS = {'spread_diameter', 'spacing', 'clearance'}
 PRESETS = {'원형 롤러 예시': ROLLER_EXAMPLE, '시트 기본값': SHEET_EXAMPLE}
 DERIVED = (
-    ('feed', '피딩 직후 두께'), ('base', '컴팩팅 전 균일층'), ('required', '목표층에 필요한 겉보기 두께'),
+    ('feed', '피딩 직후 평균 두께'), ('base', '컴팩팅 전 기준층'), ('required', '목표층에 필요한 겉보기 두께'),
     ('deposit', '형성층 두께'), ('balance', '잉여 두께'), ('swept', '스프래딩이 걷어낸 두께'),
     ('sweep', '스프래딩롤러가 지난 거리'), ('diverted', '접촉 후 유출 단면적'),
 )
+
+FEED_MODES = {'aor': 'AOR 피딩', 'uniform': '균일 피딩'}
+DIRECTIONS = {'rear_to_front': '뒤 → 앞', 'front_to_rear': '앞 → 뒤'}
+FLOW_VIEWS = {'time': '시간별 유량', 'distance': '거리별 피딩층 두께'}
+COMPARISONS = {'flow': '순간 토출 유량', 'feed': '피딩 직후 두께', 'spread': '스프래딩 앞 높이',
+               'compact': '컴팩팅 앞 높이', 'formed': '컴팩팅 후 두께'}
+COMPARE_VIEWS = {'percent': '편차율 (%)', 'difference': '실단위 편차', 'overlay': '두 곡선 겹쳐 보기'}
+
+
+def _compute_model(parameters, direction):
+    model = make_model(parameters, two_pass=True, feed_direction=direction)
+    reference = (make_model(replace(parameters, aor=None), continuous_lead=model.aor.lead,
+                            two_pass=True, feed_direction=direction) if model.aor else None)
+    return model, build_curve(model), reference
+
+
+def _input_numbers(fields):
+    values = {}
+    for key, var in fields.items():
+        try:
+            values[key] = float(var.get())
+        except ValueError:
+            values[key] = math.nan
+    return values
+
 
 
 class RecoaterApp:
@@ -38,6 +69,21 @@ class RecoaterApp:
         self.fields = {key: tk.StringVar(root) for key, _ in (*POWDER_FIELDS, *ROLLERS)}
         self.spread_on = tk.BooleanVar(root, value=True)
         self.speed = tk.StringVar(root, value='16')
+        self.feed_mode = tk.StringVar(root, value='aor')
+        self.direction = tk.StringVar(root, value='rear_to_front')
+        self.flow_view = tk.StringVar(root, value='time')
+        self.compare_metric = tk.StringVar(root, value='flow')
+        self.compare_view = tk.StringVar(root, value='percent')
+        self._angles = dict.fromkeys(FEED_MODES, '45')
+        self._mode = 'aor'
+        self._chart_mode = 'flow'
+        self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='recoater')
+        self._model_future = self._comparison_future = None
+        self._comparison_key = None
+        self._comparisons = {}
+        self.reference = None
+        self._reset_on_build = True
+        self._poll = None
         self.camera = tk.StringVar(root, value='follow')
         self.preset = tk.StringVar(root, value=next(iter(PRESETS)))
         self.distance_text = tk.StringVar(root, value='0')
@@ -58,9 +104,13 @@ class RecoaterApp:
         self._entries = {}
         self._styles()
         self._build()
-        for var in (*self.fields.values(), self.spread_on):
+        for var in (*self.fields.values(), *self.aor_panel.fields.values(), self.spread_on):
             var.trace_add('write', self._schedule_rebuild)
         self.speed.trace_add('write', self._speed_changed)
+        self.feed_mode.trace_add('write', self._mode_changed)
+        self.direction.trace_add('write', self._direction_changed)
+        for var in (self.flow_view, self.compare_metric, self.compare_view):
+            var.trace_add('write', self._view_changed)
         root.bind('<Unmap>', self._hidden, add='+')
         root.bind('<Destroy>', self._destroyed, add='+')
         root.protocol('WM_DELETE_WINDOW', self.close)
@@ -130,22 +180,81 @@ class RecoaterApp:
         transport.grid(row=1, column=0, sticky='ew', pady=(0, 8))
         self._build_transport(transport)
 
-        plot_card = self._card(work, (11, 7))
+        plot_card = self._card(work, (8, 4))
         plot_card.grid(row=2, column=0, sticky='nsew')
-        chart_heading = ttk.Frame(plot_card, style='Suite.Surface.TFrame')
-        chart_heading.pack(fill='x', pady=(0, 3))
-        self._label(chart_heading, '진행거리별 높이 (mm)', style='Suite.CardTitle.TLabel').pack(side='left')
-        self._label(chart_heading, '실선 · 진행   점선 · 예상   거리 클릭 · 이동').pack(side='right')
-        self.chart = tk.Canvas(plot_card, width=1, height=1, background=COLORS['surface'],
+        self.plots = ttk.Notebook(plot_card)
+        self.plots.pack(fill='both', expand=True)
+        self.plot_pages, self.canvases = {}, {}
+        for key, caption in (('flow', '토출 파형'), ('height', '더미 높이'), ('compare', '연속피딩 대비')):
+            page = ttk.Frame(self.plots, style='Suite.Surface.TFrame', padding=(4, 0))
+            self.plots.add(page, text=caption)
+            self.plot_pages[key] = page
+            toolbar = ttk.Frame(page, style='Suite.Surface.TFrame')
+            toolbar.pack(fill='x')
+            if key == 'flow':
+                self._choice(toolbar, self.flow_view, FLOW_VIEWS, 13).pack(side='left')
+                self.flow_summary = tk.StringVar(self.root)
+                self._label(toolbar, value=self.flow_summary).pack(side='right')
+            elif key == 'compare':
+                self.compare_selector = self._choice(toolbar, self.compare_metric, COMPARISONS, 13)
+                self.compare_selector.pack(side='left')
+                self._choice(toolbar, self.compare_view, COMPARE_VIEWS, 14).pack(side='left', padx=(4, 0))
+                self.compare_summary = tk.StringVar(self.root)
+                self.compare_current = tk.StringVar(self.root)
+                self._label(page, value=self.compare_current).pack(side='bottom', fill='x')
+                self._label(toolbar, value=self.compare_summary).pack(side='right')
+            else:
+                self._label(toolbar, '컴팩팅 ●   스프래딩 ◆    ·    눌러서 위치 이동').pack(anchor='w')
+            canvas = tk.Canvas(page, width=1, height=1, background=COLORS['surface'],
                                highlightthickness=0, cursor='crosshair')
-        self.chart.pack(fill='both', expand=True)
-        self.chart.bind('<Button-1>', self._chart_seek)
-        for canvas in (self.scene, self.chart):
-            canvas.bind('<Configure>', self._schedule_paint)
+            canvas.pack(fill='both', expand=True)
+            self.canvases[key] = canvas
+            bind_chart_hover(canvas)
+            canvas.bind('<Configure>', self._schedule_paint, add='+')
+        self.chart = self.canvases['height']
+        self.chart.bind('<Button-1>', self._chart_seek, add='+')
+        self.plots.bind('<<NotebookTabChanged>>', self._plot_selected)
+        self.scene.bind('<Configure>', self._schedule_paint)
 
         panel = self._card(body, (10, 9))
         panel.grid(row=0, column=1, sticky='nsew')
         self._build_sidebar(panel)
+
+    @staticmethod
+    def _choice(parent, variable, labels, width):
+        display = tk.StringVar(parent, value=labels[variable.get()])
+        combo = ttk.Combobox(parent, values=tuple(labels.values()), textvariable=display,
+                             state='readonly', width=width)
+        keys = {label: key for key, label in labels.items()}
+        combo.bind('<<ComboboxSelected>>', lambda _event: variable.set(keys[display.get()]))
+        variable.trace_add('write', lambda *_: display.set(labels.get(variable.get(), '')))
+        return combo
+
+    def _plot_selected(self, _event=None):
+        selected = self.plots.select()
+        for key, page in self.plot_pages.items():
+            if str(page) == selected:
+                self._chart_mode = key
+                break
+        self._schedule_paint()
+
+    def _view_changed(self, *_):
+        if not self._loading:
+            self._schedule_paint()
+
+    def _mode_changed(self, *_):
+        if self._loading or self.feed_mode.get() == self._mode:
+            return
+        self._angles[self._mode] = self.fields['angle'].get()
+        self._mode = self.feed_mode.get()
+        self.fields['angle'].set(self._angles[self._mode])
+        self._direction_changed()
+
+    def _direction_changed(self, *_):
+        if self._loading:
+            return
+        self._reset_on_build = True
+        self._schedule_rebuild()
 
     def _build_transport(self, panel):
         commands = ttk.Frame(panel, style='Suite.Surface.TFrame')
@@ -213,9 +322,20 @@ class RecoaterApp:
         self.sidebar.bind('<Configure>', lambda event: self.sidebar.itemconfigure(window, width=event.width))
         settings.bind('<Configure>', lambda _event: self.sidebar.configure(scrollregion=self.sidebar.bbox(window)))
 
+        for label, variable, choices in (('피딩 방식', self.feed_mode, FEED_MODES),
+                                          ('피딩 방향', self.direction, DIRECTIONS)):
+            row = ttk.Frame(settings, style='Suite.Surface.TFrame')
+            row.pack(fill='x', pady=(0, 3))
+            self._label(row, label).pack(side='left')
+            self._choice(row, variable, choices, 14).pack(side='right')
+        self.sequence = tk.StringVar(self.root)
+        self._label(settings, value=self.sequence, wraplength=265, justify='left').pack(fill='x', pady=(1, 6))
         self._label(settings, '파우더와 베드', style='Suite.CardTitle.TLabel').pack(anchor='w')
         self._field_grid(settings, POWDER_FIELDS)
-        self._label(settings, '롤러', style='Suite.CardTitle.TLabel').pack(anchor='w', pady=(7, 0))
+        self.aor_panel = AorPanel(self, settings)
+        self.aor_panel.frame.pack(fill='x')
+        self._roller_heading = self._label(settings, '롤러', style='Suite.CardTitle.TLabel')
+        self._roller_heading.pack(anchor='w', pady=(7, 0))
         ttk.Checkbutton(settings, text='스프래딩롤러 사용', variable=self.spread_on,
                         style='Recoater.Card.TCheckbutton').pack(anchor='w', pady=(3, 0))
         self._field_grid(settings, ROLLERS)
@@ -230,7 +350,8 @@ class RecoaterApp:
             self._derived_rows[key] = row
         self._bind_scroll(self.sidebar)
 
-    def _field_grid(self, parent, fields):
+    def _field_grid(self, parent, fields, variables=None):
+        variables = self.fields if variables is None else variables
         grid = ttk.Frame(parent, style='Suite.Surface.TFrame')
         grid.pack(fill='x', pady=(2, 0))
         for column in range(2):
@@ -239,7 +360,7 @@ class RecoaterApp:
             cell = ttk.Frame(grid, style='Suite.Surface.TFrame')
             cell.grid(row=i//2, column=i%2, sticky='ew', padx=(0, 5) if i%2 == 0 else 0, pady=(0, 5))
             self._label(cell, label).pack(anchor='w')
-            entry = ttk.Entry(cell, textvariable=self.fields[key], width=10, justify='right')
+            entry = ttk.Entry(cell, textvariable=variables[key], width=10, justify='right')
             entry.pack(fill='x')
             entry.bind('<FocusIn>', self._reveal_field)
             self._entries[key] = entry
@@ -300,6 +421,8 @@ class RecoaterApp:
         if event.widget is self.root:
             self._closed = True
             self._halt()
+            self._cancel('_poll')
+            self._executor.shutdown(wait=False, cancel_futures=True)
             self._cancel('_edit')
             self._cancel('_draw')
 
@@ -329,10 +452,13 @@ class RecoaterApp:
             values = asdict(params)
             for name, var in self.fields.items():
                 var.set(f'{values[name]:g}')
+            self._angles['uniform'] = f'{params.angle:g}'
+            self._angles['aor'] = '45'
+            self.fields['angle'].set(self._angles[self._mode])
             self.spread_on.set(params.spread_on)
         finally:
             self._loading = False
-        self.distance = 0.
+        self._reset_on_build = True
         self._rebuild()
 
     def _schedule_rebuild(self, *_):
@@ -341,6 +467,11 @@ class RecoaterApp:
         self._halt()
         self.preset.set('사용자 입력')
         self.play_button.state(['disabled'])
+        # An earlier background result must not overwrite an in-progress edit.
+        for task in (self._model_future, self._comparison_future):
+            if task is not None:
+                task.cancel()
+        self._model_future = self._comparison_future = None
         self._cancel('_edit')
         self._edit = self.root.after(110, self._rebuild)
 
@@ -366,21 +497,66 @@ class RecoaterApp:
         for key, _ in DERIVED:
             if spread or key not in {'swept', 'sweep', 'diverted'}:
                 self._derived_rows[key].pack(fill='x', pady=2)
-        try:
-            values = {}
-            for name, var in self.fields.items():
-                try:
-                    values[name] = float(var.get())
-                except ValueError:
-                    values[name] = math.nan
-            self.model = make_model(Parameters(**values, spread_on=spread))
-            self.curve = build_curve(self.model)
-            self.distance = min(self.distance, self.model.parameters.bed_length)
-        except (ValueError, ArithmeticError) as exc:
-            self.model = None
-            self.curve = ()
-            self.problem = str(exc) if isinstance(exc, ValueError) else '입력값의 단위와 크기를 확인하세요.'
+        aor = self.feed_mode.get() == 'aor'
+        if aor:
+            self.aor_panel.frame.pack(fill='x', before=self._roller_heading)
+        else:
+            self.aor_panel.frame.pack_forget()
+            self.plots.select(self.plot_pages['height'])
+        for key in ('flow', 'compare'):
+            self.plots.tab(self.plot_pages[key], state='normal' if aor else 'disabled')
+        self.sequence.set('뒤 → 앞 피딩  /  앞 → 뒤 스프래딩·컴팩팅' if
+                          self.direction.get() == 'rear_to_front' else '앞 → 뒤 한 번에 피딩 → 스프래딩 → 컴팩팅')
+        if not spread:
+            self.sequence.set(self.sequence.get().replace('스프래딩·', '').replace('스프래딩 → ', ''))
+            if self.compare_metric.get() == 'spread':
+                self.compare_metric.set('compact')
+        self.compare_selector.configure(values=tuple(v for k, v in COMPARISONS.items() if spread or k != 'spread'))
+        for task in (self._comparison_future, self._model_future):
+            if task is not None:
+                task.cancel()
+        self._comparisons.clear()
+        self._comparison_future = self._comparison_key = None
+        self.model = self.reference = None
+        self.curve = ()
+        self.problem = '공정 조건 계산 중…'
+        parameters = Parameters(**_input_numbers(self.fields), spread_on=spread,
+                                aor=AorParameters(**_input_numbers(self.aor_panel.fields)) if aor else None)
+        self._model_future = self._executor.submit(_compute_model, parameters, self.direction.get())
+        self._arm_poll()
         self._paint(reset_entry=True)
+
+    def _arm_poll(self):
+        if self._poll is None and not self._closed:
+            self._poll = self.root.after(25, self._collect_calculations)
+
+    def _collect_calculations(self):
+        self._poll = None
+        if self._closed:
+            return
+        ready = False
+        if self._model_future is not None and self._model_future.done():
+            task, self._model_future = self._model_future, None
+            try:
+                self.model, self.curve, self.reference = task.result()
+                self.distance = 0. if self._reset_on_build else min(self.distance, self.model.travel_end)
+                self._reset_on_build = False
+                self.problem = ''
+            except (ValueError, ArithmeticError) as exc:
+                self.problem = str(exc) if isinstance(exc, ValueError) else '입력값의 단위와 크기를 확인하세요.'
+            self.aor_panel.show_results(self.model.aor if self.model else None)
+            ready = True
+        if self._comparison_future is not None and self._comparison_future.done():
+            task, self._comparison_future = self._comparison_future, None
+            try:
+                self._comparisons[self._comparison_key] = task.result()
+            except (ValueError, ArithmeticError) as exc:
+                self._comparisons[self._comparison_key] = str(exc) or '비교 곡선을 계산할 수 없습니다.'
+            ready = True
+        if ready:
+            self._paint(reset_entry=True)
+        if self._model_future is not None or self._comparison_future is not None:
+            self._arm_poll()
 
     def _set_camera(self, value):
         self.camera.set(value)
@@ -388,7 +564,7 @@ class RecoaterApp:
 
     def _slide(self, fraction):
         if self.model is not None:
-            self.seek(float(fraction) * self.model.parameters.bed_length)
+            self.seek(float(fraction) * self.model.travel_end)
 
     def _commit_distance(self, _event):
         if self.model is not None:
@@ -408,13 +584,14 @@ class RecoaterApp:
     def _chart_seek(self, event):
         if self.model is not None:
             left, right = chart_x_bounds(self.chart.winfo_width())
-            self.seek((event.x-left)/(right-left) * self.model.parameters.bed_length)
+            if left <= event.x <= right:
+                self.seek((event.x-left)/(right-left) * self.model.travel_end)
 
     def seek(self, distance):
         if self.model is None or self._edit is not None:
             return
         self._halt()
-        self.distance = min(self.model.parameters.bed_length, max(0., distance))
+        self.distance = min(self.model.travel_end, max(0., distance))
         self._paint(reset_entry=True)
 
     def toggle_play(self):
@@ -423,7 +600,7 @@ class RecoaterApp:
             return
         if self.model is None or self._edit is not None or self._speed_value() is None:
             return
-        if self.distance >= self.model.parameters.bed_length:
+        if self.distance >= self.model.travel_end:
             self.distance = 0.
         self.is_playing = True
         self._last_time = time.monotonic()
@@ -437,7 +614,7 @@ class RecoaterApp:
             self._halt()
             return
         now = time.monotonic()
-        length = self.model.parameters.bed_length
+        length = self.model.travel_end
         self.distance = min(length, self.distance + speed * max(0., now-self._last_time))
         self._last_time = now
         if self.distance >= length:
@@ -457,69 +634,138 @@ class RecoaterApp:
         model = self.model
         speed_ok = self._speed_value() is not None
         ready = model is not None and self._edit is None
-        at_end = model is not None and self.distance >= model.parameters.bed_length
+        at_end = model is not None and self.distance >= model.travel_end
         action = '일시정지' if self.is_playing else '다시 재생' if at_end else '재생'
         self.play_button.configure(text=action, state='normal' if ready and speed_ok else 'disabled')
         for widget in (self.rewind_button, self.timeline, self.distance_entry):
             widget.state(['!disabled'] if ready else ['disabled'])
-        in_bed = model is not None and model.contact_x <= model.parameters.bed_length
+        in_bed = model is not None and model.contact_x <= model.travel_end
         self.contact_button.state(['!disabled'] if ready and in_bed else ['disabled'])
         for key, button in self.view_buttons.items():
             button.configure(style='Suite.Primary.TButton' if self.camera.get() == key else 'Suite.Secondary.TButton')
         if model is None:
             self.readout.set('—')
             self.status.set(self.problem)
-            self.status_label.configure(style='Suite.Status.Error.TLabel')
+            self.status_label.configure(style='Suite.CardText.TLabel' if self._model_future else 'Suite.Status.Error.TLabel')
             for var in (*self.metrics[0], *self.metrics[1], *self.derived.values()):
                 var.set('—')
-            empty(self.scene, '공정 조건을 확인하세요.')
-            empty(self.chart, '')
+            empty(self.scene, '계산 중…' if self._model_future else '공정 조건을 확인하세요.')
+            for canvas in self.canvases.values():
+                empty(canvas, '')
+            self.flow_summary.set('')
+            self.compare_summary.set('')
+            self.compare_current.set('')
             return
 
         state = model.at(self.distance)
-        length = model.parameters.bed_length
+        length = model.travel_end
         self.position.set(self.distance/length)
         self.readout.set(f'{format_number(self.distance, 2)} / {length:.5g} mm')
         if reset_entry or self.root.focus_get() is not self.distance_entry:
             self._display_distance = f'{self.distance:.9g}'
             self.distance_text.set(self._display_distance)
-        for profile, row in zip((state, state.spreader), self.metrics):
+        for profile, row in zip((state if state.compact_started else None, state.spreader), self.metrics):
             if profile is not None:
                 for var, number in zip(row, (profile.height, profile.rise, profile.pile_area)):
                     var.set(format_number(number))
-        amounts = (model.feed, model.base, model.required, model.deposit, model.balance,
+            else:
+                for var in row:
+                    var.set('—')
+        formed = None
+        if state.compact_started:
+            formed = state.local.formed_height if state.local is not None else model.deposit
+        amounts = (model.feed, model.base, model.required, formed, model.balance,
                    model.swept_thickness, state.spread_distance, state.diverted_area)
         for (key, _), number in zip(DERIVED, amounts):
-            self.derived[key].set(format_number(number) + (' mm²' if key == 'diverted' else ' mm'))
+            self.derived[key].set('—' if number is None else format_number(number) + (' mm²' if key == 'diverted' else ' mm'))
         self._show_status(model, state, speed_ok, in_bed)
         draw_section(self.scene, model, state, self.camera.get() == 'follow')
-        draw_height_chart(self.chart, model, state, self.curve)
+        if self._chart_mode == 'height':
+            draw_height_chart(self.chart, model, state, self.curve)
+        elif self._chart_mode == 'flow' and model.aor:
+            view = self.flow_view.get()
+            draw_discharge_chart(self.canvases['flow'], model, state, view)
+            low, mean, high, contrast = discharge_readings(model, view)
+            unit = 'g/s' if view == 'time' else 'mm'
+            self.flow_summary.set(f'골 {low:.4g}   평균 {mean:.4g}   마루 {high:.4g} {unit}  ·  대비 {100*contrast:.3g}%')
+        elif self._chart_mode == 'compare' and self.reference:
+            self._draw_comparison(state)
+
+    def _draw_comparison(self, state):
+        metric = self.compare_metric.get()
+        canvas = self.canvases['compare']
+        if metric not in self._comparisons:
+            if self._comparison_key != metric or self._comparison_future is None:
+                if self._comparison_future is not None:
+                    self._comparison_future.cancel()
+                self._comparison_key = metric
+                self._comparison_future = self._executor.submit(prepare_comparison, self.model, self.reference, metric)
+                self._arm_poll()
+            self.compare_summary.set('')
+            self.compare_current.set('')
+            empty(canvas, '비교 곡선 계산 중…')
+            return
+        data = self._comparisons[metric]
+        if isinstance(data, str):
+            self.compare_summary.set('')
+            self.compare_current.set('')
+            empty(canvas, data)
+            return
+        current = data.at_state(state)
+        if current is None:
+            self.compare_current.set('이 항목의 공정 구간 밖입니다.')
+        else:
+            self.compare_current.set(f'AOR {quantity(current.actual, data.unit)}   ·   연속 {quantity(current.reference, data.unit)}'
+                                     f'   ·   편차 {quantity(current.difference, data.unit)} ({quantity(current.percent, "%")})')
+        view = self.compare_view.get()
+        summary = data.percent if view == 'percent' else data.difference
+        unit = '%' if view == 'percent' else data.unit
+        self.compare_summary.set('최소 ' + quantity(summary.minimum) + '  최대 ' + quantity(summary.maximum)
+                                 + '  RMS ' + quantity(summary.rms, unit))
+        draw_comparison_chart(canvas, data, current, view)
 
     def _show_status(self, model, state, speed_ok, in_bed):
         style = 'Suite.CardText.TLabel'
         if not speed_ok:
             message, style = '재생 속도에 0보다 큰 수를 입력하세요.', 'Suite.Status.Error.TLabel'
-        elif model.balance < -1e-12:
-            message, style = '목표층을 만들기에 파우더 공급이 부족합니다.', 'Suite.Status.Warning.TLabel'
-        elif model.excess <= 0:
-            message = '컴팩팅롤러 앞에 쌓이는 파우더가 없습니다.'
-        elif state.contacted:
-            message, style = '접촉 중 · 최초 접촉 ' + format_number(model.contact_x, 2) + ' mm', 'Suite.Status.Success.TLabel'
-        elif in_bed:
-            message = '접촉 전 · 최초 접촉 ' + format_number(model.contact_x, 2) + ' mm'
-        elif state.spreader is None:
-            message = '스프래딩롤러 미사용'
         else:
-            message = '베드 내 접촉 없음 · 예상 접촉 거리 ' + format_number(model.contact_x, 2) + ' mm'
+            stage = {'feed': '뒤 → 앞 피딩', 'compact': '앞 → 뒤 스프래딩·컴팩팅',
+                     'combined': '앞 → 뒤 피딩·스프래딩·컴팩팅'}[state.phase]
+            if not model.parameters.spread_on:
+                stage = stage.replace('스프래딩·', '')
+            if state.phase == 'combined' and self.distance >= model.feed_end:
+                stage = '토출 완료 · 앞 → 뒤 롤러 통과'
+            if self.distance >= model.travel_end:
+                stage = '완료'
+            details = []
+            if model.aor:
+                details.append('토출 ' + quantity(state.flux, 'g/s'))
+                details.append('경과 ' + quantity(state.elapsed, 's'))
+            if state.contacted:
+                details.append('롤러 접촉')
+            elif state.compact_started and model.balance < -1e-12:
+                details.append('평균 공급 부족')
+            message = '  ·  '.join((stage, *details))
         self.status_label.configure(style=style)
         self.status.set(message)
 
     def input_state(self):
+        selected = self.plots.select()
+        plot = next((k for k, page in self.plot_pages.items() if str(page) == selected), self._chart_mode)
+        metric = self.compare_metric.get()
+        if not self.spread_on.get() and metric == 'spread':
+            metric = 'compact'
         return {'parameters': {name: var.get() for name, var in self.fields.items()},
-                'spread_on': self.spread_on.get(), 'speed': self.speed.get(), 'camera': self.camera.get()}
+                'spread_on': self.spread_on.get(), 'speed': self.speed.get(), 'camera': self.camera.get(),
+                'feed_mode': self._mode, 'direction': self.direction.get(),
+                'aor': {name: var.get() for name, var in self.aor_panel.fields.items()},
+                'angles': {**self._angles, self._mode: self.fields['angle'].get()},
+                'preset': self.preset.get(), 'calibration_open': self.aor_panel.calibration_open.get(),
+                'plot': 'height' if self._mode == 'uniform' else plot, 'flow_view': self.flow_view.get(),
+                'compare_metric': metric, 'compare_view': self.compare_view.get()}
 
     def restore_input_state(self, state):
-        if not isinstance(state, dict):
+        if not isinstance(state, dict) or not state:
             return
         raw = state.get('parameters', {})
         self._loading = True
@@ -528,17 +774,51 @@ class RecoaterApp:
                 for name, value in raw.items():
                     if name in self.fields and isinstance(value, str) and len(value) <= 80:
                         self.fields[name].set(value)
+            # Pre-AOR profiles are uniform recipes. A fresh profile opens in AOR mode.
+            mode = state.get('feed_mode', 'uniform' if raw else 'aor')
+            self._mode = mode if isinstance(mode, str) and mode in FEED_MODES else 'aor'
+            self.feed_mode.set(self._mode)
+            for key, var, choices, default in (
+                ('direction', self.direction, DIRECTIONS, 'rear_to_front'),
+                ('flow_view', self.flow_view, FLOW_VIEWS, 'time'),
+                ('compare_metric', self.compare_metric, COMPARISONS, 'flow'),
+                ('compare_view', self.compare_view, COMPARE_VIEWS, 'percent')):
+                value = state.get(key)
+                var.set(value if isinstance(value, str) and value in choices else default)
+            angles = state.get('angles', {})
+            for key in FEED_MODES:
+                value = angles.get(key) if isinstance(angles, dict) else None
+                if isinstance(value, str) and len(value) <= 80:
+                    self._angles[key] = value
+            if isinstance(raw, dict) and 'angle' in raw:
+                self._angles[self._mode] = self.fields['angle'].get()
+            self.fields['angle'].set(self._angles[self._mode])
+            aor = state.get('aor')
+            if isinstance(aor, dict):
+                for name, value in aor.items():
+                    if name in self.aor_panel.fields and isinstance(value, str) and len(value) <= 80:
+                        self.aor_panel.fields[name].set(value)
+            plot = state.get('plot')
+            self._chart_mode = plot if isinstance(plot, str) and plot in self.plot_pages else 'flow'
+            if self._mode == 'uniform':
+                self._chart_mode = 'height'
+            self.plots.tab(self.plot_pages[self._chart_mode], state='normal')
+            self.plots.select(self.plot_pages[self._chart_mode])
             if type(state.get('spread_on')) is bool:
                 self.spread_on.set(state['spread_on'])
             if isinstance(state.get('speed'), str) and len(state['speed']) <= 80:
                 self.speed.set(state['speed'])
             if state.get('camera') in ('follow', 'full'):
                 self.camera.set(state['camera'])
-            if raw:
+            preset = state.get('preset')
+            if isinstance(preset, str) and preset in PRESETS:
+                self.preset.set(preset)
+            elif raw:
                 self.preset.set('사용자 입력')
+            self.aor_panel.set_calibration_open(state.get('calibration_open') is True)
         finally:
             self._loading = False
-        self.distance = 0.
+        self._reset_on_build = True
         self._rebuild()
 
 

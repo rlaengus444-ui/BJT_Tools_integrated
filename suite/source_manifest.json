@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.11.0",
+  "suite_version": "1.12.0",
   "tools": [
     {
       "id": "bjt",
@@ -166,13 +166,13 @@
     {
       "id": "recoater",
       "label": "리코터 시뮬레이터",
-      "description": "두 롤러 사이 파우더 흐름과 최초 접촉을 단면·그래프로 확인",
+      "description": "피딩 방향별 AOR 토출 파형, 스프래딩·컴팩팅 단면과 연속피딩 비교",
       "source": "sources/recoater_tool.py",
-      "original_path": "User-supplied recoater_simulator.html (native Tk interface and Python model port)",
+      "original_path": "User-supplied recoater_simulator.html (AOR waveform and tray model, native machine sequences)",
       "controller": "RecoaterApp",
       "embedded_base": false,
-      "sha256": "6d1113e1d9bc4f474d8524c8fd673246025561c38f04dbc98c4622c0de852eb7",
-      "bytes": 25757
+      "sha256": "475c86cc4c283b1a36917aadf8a9a8ffd7ab977fea4cc47406849b6d10725f94",
+      "bytes": 40896
     }
   ],
   "dependencies": [
@@ -758,14 +758,35 @@
       "tools": [
         "recoater"
       ],
-      "sha256": "e7731ba5a7e064a651251e521ce1d273a85cce07e4f6a46b3b76456bdedee3b6"
+      "sha256": "465ec4cf0da67a15a69c06c22167a4ec663f7fff34f3d8fe035a0bd311cdf47b"
     },
     {
       "path": "recoater_views.py",
       "tools": [
         "recoater"
       ],
-      "sha256": "e94d1930d2c1ceee2f8c9c3edfbc100e2b457f92adc84551a1465a01ace0e77f"
+      "sha256": "cf54242ae268425e06018bc50a47627fd41498ecc496db8f17e39a98c3751ae3"
+    },
+    {
+      "path": "recoater_aor.py",
+      "tools": [
+        "recoater"
+      ],
+      "sha256": "98450eba3e646b7da2836d5f7b9ed3400c24cb1512435055785f2d4a5e99b82a"
+    },
+    {
+      "path": "recoater_charts.py",
+      "tools": [
+        "recoater"
+      ],
+      "sha256": "e2cc2bcedca2e6e1ab6d1190a05d0847803842e9729f6c0ec392f89c2ef61e70"
+    },
+    {
+      "path": "recoater_controls.py",
+      "tools": [
+        "recoater"
+      ],
+      "sha256": "4d547eb2348175f70115ba2bb7baa0f8bf0bc8c8e987ac973a52a5b335bffafe"
     }
   ]
 }
