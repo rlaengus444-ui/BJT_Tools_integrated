@@ -1,0 +1,22 @@
+{
+  "release_url": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/releases/tag/v1.11.0",
+  "release_id": 457898426,
+  "release_is_prerelease": true,
+  "source": "df02febc84a8f830d72b6223c751993d37fb1f06",
+  "windows_run": "https://github.com/rlaengus444-ui/BJT_Tools_integrated/actions/runs/45586875333",
+  "windows_run_passed": true,
+  "windows_evidence": {
+    "evidence_artifact_id": 15010216605,
+    "evidence_artifact_sha256": "df3fa8cb0665ad83e0c7a6a7b6c840b99ea5937ac2c0f29bf417739e8c403062",
+    "windows_source_tests": 511,
+    "windows_source_allowed_skips": 2,
+    "ir_upstream_tests": 572,
+    "source_capsule_tests": 8,
+    "gates": 20
+  },
+  "notion_page": "https://app.notion.com/p/40205e94a22581e3b272ffa8a1de15e7",
+  "previous_notion_release_folded": "1.10.1",
+  "drive_latest_source_only": true,
+  "physical_recoating_verified": false,
+  "actual_ir_equipment_used": false
+}

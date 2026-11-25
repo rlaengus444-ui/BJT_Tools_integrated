@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "compact_size": [
+    1100,
+    760
+  ],
+  "default_contact_mm": 118.66044510913807,
+  "chart_seek": true,
+  "animation_advanced": true,
+  "suite_stop": true,
+  "tab_pause": true,
+  "restore": {
+    "passed": true,
+    "tools": [
+      "alignment",
+      "arrange",
+      "bjt",
+      "chitu_checker",
+      "compare",
+      "exchanger",
+      "ir_feedback",
+      "m2_converter",
+      "nesting",
+      "number_tools",
+      "overlay",
+      "recoater",
+      "sequence_z",
+      "thermal"
+    ],
+    "oven_language": "en"
+  }
+}

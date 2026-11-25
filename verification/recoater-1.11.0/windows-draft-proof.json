@@ -1,0 +1,35 @@
+{
+  "release_id": 457898426,
+  "tag": "v1.11.0",
+  "commit": "df02febc84a8f830d72b6223c751993d37fb1f06",
+  "draft": true,
+  "asset_ids": {
+    "BJT_1.11.0_manual.zip": 790962382,
+    "BJT_1.11.0_source.zip": 790962441,
+    "BJT_1.11.0_standalone.pyw": 790962537,
+    "BJT_1.11.0_Windows_x64.zip": 790961522,
+    "SHA256SUMS.txt": 790962639
+  },
+  "assets": {
+    "BJT_1.11.0_manual.zip": {
+      "bytes": 246076,
+      "sha256": "7ad60e66f17aab29e7f3759baf9ed4d081d1f205d484224852fd3e39236ff576"
+    },
+    "BJT_1.11.0_source.zip": {
+      "bytes": 26453177,
+      "sha256": "72c537dc7972717562b046e4ec9286e2bfb68c3108448daafc213c59ebd4e4e6"
+    },
+    "BJT_1.11.0_standalone.pyw": {
+      "bytes": 16135460,
+      "sha256": "e92fe8c2d2b061633e9c7b62a58941c4ec0051bb08ffc0ce8018f3f3c72483b6"
+    },
+    "BJT_1.11.0_Windows_x64.zip": {
+      "bytes": 418311085,
+      "sha256": "80c2c9a9fd4311271cd1ed944d9313348adb3e77d4e96b38feb1c9f685d5f61a"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 361,
+      "sha256": "a3f5cdbffb59b0e219311e6dbe33986e03f3c031697914e04ccf691d10eaf107"
+    }
+  }
+}

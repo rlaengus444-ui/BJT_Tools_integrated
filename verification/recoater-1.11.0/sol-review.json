@@ -1,0 +1,51 @@
+{
+  "review_completed": true,
+  "route": "native collaboration.spawn_agent and followup_task",
+  "review_agent": "sol_reviewer_recoater_design",
+  "requested_model": "gpt-6.2-sol",
+  "requested_reasoning_effort": "max",
+  "provider_model_identity_independently_attested": false,
+  "base": "f681ed827788e933c1dbe840706e07f1bb71dbd7",
+  "reviewed_revision": "df02febc84a8f830d72b6223c751993d37fb1f06",
+  "original_attachment_sha256": "592b0fc6ff0bb056f6a5ac1b62706b4aa5dccaecc54022d748e50ceb98f14fd5",
+  "completed_preimplementation_design_review": true,
+  "completed_postimplementation_review": true,
+  "reproduced_checks": {
+    "model_tests": 9,
+    "native_tk_tests_linux_xorg": 3,
+    "compact_source_probe_pixels": [1120, 780],
+    "js_differential": {
+      "seed": 1948,
+      "inputs": 389,
+      "valid_models": 267,
+      "invalid_inputs": 122,
+      "states": 5667,
+      "complete_curves": 96,
+      "curve_knots": 23181,
+      "comparisons": 187775,
+      "absolute_tolerance": 1e-12,
+      "relative_tolerance": 2e-11
+    },
+    "quadrature": {
+      "cases": 27,
+      "maximum_relative_area_difference": 3.07e-10
+    },
+    "resource_hashes": 94,
+    "source_capsule_files": 378,
+    "ir_resource_tests": 5,
+    "ir_release_evidence_tests": 8,
+    "draft_staging_offline_mocks_passed": true
+  },
+  "resolved_findings": [
+    "Use true model coordinates when the formatted distance entry is unfocused without editing.",
+    "Use significant figures for chart labels on fractional axes.",
+    "Show peak markers over roller silhouettes.",
+    "Describe contact as the compacting pile against the spreading roller's back."
+  ],
+  "unresolved_blockers_for_windows_verification": [],
+  "chitubox_integration_run_in_local_review": false,
+  "chitubox_local_limit": "trimesh unavailable; Windows suite installs the pinned dependency",
+  "physical_recoating_validated": false,
+  "actual_ir_equipment_used": false,
+  "independently_run_native_windows": false
+}
