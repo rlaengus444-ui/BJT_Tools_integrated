@@ -248,7 +248,7 @@ class AllToolCloseReopenTests(unittest.TestCase):
                     self.fail('Suite did not finish asynchronous IR archive/worker shutdown')
 
                 root, first = open_suite()
-                self.assertEqual(len(first.controllers), 13)
+                self.assertEqual(len(first.controllers), 14)
                 c = first.controllers
                 c['bjt'].input_var.set(str(base / '새 모델.stl'))
                 c['bjt'].output_var.set(str(base / '별도 출력.stl'))
@@ -310,6 +310,9 @@ class AllToolCloseReopenTests(unittest.TestCase):
                 c['ir_feedback'].maximum_ir_percent.set('79')
                 c['ir_feedback'].slice_panel.radius.set('4.5')
                 c['ir_feedback'].slice_panel.paths = (str(image),)
+                c['recoater'].fields['layer'].set('0.125')
+                c['recoater'].speed.set('12.5')
+                c['recoater'].camera.set('full')
                 expected = {key: capture_inputs(key, value) for key, value in c.items()}
                 close_suite(root, first)
                 self.assertFalse(first.close_errors)

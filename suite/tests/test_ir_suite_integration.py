@@ -46,7 +46,7 @@ NON_IR_SOURCE_HASHES = {
 class ResourceAndNamespaceTests(unittest.TestCase):
     def test_non_ir_sources_match_reviewed_hashes(self):
         tools = {item['id']: item for item in read_manifest()['tools']}
-        self.assertEqual(set(tools), set(NON_IR_SOURCE_HASHES) | {'ir_feedback'})
+        self.assertEqual(set(tools), set(NON_IR_SOURCE_HASHES) | {'ir_feedback', 'recoater'})
         for key, checksum in NON_IR_SOURCE_HASHES.items():
             with self.subTest(tool=key):
                 path = ROOT / tools[key]['source']

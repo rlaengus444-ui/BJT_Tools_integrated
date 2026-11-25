@@ -102,6 +102,49 @@ def _language_check(root, controller):
             'all_numeric_model_inputs_preserved': True, 'oven_profile_preserved': True}
 
 
+def _recoater_check(root, app):
+    """Run the embedded simulator through its actual buttons in a small window."""
+    from frozen_packing_gui import _resize_compact
+    from recoater_views import chart_x_bounds
+    full_size = root.geometry()
+    app.select_tool('recoater')
+    try:
+        _resize_compact(root)
+        root.update()
+        tool = app.controllers['recoater']
+        assert tool.scene.winfo_viewable() and tool.chart.winfo_viewable()
+        assert tool.scene.winfo_height() >= 110 and tool.chart.winfo_height() >= 80
+        assert tool.scene.find_all() and tool.chart.find_all()
+        assert not tool.is_playing and tool.distance == 0
+        tool.contact_button.invoke()
+        contact = tool.distance
+        assert abs(contact - 118.66044510913807) < 1e-9
+        left, right = chart_x_bounds(tool.chart.winfo_width())
+        x = (left + right) // 2
+        tool.chart.event_generate('<Button-1>', x=x, y=40)
+        root.update()
+        assert abs(tool.distance - ((x-left)/(right-left))*250) < 1e-8
+        tool.play_button.invoke()
+        start = tool.distance
+        deadline = time.monotonic() + 4
+        while tool.distance <= start and time.monotonic() < deadline:
+            root.update()
+            time.sleep(.01)
+        assert tool.is_playing and tool.distance > start
+        app.stop_current()
+        assert not tool.is_playing and tool._anim is None
+        tool.play_button.invoke()
+        app.notebook.select(app.home)
+        root.update()
+        assert not tool.is_playing and tool._anim is None
+        return {'passed': True, 'compact_size': [root.winfo_width(), root.winfo_height()],
+                'default_contact_mm': contact, 'chart_seek': True, 'animation_advanced': True,
+                'suite_stop': True, 'tab_pause': True}
+    finally:
+        root.geometry(full_size)
+        root.update()
+
+
 def _seed_inputs(app, work):
     import numpy as np
     c = app.controllers
@@ -164,6 +207,10 @@ def _seed_inputs(app, work):
     ir.slice_panel.radius.set('1.25')
     ir.slice_panel.dpi_x.set('450')
     ir.slice_panel.dpi_y.set('500')
+    recoater = c['recoater']
+    recoater.fields['layer'].set('0.125')
+    recoater.speed.set('12.5')
+    recoater.camera.set('full')
 
 
 def run(mode, directory):
@@ -189,17 +236,18 @@ def run(mode, directory):
         for key in app.specs:
             app.mount_tool(key, app.loader.load(key))
         root.update_idletasks()
-        assert len(app.controllers) == len(app.specs) == 13
+        assert len(app.controllers) == len(app.specs) == 14
         assert app.specs['m2_converter']['label'] == '이미지 변환'
         assert app.specs['thermal']['label'] == '오븐 열확산 시뮬레이터'
         assert not any('하나의 공간' in text or '11가지 작업 도구' in text
                        for text in _captions(app.home))
-        checks['all_13_tools_and_simple_titles'] = {'passed': True}
+        checks['all_14_tools_and_simple_titles'] = {'passed': True}
         if mode == 'save':
             from frozen_packing_gui import verify as verify_packing
             app.select_tool('nesting')
             root.geometry('1400x950+0+0');root.deiconify();root.update()
             checks['packing_inference_and_exports'] = verify_packing(root, app.controllers['nesting'], work / 'packing')
+            checks['recoater_simulation'] = _recoater_check(root, app)
             assert not settings.exists(), 'A fresh verification profile is required'
             checks['native_image_custom_settings'] = _native_image_check(work)
             checks['native_drop_callback'] = _drop_check(root, app.controllers['chitu_checker'], work)
@@ -217,7 +265,9 @@ def run(mode, directory):
             assert not mismatches, 'Input restore mismatch: ' + repr(mismatches)
             assert app.controllers['thermal'].language_var.get() == 'en'
             assert app.controllers['thermal'].run_btn.cget('text') == 'Run simulation'
-            checks['fresh_process_all_13_inputs_restored'] = {'passed': True,
+            recoater = app.controllers['recoater']
+            assert recoater.distance == 0. and not recoater.is_playing
+            checks['fresh_process_all_14_inputs_restored'] = {'passed': True,
                 'tools': sorted(actual), 'oven_language': 'en'}
         else:
             raise ValueError('Unknown feature verification phase: ' + mode)

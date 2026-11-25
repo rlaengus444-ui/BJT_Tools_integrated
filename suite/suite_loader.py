@@ -73,12 +73,12 @@ class ToolLoader:
             if key in self.modules:
                 return self.modules[key]
             tool = self.specs[key]
-            if key in ('bjt', 'compare', 'exchanger', 'm2_converter', 'chitu_checker', 'nesting', 'ir_feedback'):
+            if key in ('bjt', 'compare', 'exchanger', 'm2_converter', 'chitu_checker', 'nesting', 'ir_feedback', 'recoater'):
                 for dependency in read_manifest().get('dependencies', []):
                     owners = dependency.get('tools')
                     if owners is not None and key not in owners:
                         continue
-                    if key in ('nesting', 'ir_feedback') and owners is None:
+                    if key in ('nesting', 'ir_feedback', 'recoater') and owners is None:
                         continue
                     # The optional BJT wrapper belongs only to the BJT tool;
                     # preserve the existing checks for the other engines.

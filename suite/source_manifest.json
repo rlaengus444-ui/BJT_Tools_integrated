@@ -1,5 +1,5 @@
 {
-  "suite_version": "1.10.1",
+  "suite_version": "1.11.0",
   "tools": [
     {
       "id": "bjt",
@@ -162,6 +162,17 @@
       "bytes": 11147,
       "controller": "App",
       "embedded_base": false
+    },
+    {
+      "id": "recoater",
+      "label": "리코터 시뮬레이터",
+      "description": "두 롤러 사이 파우더 흐름과 최초 접촉을 단면·그래프로 확인",
+      "source": "sources/recoater_tool.py",
+      "original_path": "User-supplied recoater_simulator.html (native Tk interface and Python model port)",
+      "controller": "RecoaterApp",
+      "embedded_base": false,
+      "sha256": "6d1113e1d9bc4f474d8524c8fd673246025561c38f04dbc98c4622c0de852eb7",
+      "bytes": 25757
     }
   ],
   "dependencies": [
@@ -233,7 +244,7 @@
     {
       "path": "suite_state.py",
       "purpose": "사용자별 전체 도구 입력값 저장 및 복원",
-      "sha256": "f247bafe161e1c8c0c7b758402379f7b885fd601291e3af4fe2957bf046ca0fe"
+      "sha256": "3abd5499786173ae5e8d340caf29a9d5b228caf67d15cd644f5206aa8086c37c"
     },
     {
       "path": "oven_i18n.py",
@@ -741,6 +752,20 @@
       "tools": [
         "ir_feedback"
       ]
+    },
+    {
+      "path": "recoater_model.py",
+      "tools": [
+        "recoater"
+      ],
+      "sha256": "e7731ba5a7e064a651251e521ce1d273a85cce07e4f6a46b3b76456bdedee3b6"
+    },
+    {
+      "path": "recoater_views.py",
+      "tools": [
+        "recoater"
+      ],
+      "sha256": "e94d1930d2c1ceee2f8c9c3edfbc100e2b457f92adc84551a1465a01ace0e77f"
     }
   ]
 }

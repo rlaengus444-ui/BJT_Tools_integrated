@@ -119,12 +119,12 @@ class ChituIntegrationTests(unittest.TestCase):
         self.assertIn('fit(selectedPair())', page)
         self.assertNotIn('<script src=', page)
 
-    def test_manifest_keeps_existing_tools_and_adds_ir_feedback(self):
+    def test_manifest_keeps_existing_tools_and_registers_recoater(self):
         from suite_loader import read_manifest, verify_sources
         manifest = read_manifest()
         self.assertRegex(manifest['suite_version'], r'^\d+\.\d+\.\d+$')
-        self.assertEqual(len(manifest['tools']), 13)
-        self.assertIn('ir_feedback', {tool['id'] for tool in manifest['tools']})
+        self.assertEqual(len(manifest['tools']), 14)
+        self.assertTrue({'ir_feedback', 'recoater'} <= {tool['id'] for tool in manifest['tools']})
         spec = next(tool for tool in manifest['tools'] if tool['id'] == 'chitu_checker')
         self.assertFalse(spec['embedded_base'])
         self.assertEqual(spec['controller'], 'ChituCheckerApp')

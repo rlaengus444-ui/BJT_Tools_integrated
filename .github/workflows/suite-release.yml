@@ -14,8 +14,8 @@ name: Integrated suite Windows verification and draft release
         required: false
         type: boolean
         default: false
-      chitu_fix_draft_id:
-        description: 'Prepared v1.10.1 prerelease draft ID for the CHITUBOX fix branch'
+      public_draft_id:
+        description: 'Prepared evaluation prerelease draft ID for the approved release branch'
         required: false
         type: string
 
@@ -112,12 +112,12 @@ jobs:
         shell: pwsh
         run: |
           python 'suite/배포_빌드/ci_windows_release.py' --output "$env:BJT_CI_OUTPUT" --publish-only
-      - name: Stage verified v1.10.1 Windows assets in its prepared draft
-        if: github.repository == 'rlaengus444-ui/BJT_Tools_integrated' && github.ref == 'refs/heads/fix/chitu-export-1.10.1' && inputs.chitu_fix_draft_id != ''
+      - name: Stage verified Windows assets in the prepared evaluation draft
+        if: github.repository == 'rlaengus444-ui/BJT_Tools_integrated' && github.ref == 'refs/heads/feature/recoater-simulator-1.11.0' && inputs.public_draft_id != ''
         env:
           GH_TOKEN: ${{ github.token }}
           BJT_CI_OUTPUT: ${{ runner.temp }}\bjt-suite-native
-          BJT_CHITU_FIX_DRAFT_ID: ${{ inputs.chitu_fix_draft_id }}
+          BJT_PUBLIC_DRAFT_ID: ${{ inputs.public_draft_id }}
         shell: pwsh
         run: |
-          python release_tools/stage_chitu_fix_draft.py --output "$env:BJT_CI_OUTPUT" --release-id "$env:BJT_CHITU_FIX_DRAFT_ID"
+          python release_tools/stage_public_draft.py --output "$env:BJT_CI_OUTPUT" --release-id "$env:BJT_PUBLIC_DRAFT_ID"

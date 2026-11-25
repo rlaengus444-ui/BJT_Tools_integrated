@@ -295,6 +295,8 @@ class SuiteApp:
 
     def _tab_changed(self, _event=None):
         key = self.active_tool()
+        if key != 'recoater' and 'recoater' in self.controllers:
+            self.controllers['recoater'].pause()
         self.tool_selector.current(0 if key is None else list(self.specs).index(key) + 1)
         if key is None:
             self.stop_button.configure(state='disabled')
@@ -551,6 +553,9 @@ class SuiteApp:
             controller.disconnect()
             self.status.set('IR 피드백 연결 해제 요청 · CSV·플롯을 저장합니다.')
             return
+        if key == 'recoater' and controller is not None:
+            controller.pause()
+            return
         if controller is not None and self.signal_stop(controller):
             self.status.set(self.specs[key]['label'] + ' · 중단을 요청했습니다. 현재 처리와 정리가 끝날 때까지 기다립니다.')
 
@@ -563,6 +568,8 @@ class SuiteApp:
                 '\n\n이미지 교체·복구 또는 STL 입력 변환은 완료될 때까지 기다립니다.', parent=self.root):
             return
         self.closing = True
+        if 'recoater' in self.controllers:
+            self.controllers['recoater'].pause()
         self.stop_button.configure(state='disabled')
         self._persist_before_close()
         self._pending_tool_closes = set()

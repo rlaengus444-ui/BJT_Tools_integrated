@@ -107,6 +107,17 @@ def require_ir_check(report):
         raise RuntimeError('Owned offline IR session and loss-free archive shutdown are required')
 
 
+def require_recoater_check(report):
+    phases = {phase.get('phase'): phase.get('report', {}).get('checks', {})
+              for phase in report.get('checks', [])}
+    checks = phases.get('save', {}).get('recoater_simulation', {})
+    restored = phases.get('restore', {}).get('fresh_process_all_14_inputs_restored', {})
+    if (any(checks.get(key) is not True for key in
+            ('passed', 'chart_seek', 'animation_advanced', 'suite_stop', 'tab_pause'))
+            or restored.get('passed') is not True or 'recoater' not in restored.get('tools', [])):
+        raise RuntimeError('Frozen recoater controls and input restoration evidence is required')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path,
@@ -131,8 +142,9 @@ def main():
             raise RuntimeError('Frozen verification did not pass: ' + name)
         reports[name] = report
     expected_tools = len(json.loads((source / 'source_manifest.json').read_text(encoding='utf-8'))['tools'])
-    if expected_tools != 13 or reports['smoke-exe'].get('tool_count') != expected_tools:
-        raise RuntimeError('Expected all 13 registered tools, including IR feedback')
+    if expected_tools != 14 or reports['smoke-exe'].get('tool_count') != expected_tools:
+        raise RuntimeError('Expected all 14 registered tools, including the recoater simulator')
+    require_recoater_check(reports['features-exe'])
     require_packing_check(reports['features-exe'])
     for name in ('ir-feedback-exe', 'ir-feedback-cli-exe'):
         require_ir_check(reports[name])
@@ -199,7 +211,8 @@ def main():
 
 ZIP을 모두 풀고 BJT_통합프로그램.exe를 실행하세요.
 Python과 .NET 설치가 필요하지 않습니다. _internal 폴더를 함께 보관하세요.
-13개 도구 중 치투 배치 검사에서 겹침·표면 접촉·최소 간격을 검사합니다.
+14개 도구 중 치투 배치 검사에서 겹침·표면 접촉·최소 간격을 검사합니다.
+리코터 시뮬레이터에서 두 롤러 앞 파우더의 단면과 높이 그래프를 확인할 수 있습니다.
 IR 피드백 제어에는 이미지 회복제어 Excel 계산시트가 포함됩니다.
 이미지 회복제어와 사용자 Excel 수식에는 설치된 Microsoft Excel 데스크톱이 필요합니다.
 IR 지원 장비는 M1·S3이며 연결 버튼을 눌러야 시작합니다. M2는 지원하지 않습니다.

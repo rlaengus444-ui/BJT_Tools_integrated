@@ -201,7 +201,7 @@ def _input_widgets(controller):
 
 
 def capture_inputs(key, controller):
-    if key == 'ir_feedback':
+    if key in ('ir_feedback', 'recoater'):
         return {'variables': {}, 'inputs': _plain(controller.input_state())}
     variables = {name: _raw(variable) for name, variable in _variables(controller).items()}
     state = {'variables': variables, 'inputs': {}}
@@ -346,7 +346,7 @@ def restore_inputs(key, controller, state):
     """Apply data without launching jobs; return recoverable-field warnings."""
     if not isinstance(state, dict):
         return []
-    if key == 'ir_feedback':
+    if key in ('ir_feedback', 'recoater'):
         controller.restore_input_state(state.get('inputs', {}))
         return []
     warnings = []

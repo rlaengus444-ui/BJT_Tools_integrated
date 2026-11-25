@@ -1,4 +1,4 @@
-"""Attach the checked v1.10.1 Windows CI outputs to its prepared draft."""
+"""Attach checked Windows CI outputs to a prepared evaluation prerelease draft."""
 from __future__ import annotations
 
 import argparse
@@ -10,10 +10,7 @@ import subprocess
 
 
 REPOSITORY = 'rlaengus444-ui/BJT_Tools_integrated'
-REF = 'refs/heads/fix/chitu-export-1.10.1'
-TAG = 'v1.10.1'
-ASSETS = {'BJT_1.10.1_Windows_x64.zip', 'BJT_1.10.1_source.zip',
-          'BJT_1.10.1_manual.zip', 'BJT_1.10.1_standalone.pyw', 'SHA256SUMS.txt'}
+RELEASE_REFS = {'refs/heads/feature/recoater-simulator-1.11.0': '1.11.0'}
 
 
 def api(endpoint, *args):
@@ -21,18 +18,22 @@ def api(endpoint, *args):
 
 
 def stage(output, release_id):
-    if (os.environ.get('GITHUB_REPOSITORY') != REPOSITORY or os.environ.get('GITHUB_REF') != REF
+    version = RELEASE_REFS.get(os.environ.get('GITHUB_REF'))
+    if (os.environ.get('GITHUB_REPOSITORY') != REPOSITORY or version is None or release_id <= 0
             or os.environ.get('GITHUB_EVENT_NAME') != 'workflow_dispatch' or not os.environ.get('GH_TOKEN')):
-        raise RuntimeError('The dedicated v1.10.1 dispatch and job token are required')
+        raise RuntimeError('An approved release branch, explicit draft, and job token are required')
+    tag_name = f'v{version}'
+    assets = {f'BJT_{version}_{name}' for name in
+              ('Windows_x64.zip', 'source.zip', 'manual.zip', 'standalone.pyw')} | {'SHA256SUMS.txt'}
     summary = json.loads((output / 'reports/native-summary.json').read_text(encoding='utf-8'))
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
-    if (summary.get('passed') is not True or summary['version'] != TAG[1:]
+    if (summary.get('passed') is not True or summary['version'] != version
             or commit != summary['commit'] or commit != os.environ.get('GITHUB_SHA')
             or summary['checks']['features-exe']['passed'] is not True):
         raise RuntimeError('A successful Windows build of this exact revision is required')
     folder = output / 'release-assets'
     expected = summary['assets']
-    if set(expected) != ASSETS or {path.name for path in folder.iterdir()} != ASSETS:
+    if set(expected) != assets or {path.name for path in folder.iterdir()} != assets:
         raise RuntimeError('Expected the five verified release assets')
     for name, proof in expected.items():
         path = folder / name
@@ -42,14 +43,14 @@ def stage(output, release_id):
             raise RuntimeError('Build asset changed: ' + name)
 
     release_api = f'repos/{REPOSITORY}/releases/{release_id}'
-    tag = api(f'repos/{REPOSITORY}/git/ref/tags/{TAG}')
+    tag = api(f'repos/{REPOSITORY}/git/ref/tags/{tag_name}')
     if tag['object']['type'] != 'commit' or tag['object']['sha'] != commit:
         raise RuntimeError('The release tag must point to the exact build revision')
 
     def read_draft():
         release = api(release_api)
         if (release['id'] != release_id or release['draft'] is not True
-                or release['prerelease'] is not True or release['tag_name'] != TAG
+                or release['prerelease'] is not True or release['tag_name'] != tag_name
                 or release['target_commitish'] != commit):
             raise RuntimeError('The prepared prerelease must still be an unpublished draft for this build')
         present = {}
@@ -70,9 +71,9 @@ def stage(output, release_id):
             if name not in read_draft():
                 raise RuntimeError('Draft upload was not confirmed: ' + name)
     uploaded = read_draft()
-    if set(uploaded) != ASSETS:
+    if set(uploaded) != assets:
         raise RuntimeError('The draft asset set is incomplete')
-    print(json.dumps({'release_id': release_id, 'tag': TAG, 'commit': commit,
+    print(json.dumps({'release_id': release_id, 'tag': tag_name, 'commit': commit,
                       'draft': True, 'asset_ids': uploaded, 'assets': expected}, indent=2))
 
 
